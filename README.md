@@ -1,7 +1,7 @@
 # Sara
 
 A painting program that paints on the graphics card, in floating point colour,
-built in Godot 4.7 and licensed under the GPLv3.
+built in Godot and licensed under the GPLv3.
 
 This is Sara's public home. The source arrives here with the first public
 release, and the builds for Linux, Windows and Android go on the
