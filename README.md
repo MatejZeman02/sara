@@ -15,7 +15,7 @@
 </p>
 
 <p align="center">
-  <b><a href="https://github.com/MatejZeman02/sara/releases">Download Sara</a></b>
+  <b><a href="#download">Download Sara</a></b>
   &nbsp;·&nbsp;
   <a href="CONTRIBUTING.md#building-sara">Build it yourself</a>
   &nbsp;·&nbsp;
@@ -38,14 +38,16 @@ connection is planned.
 
 ## Download
 
-Every version is on the **[Releases page](https://github.com/MatejZeman02/sara/releases)**. Open the
-newest release, look under **Assets** and take the file for your system.
+Take the file for your system from the table, and the newest release is the
+one it links. Every version is also on the **[Releases page](https://github.com/MatejZeman02/sara/releases)**,
+under **Assets**. The **Source code** zips GitHub adds to every release are not
+Sara to paint with, they are for building it.
 
 | System                       | File                                  | How to start it                                                                                                       |
 | ---------------------------- | ------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| **Windows** 10 or 11, 64-bit | `sara-windows-x86_64-...-release.zip` | Unpack the whole zip into a folder of its own (right-click, **Extract All**) and double-click `sara.exe` inside it.   |
-| **Android** tablet           | `sara-android-...-debug.apk`          | Copy it to the tablet and tap it. Android asks to allow installs from that source once.                               |
-| **Linux**, x86_64            | `Sara-...-x86_64.AppImage`            | Make it executable (`chmod +x` and its name, or tick **Allow executing** in its file properties) and double-click it. |
+| **Windows** 10 or 11, 64-bit | [`sara-windows-x86_64-v1.0.0-alpha.1-7d35bab-release.zip`](https://github.com/MatejZeman02/sara/releases/download/v1.0.0-alpha.1/sara-windows-x86_64-v1.0.0-alpha.1-7d35bab-release.zip) | Unpack the whole zip into a folder of its own (right-click, **Extract All**) and double-click `sara.exe` inside it.   |
+| **Android** tablet           | [`sara-android-v1.0.0-alpha.1-7d35bab-debug.apk`](https://github.com/MatejZeman02/sara/releases/download/v1.0.0-alpha.1/sara-android-v1.0.0-alpha.1-7d35bab-debug.apk)          | Copy it to the tablet and tap it. Android asks to allow installs from that source once.                               |
+| **Linux**, x86_64            | [`Sara-1.0.0-alpha.1-x86_64.AppImage`](https://github.com/MatejZeman02/sara/releases/download/v1.0.0-alpha.1/Sara-1.0.0-alpha.1-x86_64.AppImage)            | Make it executable (`chmod +x` and its name, or tick **Allow executing** in its file properties) and double-click it. |
 
 > [!NOTE]
 > - **The first start** is slower while Sara prepares its brushes for your

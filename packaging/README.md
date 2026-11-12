@@ -146,7 +146,15 @@ themselves are kept in `~/.cache/sara/native`, or `SARA_NATIVE_DIR`, outside
 the tree. `JXL_JOBS` sets the build's jobs and defaults to the machine's
 cores. The Windows library is cross-built on Linux with llvm-mingw:
 `LLVM_MINGW` names the unpacked toolchain, or else the
-`x86_64-w64-mingw32-clang` on `PATH` is used. A Linux library that fails to
+`x86_64-w64-mingw32-clang` on `PATH` is used. A Linux library built by the
+machine's own compiler asks for the machine's glibc, and 1.0.0-alpha.1's asked
+for 2.43, which no Debian had. A build a stranger is handed therefore sets
+`GODOT_LINUX_SDK` to the buildroot SDK Godot builds its own Linux releases
+with, `x86_64-godot-linux-gnu_sdk-buildroot.tar.bz2` from the
+godotengine/buildroot releases, unpacked and with its `relocate-sdk.sh` run
+once. Its glibc is 2.34, so the libraries load on Debian 12, Ubuntu 22.04 and
+anything newer, and no sudo is needed. Without it a dim note says the Linux
+libraries need this machine's glibc. A Linux library that fails to
 build, or a clone with no module checked out, still exports, as a Sara without
 JPEG XL or with LZW unpacked in GDScript, and the build says so in a dim note
 line.
