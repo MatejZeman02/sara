@@ -1,0 +1,87 @@
+# Kernel: pattern_tone
+#
+# The paper's brightness, contrast and cutoff band, baked into the pattern
+# texture so they cost nothing per dab. `SaPatternTone` runs it over the tile
+# `SaDabPattern` just made and binds what comes out.
+#
+# The contrast pivots about the neutral point, by default the tile's own mean
+# (`pattern_mean` averages it into one texel on the card, no readback), because
+# a pivot fixed at a half sends a paper that sits near 0.8 mostly to one.
+# The result is clamped to 0 to 1, where the colour adjustments do not: a
+# texel is coverage, and the dab multiplies its falloff by it.
+# The cutoff band is tested after the tone, as Krita does, so a band does not
+# move under a row that says nothing about it.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel pattern_tone
+kernel pattern_mean
+
+# Both `r32f` rather than the storage token: a pattern is coverage at one float
+# a texel, the format `SaPattern` makes and the format the dab samples, and
+# neither side of this pass is ever the document's own depth.
+image sa_pattern: r32f, readonly
+image sa_toned: r32f
+# One texel: the pattern's mean, written by `pattern_mean` and read as the pivot.
+image sa_mean: r32f
+
+params:
+    # Brightness added after the pivot, contrast as the widening about it, the
+    # neutral point the row names, and one while the pivot is the pattern's own
+    # mean instead. One vec4 because `SaCompute.set_push_constant_float_array`
+    # rounds what it sends up to four floats and the layout reader does not, so
+    # three declared floats would be sent as four and read as twelve bytes.
+    vec4 tone
+
+    # The cutoff band's left and right bound as pattern values, the policy as
+    # `SaPatternTone.Policy`, and one spare, for the same rounding reason. The
+    # policy is a float carrying an integer because the block is floats: nought
+    # leaves every texel alone, one takes a texel outside the band down to
+    # nothing, and two takes it up to full.
+    vec4 cutoff
+
+# At most this many samples along a side of the mean. A shipped tile is 256 and
+# is read texel for texel, and a picture or a scaled tile past that is read on a
+# stride, which moves the mean of a grain by far less than a row can show.
+const int SA_MEAN_SIDE = 256
+
+
+def pattern_tone():
+    ivec2 at = ivec2(global_id.xy)
+    ivec2 size = image_size(sa_toned)
+    if at.x >= size.x or at.y >= size.y:
+        return
+    float value = sa_pattern[at].r
+    float pivot = tone.w > 0.5 ? sa_mean[ivec2(0, 0)].r : tone.z
+    float toned = clamp((value - pivot) * (1.0 + tone.y) + pivot + tone.x, 0.0, 1.0)
+    # A bound is inclusive, so a band of the whole range keeps every texel
+    # whatever the policy says, and a band whose left has passed its right keeps
+    # nothing. Both are settings a painter can reach with two sliders and
+    # neither is an error, so the comparison decides it rather than a guard.
+    int policy = int(cutoff.z + 0.5)
+    if policy != 0 and (toned < cutoff.x or toned > cutoff.y):
+        toned = policy == 1 ? 0.0 : 1.0
+    sa_toned[at] = vec4(toned)
+
+# The tile's mean into one texel, which the tone reads as its pivot. Each row is
+# averaged before the rows are, so a float never sums more than one row's worth
+# of texels and the mean keeps the precision a whole tile summed at once loses.
+
+
+def pattern_mean():
+    # Once and not sixty-four times, for the reason `smudge_pickup` gives: a
+    # dispatch of one group still runs every invocation of the group.
+    if global_id.x != 0 or global_id.y != 0:
+        return
+    ivec2 size = image_size(sa_pattern)
+    int stride_x = max((size.x + SA_MEAN_SIDE - 1) / SA_MEAN_SIDE, 1)
+    int stride_y = max((size.y + SA_MEAN_SIDE - 1) / SA_MEAN_SIDE, 1)
+    int across = (size.x + stride_x - 1) / stride_x
+    int down = (size.y + stride_y - 1) / stride_y
+    float rows = 0.0
+    for sy in range(down):
+        float row = 0.0
+        for sx in range(across):
+            row += sa_pattern[ivec2(sx * stride_x, sy * stride_y)].r
+        rows += row / across
+    sa_mean[ivec2(0, 0)] = vec4(rows / down)

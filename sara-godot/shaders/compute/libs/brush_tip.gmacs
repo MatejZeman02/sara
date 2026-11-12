@@ -1,0 +1,394 @@
+# A brush tip's coverage at a point, and the sharpness cut on it.
+#
+# Library functions a dab kernel of any engine calls to answer "how much of the
+# tip is here". They live here, not in the stamp brush's `dab_masks.gmacs`,
+# because the noise brush samples a tip and cuts it the same way and a module
+# sees the door and nothing else.
+#
+# Every coverage is 1 for opaque and 0 for clear, never outside 0 to 1. Every
+# *point* is in pixels from the dab centre, already in the tip's own rotated
+# frame: the rotation, the mirror (`sa_mirror_signs`) and the spike fold
+# (`sa_fold_into_wedge`) are the caller's to apply, in that order.
+# `sa_apply_threshold` cuts at the half-coverage contour, which never moves, so
+# the painted width does not either.
+#
+# Two bindings the importer declares before the import, because a library
+# cannot declare a binding without renumbering the importer's own:
+#
+#     buffer softness: float curve[]
+#     sampler tip_image
+#
+# A kernel that uses neither generator still declares both, bound to a stand-in,
+# since a function reading an undeclared name fails to compile whether it is
+# called or not.
+#
+# This file imports `erf` itself for the GAUSS generator, so a kernel that wants
+# `sa_erf` leans on this import rather than writing a second.
+#
+# The falloffs are written from the shape they draw, not ported, so the file
+# carries no copyright line but Sara's own.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+import erf
+
+# One vocabulary for every falloff here: how far a point is from the dab
+# centre, measured in units of the ellipse it is being tested against, and
+# squared because not one of them needs the root. One is exactly the ellipse,
+# under one is inside it.
+#
+# The argument is the **reciprocal** of the half-extents rather than the
+# half-extents, so a radius is a multiply and never a divide. That is not only
+# cheaper: at a fade of one the core's reciprocal is the rim's reciprocal
+# unchanged, bit for bit, so a point exactly on the rim reads exactly one
+# against both and an image tip at full hardness keeps its corners.
+
+
+def sa_squared_radius(vec2 point, vec2 inverse_extent) -> float:
+    vec2 scaled = point * inverse_extent
+    return dot(scaled, scaled)
+
+# The core ellipse, as the reciprocal of its half-extents.
+#
+# Fade is the share of the tip given over to falloff, so the core is the rim
+# ellipse scaled by it and the core's reciprocal is the rim's divided by it. A
+# fade of nothing would put the core at a point and its reciprocal at infinity,
+# so it degenerates to a core one pixel across instead. That is the hard end of
+# the slider said in the only way an ellipse can say it.
+
+
+def sa_core_coefficient(vec2 rim_coefficient, vec2 fade) -> vec2:
+    float x = fade.x <= 0.0 ? 1.0 : rim_coefficient.x / fade.x
+    float y = fade.y <= 0.0 ? 1.0 : rim_coefficient.y / fade.y
+    return vec2(x, y)
+
+# The straight ramp that ends an antialiased dab on its own outline. Every
+# falloff here reaches the rim at whatever value its own arithmetic happens to
+# leave there, which on a hard tip is a cliff, so the last pixel is a straight
+# line from that value down to nothing and the outermost ring is never a step.
+# *distance* and the two bounds are in whatever the caller measures in, pixels
+# for the Gaussian and squared radii for the curve.
+
+
+def sa_ramp_to_nothing(float at_start, float distance, float ramp_start, float ends) -> float:
+    return at_start * (1.0 - (distance - ramp_start) / max(ends - ramp_start, 1e-6))
+
+const float SA_PI = 3.14159265358979323846
+
+# A spiked tip is the plain falloff read inside one repeated sector, so the fold
+# is: turn the point back into the first sector and let the falloff answer
+# there. The `spikes` sectors are `2 * pi / spikes` wide and the first reaches
+# `wedge = pi / spikes` either side of the x axis. The caller folds y to its
+# absolute value first, so the angle arrives in 0 to pi, and two spikes is the
+# plain ellipse and skips the fold outright.
+#
+# **A closed form rather than a bounded loop.** A rotation applied one sector at
+# a time needs a cap so a bad `spikes` cannot hang a dispatch. The closed form
+# (one `ceil`, one `cos` and one `sin`) needs none.
+
+
+def sa_fold_into_wedge(vec2 point, float spikes) -> vec2:
+    if spikes <= 2.0:
+        return point
+    float wedge = SA_PI / spikes
+    float angle = atan(point.y, point.x)
+    float sectors = max(0.0, ceil((angle - wedge) / (2.0 * wedge)))
+    float back = -2.0 * wedge * sectors
+    float cs = cos(back)
+    float ss = sin(back)
+    return vec2(cs * point.x - ss * point.y, ss * point.x + cs * point.y)
+
+# The DEFAULT generator's coverage at *point*, which is already folded and in
+# pixels from the dab centre.
+#
+# **The falloff is a straight ramp in the squared radius**, run between the core
+# ellipse and the rim. Everything inside the core is solid, everything outside
+# the rim is nothing, and between them the coverage falls from one to nothing.
+# With *rim* the squared radius against the outline and *core* the squared radius
+# against the core ellipse:
+#
+#     coverage = (1 - rim) / (1 - rim / core)
+#
+# Written against the ratio rather than against the fade, which keeps the
+# arithmetic honest for a tip whose two fades differ and for the pixel the
+# antialiasing adds, and keeps the edge smooth as the ellipse gets thin.
+#
+# **The denominator cannot vanish.** The branches above leave `core > 1` and
+# `rim <= 1`, so `rim / core` is strictly under one. A core that reaches the rim
+# (a fade of one and no antialiasing) is answered before the divide as the hard
+# disc it is. Antialiasing adds a pixel to the absolute coordinates before the
+# core radius and leaves the rim radius alone, so the two are deliberately a
+# pixel out of step and the outermost ring is a ramp rather than a cliff.
+
+
+def sa_circle_coverage(vec2 point, vec2 half_extent, vec2 fade, float antialias) -> float:
+    vec2 rim_coefficient = 1.0 / max(half_extent, vec2(1e-6))
+    float rim = sa_squared_radius(point, rim_coefficient)
+    if rim > 1.0:
+        return 0.0
+
+    vec2 core_coefficient = sa_core_coefficient(rim_coefficient, fade)
+    vec2 measured = antialias > 0.5 ? abs(point) + vec2(1.0) : abs(point)
+    float core = sa_squared_radius(measured, core_coefficient)
+    if core <= 1.0:
+        return 1.0
+
+    return clamp((1.0 - rim) / (1.0 - rim / core), 0.0, 1.0)
+
+# The RECTANGLE outline: the same ramp as the ellipse, once per axis, in the
+# plain radius because a rectangle's edges are straight. **A rectangle is the
+# intersection of two bands**, so the smaller of the two coverages wins. An axis
+# whose point has not left its own core covers it fully and drops out, which is
+# why each is answered by a branch rather than a `min` over two ramps that would
+# have run past their own ends. The antialiasing shift is applied to the core
+# radius and not to the rim radius, exactly as on the ellipse.
+
+
+def sa_rectangle_coverage(vec2 point, vec2 half_extent, vec2 fade, float antialias) -> float:
+    vec2 rim_coefficient = 1.0 / max(half_extent, vec2(1e-6))
+    vec2 absolute = abs(point)
+    vec2 rim = absolute * rim_coefficient
+    if rim.x > 1.0 or rim.y > 1.0:
+        return 0.0
+
+    vec2 core_coefficient = sa_core_coefficient(rim_coefficient, fade)
+    vec2 measured = antialias > 0.5 ? absolute + vec2(1.0) : absolute
+    vec2 core = measured * core_coefficient
+
+    float across = 1.0
+    if core.x > 1.0:
+        across = (1.0 - rim.x) / (1.0 - rim.x / core.x)
+    float down = 1.0
+    if core.y > 1.0:
+        down = (1.0 - rim.y) / (1.0 - rim.y / core.y)
+    return clamp(min(across, down), 0.0, 1.0)
+
+# The blur the GAUSS generator's edge is, as a fraction of the dab's radius at
+# a fade of one. It is the generator's one measured number and everything else
+# about it follows from the shape below.
+const float SA_GAUSS_BLUR = 0.27044
+
+# How much of a Gaussian's tail counts as reaching somewhere. Past two and a
+# half standard deviations 98.8 percent of the mass is behind you, which is the
+# distance at which a blurred edge has finished being an edge.
+const float SA_GAUSS_TAIL = 2.5
+
+const float SA_SQRT_2 = 1.41421356237309504880
+
+# The floor the derived blur is held at, and it is the softest hard edge Sara
+# offers rather than a guard on a division. At a blur of nothing the two error
+# functions below separate so far that every texel but the exact centre reads
+# clear, which is a spike and not a disc. Measured on this kernel at a
+# half-extent of 20, a floor of 0.05 puts the half-coverage ring at 19.3 pixels
+# of 20, which is the hard edge the slider was asking for.
+const float SA_GAUSS_MIN_FADE = 0.05
+
+# The GAUSS generator, at a *dist* already measured in pixels along the major
+# axis.
+#
+# **It is a hard disc blurred, and that is the whole of it.** Take a solid disc
+# of radius *core*, blur it with a Gaussian of standard deviation *sigma*, and
+# read the result at *dist*. The blur of a segment is the difference of two
+# error functions across its ends, which is the integral of the bell over the
+# texel rather than its height at the texel's centre, and that is why this
+# generator has no corner where the DEFAULT one does. Dividing by the value at
+# the centre is what puts the middle of the dab at exactly one.
+#
+# **The core is pulled in by the blur it is about to be given.** `SA_GAUSS_TAIL`
+# standard deviations is where a blurred edge has finished spreading, so a core
+# that ends that far inside the rim spreads out to the rim and no further, and
+# the dab still ends where the Size row says it does. That single sentence is
+# where both of the numbers below come from: `core = radius - 2.5 * sigma`, and
+# `sigma` is the blur fraction times the radius.
+#
+# Fade reaches this generator as a hardness rather than as a fade, which is the
+# one place the four disagree, so the blur is driven by its complement.
+#
+# Distance is measured in pixels along the major axis, with the minor axis
+# squashed into it rather than both normalised, so the blur is a blur of a
+# fixed number of pixels and stays one on a thin ellipse.
+
+
+def sa_gauss_at(float dist, float core, float spread, float peak) -> float:
+    float lit = sa_erf((core + dist) / spread) - sa_erf((dist - core) / spread)
+    return clamp(lit / peak, 0.0, 1.0)
+
+
+def sa_gauss_coverage(vec2 point, vec2 half_extent, vec2 fade, float antialias) -> float:
+    float radius = max(half_extent.x, 1e-6)
+    float squash = radius / max(half_extent.y, 1e-6)
+    float dist = length(vec2(point.x, point.y * squash))
+    if dist > radius:
+        return 0.0
+
+    float blur = max(SA_GAUSS_MIN_FADE, 1.0 - 0.5 * (fade.x + fade.y))
+    float sigma = SA_GAUSS_BLUR * blur * radius
+    float core = radius - SA_GAUSS_TAIL * sigma
+    # The error function takes its argument in units of sigma root two, so the
+    # division below is by that rather than by sigma, and `peak` is twice the
+    # value at the centre because the two ends contribute one each.
+    float spread = SA_SQRT_2 * sigma
+    float peak = 2.0 * sa_erf(core / spread)
+    float coverage = sa_gauss_at(dist, core, spread, peak)
+
+    float ramp_start = max(0.0, radius - 1.0)
+    if antialias > 0.5 and dist > ramp_start:
+        coverage = sa_ramp_to_nothing(sa_gauss_at(ramp_start, core, spread, peak), dist, ramp_start, radius)
+    return clamp(coverage, 0.0, 1.0)
+
+# One reading of the falloff the painter drew, linear between neighbours, at a
+# squared normalised radius.
+#
+# The SOFT generator has no closed form because its curve is a picture rather
+# than a formula, so the table is the falloff and this is the whole of reading
+# it. The table's own length sets its resolution, and the argument is the same
+# squared radius the DEFAULT generator ramps against, which is why the curve a
+# painter draws against distance shows up against distance squared.
+
+
+def sa_softness_at(float squared_radius) -> float:
+    float last = float(softness.curve.length() - 1)
+    float at = clamp(squared_radius, 0.0, 1.0) * last
+    int lower = int(floor(at))
+    int upper = min(lower + 1, int(last))
+    float t = at - lower
+    return clamp(mix(softness.curve[lower], softness.curve[upper], t), 0.0, 1.0)
+
+# The SOFT generator: the drawn falloff, read at the point's own squared
+# radius, and ended on the outline the same way the others are.
+#
+# **Its edge ramp starts at a squared radius rather than a pixel**, because
+# that is the axis this generator measures in and a ramp has to start where the
+# thing it ramps is defined. One pixel inside the rim is `1 - 1 / half_extent`
+# of the way out on an axis, the two axes are averaged because the ramp is one
+# number, and squaring it puts it back on the curve's own scale.
+
+
+def sa_soft_coverage(vec2 point, vec2 half_extent, float antialias) -> float:
+    vec2 rim_coefficient = 1.0 / max(half_extent, vec2(1e-6))
+    float rim = sa_squared_radius(point, rim_coefficient)
+    if rim > 1.0:
+        return 0.0
+
+    float coverage = sa_softness_at(rim)
+    if antialias > 0.5:
+        vec2 inside = max(vec2(0.0), vec2(1.0) - rim_coefficient)
+        float ramp_start = 0.5 * (inside.x + inside.y)
+        ramp_start *= ramp_start
+        if rim > ramp_start:
+            coverage = sa_ramp_to_nothing(sa_softness_at(ramp_start), rim, ramp_start, 1.0)
+    return clamp(coverage, 0.0, 1.0)
+
+# The two mirror bits as a pair of signs. Bit 0 flips the tip's x axis and
+# bit 1 its y, and a multiply is cheaper than two branches for the same reason
+# the sharpness threshold is not a branch.
+#
+# **A procedural tip is symmetric about both its own axes**, because every
+# generator here squares the coordinate or takes its absolute value, so on its
+# own a mirror changes nothing a reader can see. What it changes is the spike
+# fold, which is not symmetric in x, and the rotation the CPU negates alongside
+# it. The bits are read here because the image tip is the one that needs them.
+
+
+def sa_mirror_signs(float bits) -> vec2:
+    int mask = int(bits + 0.5)
+    return vec2((mask & 1) != 0 ? -1.0 : 1.0, (mask & 2) != 0 ? -1.0 : 1.0)
+
+# The IMAGE generator: the tip's own picture, sampled at the point mapped
+# into the texture's 0 to 1, and softened by Hardness.
+#
+# *point* is in pixels from the dab centre in the tip's rotated, mirrored frame,
+# so the map is a divide by the diameter and a shift, and the size, the rotation
+# and the ratio are already in it. Outside the tip's own rectangle the answer is
+# nothing rather than the clamped edge texel, which a `CLAMP_TO_EDGE` sampler
+# would smear across the whole dab box.
+#
+# **Hardness is an AND, not a replacement.** The picture's own coverage is the
+# mask, and the slider multiplies it by the DEFAULT generator's falloff on
+# *falloff_radius*, which is the ellipse through the corners of the picture's
+# own rectangle rather than the one inscribed in it. Through the corners is what
+# makes full hardness paint the picture unchanged: the squared radius reads
+# exactly 1 there, one is not past one, and at a fade of one the whole rectangle
+# is core. The inscribed ellipse would have cut the corners off at every
+# setting, which is a round tip rather than a hard one. Because the ellipse is
+# fitted to the rectangle, a tip squashed by its ratio softens along its own
+# outline rather than along a circle.
+#
+# **The falloff is asked for without antialiasing** whatever the tip's own
+# setting is, and that is not the same as switching antialiasing off. The one
+# pixel the ramp adds before the core radius exists to soften a hard edge, and
+# this falloff has no edge to soften: the picture's own coverage is what ends
+# the dab, it is already antialiased by the sampler, and adding the pixel here
+# would instead drop the corner texels to nothing at full hardness, where full
+# hardness has to paint the picture unchanged.
+#
+# **The spike fold is not applied to an image tip**, unlike every generator
+# beside it. A fold mirrors the picture about its own axes, which is a different
+# tip rather than a spiked one, so an image tip is read before the fold.
+
+
+def sa_image_coverage(vec2 point, vec2 half_extent, vec2 falloff_radius, vec2 fade) -> float:
+    vec2 uv = point / max(half_extent * 2.0, vec2(1e-6)) + vec2(0.5)
+    if uv.x < 0.0 or uv.x > 1.0 or uv.y < 0.0 or uv.y > 1.0:
+        return 0.0
+    float picture = clamp(texture(tip_image, uv).r, 0.0, 1.0)
+    return picture * sa_circle_coverage(point, falloff_radius, fade, 0.0)
+
+# The coverage contour sharpness binarises at.
+# A half is what an antialiased edge means by an edge: the ring where the tip
+# is half covered is the one a painter reads as the outline, and it is where
+# `SA_GAUSS_MIN_FADE` above is already reasoned about. Fixing the cut here
+# rather than letting it slide with the dial is what keeps the painted width
+# the same at every sharpness.
+const float SA_SHARPNESS_CONTOUR = 0.5
+
+# The half of sharpness that is a mask rather than a position. The other half
+# snaps the dab centre and is the calling engine's to do on the CPU, because
+# the box has to be computed from the snapped centre.
+#
+# **The cut is made at the tip's own half-coverage contour and does not move.**
+# A cut placed at `1 - sharpness` instead walks the boundary from the centre of
+# the dome out to its rim as the dial rises, and the painted disc grows with it
+# while the Size row says nothing. Measured on one 129.6 pixel tip that is 90
+# pixels of ink at sharpness 0.35 and 128 at 1.00, a brush 30 percent narrower
+# than its own number at one end of the dial. The half-coverage contour is
+# what an antialiased edge means by an edge and what a painter reads off the
+# screen with a ruler, so it is the contour the size rule is stated in, and it
+# is fixed.
+#
+# What sharpness moves instead is **how wide a band of coverage survives around
+# that contour**. Zero leaves the whole range, so the dab is the dome untouched
+# and a painter's existing brushes are safe. One closes the band to nothing, so
+# the dab is a binary disc at the contour, which is the pen. In between the band
+# narrows towards the contour from both sides at once, which steepens the edge
+# without moving the ring where it crosses a half. Softness pulls the lower edge
+# back down so a small pen does not alias away, under the fixed contour rather
+# than under a moving one.
+#
+# **What this costs.** The rule that a softness of zero is a hard cut at every
+# sharpness is gone, and it had to be: a cut hard at every sharpness is a cut
+# that has to move to do anything, and moving it is the defect. A hard cut is
+# now what a sharpness of one means. The one assertion in `test_dab_shader.gd`
+# that measured it at a half measures it at one now, and says why.
+#
+# **A remap and a clamp, not two branches.** A divergent branch per texel inside
+# an 8 by 8 workgroup costs more than the arithmetic it saves, and both sides of
+# it are evaluated anyway, so the cut is one subtraction, one divide and a
+# clamp.
+
+
+def sa_apply_threshold(float coverage, float sharpness, float softness) -> float:
+    if sharpness <= 0.0:
+        return coverage
+    float s = clamp(sharpness, 0.0, 1.0)
+    # The two edges close on the contour rather than sliding along the dome.
+    # At a sharpness of zero they are one and nothing, so the remap below is
+    # the identity and a painter's existing brushes are untouched. At one they
+    # meet, and the remap is a step at the contour.
+    float high = mix(1.0, SA_SHARPNESS_CONTOUR, s)
+    float low = mix(0.0, SA_SHARPNESS_CONTOUR * (1.0 - clamp(softness, 0.0, 1.0)), s)
+    # The output crosses a half exactly where the coverage does, at every
+    # sharpness, because both edges are the same distance either side of the
+    # contour until softness pulls the lower one down. That is the painted
+    # width holding still.
+    return clamp((coverage - low) / max(high - low, 1e-6), 0.0, 1.0)

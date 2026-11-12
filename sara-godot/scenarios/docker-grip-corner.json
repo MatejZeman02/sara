@@ -1,0 +1,251 @@
+[
+ {
+  "wait": 30
+ },
+ {
+  "layout_preset": {
+   "delete": "full (custom)"
+  }
+ },
+ {
+  "layout_preset": {
+   "load": "full"
+  }
+ },
+ {
+  "wait": 30
+ },
+ {
+  "state": "every-docker-at-its-default"
+ },
+ {
+  "shot": "every-docker-at-its-default"
+ },
+ {
+  "docker_resize": {
+   "id": "ToolBoxDocker",
+   "by": [
+    -600,
+    -600
+   ],
+   "grip": true
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "docker_resize": {
+   "id": "LayersDocker",
+   "by": [
+    -600,
+    -600
+   ],
+   "grip": true
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "docker_resize": {
+   "id": "ColorDocker",
+   "by": [
+    -600,
+    -600
+   ],
+   "grip": true
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "docker_resize": {
+   "id": "InfoDocker",
+   "by": [
+    -600,
+    -600
+   ],
+   "grip": true
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "docker_resize": {
+   "id": "RecorderDocker",
+   "by": [
+    -600,
+    -600
+   ],
+   "grip": true
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "docker_resize": {
+   "id": "MinimapDocker",
+   "by": [
+    -600,
+    -600
+   ],
+   "grip": true
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "docker_resize": {
+   "id": "ToolOptionsDocker",
+   "by": [
+    -600,
+    -600
+   ],
+   "grip": true
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "docker_resize": {
+   "id": "GraphDocker",
+   "by": [
+    -600,
+    -600
+   ],
+   "grip": true
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "docker_resize": {
+   "id": "HistoryDocker",
+   "by": [
+    -600,
+    -600
+   ],
+   "grip": true
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "docker_resize": {
+   "id": "ReferenceDocker",
+   "by": [
+    -600,
+    -600
+   ],
+   "grip": true
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "docker": {
+   "id": "BrushPresetsDocker"
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "docker_resize": {
+   "id": "BrushPresetsDocker",
+   "by": [
+    -600,
+    -600
+   ],
+   "grip": true
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "wait": 15
+ },
+ {
+  "state": "every-docker-at-its-smallest"
+ },
+ {
+  "shot": "every-docker-at-its-smallest"
+ },
+ {
+  "layout_preset": {
+   "load": "full"
+  }
+ },
+ {
+  "wait": 30
+ },
+ {
+  "state": "before-the-clicks"
+ },
+ {
+  "click": {
+   "at": [
+    1893,
+    976
+   ]
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "a-click-on-the-layers-more-button"
+ },
+ {
+  "shot": "a-click-on-the-layers-more-button"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 8
+ },
+ {
+  "state": "before-the-second-click"
+ },
+ {
+  "click": {
+   "at": [
+    1884,
+    388
+   ]
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "a-click-on-the-pickers-hex-input"
+ },
+ {
+  "shot": "a-click-on-the-pickers-hex-input"
+ },
+ {
+  "layout_preset": {
+   "load": "default"
+  }
+ },
+ {
+  "wait": 25
+ },
+ {
+  "layout_preset": {
+   "delete": "full (custom)"
+  }
+ }
+]

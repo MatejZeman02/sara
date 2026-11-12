@@ -1,0 +1,152 @@
+[
+  {
+    "wait": 35
+  },
+  {
+    "answer": 2
+  },
+  {
+    "wait": 8
+  },
+  {
+    "open": "preferences"
+  },
+  {
+    "wait": 16
+  },
+  {
+    "page": "Keyboard Shortcuts"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "shortcut_profile": "Sara Default"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "key": {
+      "key": "comma",
+      "ctrl": true
+    }
+  },
+  {
+    "wait": 16
+  },
+  {
+    "tool": "brush"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "state": "0-brush-on-the-canvas-preferences-closed"
+  },
+  {
+    "key": {
+      "key": "comma",
+      "ctrl": true
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "state": "1-preferences-open"
+  },
+  {
+    "key": {
+      "key": "t",
+      "ctrl": true
+    }
+  },
+  {
+    "wait": 16
+  },
+  {
+    "state": "2-ctrl-t-with-preferences-focused"
+  },
+  {
+    "key": {
+      "key": "u",
+      "ctrl": true
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "state": "3-ctrl-u-with-preferences-focused"
+  },
+  {
+    "key": {
+      "key": "z",
+      "ctrl": true
+    }
+  },
+  {
+    "wait": 16
+  },
+  {
+    "state": "4-ctrl-z-with-preferences-focused"
+  },
+  {
+    "key": "f"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "key": {
+      "key": "b",
+      "shift": true
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "state": "5-a-bare-tool-key-and-shift-b-with-preferences-open"
+  },
+  {
+    "key": {
+      "key": "comma",
+      "ctrl": true
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "state": "6-ctrl-comma-still-closes-preferences"
+  },
+  {
+    "key": {
+      "key": "t",
+      "ctrl": true
+    }
+  },
+  {
+    "wait": 16
+  },
+  {
+    "state": "7-ctrl-t-on-the-canvas-still-works"
+  },
+  {
+    "key": "escape"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "key": "b"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "state": "8-back-to-the-brush"
+  }
+]

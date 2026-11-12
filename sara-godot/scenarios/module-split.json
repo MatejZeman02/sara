@@ -1,0 +1,12 @@
+[
+  {"wait": 35},
+  {"docker": "park"},
+  {"wait": 10},
+  {"state": "1-as-started"},
+  {"colour": "#d84a2a"},
+  {"brush": {"radius": 0.05}},
+  {"stroke": {"from": [380, 800], "to": [1080, 900], "pressure": 0.9, "steps": 24}},
+  {"wait": 40},
+  {"shot": "2-a-stroke-still-paints"},
+  {"state": "2-a-stroke-still-paints"}
+]

@@ -1,0 +1,407 @@
+[
+  {
+    "wait": 30
+  },
+  {
+    "docker": "park"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "document": "srgb"
+  },
+  {
+    "wait": 25
+  },
+  {
+    "fit": true
+  },
+  {
+    "wait": 10
+  },
+  {
+    "layer": {
+      "activate": "Background"
+    }
+  },
+  {
+    "layer": {
+      "fill": [
+        0.25,
+        0.25,
+        0.25,
+        1.0
+      ],
+      "chunks": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          0,
+          4
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          2,
+          4
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ],
+        [
+          4,
+          2
+        ],
+        [
+          4,
+          3
+        ],
+        [
+          4,
+          4
+        ],
+        [
+          6,
+          0
+        ],
+        [
+          6,
+          1
+        ],
+        [
+          6,
+          2
+        ],
+        [
+          6,
+          3
+        ],
+        [
+          6,
+          4
+        ]
+      ]
+    }
+  },
+  {
+    "layer": {
+      "fill": [
+        0.65,
+        0.65,
+        0.65,
+        1.0
+      ],
+      "chunks": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          3,
+          3
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          5,
+          0
+        ],
+        [
+          5,
+          1
+        ],
+        [
+          5,
+          2
+        ],
+        [
+          5,
+          3
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          7,
+          0
+        ],
+        [
+          7,
+          1
+        ],
+        [
+          7,
+          2
+        ],
+        [
+          7,
+          3
+        ],
+        [
+          7,
+          4
+        ]
+      ]
+    }
+  },
+  {
+    "wait": 15
+  },
+  {
+    "shot": "0-the-banded-backdrop"
+  },
+  {
+    "layer": {
+      "activate": "Layer 1"
+    }
+  },
+  {
+    "colour": "#ff8000"
+  },
+  {
+    "tool": {
+      "id": "brush",
+      "options": {
+        "radius": 0.035,
+        "hardness": 1.0,
+        "opacity": 1.0,
+        "spacing": 0.08,
+        "flow": 1.0,
+        "painting_mode": 0
+      }
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "stroke": {
+      "from": [
+        320,
+        380
+      ],
+      "to": [
+        1440,
+        380
+      ],
+      "pressure": 1.0,
+      "steps": 48
+    }
+  },
+  {
+    "wait": 25
+  },
+  {
+    "shot": "1-the-stroke-under-normal"
+  },
+  {
+    "state": "1-the-stroke-under-normal"
+  },
+  {
+    "comment": "The module's mode is set on Layer 1 from the Layers docker's own blend dropdown, searched and picked there, rather than by a layer step with the docker parked"
+  },
+  {
+    "docker": {
+      "id": "LayersDocker",
+      "at": [
+        1600,
+        105
+      ]
+    }
+  },
+  {
+    "wait": 16
+  },
+  {
+    "click": {
+      "control": "BlendModeOpt"
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "key": {
+      "key": "H",
+      "shape": "label"
+    }
+  },
+  {
+    "wait": 3
+  },
+  {
+    "key": {
+      "key": "A",
+      "shape": "label"
+    }
+  },
+  {
+    "wait": 3
+  },
+  {
+    "key": {
+      "key": "R",
+      "shape": "label"
+    }
+  },
+  {
+    "wait": 3
+  },
+  {
+    "key": {
+      "key": "D",
+      "shape": "label"
+    }
+  },
+  {
+    "wait": 16
+  },
+  {
+    "shot": "1b-the-layers-own-dropdown-offers-hard-mix"
+  },
+  {
+    "choice": {
+      "pick": 15
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "shot": "2-the-same-stroke-under-the-modules-mode"
+  },
+  {
+    "state": "2-the-same-stroke-under-the-modules-mode"
+  },
+  {
+    "layer": {
+      "blend": "normal"
+    }
+  },
+  {
+    "wait": 15
+  },
+  {
+    "blend": "Contrast"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "shot": "3-the-blend-list-the-same-one-a-built-in-comes-from"
+  },
+  {
+    "blend_row": "hard_mix!"
+  },
+  {
+    "wait": 15
+  },
+  {
+    "shot": "4-the-modules-mode-at-the-top-of-the-list"
+  },
+  {
+    "blend_row": "hard_mix_fav"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "shot": "5-the-bar-reads-hard-mix"
+  },
+  {
+    "layer": {
+      "activate": "Background"
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "stroke": {
+      "from": [
+        320,
+        700
+      ],
+      "to": [
+        1440,
+        700
+      ],
+      "pressure": 1.0,
+      "steps": 48
+    }
+  },
+  {
+    "wait": 25
+  },
+  {
+    "shot": "6-the-brush-blends-with-the-modules-kernel"
+  },
+  {
+    "state": "6-the-brush-blends-with-the-modules-kernel"
+  }
+]

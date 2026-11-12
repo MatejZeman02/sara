@@ -1,0 +1,23 @@
+[
+  {"wait": 40},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 15},
+  {"document": "srgb"},
+  {"wait": 12},
+  {"layer": {"add": "Paper", "type": "paper", "generator": {"color": [0.31, 0.27, 0.22, 1.0], "second": [0.45, 0.40, 0.33, 1.0]}}},
+  {"layer": {"add": "Ink"}},
+  {"wait": 10},
+  {"colour": [0.85, 0.75, 0.55]},
+  {"tool": {"id": "brush", "options": {"radius": 0.03, "hardness": 1.0, "opacity": 1.0, "flow": 1.0, "spacing": 0.12}}},
+  {"wait": 10},
+  {"stroke": {"from": [500, 400], "to": [900, 500], "pressure": 1.0}},
+  {"wait": 10},
+  {"control": {"name": "GroundChoice"}},
+  {"shot": "toned-paper-in-the-dialog"},
+  {"control": {"name": "GroundChoice", "value": "canvas"}},
+  {"wait": 20},
+  {"layers": true},
+  {"zoom": 4.0},
+  {"wait": 20},
+  {"shot": "canvas-keeps-the-tone"}
+]

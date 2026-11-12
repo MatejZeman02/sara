@@ -1,0 +1,18 @@
+[
+  {"wait": 30},
+  {"comment": "File > Import Picture over a JPEG carrying an Adobe RGB profile shows the row on that profile and a line naming it, and over a JPEG carrying a lookup table profile shows the line saying why the profile was not used."},
+  {"prefs": {"import_fit": "ask"}},
+  {"open": "import_fit", "picture": "res://core/image/tests/fixtures/profiled/adobe_rgb.jpg"},
+  {"wait": 15},
+  {"shot": "an-adobe-rgb-jpeg-names-its-profile"},
+  {"state": "an-adobe-rgb-jpeg-names-its-profile"},
+  {"key": "escape"},
+  {"wait": 10},
+
+  {"open": "import_fit", "picture": "res://core/image/tests/fixtures/profiled/lookup_table.jpg"},
+  {"wait": 15},
+  {"shot": "a-lookup-table-profile-is-set-aside-with-its-reason"},
+  {"state": "a-lookup-table-profile-is-set-aside-with-its-reason"},
+  {"key": "escape"},
+  {"wait": 10}
+]

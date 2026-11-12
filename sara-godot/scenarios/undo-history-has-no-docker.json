@@ -1,0 +1,147 @@
+[
+  {
+    "wait": 35
+  },
+  {
+    "docker": "park"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "menu": "Window"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "state": "1-the-dockers-menu-offers-undo-history"
+  },
+  {
+    "shot": "1-the-dockers-menu-offers-undo-history"
+  },
+  {
+    "key": "escape"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "docker": {
+      "id": "UndoDocker",
+      "at": [
+        1400,
+        140
+      ],
+      "size": [
+        280,
+        340
+      ]
+    }
+  },
+  {
+    "wait": 16
+  },
+  {
+    "state": "2-an-empty-stack-under-an-opening-row"
+  },
+  {
+    "shot": "2-an-empty-stack-under-an-opening-row"
+  },
+  {
+    "colour": "#ffffff"
+  },
+  {
+    "tool": {
+      "id": "brush",
+      "options": {
+        "radius": 0.05,
+        "hardness": 1.0
+      }
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "stroke": {
+      "from": [
+        300,
+        300
+      ],
+      "to": [
+        800,
+        320
+      ],
+      "pressure": 1.0,
+      "steps": 10
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "stroke": {
+      "from": [
+        300,
+        500
+      ],
+      "to": [
+        800,
+        520
+      ],
+      "pressure": 1.0,
+      "steps": 10
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "stroke": {
+      "from": [
+        300,
+        700
+      ],
+      "to": [
+        800,
+        720
+      ],
+      "pressure": 1.0,
+      "steps": 10
+    }
+  },
+  {
+    "wait": 24
+  },
+  {
+    "state": "3-three-strokes-are-three-rows"
+  },
+  {
+    "shot": "3-three-strokes-are-three-rows"
+  },
+  {
+    "undo": 2
+  },
+  {
+    "wait": 24
+  },
+  {
+    "state": "4-two-undos-move-the-marked-row-back"
+  },
+  {
+    "shot": "4-two-undos-move-the-marked-row-back"
+  },
+  {
+    "redo": 1
+  },
+  {
+    "wait": 24
+  },
+  {
+    "state": "5-a-redo-moves-it-forward-again"
+  },
+  {
+    "shot": "5-a-redo-moves-it-forward-again"
+  }
+]

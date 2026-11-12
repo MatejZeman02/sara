@@ -1,0 +1,74 @@
+[
+  {
+    "comment": "Tool Options draws an on or off row as a switch with its state. The brush's Tool Options docker at 1280 by 1024, where the bar sends the eraser to the bar's overflow and so the docker draws its Erase row. The row reads Off beside its icon, sized as a switch at the start of the value column rather than stretched across it. Then E turns the eraser on and the row reads On, pressed, at the same width."
+  },
+  {
+    "window": [
+      1280,
+      1024
+    ]
+  },
+  {
+    "wait": 60
+  },
+  {
+    "document": "srgb"
+  },
+  {
+    "wait": 20
+  },
+  {
+    "prefs": {
+      "ui_scale": 1.0
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "tool": "brush"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "docker": {
+      "id": "ToolOptionsDocker",
+      "at": [
+        600,
+        100
+      ],
+      "size": [
+        320,
+        560
+      ]
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "state": "1-erase-off"
+  },
+  {
+    "shot": "1-erase-off"
+  },
+  {
+    "key": "e"
+  },
+  {
+    "wait": 15
+  },
+  {
+    "state": "2-erase-on"
+  },
+  {
+    "shot": "2-erase-on"
+  },
+  {
+    "look": {
+      "path": "look-erase-on.png",
+      "long_edge": 800
+    }
+  }
+]

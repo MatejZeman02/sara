@@ -1,0 +1,41 @@
+[
+  {
+    "comment": "The welcome window's recent cards draw a picture for files that carry none of their own. A document is painted and saved by the capture's own save step, which writes a v4 file with no preview in it, the shape every .sad written before the fix and every picture opened as a document has, and a second path is on the list that has never been opened at all. The first card has a picture and the second has the placeholder: the document is live, so it was read back into the cache, and nothing has ever looked at the other. File > Save is then pressed, which writes the file's own preview, and the first card is drawn from the file instead, which is how the two faults the row asks to tell apart are told apart here: a picture written and not read shows as a card that stays empty after a save, and a file that has none shows as one that gains a picture from the cache. The picture is then opened as a document through File > Open and the second card gains a picture the same way, from a document that is nameless on purpose because there is no .sad behind it. The state beside each shot carries the grid's own report, which says for every card whether it drew a picture and which of the two places it came from."
+  },
+  {"wait": 35},
+  {"stroke": {"from": [500, 400], "to": [900, 520], "pressure": 1.0, "steps": 24}},
+  {"wait": 10},
+  {"save": "user://d5-no-preview.sad"},
+  {"wait": 10},
+  {
+    "prefs":
+    {
+      "recent_file_paths": ["user://d5-no-preview.sad", "res://tests/data/import_gradient.png"]
+    }
+  },
+  {"wait": 6},
+  {"open": "welcome"},
+  {"wait": 20},
+  {"shot": "1-the-live-document-has-a-picture-and-the-file-that-was-never-opened-does-not"},
+  {"state": "1-the-live-document-has-a-picture-and-the-file-that-was-never-opened-does-not"},
+  {"click": {"control": "WelcomeClose"}},
+  {"wait": 10},
+  {"menu_item": {"menu": "File", "id": 201}},
+  {"wait": 20},
+  {"open": "welcome"},
+  {"wait": 20},
+  {"shot": "2-a-save-writes-the-file-its-own-preview-and-the-card-reads-that"},
+  {"state": "2-a-save-writes-the-file-its-own-preview-and-the-card-reads-that"},
+  {"click": {"control": "WelcomeClose"}},
+  {"wait": 10},
+  {"menu_item": {"menu": "File", "id": 200}},
+  {"wait": 8},
+  {"file_picker": {"choose": "res://tests/data/import_gradient.png"}},
+  {"wait": 12},
+  {"key": "enter"},
+  {"wait": 25},
+  {"open": "welcome"},
+  {"wait": 20},
+  {"shot": "3-the-picture-opened-as-a-document-has-one-too"},
+  {"state": "3-the-picture-opened-as-a-document-has-one-too"}
+]

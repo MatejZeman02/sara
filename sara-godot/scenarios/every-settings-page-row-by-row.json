@@ -1,0 +1,982 @@
+[
+  {
+    "wait": 30
+  },
+  {
+    "comment": "Opening Preferences, one page at a time, row by row."
+  },
+  {
+    "open": "preferences"
+  },
+  {
+    "wait": 20
+  },
+  {
+    "shot": "00-preferences-default"
+  },
+  {
+    "state": "00-preferences-default"
+  },
+  {
+    "comment": "The search box, against words a painter would actually type."
+  },
+  {
+    "prefs_search": "undo"
+  },
+  {
+    "wait": 8
+  },
+  {
+    "shot": "00-search-0-undo"
+  },
+  {
+    "state": "00-search-0-undo"
+  },
+  {
+    "prefs_search": "autosave"
+  },
+  {
+    "wait": 8
+  },
+  {
+    "shot": "00-search-1-autosave"
+  },
+  {
+    "state": "00-search-1-autosave"
+  },
+  {
+    "prefs_search": "pressure"
+  },
+  {
+    "wait": 8
+  },
+  {
+    "shot": "00-search-2-pressure"
+  },
+  {
+    "state": "00-search-2-pressure"
+  },
+  {
+    "prefs_search": "grid"
+  },
+  {
+    "wait": 8
+  },
+  {
+    "shot": "00-search-3-grid"
+  },
+  {
+    "state": "00-search-3-grid"
+  },
+  {
+    "prefs_search": "krita"
+  },
+  {
+    "wait": 8
+  },
+  {
+    "shot": "00-search-4-krita"
+  },
+  {
+    "state": "00-search-4-krita"
+  },
+  {
+    "prefs_search": "exposure"
+  },
+  {
+    "wait": 8
+  },
+  {
+    "shot": "00-search-5-exposure"
+  },
+  {
+    "state": "00-search-5-exposure"
+  },
+  {
+    "prefs_search": "brush size"
+  },
+  {
+    "wait": 8
+  },
+  {
+    "shot": "00-search-6-brush-size"
+  },
+  {
+    "state": "00-search-6-brush-size"
+  },
+  {
+    "prefs_search": "close"
+  },
+  {
+    "wait": 8
+  },
+  {
+    "shot": "00-search-7-close"
+  },
+  {
+    "state": "00-search-7-close"
+  },
+  {
+    "prefs_search": ""
+  },
+  {
+    "wait": 8
+  },
+  {
+    "page": "General"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "shot": "01-general"
+  },
+  {
+    "state": "01-general"
+  },
+  {
+    "page_row": {
+      "row": "folder"
+    }
+  },
+  {
+    "page_row": {
+      "row": "advanced",
+      "value": true
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "01b-general-advanced-on"
+  },
+  {
+    "state": "01b-general-advanced-on"
+  },
+  {
+    "page_row": {
+      "row": "advanced",
+      "value": false
+    }
+  },
+  {
+    "page_row": {
+      "row": "show_last_session",
+      "value": false
+    }
+  },
+  {
+    "page_row": {
+      "row": "show_last_session",
+      "value": true
+    }
+  },
+  {
+    "page_row": {
+      "row": "history_depth",
+      "value": 5
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "state": "01c-general-history-depth-5"
+  },
+  {
+    "page": "Files"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "shot": "02-files"
+  },
+  {
+    "state": "02-files"
+  },
+  {
+    "page_row": {
+      "row": "previous_versions_kept"
+    }
+  },
+  {
+    "page_row": {
+      "row": "autosave_every"
+    }
+  },
+  {
+    "page_row": {
+      "row": "autosave_writes_the_working_file"
+    }
+  },
+  {
+    "page_row": {
+      "row": "fit_a_dropped_or_pasted_picture"
+    }
+  },
+  {
+    "page_row": {
+      "row": "export_author",
+      "value": "Test Painter"
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "state": "02b-files-author"
+  },
+  {
+    "page": "Performance"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "shot": "03-performance"
+  },
+  {
+    "state": "03-performance"
+  },
+  {
+    "performance": "read"
+  },
+  {
+    "performance": "light"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "03b-performance-light"
+  },
+  {
+    "state": "03b-performance-light"
+  },
+  {
+    "performance": "defaults"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "03c-performance-defaults"
+  },
+  {
+    "state": "03c-performance-defaults"
+  },
+  {
+    "page_row": {
+      "row": "painting_frame_rate"
+    }
+  },
+  {
+    "page_row": {
+      "row": "half_size_view_while_moving",
+      "value": true
+    }
+  },
+  {
+    "page_row": {
+      "row": "half_size_view_while_moving",
+      "value": false
+    }
+  },
+  {
+    "page_row": {
+      "row": "thumbnails_while_painting"
+    }
+  },
+  {
+    "page": "Timelapse"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "shot": "04-timelapse"
+  },
+  {
+    "state": "04-timelapse"
+  },
+  {
+    "page_row": {
+      "row": "folder"
+    }
+  },
+  {
+    "page_row": {
+      "row": "settle",
+      "value": 5.0
+    }
+  },
+  {
+    "page_row": {
+      "row": "cap",
+      "value": 500
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "state": "04b-timelapse-driven"
+  },
+  {
+    "page": "Presets"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "shot": "05-presets"
+  },
+  {
+    "state": "05-presets"
+  },
+  {
+    "page": "Brush Slots"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "shot": "06-brush-slots"
+  },
+  {
+    "state": "06-brush-slots"
+  },
+  {
+    "brush_slot": {}
+  },
+  {
+    "brush_slot": {
+      "slot": 1,
+      "clear": true
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "shot": "06b-brush-slots-clear"
+  },
+  {
+    "state": "06b-brush-slots-clear"
+  },
+  {
+    "page": "Layers"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "shot": "07-layout-layers"
+  },
+  {
+    "state": "07-layout-layers"
+  },
+  {
+    "layout_rows": {}
+  },
+  {
+    "layout_gesture": {
+      "switch": "Layer List"
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "shot": "07b-layout-layer-list-off"
+  },
+  {
+    "layout_gesture": {
+      "switch": "Layer List"
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "page_row": {
+      "row": "hide_button",
+      "value": true
+    }
+  },
+  {
+    "page_row": {
+      "row": "borrow_dwell",
+      "value": 300
+    }
+  },
+  {
+    "page_row": {
+      "row": "borrow_distance",
+      "value": 5
+    }
+  },
+  {
+    "page_row": {
+      "row": "brush_right_click",
+      "value": 0
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "shot": "07c-layout-below-rows"
+  },
+  {
+    "state": "07c-layout-below-rows"
+  },
+  {
+    "page_row": {
+      "row": "hide_button",
+      "value": false
+    }
+  },
+  {
+    "page_row": {
+      "row": "brush_right_click",
+      "value": 0
+    }
+  },
+  {
+    "page": "Top Menu Bar"
+  },
+  {
+    "layout_gesture": {"elements": "Top Bar"}
+  },
+  {
+    "wait": 12
+  },
+  {
+    "shot": "08-top-bar"
+  },
+  {
+    "state": "08-top-bar"
+  },
+  {
+    "layout_rows": {}
+  },
+  {
+    "choice": {
+      "open": "WindowButtonPositionOpt"
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "shot": "08b-window-button-position-list"
+  },
+  {
+    "choice": {
+      "pick": 1
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "shot": "08c-window-button-position-left"
+  },
+  {
+    "state": "08c-window-button-position-left"
+  },
+  {
+    "choice": {
+      "open": "WindowButtonPositionOpt"
+    }
+  },
+  {
+    "choice": {
+      "pick": 0
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "choice": {
+      "open": "WindowButtonStyleOpt"
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "shot": "08d-window-button-style-list"
+  },
+  {
+    "choice": {
+      "pick": 2
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "shot": "08e-window-button-style-icons"
+  },
+  {
+    "state": "08e-window-button-style-icons"
+  },
+  {
+    "choice": {
+      "open": "WindowButtonStyleOpt"
+    }
+  },
+  {
+    "choice": {
+      "pick": 0
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "page_row": {
+      "row": "overflow",
+      "value": false
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "shot": "08f-overflow-off"
+  },
+  {
+    "state": "08f-overflow-off"
+  },
+  {
+    "page_row": {
+      "row": "overflow",
+      "value": true
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "page": "Workspace"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "shot": "09-workspace"
+  },
+  {
+    "state": "09-workspace"
+  },
+  {
+    "page": "Display"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "shot": "10-display"
+  },
+  {
+    "state": "10-display"
+  },
+  {
+    "view_row": "Tonemap Highlights"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "10b-display-rolloff-on"
+  },
+  {
+    "state": "10b-display-rolloff-on"
+  },
+  {
+    "view_row": "Normal View"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "10c-display-rolloff-off"
+  },
+  {
+    "state": "10c-display-rolloff-off"
+  },
+  {
+    "exposure_stops": 1.5
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "10d-display-exposure-1.5"
+  },
+  {
+    "state": "10d-display-exposure-1.5"
+  },
+  {
+    "exposure_stops": 0.0
+  },
+  {
+    "wait": 8
+  },
+  {
+    "page_row": {
+      "row": "gamut_mapping",
+      "value": 0
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "shot": "10e-display-gamut-clip"
+  },
+  {
+    "state": "10e-display-gamut-clip"
+  },
+  {
+    "page_row": {
+      "row": "gamut_mapping",
+      "value": 1
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "page_row": {
+      "row": "relief_light_angle",
+      "value": 90
+    }
+  },
+  {
+    "page_row": {
+      "row": "relief_strength",
+      "value": 1.0
+    }
+  },
+  {
+    "page_row": {
+      "row": "display_profile"
+    }
+  },
+  {
+    "page_row": {
+      "row": "proof_profile"
+    }
+  },
+  {
+    "page_row": {
+      "row": "canvas_proof_mode"
+    }
+  },
+  {
+    "page_row": {
+      "row": "minimap_proof_mode"
+    }
+  },
+  {
+    "page_row": {
+      "row": "grid_size",
+      "value": 4
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "state": "10f-display-grid-4"
+  },
+  {
+    "page": "Colour Spaces"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "shot": "11-colour-spaces"
+  },
+  {
+    "state": "11-colour-spaces"
+  },
+  {
+    "page": "Colour Themes"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "shot": "12-colour-themes"
+  },
+  {
+    "state": "12-colour-themes"
+  },
+  {
+    "theme_rows": {}
+  },
+  {
+    "swatch": {
+      "key": "bg_primary",
+      "color": "#503038"
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "12b-colour-themes-forked"
+  },
+  {
+    "state": "12b-colour-themes-forked"
+  },
+  {
+    "theme_rows": {
+      "link": "background",
+      "on": false
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "shot": "12c-colour-themes-unlinked"
+  },
+  {
+    "state": "12c-colour-themes-unlinked"
+  },
+  {
+    "theme_rows": {
+      "save_as": "Probe Sweep"
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "shot": "12d-colour-themes-save-as"
+  },
+  {
+    "state": "12d-colour-themes-save-as"
+  },
+  {
+    "theme_rows": {
+      "delete": true
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "shot": "12e-colour-themes-deleted"
+  },
+  {
+    "state": "12e-colour-themes-deleted"
+  },
+  {
+    "page": "Tablet"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "shot": "13-tablet"
+  },
+  {
+    "state": "13-tablet"
+  },
+  {
+    "workspace": {
+      "pointer": true
+    }
+  },
+  {
+    "workspace": {
+      "lead": true
+    }
+  },
+  {
+    "page_row": {
+      "row": "pen_middle"
+    }
+  },
+  {
+    "page_row": {
+      "row": "pen_right"
+    }
+  },
+  {
+    "page": "Keyboard Shortcuts"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "shot": "14-shortcuts"
+  },
+  {
+    "state": "14-shortcuts"
+  },
+  {
+    "shortcut": {
+      "search": "brush size"
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "shot": "14b-shortcuts-search-brush-size"
+  },
+  {
+    "state": "14b-shortcuts-search-brush-size"
+  },
+  {
+    "shortcut": {
+      "search": ""
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "shortcut_profile": "Krita"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "14c-shortcuts-krita-profile"
+  },
+  {
+    "state": "14c-shortcuts-krita-profile"
+  },
+  {
+    "shortcut_profile": "Sara Default"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "comment": "From here on, rows that reshape the whole window or reset every page."
+  },
+  {
+    "page": "Workspace"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "workspace": {
+      "slider": "ui_scale",
+      "value": 1.3
+    }
+  },
+  {
+    "wait": 15
+  },
+  {
+    "shot": "15-ui-scale-130"
+  },
+  {
+    "state": "15-ui-scale-130"
+  },
+  {
+    "workspace": {
+      "slider": "ui_scale",
+      "value": 1.0
+    }
+  },
+  {
+    "wait": 15
+  },
+  {
+    "shot": "15b-ui-scale-100"
+  },
+  {
+    "workspace": {
+      "slider": "font_size",
+      "value": 1.3
+    }
+  },
+  {
+    "wait": 15
+  },
+  {
+    "shot": "16-font-scale-130"
+  },
+  {
+    "state": "16-font-scale-130"
+  },
+  {
+    "workspace": {
+      "slider": "font_size",
+      "value": 1.0
+    }
+  },
+  {
+    "wait": 15
+  },
+  {
+    "page_row": {
+      "row": "embed_subwindows",
+      "value": false
+    }
+  },
+  {
+    "wait": 15
+  },
+  {
+    "shot": "17-embed-subwindows-off"
+  },
+  {
+    "state": "17-embed-subwindows-off"
+  },
+  {
+    "page_row": {
+      "row": "embed_subwindows",
+      "value": true
+    }
+  },
+  {
+    "wait": 15
+  },
+  {
+    "page_row": {
+      "row": "tablet_driver"
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "page": "Files"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "page_row": {
+      "row": "reset_all_preferences",
+      "value": true
+    }
+  },
+  {
+    "wait": 15
+  },
+  {
+    "shot": "18-reset-all-preferences"
+  },
+  {
+    "state": "18-reset-all-preferences"
+  }
+]

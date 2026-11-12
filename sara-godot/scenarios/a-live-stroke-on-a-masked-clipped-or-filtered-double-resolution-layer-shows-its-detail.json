@@ -1,0 +1,536 @@
+[
+  {
+    "wait": 10
+  },
+  {
+    "load": "res://tests/data/every_composite_path.sad"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "zoom": 4.0
+  },
+  {
+    "wait": 10
+  },
+  {
+    "tool": {
+      "id": "brush",
+      "options": {
+        "radius": 0.0014,
+        "hardness": 1.0,
+        "opacity": 1.0,
+        "flow": 1.0
+      }
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "layer": {
+      "activate": "Masked"
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "move": {
+      "at": [
+        816,
+        478
+      ],
+      "pressure": 1.0
+    }
+  },
+  {
+    "press": "left"
+  },
+  {
+    "move": {
+      "at": [
+        840,
+        478
+      ],
+      "pressure": 1.0
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "move": {
+      "at": [
+        864,
+        478
+      ],
+      "pressure": 1.0
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "move": {
+      "at": [
+        888,
+        478
+      ],
+      "pressure": 1.0
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "move": {
+      "at": [
+        912,
+        478
+      ],
+      "pressure": 1.0
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "move": {
+      "at": [
+        936,
+        478
+      ],
+      "pressure": 1.0
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "wait": 5
+  },
+  {
+    "shot": "1-a-stroke-held-on-the-masked-layer-at-400"
+  },
+  {
+    "state": "1-a-stroke-held-on-the-masked-layer-at-400"
+  },
+  {
+    "release": "left"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "1-the-stroke-on-the-masked-layer-let-go-at-400"
+  },
+  {
+    "layer": {
+      "activate": "Clipped"
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "move": {
+      "at": [
+        984,
+        478
+      ],
+      "pressure": 1.0
+    }
+  },
+  {
+    "press": "left"
+  },
+  {
+    "move": {
+      "at": [
+        1008,
+        478
+      ],
+      "pressure": 1.0
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "move": {
+      "at": [
+        1032,
+        478
+      ],
+      "pressure": 1.0
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "move": {
+      "at": [
+        1056,
+        478
+      ],
+      "pressure": 1.0
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "move": {
+      "at": [
+        1080,
+        478
+      ],
+      "pressure": 1.0
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "move": {
+      "at": [
+        1104,
+        478
+      ],
+      "pressure": 1.0
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "wait": 5
+  },
+  {
+    "shot": "2-a-stroke-held-on-the-clipped-layer-at-400"
+  },
+  {
+    "state": "2-a-stroke-held-on-the-clipped-layer-at-400"
+  },
+  {
+    "release": "left"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "2-the-stroke-on-the-clipped-layer-let-go-at-400"
+  },
+  {
+    "layer": {
+      "activate": "Filtered"
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "move": {
+      "at": [
+        816,
+        606
+      ],
+      "pressure": 1.0
+    }
+  },
+  {
+    "press": "left"
+  },
+  {
+    "move": {
+      "at": [
+        840,
+        606
+      ],
+      "pressure": 1.0
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "move": {
+      "at": [
+        864,
+        606
+      ],
+      "pressure": 1.0
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "move": {
+      "at": [
+        888,
+        606
+      ],
+      "pressure": 1.0
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "move": {
+      "at": [
+        912,
+        606
+      ],
+      "pressure": 1.0
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "move": {
+      "at": [
+        936,
+        606
+      ],
+      "pressure": 1.0
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "wait": 5
+  },
+  {
+    "shot": "3-a-stroke-held-on-the-filtered-layer-at-400"
+  },
+  {
+    "state": "3-a-stroke-held-on-the-filtered-layer-at-400"
+  },
+  {
+    "release": "left"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "3-the-stroke-on-the-filtered-layer-let-go-at-400"
+  },
+  {
+    "layer": {
+      "activate": "Grouped"
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "move": {
+      "at": [
+        984,
+        606
+      ],
+      "pressure": 1.0
+    }
+  },
+  {
+    "press": "left"
+  },
+  {
+    "move": {
+      "at": [
+        1008,
+        606
+      ],
+      "pressure": 1.0
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "move": {
+      "at": [
+        1032,
+        606
+      ],
+      "pressure": 1.0
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "move": {
+      "at": [
+        1056,
+        606
+      ],
+      "pressure": 1.0
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "move": {
+      "at": [
+        1080,
+        606
+      ],
+      "pressure": 1.0
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "move": {
+      "at": [
+        1104,
+        606
+      ],
+      "pressure": 1.0
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "wait": 5
+  },
+  {
+    "shot": "4-a-stroke-held-on-the-scoped-layer-at-400"
+  },
+  {
+    "state": "4-a-stroke-held-on-the-scoped-layer-at-400"
+  },
+  {
+    "release": "left"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "4-the-stroke-on-the-scoped-layer-let-go-at-400"
+  },
+  {
+    "filter_rows": {
+      "attach": "sara-base-modules.gaussian_blur",
+      "layer": "Filtered",
+      "params": {
+        "radius": 2.0
+      }
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "layer": {
+      "activate": "Filtered"
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "move": {
+      "at": [
+        816,
+        638
+      ],
+      "pressure": 1.0
+    }
+  },
+  {
+    "press": "left"
+  },
+  {
+    "move": {
+      "at": [
+        840,
+        638
+      ],
+      "pressure": 1.0
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "move": {
+      "at": [
+        864,
+        638
+      ],
+      "pressure": 1.0
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "move": {
+      "at": [
+        888,
+        638
+      ],
+      "pressure": 1.0
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "move": {
+      "at": [
+        912,
+        638
+      ],
+      "pressure": 1.0
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "move": {
+      "at": [
+        936,
+        638
+      ],
+      "pressure": 1.0
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "wait": 5
+  },
+  {
+    "shot": "5-a-stroke-held-on-the-blurred-layer-at-400"
+  },
+  {
+    "state": "5-a-stroke-held-on-the-blurred-layer-at-400"
+  },
+  {
+    "release": "left"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "5-the-stroke-on-the-blurred-layer-let-go-at-400"
+  },
+  {
+    "layers": true
+  }
+]

@@ -1,0 +1,46 @@
+[
+  {"wait": 30},
+  {"docker": {"id": "ColorDocker", "at": [700, 200], "size": [360, 620]}},
+  {"wait": 15},
+  {"shot": "1-picker"},
+  {"state": "1-picker"},
+
+  {"open": "preferences"},
+  {"wait": 18},
+  {"page": "Colour Picker"},
+  {"wait": 12},
+
+  {"choice": {"open": "Option_shape"}},
+  {"wait": 12},
+  {"shot": "2-type-list-open"},
+  {"state": "2-type-list-open"},
+
+  {"choice": {"hover": 2}},
+  {"wait": 12},
+  {"shot": "3-pointer-on-another-row"},
+  {"state": "3-pointer-on-another-row"},
+
+  {"choice": {"pick": 3}},
+  {"wait": 15},
+  {"shot": "4-picked"},
+  {"state": "4-picked"},
+
+  {"choice": {"open": "Option_shape"}},
+  {"wait": 12},
+  {"choice": {"hover": 0}},
+  {"wait": 12},
+  {"shot": "5-mark-moved-with-the-choice"},
+  {"state": "5-mark-moved-with-the-choice"},
+
+  {"choice": {"open": "Option_shape"}},
+  {"wait": 10},
+
+  {"docker": {"id": "GraphDocker", "at": [1480, 120], "size": [420, 400]}},
+  {"wait": 15},
+  {"choice": {"open": "ModeButton"}},
+  {"wait": 12},
+  {"choice": {"hover": 1}},
+  {"wait": 12},
+  {"shot": "6-a-second-dropdown"},
+  {"state": "6-a-second-dropdown"}
+]

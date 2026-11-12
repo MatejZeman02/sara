@@ -1,0 +1,21 @@
+[
+  {"comment": "Three unreadable .pat files, named after three GIMP papers, are written into the painter's folder. The chooser opened over them draws three empty tiles and the module's store says three lines, once. The chooser is closed and opened again over the same store, and the second listing adds no line: the state dump's message block has three lines both times, and the chooser report names three errors both times."},
+  {"wait": 40},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 15},
+  {"pattern": {"unreadable": ["fractal_pattern", "HR_Wall_Paper", "Lienzo 01"]}},
+  {"wait": 5},
+  {"pattern": {"open": true, "icon_size": 64}},
+  {"wait": 20},
+  {"shot": "1-three-unreadable-papers-listed-and-said-once"},
+  {"state": "1-three-unreadable-papers-listed-and-said-once"},
+  {"pattern": {"close": true}},
+  {"wait": 8},
+  {"pattern": {"open": true, "icon_size": 64}},
+  {"wait": 20},
+  {"shot": "2-the-second-listing-adds-no-line"},
+  {"state": "2-the-second-listing-adds-no-line"},
+  {"pattern": {"close": true, "tidy": true}},
+  {"wait": 5},
+  {"state": "3-tidied"}
+]

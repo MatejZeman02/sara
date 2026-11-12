@@ -1,0 +1,20 @@
+{
+  "adapter": "NVIDIA GeForce RTX 3090 under Linux",
+  "strokes": {
+    "Bristle Flat": "09199f8abf27a0b3f74199dd38b745f9bfdb28b09d3fceca738ef7d187b285fa",
+    "Broken Chalk": "3e19f30048a81b24537a5f0388c19e6ae6345c80b0bd6904c3dd076548308714",
+    "Canvas Scumble": "debf70d2b522d0c7a7a7a88c4c886db1b99cbbde4be3b849b382f31d6f5e2484",
+    "Dry Brush": "ab5c1ad26635c804a564d4ea5ff9365fd88035d3c041e370051a1e690174e7e8",
+    "Firm Fill": "37a445757db857eeda66eb0fe9eae07c5bd5cdae2987a9b9b977c614165f91fb",
+    "Grain Round": "e8eec89c26ba4051d783ba09462d7c83f5481479722452911b453c4ed285fc0f",
+    "Graphite Pencil": "0b3670f36bf19c62ceccf1593ab2a96ade929da816775be94fa0e471890e29d2",
+    "Living Colour": "1c4afc6f9c23c6a58fc0deb90e0b37148792b72f5f111c92b2eba480bb2917cf",
+    "Ribbon Pen": "f9b0e04412cd007c17527008818ce409c1496128ea02659e34a6e4cf701a1e6e",
+    "Sea Sponge": "33e5899984de9c67edddf29767f78777b401ccea18c8d851bdfd44a2f6789d3f",
+    "Smeary Flat": "6909082ecb49857a925dce59678916e92e393d1646213a22544c8db85f48cecb",
+    "Thick Impasto": "d2601e38724ae099396d847685afde5e09002ae78d947168c92d1fe3bb0e4643",
+    "Watery Lift": "db27d2a06c91dfab999f1372295250e4ac3b5d155aa0a005cea357469f80214c",
+    "Wet Into Wet": "315e8481f21a761200588059a9d73cac3c2f306441dd7594995259a8d26c13dc",
+    "Wood Grain": "5f238b9ef0e7c3168372edf8ea318902b524dbb5f376ddb71c615b14c719c124"
+  }
+}

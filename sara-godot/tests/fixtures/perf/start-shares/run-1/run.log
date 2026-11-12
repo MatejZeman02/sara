@@ -1,0 +1,2 @@
+field	Device	NVIDIA GeForce RTX 3090
+ready	10324	engine and autoloads 7526 ms (kernels 321 ms, 334 cached, 0 compiled, engine 827 ms, run_log_init to compiler_init_begin 5251 ms, kernels_stage_done to main_script_loaded 1020 ms), main to ready 2797 ms (modules 300 ms)

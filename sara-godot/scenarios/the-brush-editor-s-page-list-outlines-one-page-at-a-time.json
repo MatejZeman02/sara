@@ -1,0 +1,21 @@
+[
+  {"comment": "The brush editor's page list outlines one page at a time. The Noise Brush from Bristle Flat, its editor opened, General's row clicked and then Look's, each a real press. The editor's report after the clicks names the open page and every row, and the shot is to see one row outlined, Look."},
+  {"wait": 60},
+  {"prefs": {"ui_scale": 1.0, "advanced_options": true}},
+  {"wait": 20},
+  {"document": "srgb", "size": [1200, 900]},
+  {"wait": 10},
+  {"preset": {"load": "Bristle Flat"}},
+  {"wait": 5},
+  {"tool": {"id": "noise_brush"}},
+  {"wait": 10},
+  {"brush_editor": {"open": true}},
+  {"wait": 20},
+  {"click": {"control": "Row0", "in": "BrushEditorPageList"}},
+  {"wait": 10},
+  {"click": {"control": "Row2", "in": "BrushEditorPageList"}},
+  {"wait": 15},
+  {"brush_editor": {}},
+  {"state": "1-general-then-look"},
+  {"shot": "1-general-then-look"}
+]

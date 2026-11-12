@@ -1,0 +1,119 @@
+# The Gaussian of the base module's blurs, a library and not a kernel.
+#
+# The Gaussian blur, the High Pass and the Unsharp Mask weigh their taps with
+# one bell taken from this file, so a fix reaches one place. Held once: the bell
+# (sigma a third of the radius, the weight of a tap *offset* texels out), its
+# normalisation (the sum of one row's weights), and the separable walk of the
+# Gaussian blur inside one dispatch, which the High Pass runs as well so that it
+# and the blur at one radius add back to the picture to the last bit.
+#
+# The Unsharp Mask takes the bell and the normalisation and keeps its own two
+# steps through a padded scratch, because its second step reads the step before
+# and divides by the row's weights where the walk divides once by their square.
+#
+# Text, after the harness. An import is pasted in where it stands, so a kernel
+# imports this below `import neighbourhood`: the walk reads the padded source
+# through `sa_premultiplied`, the `src` image and the `halo` param by those
+# names. It declares the walk's workgroup array itself, so a kernel that imports
+# it keeps the default group of eight by eight.
+#
+# Nothing here clamps a colour (hard rule 5), only the coordinates of a tap past
+# the padding.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# One row of the group's default eight by eight, which the formatter keeps
+# undeclared, so the array's 64 is that group and nothing else.
+shared vec4 sa_gaussian_across[64]
+
+# The standard deviation for a blur of *radius* texels: three of them to the
+# radius, so the tail left out is under a hundredth of the weight. The floor
+# keeps a radius of nought from dividing by zero, and there the one tap weighs
+# exactly one whatever the floor is. A float, because the Gaussian blur takes a
+# radius with a fraction, and 1.5 is a bell wider than 1 and narrower than 2.
+
+
+def sa_gaussian_sigma_of(float radius) -> float:
+    return max(radius / 3.0, 0.001)
+
+# The same for a whole *reach*, which the High Pass and the Unsharp Mask take,
+# and which the float bell answers to the bit at the same number.
+
+
+def sa_gaussian_sigma(int reach) -> float:
+    return sa_gaussian_sigma_of(float(reach))
+
+# The weight of the tap *offset* texels from the centre, unnormalised: the bell
+# lowered by its own height one texel past the reach, so it comes down to
+# nought where the reach ends.
+#
+# The bell itself stops there at exp(-4.5) of its height, a ninetieth, and the
+# texel past it takes nothing, so a blur unlowered steps down at its reach:
+# below a thin stroke at radius 100, a fall ten times the falls before it, and
+# the walk being separable, the step runs round a square. Lowered, the last tap
+# weighs what one fall of the bell does, and the line divides the rest back up
+# to one. The reach is three sigma, from `sa_gaussian_sigma`, which is how the
+# weight knows it without being told, so the three kernels that call it keep
+# their calls as they are. A radius with a fraction is lowered one texel past
+# itself the same way, and the walk stops at the radius rounded up, short of
+# that, so every tap it takes weighs more than nought.
+
+
+def sa_gaussian_weight(int offset, float sigma) -> float:
+    float past = 3.0 * sigma + 1.0
+    float spread = 2.0 * sigma * sigma
+    return exp(-float(offset * offset) / spread) - exp(-past * past / spread)
+
+# The normalisation: the weights of one row of 2 * *reach* + 1 taps summed from
+# the left, the order every pass sums its taps in.
+
+
+def sa_gaussian_line(int reach, float sigma) -> float:
+    float line = 0.0
+    for i in range_inclusive(-reach, reach):
+        line += sa_gaussian_weight(i, sigma)
+    return line
+
+# The Gaussian blur of the padded source at the dispatch texel *at*,
+# premultiplied, over *reach* texels each way with the bell of *sigma*,
+# separable inside one dispatch.
+#
+# The pass takes one kernel and no scratch texture, so the horizontal half runs
+# into workgroup memory rather than into a second texture: the group walks the
+# rows its eight outputs read, eight at a time, every thread blurring one row
+# across, and after a barrier each thread adds the eight rows of its own column
+# into its vertical sum. A texel costs about (reach / 4 + 1) * (2 * reach + 9)
+# reads against the square's (2 * reach + 1) ^ 2, 116 against 441 at 10 and
+# 1526 against 10201 at 50, in 1 KB of shared memory whatever the reach.
+#
+# Every thread of the group calls it, a texel past the target's edge as well,
+# because the barriers wait for all of them. A tap is premultiplied before it is
+# summed, and the caller straightens the answer.
+
+
+def sa_gaussian_blurred_with(ivec2 at, int reach, float sigma) -> vec4:
+    float line = sa_gaussian_line(reach, sigma)
+    ivec2 last = image_size(src) - 1
+    int top = at.y - int(local_id.y) - reach
+    int blocks = (8 + 2 * reach + 7) / 8
+    vec4 sum = vec4(0.0)
+    for block in range(blocks):
+        int row = top + block * 8 + int(local_id.y)
+        vec4 part = vec4(0.0)
+        for dx in range_inclusive(-reach, reach):
+            ivec2 tap = clamp(ivec2(at.x + dx, row) + ivec2(halo, halo), ivec2(0, 0), last)
+            part += sa_gaussian_weight(dx, sigma) * sa_premultiplied(image_load(src, tap))
+        sa_gaussian_across[local_index] = part
+        barrier()
+        for ly in range(8):
+            int dy = top + block * 8 + ly - at.y
+            if abs(dy) <= reach:
+                sum += sa_gaussian_weight(dy, sigma) * sa_gaussian_across[ly * 8 + int(local_id.x)]
+        barrier()
+    return sum / (line * line)
+
+# The walk with the bell of a whole *reach*, which the High Pass runs.
+
+
+def sa_gaussian_blurred(ivec2 at, int reach) -> vec4:
+    return sa_gaussian_blurred_with(at, reach, sa_gaussian_sigma(reach))

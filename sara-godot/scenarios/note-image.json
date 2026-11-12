@@ -1,0 +1,56 @@
+[
+  {"wait": 30},
+  {"docker": {"id": "LayersDocker", "at": [1600, 570], "size": [310, 400]}},
+  {"wait": 10},
+
+  {"note": {"target": "OpacitySlider", "text": "A whole-window note: the picture is a WebP, not a 600 KB PNG.", "save": true}},
+  {"wait": 10},
+  {"shot": "after-whole-window"},
+
+  {"note": "on"},
+  {"wait": 5},
+  {"press": {"button": "left", "at": [1470, 700], "shift": true}},
+  {"move": [1600, 820]},
+  {"move": [1900, 1040]},
+  {"wait": 5},
+  {"shot": "region-framed"},
+  {"release": {"button": "left", "at": [1900, 1040], "shift": true}},
+  {"wait": 5},
+
+  {"note": {"target": "OpacitySlider", "text": "A region note: the frame is kept whole while the rest is not in the picture."}},
+  {"wait": 10},
+  {"shot": "box-open"},
+  {"state": "box-open"},
+
+  {"drag": {"window": "Note on OpacitySlider", "by": [-260, -140], "via": "input"}},
+  {"wait": 5},
+  {"shot": "box-dragged"},
+  {"state": "box-dragged"},
+
+  {"press": {"button": "left", "at": [1648, 853]}},
+  {"move": [1700, 900]},
+  {"move": [1748, 943]},
+  {"wait": 5},
+  {"shot": "box-resized"},
+  {"state": "box-resized"},
+  {"release": {"button": "left", "at": [1748, 943]}},
+  {"wait": 5},
+
+  {"note": "save"},
+  {"wait": 10},
+  {"shot": "after-region"},
+  {"state": "after-region"},
+
+  {"note": {"target": "OpacitySlider", "text": "The third box opens at the size the second one was left at."}},
+  {"wait": 10},
+  {"shot": "box-remembered"},
+  {"state": "box-remembered"},
+
+  {"press": {"button": "left", "at": [1908, 993]}},
+  {"move": [1700, 800]},
+  {"move": [1400, 500]},
+  {"release": {"button": "left", "at": [1400, 500]}},
+  {"wait": 5},
+  {"state": "box-shrunk"},
+  {"note": "cancel"}
+]

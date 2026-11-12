@@ -1,0 +1,155 @@
+[
+ {
+  "wait": 30
+ },
+ {
+  "colour": "#d84a2a"
+ },
+ {
+  "state": "0-nothing-painted"
+ },
+ {
+  "stroke": {
+   "from": [
+    420,
+    300
+   ],
+   "to": [
+    700,
+    320
+   ],
+   "pressure": 0.9,
+   "steps": 20
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "1-prefs-closed"
+ },
+ {
+  "shot": "1-prefs-closed"
+ },
+ {
+  "open": "preferences"
+ },
+ {
+  "wait": 20
+ },
+ {
+  "prefs_frame": {
+   "probe": true
+  }
+ },
+ {
+  "prefs_frame": {
+   "minimize": true
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "2-rolled-up"
+ },
+ {
+  "colour": "#2e8f5a"
+ },
+ {
+  "stroke": {
+   "from": [
+    420,
+    360
+   ],
+   "to": [
+    700,
+    380
+   ],
+   "pressure": 0.9,
+   "steps": 20
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "2-rolled-up"
+ },
+ {
+  "shot": "2-rolled-up-after-stroke"
+ },
+ {
+  "prefs_frame": {
+   "minimize": true
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "prefs_frame": {
+   "probe": true
+  }
+ },
+ {
+  "colour": "#c8a02e"
+ },
+ {
+  "stroke": {
+   "from": [
+    420,
+    480
+   ],
+   "to": [
+    700,
+    500
+   ],
+   "pressure": 0.9,
+   "steps": 20
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "3-open-again-paints"
+ },
+ {
+  "shot": "3-open-again-paints"
+ },
+ {
+  "prefs_frame": {
+   "reopen": true
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "colour": "#3a5fd8"
+ },
+ {
+  "stroke": {
+   "from": [
+    420,
+    420
+   ],
+   "to": [
+    700,
+    440
+   ],
+   "pressure": 0.9,
+   "steps": 20
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "4-prefs-closed-again"
+ },
+ {
+  "shot": "4-prefs-closed-again"
+ }
+]

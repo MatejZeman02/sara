@@ -1,0 +1,9 @@
+[
+  {"comment": "The start after a close under focus mode. Opens on the profile `focus-mode-left-on-at-a-close-gives-the-dockers-back-at-the-next-start-first-run` (or its `closed-under-the-mode` twin) left, and shows which dockers are open, where they stand and what the Info docker says of focus mode. Sara starts with the mode off, so Tab hides nothing the painter has not got yet."},
+  {"settings": "keep"},
+  {"wait": 45},
+  {"window": [1920, 1080]},
+  {"wait": 60},
+  {"state": "10-the-start-after-the-close"},
+  {"shot": "10-the-start-after-the-close"}
+]

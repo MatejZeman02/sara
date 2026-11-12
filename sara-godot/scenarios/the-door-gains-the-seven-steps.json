@@ -1,0 +1,79 @@
+[
+  {"wait": 45},
+
+  {"docker": {"id": "ToolBoxDocker", "at": [0, 90], "size": [60, 420]}},
+  {"docker": {"id": "ToolOptionsDocker", "at": [0, 300], "size": [280, 430]}},
+  {"docker": {"id": "ReferenceDocker", "at": [0, 760], "size": [280, 260]}},
+  {"docker": {"id": "ColorDocker", "at": [1600, 90], "size": [310, 480]}},
+  {"docker": {"id": "LayersDocker", "at": [1600, 600], "size": [310, 400]}},
+  {"wait": 12},
+
+  {"colour": "#e8b23c"},
+  {"tool": "brush"},
+  {"wait": 4},
+
+  {"stroke": {"points": [
+    {"at": [400, 250], "pressure": 0.15, "tilt": [-0.8, 0.1]},
+    {"at": [700, 400], "pressure": 0.45, "tilt": [-0.4, 0.2]},
+    {"at": [1000, 300], "pressure": 0.75, "tilt": [0.3, -0.3]},
+    {"at": [1300, 450], "pressure": 1.0, "tilt": [0.9, -0.6]}
+  ]}},
+  {"wait": 12},
+  {"state": "01-a-stroke-of-four-waypoints-with-its-own-pressure-and-tilt"},
+  {"shot": "01-a-stroke-of-four-waypoints-with-its-own-pressure-and-tilt"},
+
+  {"zoom": 3.0},
+  {"wait": 6},
+  {"state": "02-zoomed-in-on-a-corner"},
+  {"shot": "02-zoomed-in-on-a-corner"},
+  {"fit": true},
+  {"wait": 8},
+  {"state": "03-fitted-before-the-shot"},
+  {"shot": "03-fitted-before-the-shot"},
+
+  {"select": {"polygon": [[400, 200], [1400, 220], [1300, 800], [420, 760]]}},
+  {"wait": 8},
+  {"state": "04-a-polygon-selection"},
+  {"shot": "04-a-polygon-selection"},
+
+  {"select": {"rect": [700, 400, 100, 100], "mode": "subtract"}},
+  {"wait": 8},
+  {"state": "05-a-hole-subtracted-inside-one-chunk"},
+
+  {"select": {"feather": 12}},
+  {"wait": 8},
+  {"state": "06-feathered-inside-the-chunks-it-already-covered"},
+
+  {"gradient": {"from": [450, 250], "to": [1350, 750], "steps": 10}},
+  {"wait": 12},
+  {"state": "07-a-gradient-drag-in-document-pixels"},
+  {"shot": "07-a-gradient-drag-in-document-pixels"},
+
+  {"select": "none"},
+  {"wait": 6},
+  {"select": [500, 300, 600, 400]},
+  {"wait": 6},
+  {"state": "08-the-transform-box-before-the-drag"},
+
+  {"transform": {"from": [800, 500], "to": [1000, 600], "steps": 8}},
+  {"wait": 10},
+  {"state": "09-the-transform-moved-by-its-middle"},
+  {"shot": "09-the-transform-moved-by-its-middle"},
+
+  {"transform": {"commit": true}},
+  {"wait": 10},
+  {"state": "10-the-move-committed"},
+  {"shot": "10-the-move-committed"},
+
+  {"select": "none"},
+  {"wait": 4},
+  {"crop": {"from": [400, 200], "to": [1500, 900], "steps": 8}},
+  {"wait": 10},
+  {"state": "11-the-crop-box-drawn-in-document-pixels"},
+  {"shot": "11-the-crop-box-drawn-in-document-pixels"},
+
+  {"crop": {"commit": true}},
+  {"wait": 12},
+  {"state": "12-the-crop-committed"},
+  {"shot": "12-the-crop-committed"}
+]

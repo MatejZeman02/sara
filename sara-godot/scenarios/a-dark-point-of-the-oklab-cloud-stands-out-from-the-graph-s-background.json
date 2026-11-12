@@ -1,0 +1,21 @@
+[
+  {"comment": "The Oklab cloud over a ramp from black to yellow, a photo of a column fading out towards the cube's black corner. A gradient from black to yellow across the document, then the Graph docker's Oklab Cloud at the docker's size and at its smallest. Every mark of the column, its darkest included, stands out from the grey."},
+  {"wait": 30},
+  {"docker": "park"},
+  {"docker": {"id": "GraphDocker", "at": [1180, 120], "size": [700, 480]}},
+  {"wait": 10},
+  {"colour": "#000000"},
+  {"background_colour": "#ffff00"},
+  {"tool": "gradient"},
+  {"gradient": {"from": [100, 400], "to": [1500, 400], "steps": 10}},
+  {"wait": 15},
+  {"zoom": 0.5},
+  {"wait": 10},
+  {"graph": {"mode": "cloud", "scale": "log", "reset": true}},
+  {"wait": 20},
+  {"shot": "1-the-cloud-over-black-to-yellow"},
+  {"state": "1-the-cloud-over-black-to-yellow"},
+  {"docker": {"id": "GraphDocker", "at": [1380, 120], "size": [300, 300]}},
+  {"wait": 20},
+  {"shot": "2-the-same-at-the-smallest-docker"}
+]

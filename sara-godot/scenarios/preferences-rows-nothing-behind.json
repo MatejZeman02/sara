@@ -1,0 +1,127 @@
+[
+ {
+  "window": [
+   1600,
+   1200
+  ]
+ },
+ {
+  "wait": 60
+ },
+ {
+  "document": "srgb"
+ },
+ {
+  "wait": 20
+ },
+ {
+  "state": "01-a-fresh-bar"
+ },
+ {
+  "shot": "01-a-fresh-bar"
+ },
+ {
+  "open": "preferences"
+ },
+ {
+  "wait": 15
+ },
+ {
+  "page": "Top Menu Bar"
+ },
+ {
+  "layout_gesture": {"elements": "Top Bar"}
+ },
+ {
+  "wait": 12
+ },
+ {
+  "layout_rows": true
+ },
+ {
+  "state": "02-the-top-menu-bar-page"
+ },
+ {
+  "shot": "02-the-top-menu-bar-page"
+ },
+ {
+  "wheel": {
+   "at": [
+    914,
+    900
+   ],
+   "notches": -8
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "layout_rows": true
+ },
+ {
+  "layout_gesture": {
+   "switch": "size_by_pressure"
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "layout_gesture": {
+   "switch": "opacity_by_pressure"
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "layout_gesture": {
+   "switch": "exposure"
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "layout_rows": true
+ },
+ {
+  "state": "03-the-three-switched-on"
+ },
+ {
+  "shot": "03-the-three-switched-on"
+ },
+ {
+  "wheel": {
+   "at": [
+    914,
+    700
+   ],
+   "notches": -6
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "layout_rows": true
+ },
+ {
+  "layout_gesture": {
+   "switch": "stabilizer_amount"
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "layout_rows": true
+ },
+ {
+  "state": "04-the-fourth-row-with-nothing-behind-it"
+ },
+ {
+  "shot": "04-the-fourth-row-with-nothing-behind-it"
+ }
+]

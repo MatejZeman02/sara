@@ -1,0 +1,19 @@
+[
+  { "wait": 60 },
+  { "layout_preset": { "load": "minimalistic" } },
+  { "wait": 20 },
+  { "document": "srgb" },
+  { "tool": "brush" },
+  { "wait": 10 },
+  { "state": "f85-01-before-a-stroke" },
+
+  { "stroke": { "from": [600, 500], "to": [1300, 620], "pressure": 1.0 } },
+  { "wait": 10 },
+  { "state": "f85-02-one-stroke" },
+  { "shot": "f85-02-one-stroke" },
+
+  { "stroke": { "from": [620, 560], "to": [1320, 680], "pressure": 0.4 } },
+  { "wait": 10 },
+  { "state": "f85-03-a-lighter-stroke" },
+  { "shot": "f85-03-a-lighter-stroke" }
+]

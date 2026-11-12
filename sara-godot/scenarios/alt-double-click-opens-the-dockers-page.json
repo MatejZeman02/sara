@@ -1,0 +1,34 @@
+[
+  {"wait": 40},
+
+  {"open": "curves"},
+  {"wait": 25},
+  {"docker_page": {"id": "FilterDialog"}},
+  {"wait": 25},
+  {"shot": "no-page-nothing-opened"},
+  {"state": "no-page-nothing-opened"},
+  {"drag": {"window": "Curves", "by": [-560, 260]}},
+  {"wait": 10},
+
+  {"docker": {"id": "LayersDocker", "at": [1180, 120], "size": [300, 380]}},
+  {"docker": {"id": "ColorDocker", "at": [1180, 520], "size": [300, 360]}},
+  {"docker": {"id": "ToolBoxDocker", "at": [60, 120]}},
+  {"wait": 15},
+  {"shot": "three-dockers"},
+  {"state": "three-dockers"},
+
+  {"docker_page": {"id": "LayersDocker"}},
+  {"wait": 25},
+  {"shot": "layers-page"},
+  {"state": "layers-page"},
+
+  {"docker_page": {"id": "ColorDocker"}},
+  {"wait": 25},
+  {"shot": "colour-picker-page"},
+  {"state": "colour-picker-page"},
+
+  {"docker_page": {"id": "ToolBoxDocker"}},
+  {"wait": 25},
+  {"shot": "toolbox-page"},
+  {"state": "toolbox-page"}
+]

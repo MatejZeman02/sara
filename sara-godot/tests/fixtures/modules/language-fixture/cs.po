@@ -1,0 +1,319 @@
+# The language fixture's catalogue, Czech.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# It translates the Languages page's own words and the top bar's menu names,
+# enough for a suite to read a sentence through tr() and for a scenario's shot
+# to show the page in Czech. T3 added every docker's title, the File and
+# Window menus' rows and the toolbox's tool names, so a shot shows the dockers
+# and the menus follow the locale too. It is a fixture and not Sara's Czech,
+# which is a module of its own.
+msgid ""
+msgstr ""
+"Language: cs\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+
+msgid "Languages"
+msgstr "Jazyky"
+
+msgid "Language"
+msgstr "Jazyk"
+
+msgid "The language Sara's windows speak. It switches at once, with no restart."
+msgstr "Jazyk, kterým mluví okna Sary. Přepne se hned, bez restartu."
+
+msgid "English"
+msgstr "Angličtina"
+
+msgid "Czech"
+msgstr "Čeština"
+
+# The blend list's words: every mode a fresh profile's bar
+# offers, its section headings, Multiply's sentence and the line that keeps a
+# mode's English in its hover. Krita's Czech names where it has one.
+msgid "Favourites"
+msgstr "Oblíbené"
+
+msgid "Normal"
+msgstr "Normální"
+
+msgid "Erase"
+msgstr "Vymazat"
+
+msgid "sRGB Normal"
+msgstr "Normální sRGB"
+
+msgid "Linear Normal"
+msgstr "Lineární normální"
+
+msgid "Oklab Normal"
+msgstr "Normální Oklab"
+
+msgid "Darken"
+msgstr "Ztmavit"
+
+msgid "Multiply"
+msgstr "Násobit"
+
+msgid "Lighten"
+msgstr "Zesvětlit"
+
+msgid "Screen"
+msgstr "Závoj"
+
+msgid "Add"
+msgstr "Přidat"
+
+msgid "Colour Dodge"
+msgstr "Zesvětlit barvy"
+
+msgid "Contrast"
+msgstr "Kontrast"
+
+msgid "Overlay"
+msgstr "Překrýt"
+
+msgid "Soft Light"
+msgstr "Měkké světlo"
+
+msgid "Hard Light"
+msgstr "Tvrdé světlo"
+
+msgid "Comparative"
+msgstr "Srovnávací"
+
+msgid "Difference"
+msgstr "Rozdíl"
+
+msgid "Exclusion"
+msgstr "Vyloučení"
+
+msgid "Colour"
+msgstr "Barva"
+
+msgid "Hue"
+msgstr "Odstín"
+
+msgid "Saturation"
+msgstr "Sytost"
+
+msgid "Lightness"
+msgstr "Světlost"
+
+msgid "Other"
+msgstr "Ostatní"
+
+msgid "In English: %s"
+msgstr "Anglicky: %s"
+
+msgid ""
+"Darkens by multiplying the two colours, like inks laid over one another, and "
+"white changes nothing."
+msgstr ""
+"Ztmavuje násobením obou barev, jako inkousty položené přes sebe, a bílá nic "
+"nemění."
+
+msgid "On this document it mixes in %s."
+msgstr "Na tomto dokumentu míchá v %s."
+
+msgid "Catalogues"
+msgstr "Katalogy"
+
+msgid ""
+"Every language but English comes from a module. Where two catalogues carry "
+"the same sentence, the one lower in this list is shown."
+msgstr ""
+"Každý jazyk kromě angličtiny přináší modul. Když dva katalogy nesou tutéž "
+"větu, ukáže se ta z katalogu níže v tomto seznamu."
+
+msgid ""
+"Built in. Every catalogue translates from it, and a sentence none carries is "
+"shown in it."
+msgstr ""
+"Vestavěná. Každý katalog překládá z ní a věta, kterou žádný nenese, se "
+"ukáže v ní."
+
+msgid "From the module %s."
+msgstr "Z modulu %s."
+
+msgid "From the module %s, in %s."
+msgstr "Z modulu %s, v souboru %s."
+
+msgid "%s, with no catalogue loaded"
+msgstr "%s, bez načteného katalogu"
+
+msgid "%d sentence"
+msgid_plural "%d sentences"
+msgstr[0] "%d věta"
+msgstr[1] "%d věty"
+msgstr[2] "%d vět"
+
+# The top bar page's readout, whose counts go through tr_n() since T4, so a
+# scenario shows a count in each of Czech's three forms.
+msgid "%d control is in the overflow list, behind the button at the end of the bar."
+msgid_plural "%d controls are in the overflow list, behind the button at the end of the bar."
+msgstr[0] "%d ovládací prvek je v seznamu přetečení, za tlačítkem na konci lišty."
+msgstr[1] "%d ovládací prvky jsou v seznamu přetečení, za tlačítkem na konci lišty."
+msgstr[2] "%d ovládacích prvků je v seznamu přetečení, za tlačítkem na konci lišty."
+
+msgid "The window is %d pixel too narrow for one row, so the second row stays."
+msgid_plural "The window is %d pixels too narrow for one row, so the second row stays."
+msgstr[0] "Okno je o %d pixel příliš úzké pro jednu řadu, a tak druhá řada zůstává."
+msgstr[1] "Okno je o %d pixely příliš úzké pro jednu řadu, a tak druhá řada zůstává."
+msgstr[2] "Okno je o %d pixelů příliš úzké pro jednu řadu, a tak druhá řada zůstává."
+
+msgid "Interface"
+msgstr "Rozhraní"
+
+msgid "File"
+msgstr "Soubor"
+
+msgid "Edit"
+msgstr "Úpravy"
+
+msgid "View"
+msgstr "Zobrazení"
+
+msgid "Window"
+msgstr "Okno"
+
+msgid "Image"
+msgstr "Obrázek"
+
+msgid "Layer"
+msgstr "Vrstva"
+
+msgid "Select"
+msgstr "Výběr"
+
+msgid "Help"
+msgstr "Nápověda"
+
+msgid "Tools"
+msgstr "Nástroje"
+
+msgid "Filter"
+msgstr "Filtr"
+
+msgid "Modules"
+msgstr "Moduly"
+
+msgid "Toolbox"
+msgstr "Panel nástrojů"
+
+msgid "Layers"
+msgstr "Vrstvy"
+
+msgid "Colour Picker"
+msgstr "Výběr barvy"
+
+msgid "Info"
+msgstr "Informace"
+
+msgid "Recorder"
+msgstr "Záznam"
+
+msgid "Minimap"
+msgstr "Minimapa"
+
+msgid "Tool Options"
+msgstr "Volby nástroje"
+
+msgid "Graph"
+msgstr "Graf"
+
+msgid "Recent Presets"
+msgstr "Nedávné předvolby"
+
+msgid "Undo History"
+msgstr "Historie kroků"
+
+msgid "Reference"
+msgstr "Předlohy"
+
+msgid "Brush Presets"
+msgstr "Předvolby štětců"
+
+msgid "Pop-up Palette"
+msgstr "Vyskakovací paleta"
+
+msgid "Filters"
+msgstr "Filtry"
+
+msgid "New..."
+msgstr "Nový..."
+
+msgid "Open File..."
+msgstr "Otevřít soubor..."
+
+msgid "Import Picture..."
+msgstr "Vložit obrázek..."
+
+msgid "Save"
+msgstr "Uložit"
+
+msgid "Save As..."
+msgstr "Uložit jako..."
+
+msgid "Export..."
+msgstr "Exportovat..."
+
+msgid "Quit"
+msgstr "Ukončit"
+
+msgid "Dockers"
+msgstr "Panely"
+
+msgid "Focus Mode"
+msgstr "Soustředění"
+
+msgid "Brush"
+msgstr "Štětec"
+
+msgid "Eraser"
+msgstr "Guma"
+
+msgid "Fill"
+msgstr "Výplň"
+
+msgid "Gradient"
+msgstr "Přechod"
+
+msgid "Crop"
+msgstr "Oříznutí"
+
+msgid "Transform"
+msgstr "Transformace"
+
+msgid "Eyedropper"
+msgstr "Kapátko"
+
+msgid "Pan"
+msgstr "Posun"
+
+msgid "Zoom"
+msgstr "Lupa"
+
+msgid "Marquee"
+msgstr "Obdélníkový výběr"
+
+msgid "Ellipse Select"
+msgstr "Eliptický výběr"
+
+msgid "Lasso"
+msgstr "Laso"
+
+msgid "Magic Wand"
+msgstr "Kouzelná hůlka"
+
+msgid "Patch"
+msgstr "Záplata"
+
+msgid "%s and %s"
+msgstr "%s a %s"
+
+msgid "%s. Right press for %s."
+msgstr "%s. Pravým stiskem %s."

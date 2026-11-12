@@ -1,0 +1,28 @@
+# The box blur as the written kernel it was before it became a pixel function,
+# kept so test_box_blur.gd holds the two to the same pixels.
+
+kernel blur
+
+image src: readonly
+image mask: r32f, readonly
+image dst
+
+params:
+    int radius
+    int halo
+    vec2 origin
+
+import neighbourhood
+
+
+def blur():
+    ivec2 at = pixel + ivec2(origin)
+    if at.x >= image_size(dst).x or at.y >= image_size(dst).y:
+        return
+    int reach = min(radius, halo)
+    vec4 sum = vec4(0.0)
+    for dy in range_inclusive(-reach, reach):
+        for dx in range_inclusive(-reach, reach):
+            sum += sa_premultiplied(image_load(src, at + ivec2(halo + dx, halo + dy)))
+    int n = 2 * reach + 1
+    sa_finish(at, sa_kept(at), sa_straight(sum / (n * n)))

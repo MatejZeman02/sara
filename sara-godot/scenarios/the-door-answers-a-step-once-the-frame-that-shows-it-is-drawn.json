@@ -1,0 +1,13 @@
+[
+ {"comment": "The opening of the door session scripts/test_the_door_answers_a_step_once_the_frame_that_shows_it_is_drawn.py paints 50 strokes in, and the stroke it repeats: a small document, the brush at its default, and one short stroke on the tool route in document pixels. The suite sends every step before the first stroke as it stands and then this stroke fifty times, and reads the `drawn` key of every answer. Run alone this file paints three of the strokes and photographs them."},
+ {"document": "srgb", "size": [640, 480], "background": {"kind": "colour", "color": "#e8dcc4"}},
+ {"fit": true},
+ {"wait": 10},
+ {"tool": "brush"},
+ {"colour": "#3060a0"},
+ {"stroke": {"from": [100, 100], "to": [300, 160], "space": "document", "route": "tool", "pressure": 0.7, "steps": 8}},
+ {"stroke": {"from": [100, 200], "to": [300, 260], "space": "document", "route": "tool", "pressure": 0.7, "steps": 8}},
+ {"stroke": {"from": [100, 300], "to": [300, 360], "space": "document", "route": "tool", "pressure": 0.7, "steps": 8}},
+ {"wait": 10},
+ {"shot": "1-three-strokes"}
+]

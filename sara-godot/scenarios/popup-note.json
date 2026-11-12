@@ -1,0 +1,21 @@
+[
+  {"wait": 30},
+  {"click": {"at": [980, 18]}},
+  {"wait": 10},
+  {"key": {"key": "c", "ctrl": true, "shift": true}},
+  {"wait": 10},
+  {"press": {"button": "left", "at": [1000, 310]}},
+  {"wait": 10},
+  {"shot": "note-on-item"},
+  {"release": {"button": "left", "at": [1000, 310]}},
+  {"wait": 10},
+  {"note": "cancel"},
+  {"wait": 10},
+  {"shot": "after-cancel"},
+  {"click": {"at": [980, 18]}},
+  {"wait": 10},
+  {"click": {"at": [1000, 310]}},
+  {"wait": 10},
+  {"shot": "menu-still-works"},
+  {"state": "menu-still-works"}
+]

@@ -1,0 +1,16 @@
+[
+  {"wait": 45},
+  {"prefs": {"software_cursor": "never"}},
+  {"wait": 10},
+  {"docker": "park"},
+  {"document": "srgb"},
+  {"wait": 20},
+  {"layer": {"add": "Paper", "type": "paper"}},
+  {"layer": {"activate": "Paper", "generator": {"scale": 40.0, "second": [0.12, 0.2, 0.42, 1.0]}}},
+  {"wait": 20},
+  {"shot": "p-80"},
+  {"look": {"path": "look-p.png", "long_edge": 1920}},
+  {"zoom": 1.0},
+  {"wait": 20},
+  {"shot": "p-100"}
+]

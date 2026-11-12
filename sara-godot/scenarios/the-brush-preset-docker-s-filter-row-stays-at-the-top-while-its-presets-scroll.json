@@ -1,0 +1,17 @@
+[
+  {"wait": 40},
+  {"docker": "park"},
+  {"wait": 10},
+  {"docker": {"id": "BrushPresetsDocker", "at": [900, 200], "size": [300, 420]}},
+  {"wait": 20},
+  {"presets_docker": {}},
+  {"shot": "1-at-the-top-the-filter-row-stands-over-the-first-presets"},
+  {"wheel": {"at": [1050, 450], "notches": -250, "read": true}},
+  {"wait": 20},
+  {"presets_docker": {}},
+  {"state": "2-scrolled-to-the-end-the-filter-row-stands-where-it-stood"},
+  {"shot": "2-scrolled-to-the-end-the-filter-row-stands-where-it-stood"},
+  {"click": {"control": "ChooserTag"}},
+  {"wait": 15},
+  {"shot": "3-the-tag-filter-still-opens-its-list-at-the-end-of-the-scroll"}
+]

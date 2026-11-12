@@ -1,0 +1,53 @@
+[
+  {"wait": 20},
+  {"open": "preferences"},
+  {"wait": 20},
+
+  {"page": "Tablet"},
+  {"wait": 15},
+  {"state": "01-tablet"},
+
+  {"page": "Timelapse"},
+  {"wait": 15},
+  {"state": "02-timelapse"},
+
+  {"page": "Colour Spaces"},
+  {"wait": 15},
+  {"state": "03-colour-spaces"},
+
+  {"page": "General"},
+  {"wait": 15},
+  {"state": "04-general"},
+
+  {"page": "Brush Slots"},
+  {"wait": 15},
+  {"state": "05-brush-slots"},
+
+  {"page": "Presets"},
+  {"wait": 15},
+  {"state": "06-presets"},
+
+  {"page": "Layers"},
+  {"wait": 15},
+  {"state": "07-layers-docker"},
+
+  {"page": "Top Menu Bar"},
+  {"wait": 15},
+  {"state": "08-top-menu-bar"},
+
+  {"page": "Workspace"},
+  {"wait": 15},
+  {"state": "09-workspace"},
+
+  {"page": "Keyboard Shortcuts"},
+  {"wait": 15},
+  {"state": "10-keyboard-shortcuts"},
+
+  {"page": "Colour Themes"},
+  {"wait": 15},
+  {"state": "11-colour-themes"},
+
+  {"page": "Display"},
+  {"wait": 15},
+  {"state": "12-display"}
+]

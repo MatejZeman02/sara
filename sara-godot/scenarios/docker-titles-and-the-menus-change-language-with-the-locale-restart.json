@@ -1,0 +1,27 @@
+[
+  {"settings": "keep"},
+  {"comment": "The profile the first half left in Czech, opened again, which is a run begun in Czech. The locale is set before the fixture module registers its catalogue, so the dockers are built in English and the catalogue arriving is what has to reach them. Then English is picked, and the menu titles, which a bar built in Czech keeps, have to follow."},
+  {"args": ["--modules-dir=res://tests/fixtures/modules"]},
+  {"wait": 45},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 20},
+  {"message": {"close": "escape"}},
+  {"wait": 10},
+  {"state": "6-restart-czech"},
+  {"shot": "6-restart-czech"},
+  {"menu": "Window"},
+  {"wait": 15},
+  {"shot": "7-restart-czech-window-menu"},
+  {"key": "escape"},
+  {"wait": 10},
+
+  {"open": "preferences"},
+  {"page": "Languages"},
+  {"wait": 15},
+  {"page_row": {"row": "language", "value": 0}},
+  {"wait": 15},
+  {"key": {"key": "comma", "ctrl": true}},
+  {"wait": 20},
+  {"state": "8-restart-english"},
+  {"shot": "8-restart-english"}
+]

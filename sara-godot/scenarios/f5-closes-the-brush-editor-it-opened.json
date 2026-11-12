@@ -1,0 +1,31 @@
+[
+  {"comment": "F5 closes the brush editor it opened. F5 over the canvas opens the editor on the brush in hand, F5 again, with the editor holding the keyboard, closes it, and a third F5 opens it again. Nothing is saved."},
+  {"wait": 45},
+  {"window": [1920, 1080]},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 20},
+  {"document": "srgb"},
+  {"wait": 25},
+  {"tool": "brush"},
+  {"wait": 5},
+  {"state": "00-no-editor"},
+  {"shot": "00-no-editor"},
+
+  {"comment": "01, F5 over the canvas opens the brush editor."},
+  {"key": {"key": "f5"}},
+  {"wait": 30},
+  {"state": "01-f5-opens-the-editor"},
+  {"shot": "01-f5-opens-the-editor"},
+
+  {"comment": "02, F5 again, with the editor focused, puts it away."},
+  {"key": {"key": "f5"}},
+  {"wait": 20},
+  {"state": "02-f5-closes-it"},
+  {"shot": "02-f5-closes-it"},
+
+  {"comment": "03, a third F5 opens it again on the brush in hand."},
+  {"key": {"key": "f5"}},
+  {"wait": 30},
+  {"state": "03-f5-opens-it-again"},
+  {"shot": "03-f5-opens-it-again"}
+]

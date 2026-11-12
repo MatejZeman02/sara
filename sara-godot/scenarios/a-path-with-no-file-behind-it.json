@@ -1,0 +1,13 @@
+[
+ {
+  "args": [
+   "user://f100-there-is-no-file-here.sad"
+  ]
+ },
+ {
+  "wait": 60
+ },
+ {
+  "state": "f100-2-nothing-was-opened"
+ }
+]

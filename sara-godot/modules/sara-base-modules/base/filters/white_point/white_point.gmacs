@@ -1,0 +1,81 @@
+# Kernels: white_point
+# The white point of the Filter menu. Every output texel reads only its own
+# input texel and rewrites it in place, so this is a point kernel and keeps the
+# contract on SaPointPass: the colour field at binding 0, the selection mask at
+# binding 1 read per pixel and mixed by, and the dispatched region's origin in
+# the push constant.
+#
+# Every colour is multiplied by one matrix in linear light, the von Kries
+# scaling white_point_filter.gd builds in Bradford's cone space from the
+# colour the painter picked, already mixed with the identity by the strength.
+# An RGB document's curve is taken off, the matrix applied in its own linear
+# RGB and the curve put back. An Oklab document is read back to linear sRGB,
+# where the matrix was built, and written back to Oklab. Alpha is kept.
+#
+# Nothing clamps (hard rule 5). The curve is mirrored through the origin, so a
+# negative channel keeps its sign, and a colour above white is scaled like any
+# other.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel white_point
+
+import linear_srgb_color_space
+import transfer_curve
+
+image canvas
+# The document-wide selection, as in adjust.gmacs: a 1 by 1 mask reads as 1.0
+# everywhere through the clamped read (core/api/selection/sa_selection.gd).
+image mask: r32f, readonly
+
+# 80 bytes: the region's origin, the coordinate system and a spare, the
+# matrix by column, the document's curve, then three spares.
+params:
+    float origin_x  # the dispatched region's origin in the chunk, in pixels
+    float origin_y  # zero for the destructive pass, which covers the chunk
+    float coordinates
+    float spare_a
+    float balance[9]
+    float transfer_slope
+    float transfer_threshold
+    float transfer_gain
+    float transfer_exponent
+    float spare_b
+    float spare_c
+    float spare_d
+
+
+def balance_matrix() -> mat3:
+    return mat3(
+        balance[0], balance[1], balance[2],
+        balance[3], balance[4], balance[5],
+        balance[6], balance[7], balance[8])
+
+const int SA_COORDS_OKLAB = 1
+
+
+def document_is_oklab() -> bool: return int(coordinates + 0.5) == SA_COORDS_OKLAB
+
+
+def document_to_light(vec3 c) -> vec3:
+    if document_is_oklab(): return oklab_to_linear_srgb(c)
+    return sa_transfer_decode(c, transfer_slope, transfer_threshold, transfer_gain, transfer_exponent)
+
+
+def light_to_document(vec3 c) -> vec3:
+    if document_is_oklab(): return linear_srgb_to_oklab(c)
+    return sa_transfer_encode(c, transfer_slope, transfer_threshold, transfer_gain, transfer_exponent)
+
+
+def coverage_at(ivec2 px) -> float:
+    return mask[min(px, image_size(mask) - 1)].r
+
+
+def white_point():
+    ivec2 px = ivec2(global_id.xy) + ivec2(int(origin_x), int(origin_y))
+    ivec2 size = image_size(canvas)
+    if px.x >= size.x or px.y >= size.y:
+        return
+    vec4 c = canvas[px]
+    vec3 balanced = light_to_document(balance_matrix() * document_to_light(c.rgb))
+    canvas[px] = vec4(mix(c.rgb, balanced, coverage_at(px)), c.a)

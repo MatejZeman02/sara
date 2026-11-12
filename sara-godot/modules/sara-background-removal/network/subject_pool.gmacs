@@ -1,0 +1,45 @@
+# Kernel: subject_pool
+#
+# U²-NetP's max pool, `nn.MaxPool2d(2, stride=2, ceil_mode=True)`: the largest
+# of each 2×2 square, the output half the input's size rounded up, so the last
+# row or column of an odd size is a square that runs off the edge and takes the
+# largest of the texels it holds. Tensors are laid out as `subject_convolve`
+# says.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel subject_pool
+
+buffer source: float values[]
+buffer target: float values[]
+
+params:
+    int source_at
+    int target_at
+    int channels
+    # The input's size. The output's is half of each, rounded up.
+    int height
+    int width
+
+
+@workgroup_size(64, 1)
+def subject_pool():
+    int out_height = (height + 1) / 2
+    int out_width = (width + 1) / 2
+    int at = int(global_id.x)
+    int channel = int(global_id.y)
+    if at >= out_height * out_width or channel >= channels:
+        return
+    int y = at / out_width
+    int x = at - y * out_width
+    int base = source_at + channel * height * width
+    int sy = 2 * y
+    int sx = 2 * x
+    float largest = source.values[base + sy * width + sx]
+    if sx + 1 < width:
+        largest = max(largest, source.values[base + sy * width + sx + 1])
+    if sy + 1 < height:
+        largest = max(largest, source.values[base + (sy + 1) * width + sx])
+        if sx + 1 < width:
+            largest = max(largest, source.values[base + (sy + 1) * width + sx + 1])
+    target.values[target_at + channel * out_height * out_width + at] = largest

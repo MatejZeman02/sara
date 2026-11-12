@@ -1,0 +1,656 @@
+# Kernels: brightness_contrast, hue_saturation_lightness, levels, curves,
+#          color_balance, palette, exposure
+# The destructive adjustments of Filter. Each rewrites one chunk of one colour
+# field in place, through the selection mask, and nothing here clamps (hard
+# rule 5). The one bound is the depth's own largest storable number, see
+# store_adjusted below.
+#
+# Brightness and contrast act in light, a power curve on linear luminance and a
+# factor, and a record saved before that keeps the old formula on the encoded
+# RGB view (see the block above the kernel). Hue, saturation and lightness are Oklab-defined: a rotation of the a
+# and b axes, a scale of them, and an offset of L. Saturation in a record that
+# names CAM16 scales CAM16 chroma instead, through libs/cam16_hellwig.gmacs.
+# Levels and Curves are RGB-defined except on their Oklab L channel. Levels
+# borrows other kernels' parameter slots, see the block above its kernel. Colour
+# balance is RGB-defined for its shift and Oklab-defined for its bands.
+#
+# An operation defined only for positive channels cleans its own input through
+# libs/positive_channels.gmacs. Colour balance clamps the L its bands read and
+# adds its shift, so it needs no net.
+#
+# The push constant's tail is SaColorSpace.to_push_constant(), the same
+# twenty-four floats composite.gmacs takes. The helpers are the composite
+# kernel's, repeated because a .gmacs block cannot be shared between files
+# without sharing the push constant that names it.
+#
+# Every kernel also serves the live preview: the compositor copies the dirty
+# region of the active layer's chunk into a scratch and dispatches over that
+# region alone, which is what origin_x and origin_y are for.
+#
+# Every kernel writes through store_adjusted. A finite number past the largest
+# the depth holds (65504 at F16) is stored as that largest, because an infinity
+# turns the next filter's arithmetic into NaN. A NaN is never hidden: it is
+# stored as it came and marked in the guard buffer, which SaPointAdjust reads to
+# name the filter that wrote it.
+
+kernel brightness_contrast
+kernel hue_saturation_lightness
+kernel levels
+kernel curves
+kernel color_balance
+kernel palette
+kernel exposure
+
+import cam16_hellwig
+import linear_srgb_color_space
+import positive_channels
+import transfer_curve
+
+image canvas
+# The document-wide selection, as in paint.gmacs: a 1 by 1 mask reads as 1.0
+# everywhere through the clamped read (core/api/selection/sa_selection.gd).
+image mask: r32f, readonly
+# Five lookups of CURVE_SAMPLES, one per channel, for the curves kernel,
+#   then colour balance's nine amounts above them, then the palette's
+#   count and its colours in Oklab above those, then Levels' Equalize map
+#   above the palette. Bound on every dispatch
+#   in this file and not only on those two, because a uniform set has to cover
+#   every binding the compiled kernel kept: the other three ignore it and are
+#   still dispatched with it there.
+#
+#   Colour balance rides here for the reason SaPointAdjust.BALANCE_BASE gives:
+#   nine numbers and a toggle do not fit in a push constant already at the 128
+#   bytes Vulkan guarantees, and this buffer was bound anyway.
+buffer curves_table: float samples[]
+# What store_adjusted keeps to and what it found: the largest magnitude the
+#   document's depth holds, and one once any texel came out NaN. A buffer of
+#   its own per record rather than two more floats in the table, so the table
+#   keeps its layout and a record's mark is its own.
+buffer store_guard: float largest; uint not_a_number
+
+# 128 bytes, the Vulkan guarantee. Eight floats of parameters, then the colour
+# space tail exactly as SaColorSpace writes it.
+params:
+    float brightness  # added to the encoded RGB view
+    float contrast  # factor about 0.5 in the encoded RGB view
+    float hue  # radians, a rotation of Oklab a and b
+    float saturation  # factor on Oklab a and b
+    float lightness  # added to Oklab L
+    float origin_x  # the dispatched region's origin in the chunk, in pixels
+    float origin_y  # zero for the destructive pass, which covers the chunk
+    float spare  # the sixth parameter, which levels, curves, colour balance, brightness and contrast, and hue saturation lightness read
+    float doc_to_linear_srgb[9]
+    float linear_srgb_to_doc[9]
+    float transfer_slope
+    float transfer_threshold
+    float transfer_gain
+    float transfer_exponent
+    float coordinates
+
+
+def to_linear_srgb_matrix() -> mat3:
+    return mat3(
+        doc_to_linear_srgb[0], doc_to_linear_srgb[1], doc_to_linear_srgb[2],
+        doc_to_linear_srgb[3], doc_to_linear_srgb[4], doc_to_linear_srgb[5],
+        doc_to_linear_srgb[6], doc_to_linear_srgb[7], doc_to_linear_srgb[8])
+
+
+def from_linear_srgb_matrix() -> mat3:
+    return mat3(
+        linear_srgb_to_doc[0], linear_srgb_to_doc[1], linear_srgb_to_doc[2],
+        linear_srgb_to_doc[3], linear_srgb_to_doc[4], linear_srgb_to_doc[5],
+        linear_srgb_to_doc[6], linear_srgb_to_doc[7], linear_srgb_to_doc[8])
+
+
+def document_to_linear(vec3 c) -> vec3:
+    return sa_transfer_decode(c, transfer_slope, transfer_threshold, transfer_gain, transfer_exponent)
+
+
+def linear_to_document(vec3 c) -> vec3:
+    return sa_transfer_encode(c, transfer_slope, transfer_threshold, transfer_gain, transfer_exponent)
+
+const int SA_COORDS_OKLAB = 1
+
+
+def document_is_oklab() -> bool: return int(coordinates + 0.5) == SA_COORDS_OKLAB
+
+
+def document_to_rgb(vec3 c) -> vec3:
+    if not document_is_oklab(): return c
+    return linear_to_document(from_linear_srgb_matrix() * oklab_to_linear_srgb(c))
+
+
+def rgb_to_document(vec3 c) -> vec3:
+    if not document_is_oklab(): return c
+    return linear_srgb_to_oklab(to_linear_srgb_matrix() * document_to_linear(c))
+
+
+def document_to_oklab(vec3 c) -> vec3:
+    if document_is_oklab(): return c
+    return linear_srgb_to_oklab(to_linear_srgb_matrix() * document_to_linear(c))
+
+
+def oklab_to_document(vec3 c) -> vec3:
+    if document_is_oklab(): return c
+    return linear_to_document(from_linear_srgb_matrix() * oklab_to_linear_srgb(c))
+
+
+def coverage_at(ivec2 px) -> float:
+    return mask[min(px, image_size(mask) - 1)].r
+
+# *adjusted* over the texel *c* at *px*, through the selection, kept to the
+#   two promises the header gives.
+
+
+def store_adjusted(ivec2 px, vec4 c, vec3 adjusted):
+    vec3 kept = mix(c.rgb, adjusted, coverage_at(px))
+    bvec3 not_a_number = isnan(kept)
+    if any(not_a_number):
+        store_guard.not_a_number = 1u
+    float largest = store_guard.largest
+    canvas[px] = vec4(mix(clamp(kept, -largest, largest), kept, not_a_number), c.a)
+
+# Brightness and contrast have two formulas, and the spare says which.
+#   A record saved before the formula in light names no formula and runs the
+#   first, so a picture it drew draws the same.
+#
+#   The first is the old one, on the document's encoded RGB view: contrast a
+#   factor about 0.5, brightness an offset. With the factor above one every
+#   channel below 0.5 goes down, so a dark or saturated colour crosses zero.
+#
+#   The second is darktable's shape, in light. Contrast is a power curve on
+#   linear luminance about a grey fulcrum, Y' = F * (Y / F) ^ contrast, and
+#   every linear channel is scaled by Y' over Y, so the colour's chromaticity,
+#   and with it its Oklab hue, holds. Brightness is a factor on the linear
+#   channels. Both are positive multiples of the colour, so neither can change a
+#   channel's sign, and a luminance at or below zero, which has no power, is
+#   left where it is. The filter's sliders are mapped to the exponent and the
+#   factor in brightness_contrast_filter.gd.
+#
+#   Luminance is Rec. 709's, read on linear sRGB, which is where
+#   to_linear_srgb_matrix() takes a document of any gamut. The scale is applied
+#   in the document's own linear space, where a scalar means the same thing.
+const float BC_FULCRUM = 0.1845
+const float BC_LUMINANCE_R = 0.2126
+const float BC_LUMINANCE_G = 0.7152
+const float BC_LUMINANCE_B = 0.0722
+
+
+def bc_luminance_scale(float luminance) -> float:
+    if luminance <= 0.0: return 1.0
+    return BC_FULCRUM * pow(luminance / BC_FULCRUM, contrast) / luminance
+
+
+def brightness_contrast_in_light(vec3 c) -> vec3:
+    if document_is_oklab():
+        vec3 light = oklab_to_linear_srgb(c)
+        float y = dot(light, vec3(BC_LUMINANCE_R, BC_LUMINANCE_G, BC_LUMINANCE_B))
+        return linear_srgb_to_oklab(light * (bc_luminance_scale(y) * brightness))
+    vec3 linear = document_to_linear(c)
+    float y = dot(to_linear_srgb_matrix() * linear, vec3(BC_LUMINANCE_R, BC_LUMINANCE_G, BC_LUMINANCE_B))
+    return linear_to_document(linear * (bc_luminance_scale(y) * brightness))
+
+
+def brightness_contrast():
+    ivec2 px = ivec2(global_id.xy) + ivec2(int(origin_x), int(origin_y))
+    ivec2 size = image_size(canvas)
+    if px.x >= size.x or px.y >= size.y:
+        return
+    vec4 c = canvas[px]
+    vec3 adjusted
+    if spare > 0.5:
+        adjusted = brightness_contrast_in_light(c.rgb)
+    else:
+        vec3 rgb = document_to_rgb(c.rgb)
+        rgb = (rgb - 0.5) * contrast + 0.5 + brightness
+        adjusted = rgb_to_document(rgb)
+    store_adjusted(px, c, adjusted)
+
+# Exposure scales the light. The first parameter, the one brightness uses, is
+#   the factor, two to the power of the stops, which the filter works out so a
+#   record keeps the stops the painter set. A document on a transfer curve is
+#   decoded, scaled and encoded again, a linear one is scaled as it is, and an
+#   Oklab one is scaled in its own coordinates by the cube root of the factor,
+#   which is the same light: Oklab takes the cube root of the cone responses, so
+#   every one of the three coordinates goes by it. The factor is positive, so
+#   no channel changes sign, and nothing is clamped.
+
+
+def exposure_in_light(vec3 c) -> vec3:
+    if document_is_oklab():
+        return c * pow(brightness, 1.0 / 3.0)
+    return linear_to_document(document_to_linear(c) * brightness)
+
+
+def exposure():
+    ivec2 px = ivec2(global_id.xy) + ivec2(int(origin_x), int(origin_y))
+    ivec2 size = image_size(canvas)
+    if px.x >= size.x or px.y >= size.y:
+        return
+    vec4 c = canvas[px]
+    store_adjusted(px, c, exposure_in_light(c.rgb))
+
+
+def hue_saturation_lightness():
+    ivec2 px = ivec2(global_id.xy) + ivec2(int(origin_x), int(origin_y))
+    ivec2 size = image_size(canvas)
+    if px.x >= size.x or px.y >= size.y:
+        return
+    vec4 c = canvas[px]
+    vec3 lab = sa_positive_oklab(document_to_oklab(c.rgb))
+    float cs = cos(hue)
+    float sn = sin(hue)
+    vec2 turned = vec2(lab.y * cs - lab.z * sn, lab.y * sn + lab.z * cs)
+    vec2 ab = turned * saturation
+    float l = lab.x
+    # Saturation in CAM16, the spare at two: the turned colour's chroma is
+    #   scaled at the hue and the brightness it shows, J_HK, so a colour that
+    #   gains chroma loses lightness and does not look brighter. A record that
+    #   names no model sends nought, the Oklab scale above.
+    if spare > 1.5:
+        if saturation != 1.0:
+            vec3 linear = oklab_to_linear_srgb(vec3(lab.x, turned))
+            vec3 kept = linear_srgb_to_oklab(sa_cam16_scale_chroma_keeping_brightness(linear, saturation))
+            l = kept.x
+            ab = kept.yz
+        else:
+            ab = turned
+    # Colorize, the spare at one: the pixel's own hue is thrown away and a
+    #   and b are the one hue and chroma asked for, L kept.
+    elif spare > 0.5:
+        ab = vec2(cs, sn) * saturation
+    vec3 adjusted = oklab_to_document(vec3(l + lightness, ab))
+    store_adjusted(px, c, adjusted)
+
+# Levels has six numbers where the two passes above have at most three,
+#   and this block is already at the 128 bytes Vulkan guarantees, so it borrows
+#   the five parameter slots and the spare rather than growing. Named here so
+#   the kernel below reads as levels rather than as brightness.
+#
+# The six were `#define` aliases in the GLSL this file was converted from. The
+# dialect has no preprocessor, so each is a function of no arguments: the same
+# read under the same name, with a pair of brackets at the call site.
+
+
+def lv_in_black() -> float: return brightness
+
+
+def lv_in_gamma() -> float: return contrast
+
+
+def lv_in_white() -> float: return hue
+
+
+def lv_out_black() -> float: return saturation
+
+
+def lv_out_white() -> float: return lightness
+
+
+def lv_channel() -> float: return spare
+
+const int LV_MASTER = 0
+const int LV_OKLAB_L = 4
+
+# The input range mapped onto the output range, with the midpoint moved by a
+#   gamma. Nothing clamps, so a value the input range excludes comes out beyond
+#   the output range rather than pinned to it (hard rule 5), and pow is mirrored
+#   through the origin because pow of a negative base is undefined and this
+#   canvas carries negatives on purpose.
+#
+#   The mirror keeps the answer finite and not meaningful: a gamma that lifts
+#   the positives pushes a negative further down. So the
+#   RGB channels go through the safety net of positive_channels.gmacs before a
+#   gamma other than one, which desaturates a colour with a negative channel
+#   until that channel is zero, and the mirror is left for the Oklab L channel,
+#   a single number with no colour to desaturate. A gamma of one is a straight
+#   line, well defined for any sign, so it runs the values as they are.
+#
+#   Past the input range the power gives way to its own tangent at the end, a
+#   straight line of slope one over gamma, the way Curves rides the end of its
+#   curve and Equalize the end of its map. The power was defined there and not
+#   usable: a step-wide span puts a value of 4 at 601, a gamma of 0.1 raises
+#   that to 6e27, an F16 document stores an infinity, and on the L channel the
+#   cube back out of Oklab overflows into NaN. Inside the range nothing
+#   changed, and the line meets the power at the end with its slope.
+
+
+def levels_gamma() -> float: return lv_in_gamma() > 0.0 ? lv_in_gamma() : 1.0
+
+
+def levels_in(float x) -> float:
+    float span = lv_in_white() - lv_in_black()
+    return span != 0.0 ? (x - lv_in_black()) / span : x - lv_in_black()
+
+
+def levels_out(float v) -> float:
+    float m = abs(v)
+    float bent = m <= 1.0 ? pow(m, 1.0 / levels_gamma()) : 1.0 + (m - 1.0) / levels_gamma()
+    return lv_out_black() + sign(v) * bent * (lv_out_white() - lv_out_black())
+
+
+def levels_curve(float x) -> float:
+    return levels_out(levels_in(x))
+
+# The curve over the RGB channels *chosen* marks with a one, the others kept as
+#   they are, so a single channel is netted as part of the colour it sits in.
+
+
+def levels_rgb(vec3 rgb, vec3 chosen) -> vec3:
+    vec3 v = mix(rgb, vec3(levels_in(rgb.r), levels_in(rgb.g), levels_in(rgb.b)), chosen)
+    if levels_gamma() != 1.0:
+        v = sa_positive_channels(v)
+    return mix(rgb, vec3(levels_out(v.r), levels_out(v.g), levels_out(v.b)), chosen)
+
+# Equalize, the map Levels fills from the layer's cumulative distribution:
+#   EQUALIZE_SAMPLES entries from input level 0 to 1 above the palette, after
+#   one float naming the channel they were taken from, as SaPointAdjust's
+#   EQUALIZE_BASE lays them out. At minus one there is no map, and the
+#   kernel skips the pass. The offset is written out because the palette's constants
+#   are declared further down: five lookups of 256, nine amounts, the
+#   palette's count, 32 colours of three and 32 bands of four.
+#
+#   A value outside 0 to 1 is not on the map, and pinning it to the map's end
+#   would discard what hard rule 5 keeps. So it carries on along the end's own
+#   slope. A cumulative distribution is flat past the last painted level,
+#   and a flat end would pin as surely as a clamp, so a flat end carries the
+#   identity's slope of one instead.
+const int EQUALIZE_BASE = 5 * 256 + 9 + 1 + 32 * 3 + 32 * 4
+const int EQUALIZE_SAMPLES = 256
+
+
+def equalize_channel() -> int:
+    return int(floor(curves_table.samples[EQUALIZE_BASE] + 0.5))
+
+
+def equalize_entry(int i) -> float:
+    return curves_table.samples[EQUALIZE_BASE + 1 + i]
+
+
+def equalize_end_slope(int low, int high) -> float:
+    float slope = (equalize_entry(high) - equalize_entry(low)) * (EQUALIZE_SAMPLES - 1)
+    return slope > 0.0 ? slope : 1.0
+
+
+def equalize_at(float x) -> float:
+    int last = EQUALIZE_SAMPLES - 1
+    if x < 0.0:
+        return equalize_entry(0) + x * equalize_end_slope(0, 1)
+    if x > 1.0:
+        return equalize_entry(last) + (x - 1.0) * equalize_end_slope(last - 1, last)
+    float pos = x * last
+    int i = min(int(floor(pos)), last - 1)
+    return mix(equalize_entry(i), equalize_entry(i + 1), pos - i)
+
+# The map over the colour *c*, on Oklab L alone, whatever channel the handles
+#   are on, with a and b kept, so Equalize moves lightness and never chroma or
+#   hue. The panel counts
+#   the map on Oklab L, the Lightness row of the graph, because a map counted
+#   on one scale and read on another sends the layer past its white. An older
+#   record holds a map counted on the sRGB levels of its channel, and it is
+#   read on Oklab L all the same: both scales run from black at nought to
+#   white at one, so the spread is near the one it was, and the chroma stays.
+
+
+def equalized(vec3 c) -> vec3:
+    vec3 lab = sa_positive_oklab(document_to_oklab(c))
+    return oklab_to_document(vec3(equalize_at(lab.x), lab.y, lab.z))
+
+
+def levels():
+    ivec2 px = ivec2(global_id.xy) + ivec2(int(origin_x), int(origin_y))
+    ivec2 size = image_size(canvas)
+    if px.x >= size.x or px.y >= size.y:
+        return
+    vec4 c = canvas[px]
+    # Equalize first, so the handles move over the equalized layer.
+    vec3 base = c.rgb
+    if equalize_channel() >= 0:
+        base = equalized(base)
+    int channel = int(lv_channel() + 0.5)
+    vec3 adjusted
+    if channel == LV_OKLAB_L:
+        # The lightness channel is Oklab's, so a Levels drag on it moves what
+        #           the eye reads as light rather than what the file stores.
+        vec3 lab = sa_positive_oklab(document_to_oklab(base))
+        adjusted = oklab_to_document(vec3(levels_curve(lab.x), lab.y, lab.z))
+    else:
+        vec3 chosen = vec3(1.0)
+        if channel != LV_MASTER:
+            chosen = vec3(0.0)
+            chosen[channel - 1] = 1.0
+        adjusted = rgb_to_document(levels_rgb(document_to_rgb(base), chosen))
+    store_adjusted(px, c, adjusted)
+
+# Curves. The five lookups in the buffer are Master, Red, Green, Blue and
+#   Oklab L, in that order, each CURVE_SAMPLES entries from 0 to 1. Master runs
+#   on all three channels first, then each channel's own, which is the order
+#   Photoshop applies them in.
+#
+#   The Oklab pass is the expensive one, a round trip out of and back into the
+#   document's own coordinates, so it runs only when the spare says its curve is
+#   not the identity.
+const int CURVE_SAMPLES = 256
+const int CURVE_MASTER = 0
+const int CURVE_OKLAB_L = 4
+
+# The lookup read between two entries, which is what makes a 256-entry table
+#   enough for a smooth curve on float paint.
+#
+#   Outside 0 to 1 the curve is not defined, and clamping there would discard
+#   the out-of-range values hard rule 5 exists to keep. So the value rides on
+#   the offset the nearest end of the curve has: a curve that lifts black by a
+#   tenth lifts a negative by a tenth too, and one that changes nothing changes
+#   nothing.
+
+
+def curve_at(int channel, float x) -> float:
+    float t = clamp(x, 0.0, 1.0)
+    float pos = t * (CURVE_SAMPLES - 1)
+    int i = int(floor(pos))
+    int j = min(i + 1, CURVE_SAMPLES - 1)
+    int base = channel * CURVE_SAMPLES
+    float y = mix(curves_table.samples[base + i], curves_table.samples[base + j], pos - i)
+    return y + (x - t)
+
+
+def curves():
+    ivec2 px = ivec2(global_id.xy) + ivec2(int(origin_x), int(origin_y))
+    ivec2 size = image_size(canvas)
+    if px.x >= size.x or px.y >= size.y:
+        return
+    vec4 c = canvas[px]
+    vec3 rgb = document_to_rgb(c.rgb)
+    for ch in range(3):
+        rgb[ch] = curve_at(ch + 1, curve_at(CURVE_MASTER, rgb[ch]))
+    vec3 adjusted = rgb_to_document(rgb)
+    if spare > 0.5:
+        vec3 lab = sa_positive_oklab(document_to_oklab(adjusted))
+        adjusted = oklab_to_document(vec3(curve_at(CURVE_OKLAB_L, lab.x), lab.y, lab.z))
+    store_adjusted(px, c, adjusted)
+
+# Colour balance. Three axes named for the pair each end of a slider
+#   reaches, cyan-red on the red channel, magenta-green on the green and
+#   yellow-blue on the blue, applied in the document's own encoded RGB view the
+#   way brightness and contrast are.
+#
+#   The nine amounts are in the buffer above the lookups, band-major, darkest
+#   band first, and each is -1 to 1. The spare is the preserve-luminosity
+#   toggle.
+#
+#   The bands are a partition of Oklab lightness rather than of the RGB value,
+#   because "shadows" is what the eye reads as dark and Oklab L is the only
+#   number in this file that says so. The three weights are two smoothsteps and
+#   what is left over, so they sum to exactly one at every L and neither end
+#   band ever reaches past the middle: a colour at L 0.5 is entirely midtones, a
+#   black is entirely shadows, and nothing is double counted. L is clamped for
+#   the weighting alone, so a value above white is a highlight rather than an
+#   extrapolation, while the shift still lands on the value the file holds
+#   (hard rule 5).
+#
+#   BALANCE_STRENGTH is the unit's choice. A slider at its end adds a quarter of
+#   the encoded range to one channel, so mid grey goes to 0.625 rather than to
+#   1.5: strong enough to see at the top of the slider and fine enough to steer
+#   with in the middle, where a factor of 1.0 would have spent the whole
+#   adjustment in the slider's first tenth.
+const int BALANCE_BASE = 5 * CURVE_SAMPLES
+const float BALANCE_STRENGTH = 0.25
+
+
+def balance_shift(int band) -> vec3:
+    int base = BALANCE_BASE + band * 3
+    return vec3(curves_table.samples[base], curves_table.samples[base + 1], curves_table.samples[base + 2])
+
+
+def color_balance():
+    ivec2 px = ivec2(global_id.xy) + ivec2(int(origin_x), int(origin_y))
+    ivec2 size = image_size(canvas)
+    if px.x >= size.x or px.y >= size.y:
+        return
+    vec4 c = canvas[px]
+    vec3 lab = document_to_oklab(c.rgb)
+    float l = clamp(lab.x, 0.0, 1.0)
+    float shadows = smoothstep(0.5, 0.0, l)
+    float highlights = smoothstep(0.5, 1.0, l)
+    float midtones = 1.0 - shadows - highlights
+    vec3 shift = shadows * balance_shift(0) + midtones * balance_shift(1) + highlights * balance_shift(2)
+
+    vec3 rgb = document_to_rgb(c.rgb) + shift * BALANCE_STRENGTH
+    vec3 adjusted = rgb_to_document(rgb)
+    if spare > 0.5:
+        # The hue and chroma the shift produced, at the lightness the pixel
+        #           already had, which is what "preserve luminosity" means everywhere
+        #           it is offered.
+        vec3 shifted = document_to_oklab(adjusted)
+        adjusted = oklab_to_document(vec3(lab.x, shifted.y, shifted.z))
+    store_adjusted(px, c, adjusted)
+
+# The palette filter, which the painter reads as Colour Lookup. Every
+#   pixel moves towards the palette colour nearest to it in Oklab, by an amount
+#   that is the three sliders weighted by the same three lightness bands colour
+#   balance uses, so a slider at nothing leaves its band exactly as it was and
+#   the shot at zero is the picture before.
+#
+#   The palette rides the buffer above colour balance's nine amounts, for the
+#   reason those ride it: a count and up to PALETTE_MAX colours in Oklab do
+#   not fit a push constant, and the buffer is bound on every dispatch anyway.
+#   Nearest in Oklab rather than in RGB because that is the distance the eye
+#   reads, and the move is in Oklab for the same reason, so a red shadow
+#   pulled halfway to a blue palette colour passes through purple rather than
+#   through the grey an RGB average makes. Nothing clamps: a pixel outside the
+#   gamut moves the same fraction of its distance (hard rule 5).
+#
+# Each colour carries its own three bands and an influence, so one colour of
+#   the palette can pull on the shadows while another pulls on the highlights.
+#   A colour's pull on a pixel is its
+#   own bands weighted by that pixel's lightness bands, and its score is the
+#   pixel's distance to it per unit of pull times influence. So a colour with
+#   nothing in the shadows never takes a shadow however near it is, and twice
+#   the influence reaches twice as far.
+#   The bands sit after all PALETTE_MAX colours rather than beside each one,
+#   four floats a colour, so a colour's offset is three floats on from the one
+#   before it whatever its bands hold.
+#
+# A pixel moves towards a blend of the colours and not towards the one colour
+#   with the least score. Towards the least alone, the two pixels either
+#   side of the line where that colour changes go to two different colours,
+#   and a smooth ramp at full bands breaks into flat areas with a hard edge
+#   between them. So each colour weighs in by its score against the least,
+#   palette_weight below, and the pixel moves by each colour's own pull
+#   towards it in that share. On the line both colours weigh one and the
+#   pixel goes halfway, and the share passes smoothly to nothing as the other
+#   colour falls behind, so a pixel well inside one colour's territory still
+#   goes to that colour alone, and a pixel equal to a colour stays itself.
+#   One colour, or a pixel far from every border, moves the whole of its pull.
+const int PALETTE_BASE = BALANCE_BASE + 9
+const int PALETTE_MAX = 32
+const int PALETTE_BANDS = PALETTE_BASE + 1 + PALETTE_MAX * 3
+# Where a colour starts to weigh in, as the least score over its own. At a
+#   third, a ramp from one colour to another passes over its middle half and
+#   is flat at either colour over the quarter at each end, and its steepest
+#   step is three times the ramp's own. Tried on the spheres beside a half and
+#   a fifth: a half left the edge of each shadow narrow enough to read as a
+#   line, and a fifth let the dark underside and the background drift to a
+#   mix of every colour, so the flat look was gone.
+const float PALETTE_BLEND_FROM = 1.0 / 3.0
+
+
+def palette_count() -> int:
+    return clamp(int(curves_table.samples[PALETTE_BASE] + 0.5), 0, PALETTE_MAX)
+
+
+def palette_lab(int i) -> vec3:
+    int base = PALETTE_BASE + 1 + i * 3
+    return vec3(curves_table.samples[base], curves_table.samples[base + 1], curves_table.samples[base + 2])
+
+# Shadows, midtones, highlights and influence of colour i.
+
+
+def palette_bands(int i) -> vec4:
+    int base = PALETTE_BANDS + i * 4
+    return vec4(
+        curves_table.samples[base], curves_table.samples[base + 1],
+        curves_table.samples[base + 2], curves_table.samples[base + 3])
+
+# How much a colour of score *score* weighs beside the colour of the least
+#   score *best*, which weighs one. Nothing below PALETTE_BLEND_FROM, then a
+#   square up to one, so the share leaves nothing without a kink and is
+#   steepest on the line between the two colours. A score of nothing is a
+#   pixel on the colour itself, and weighs one.
+
+
+def palette_weight(float best, float score) -> float:
+    float ratio = score > 0.0 ? best / score : 1.0
+    float share = clamp((ratio - PALETTE_BLEND_FROM) / (1.0 - PALETTE_BLEND_FROM), 0.0, 1.0)
+    return share * share
+
+# Colour i's pull on a pixel in the lightness bands *shadows*, *midtones* and
+#   *highlights*.
+
+
+def palette_pull(int i, float shadows, float midtones, float highlights) -> float:
+    vec4 bands = palette_bands(i)
+    return shadows * bands.x + midtones * bands.y + highlights * bands.z
+
+
+def palette():
+    ivec2 px = ivec2(global_id.xy) + ivec2(int(origin_x), int(origin_y))
+    ivec2 size = image_size(canvas)
+    if px.x >= size.x or px.y >= size.y:
+        return
+    int count = palette_count()
+    if count == 0:
+        return
+    vec4 c = canvas[px]
+    vec3 lab = sa_positive_oklab(document_to_oklab(c.rgb))
+    float l = clamp(lab.x, 0.0, 1.0)
+    float shadows = smoothstep(0.5, 0.0, l)
+    float highlights = smoothstep(0.5, 1.0, l)
+    float midtones = 1.0 - shadows - highlights
+    int nearest = -1
+    float best = 0.0
+    for i in range(count):
+        float reach = palette_pull(i, shadows, midtones, highlights) * palette_bands(i).w
+        if reach <= 0.0:
+            continue
+        float score = distance(lab, palette_lab(i)) / reach
+        if nearest < 0 or score < best:
+            nearest = i
+            best = score
+    if nearest < 0:
+        return
+    # The colour of the least score weighs one by its index rather than by
+    #   its score worked again, so the sum is never below one.
+    vec3 move = vec3(0.0)
+    float total = 0.0
+    for i in range(count):
+        float pull = palette_pull(i, shadows, midtones, highlights)
+        float reach = pull * palette_bands(i).w
+        if reach <= 0.0:
+            continue
+        vec3 candidate = palette_lab(i)
+        float weight = i == nearest ? 1.0 : palette_weight(best, distance(lab, candidate) / reach)
+        move += weight * pull * (candidate - lab)
+        total += weight
+    vec3 adjusted = oklab_to_document(lab + move / total)
+    store_adjusted(px, c, adjusted)

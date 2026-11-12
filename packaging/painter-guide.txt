@@ -1,0 +1,172 @@
+SARA, A PAGE FOR THE PAINTER
+============================
+
+Sara is a painting program that paints on the graphics card, in floating
+point colour, with brushes, layers, filters and a pen. This page says which
+download to take, what your machine needs, where Sara keeps your things and
+how to tell us about a bug. It is the only page in the zip written for you.
+AGENTS.md beside it is for a coding agent, and LICENSE and THIRDPARTY.txt are
+the licences.
+
+
+WHICH DOWNLOAD TO TAKE
+----------------------
+
+Each version comes as two zips, and the last word of the name tells them
+apart.
+
+  sara-windows-x86_64-...-release.zip   Take this one. It is the build to
+                                        paint with, it starts sooner and
+                                        paints a little faster.
+
+  sara-windows-x86_64-...-debug.zip     Take this one only to help with a
+                                        bug. Reproduce the bug in it and send
+                                        its log (see SENDING A BUG below).
+                                        It is slower, and when it crashes its
+                                        log names the line that failed, which
+                                        the release build cannot.
+
+Both read and write the same settings, brushes and paintings, so you can
+switch between them and back.
+
+On Linux the same two come as archives, and the last word tells them apart
+the same way:
+
+  sara-linux-x86_64-...-release.tar.gz  Take this one.
+  sara-linux-x86_64-...-debug.tar.gz    Only to help with a bug.
+
+Every download carries the Python client, sara.py and the modules beside it,
+next to the program, so a notebook or a script can drive Sara. Python is not
+included, the client needs Python 3 with numpy, and a notebook IPython and
+ipywidgets too. The client is also a download of its own,
+sara-python-...zip, for a painter who wants it without the program.
+
+On an Android tablet there is one file, sara-android-...-debug.apk (see ON AN
+ANDROID TABLET below).
+
+
+THE FIRST START
+---------------
+
+What the machine needs:
+
+  - Windows 10 or 11, 64-bit.
+  - A graphics card with a Vulkan driver. Every card of the last ten years
+    from NVIDIA, AMD or Intel has one, install the newest driver from the
+    card maker's site. Without Vulkan Sara still starts, but it cannot paint.
+  - The card has to offer what Sara's brushes run on: compute shaders
+    (GLSL 450), 32-bit and 16-bit float images it can write to, 128 bytes of
+    push constants, workgroups of 256 and a texture as large as the canvas.
+    Sara reads these from the card at every start and writes the answer to
+    its log, on the line that starts with Floor: "met", or what fell short.
+    Vulkan promises only 4096 pixels on a side, so on some cards a very large
+    canvas cannot be shown, and Sara says so rather than painting nothing.
+  - The minimum GPU: not measured yet. Until it is, the list above is the
+    whole requirement.
+  - The runtime: nothing to install. Sara carries its own C++ runtime, and
+    the C runtime it uses is part of Windows 10 and 11.
+
+To start:
+
+  1. Unpack the whole zip into a folder of its own (right click, Extract
+     All). Do not run Sara from inside the zip, it needs the files beside it.
+  2. Double click sara.exe. sara.console.exe is the same program with a
+     console window that shows the log as it is written.
+  3. Windows may show "Windows protected your PC", because Sara is not yet
+     signed. Click "More info", then "Run anyway". Windows asks this once.
+
+On Linux, unpack the archive (tar -xzf and its name) and run sara.sh in
+the folder it makes. The machine needs a Vulkan driver, as above, and
+nothing else.
+
+The Help menu has the manual (F1), which comes with Sara and needs no
+network.
+
+
+ON AN ANDROID TABLET
+--------------------
+
+Take the .apk from the Releases page and copy it to the tablet if you did
+not download it there. Tap it in the Files app or the browser's downloads.
+
+  - Android says it does not install apps from that source. Tap Settings,
+    turn on "Allow from this source", go back and tap Install.
+  - Play Protect may warn about an unknown developer. Choose to install
+    anyway. The APK is signed with a test key, which is why.
+  - The first start takes about a minute while Sara prepares its shaders.
+
+The pen paints with its pressure and tilt. Its eraser end paints like its
+tip for now, so pick the Eraser tool instead.
+
+A finger never paints, it works the view:
+
+  One finger, a tap       opens the pop-up palette under the finger
+  One finger, double tap  picks the colour under it
+  One finger, drag        moves the view
+  Two fingers             move the view, and pinch to zoom and turn it
+  Two fingers, a tap      undoes
+
+Sara opens full screen with a thin strip along the bottom, in the colour of
+the bottom bar. It is there on purpose, because some tablets draw bands
+across a picture that fills the screen's exact height. Window > Fullscreen
+or the square button in the top bar switches to maximised under the system
+bars, which has no strip. Sara keeps your choice for the next start.
+
+On the tablet Sara writes its log and notes to Documents/Sara on the
+tablet's storage. Open it with the Files app, choose "Documents", then
+"Sara". It holds godot.log and a folder per run with the notes and their
+pictures. To report a bug, see SENDING A BUG below, and attach the zip from
+Export, or the files in that folder, to an issue through Help > Report a
+Problem.
+
+
+WHERE SARA KEEPS YOUR THINGS
+----------------------------
+
+Your paintings are wherever you save them. Everything else is in two
+folders. On Windows, paste either line into the address bar of a File
+Explorer window.
+
+  Settings, shortcuts and docker layouts:
+      Windows:  %APPDATA%\sara
+      Linux:    ~/.config/sara
+
+  Brushes and brush tips, colours, recovery copies, the log and the
+  compiled brushes:
+      Windows:  %APPDATA%\Godot\app_userdata\Sara
+      Linux:    ~/.local/share/godot/app_userdata/Sara
+
+  Inside the second folder:
+      brush_presets   the brushes you saved
+      brush_tips      the tips you drew or imported
+      autosave        the recovery copies Sara writes while you paint, which
+                      it offers back after a crash
+      logs            godot.log, the log of the last run, and the runs before
+      notes           the notes you take, one folder per run
+
+To start clean, close Sara and rename both folders, for example to sara-old
+and Sara-old. Sara starts as on its first day and makes them again. Rename
+them back to return to what you had. To reset the settings alone, use
+"Reset all preferences..." at the foot of the Preferences window.
+
+
+SENDING A BUG
+-------------
+
+  1. If the bug is in the release build, reproduce it in the debug build.
+  2. Press Ctrl+Alt+N, or choose Help > Take a Note. Move the pointer over
+     the part of Sara the bug is about and click it. Sara takes a picture of
+     the window with that part outlined. Write what you did, what you
+     expected and what happened, then press Save. Take as many notes as you
+     like.
+  3. Press Export in the note box. Sara puts the notes, their pictures and
+     its log into one zip and shows where it wrote it. When Sara crashed,
+     start it again, open a note as in step 2 and press Export straight away:
+     the zip then carries the log of the run that crashed as well.
+  4. Attach that zip to a new issue through Help > Report a Problem.
+
+The notes are written to the notes folder inside the second folder above,
+one folder per run. Nothing is ever sent by Sara itself.
+
+When the notes do not work, the log alone helps: send godot.log from the
+logs folder above.

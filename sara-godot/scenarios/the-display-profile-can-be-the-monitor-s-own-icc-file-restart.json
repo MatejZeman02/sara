@@ -1,0 +1,21 @@
+[
+  {"settings": "keep"},
+  {"comment": "Sara started again on the profile the first half left, Preferences > Display shows Monitor profile file and the same profile's name."},
+  {"wait": 30},
+  {"document": "srgb", "size": [800, 600]},
+  {"wait": 10},
+  {"open": "preferences"},
+  {"wait": 20},
+  {"page": "Display"},
+  {"wait": 15},
+  {"click": {"control": "MaximizeButton"}},
+  {"wait": 10},
+  {"prefs_search": "matrix monitor profile"},
+  {"wait": 15},
+  {"wait": 20},
+  {"control": {"name": "MonitorProfileName"}},
+  {"shot": "2-after-a-restart-the-same-profile"},
+  {"state": "2-after-a-restart-the-same-profile"},
+  {"prefs_search": ""},
+  {"wait": 10}
+]

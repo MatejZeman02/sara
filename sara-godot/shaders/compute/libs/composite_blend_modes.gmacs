@@ -1,0 +1,424 @@
+# The blend modes' formulas: what each of `composite.gmacs`'s modes makes of
+# one texel, answered rather than stored.
+#
+# Each function fetches the pair through `composite_blend_ops.gmacs`, runs the
+# mode's formula, and answers the texel it writes and the value, or false where
+# the mode leaves the texel alone. `composite.gmacs` stores that value as it
+# is, which every bake and every stage of `SaStrokeRun` relies on, and
+# `stroke_commit.gmacs` stores it rounded to a half where the layer narrows it,
+# which is the brush's commit. One copy of every formula serves both, so
+# a mode cannot paint one colour in the preview and another at the commit.
+#
+# The importer declares `image canvas`, `image chunk` and the composite block
+# and imports `composite_color_space` and `composite_blend_ops` first. A new
+# mode is its formula here, a `def <kernel>_blended` of the shape below, and
+# its row of `BLEND_MODES` in `core/loader/skeleton_blend_modes.gd`. Both
+# files read this one through `import kernels_of/composite_blend_modes/blended`,
+# which makes each formula the kernel of that name in `composite.gmacs` and its
+# rounded twin in `stroke_commit.gmacs`, so neither file names a mode.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+
+def composite_blended(out ivec2 canvas_coords, out vec4 value) -> bool:
+    vec4 src, dst
+    if not fetch_pixels(canvas_coords, src, dst): return false
+    value = porter_duff(src, dst, src.rgb)
+    return true
+
+
+def multiply_blended(out ivec2 canvas_coords, out vec4 value) -> bool:
+    vec4 src, dst
+    if not fetch_pixels_rgb(canvas_coords, src, dst): return false
+    vec3 B = sa_positive_channels(src.rgb) * dst.rgb
+    value = blended_rgb(src, dst, B)
+    return true
+
+
+def screen_blended(out ivec2 canvas_coords, out vec4 value) -> bool:
+    vec4 src, dst
+    if not fetch_pixels_rgb_windowed(canvas_coords, src, dst): return false
+    vec3 s = sa_positive_channels(src.rgb)
+
+    # The formula on each input's share of white, and what the shares left out
+    # added back, see "Above white" in libs/composite_blend_ops.gmacs. Written
+    # out it is s + d - share(s) * share(d): at or under white the formula
+    # itself, and above it never darker than the brighter input and rising with
+    # each input, the one under white included, because the overlap the formula
+    # takes away fades as the other climbs. So a sun screened over a sky stays
+    # a sun, and the sky still adds to it. The kink at white is forced rather
+    # than chosen: screen(1, d) = 1 already, and staying at least as bright as s
+    # above that needs a slope of at least 1 in s where under white it is 1 - d.
+    vec3 ws = white_share(s)
+    vec3 wd = white_share(dst.rgb)
+    vec3 B = past_white(1.0 - (1.0 - ws) * (1.0 - wd), s, dst.rgb)
+    value = blended_rgb_windowed(src, dst, B)
+    return true
+
+
+def overlay_blended(out ivec2 canvas_coords, out vec4 value) -> bool:
+    vec4 src, dst
+    if not fetch_pixels_rgb_windowed(canvas_coords, src, dst): return false
+    vec3 s = sa_positive_channels(src.rgb)
+
+    # The formula on the shares of white, and what they left out added back,
+    # see "Above white" in libs/composite_blend_ops.gmacs. Above white each input
+    # brightens the result with every step, and a backdrop far above white keeps
+    # its light while the source's say over it fades, since the formula sees a
+    # share near 0 there. A grey source leaves any backdrop as it is, above white
+    # too, because overlay(0.5, x) is x for every share x.
+    vec3 ws = white_share(s)
+    vec3 wd = white_share(dst.rgb)
+    vec3 B = mix(
+        2.0 * ws * wd,
+        1.0 - 2.0 * (1.0 - ws) * (1.0 - wd),
+        step(0.5, wd)
+    )
+    B = past_white(B, s, dst.rgb)
+    value = blended_rgb_windowed(src, dst, B)
+    return true
+
+
+def add_blended(out ivec2 canvas_coords, out vec4 value) -> bool:
+    vec4 src, dst
+    if not fetch_pixels_rgb(canvas_coords, src, dst): return false
+    # Unbounded on purpose. Add is arithmetic-safe: it is well defined on
+    # unbounded linear data, so it runs unrestricted. A min() capping it at 1.0
+    # would destroy exactly the headroom a scene-referred document exists to
+    # carry, before the value ever reached storage, so nothing downstream could
+    # recover it.
+    vec3 B = src.rgb + dst.rgb
+    value = blended_rgb(src, dst, B)
+    return true
+
+
+def signed_add_blended(out ivec2 canvas_coords, out vec4 value) -> bool:
+    vec4 src, dst
+    if not fetch_pixels_rgb_windowed(canvas_coords, src, dst): return false
+    # Add with the source read as an offset from middle grey, what GIMP and
+    # Krita call Grain Merge. A layer holding a signed change stores it with
+    # half of white added, so it stays positive and can be painted and seen,
+    # and this takes the half off again: grey changes nothing, lighter paint
+    # lightens and darker paint darkens. Windowed, because middle grey is half
+    # of the document's white W rather than half of 1. Unbounded like Add,
+    # and linear in both inputs, so above white it needs no share of white.
+    vec3 B = src.rgb + dst.rgb - 0.5
+    value = blended_rgb_windowed(src, dst, B)
+    return true
+
+# Colour Dodge's light past white, spilled into the other channels as a light
+# does. *lit* is the W3C quotient Cb / (1 - Cs) per channel, unclamped.
+#
+# The clamp alone lit each channel on its own, so a channel the colour held none
+# of never rose, and orange painted again and again stayed orange or yellow. Here
+# the clamp still draws the colour, and the light it clipped is counted: each
+# channel's excess e past white counts as e / (1 + e), which is e itself just
+# past white and never more than one white, since a fully lit source channel
+# divides by nearly zero. The result keeps the luminance of that light by
+# mixing the clamped colour towards white, which holds its hue and lowers its
+# saturation, and where the luminance reaches white it is white. A pixel with no
+# channel past white is the clamp's colour exactly, and black stays black.
+#
+# Mixing the unclamped quotient towards a grey of its luminance instead would
+# hold the quotient's hue, which a fully lit channel drags to its own primary,
+# so orange over grey would turn red before it paled. Mixing the clamped colour
+# towards white keeps the hue the painter saw and the same light.
+#
+# The luminance weights are the document primaries' share of Y, read off the
+# same matrix the Oklab modes use.
+
+
+def dodge_spilled(vec3 lit) -> vec3:
+    vec3 clipped = min(lit, vec3(1.0))
+    vec3 excess = max(lit - 1.0, vec3(0.0))
+    vec3 weights = vec3(0.2126, 0.7152, 0.0722) * to_linear_srgb_matrix()
+    float light = dot(weights, clipped + excess / (1.0 + excess))
+    float drawn = dot(weights, clipped)
+    if light <= drawn: return clipped
+    if light >= 1.0 or drawn >= 1.0: return vec3(1.0)
+    return mix(clipped, vec3(1.0), (light - drawn) / (1.0 - drawn))
+
+
+def color_dodge_blended(out ivec2 canvas_coords, out vec4 value) -> bool:
+    vec4 src, dst
+    if not fetch_pixels_rgb_windowed(canvas_coords, src, dst): return false
+    # W3C: a black backdrop stays black, else Cb / (1 - Cs), and its light past
+    # white spills into the other channels, see dodge_spilled above. The
+    # epsilon keeps the fully lit source from dividing by zero.
+    vec3 s = sa_positive_channels(src.rgb)
+
+    # Above white, see "Above white" in libs/composite_blend_ops.gmacs. The
+    # backdrop takes its share of white like Screen's inputs. The source cannot:
+    # its share falls under white again past it, so the quotient would drop off
+    # the clamp, and a source just above white over a dark backdrop drew darker
+    # than at white itself. The clamp already reads a source at or past white as
+    # white, so its share is its value up to white, and its light past white is
+    # added whole. So a source above white over any backdrop with light in it
+    # draws as itself, plus what the backdrop holds above white.
+    vec3 cs = min(s, vec3(1.0))
+    vec3 lit = white_share(dst.rgb) / max(1.0 - cs, vec3(DIVIDE_EPSILON))
+    lit = mix(max(lit, vec3(0.0)), vec3(0.0), step(dst.rgb, vec3(0.0)))
+    vec3 B = dodge_spilled(lit)
+    B = past_white(B, cs, dst.rgb) + (s - cs)
+    value = blended_rgb_windowed(src, dst, B)
+    return true
+
+
+def darken_blended(out ivec2 canvas_coords, out vec4 value) -> bool:
+    vec4 src, dst
+    if not fetch_pixels_rgb(canvas_coords, src, dst): return false
+    vec3 B = min(src.rgb, dst.rgb)
+    value = blended_rgb(src, dst, B)
+    return true
+
+
+def lighten_blended(out ivec2 canvas_coords, out vec4 value) -> bool:
+    vec4 src, dst
+    if not fetch_pixels_rgb(canvas_coords, src, dst): return false
+    vec3 B = max(src.rgb, dst.rgb)
+    value = blended_rgb(src, dst, B)
+    return true
+
+
+def soft_light_blended(out ivec2 canvas_coords, out vec4 value) -> bool:
+    vec4 src, dst
+    if not fetch_pixels_rgb_windowed(canvas_coords, src, dst): return false
+    # W3C soft-light: D(Cb) is the smooth "lightening target" the source pulls towards.
+    # The square root is why the backdrop is netted: it read a negative as zero.
+    vec3 s = sa_positive_channels(src.rgb)
+    vec3 b = sa_positive_channels(dst.rgb)
+
+    # On the shares of white, and what they left out added back, see "Above
+    # white" in libs/composite_blend_ops.gmacs. The netted backdrop is what the
+    # formula reads, so its remainder is taken from that too. Above white each
+    # input brightens the result with every step, and a grey source leaves any
+    # backdrop as it is, as under white.
+    vec3 ws = white_share(s)
+    vec3 wb = white_share(b)
+    vec3 d = mix(
+        ((16.0 * wb - 12.0) * wb + 4.0) * wb,
+        sqrt(wb),
+        step(0.25, wb)
+    )
+    vec3 B = mix(
+        wb - (1.0 - 2.0 * ws) * wb * (1.0 - wb),
+        wb + (2.0 * ws - 1.0) * (d - wb),
+        step(0.5, ws)
+    )
+    B = past_white(B, s, b)
+    value = blended_rgb_windowed(src, dst, B)
+    return true
+
+
+def hard_light_blended(out ivec2 canvas_coords, out vec4 value) -> bool:
+    vec4 src, dst
+    if not fetch_pixels_rgb_windowed(canvas_coords, src, dst): return false
+    # Overlay with the source and backdrop roles swapped, above white as well:
+    # the formula on the shares of white and what they left out added back,
+    # see "Above white" in libs/composite_blend_ops.gmacs. A source far above
+    # white keeps its light while the backdrop's say under it fades, and a grey
+    # source leaves any backdrop as it is.
+    vec3 s = sa_positive_channels(src.rgb)
+    vec3 ws = white_share(s)
+    vec3 wd = white_share(dst.rgb)
+    vec3 B = mix(
+        2.0 * ws * wd,
+        1.0 - 2.0 * (1.0 - ws) * (1.0 - wd),
+        step(0.5, ws)
+    )
+    B = past_white(B, s, dst.rgb)
+    value = blended_rgb_windowed(src, dst, B)
+    return true
+
+
+def hard_mix_blended(out ivec2 canvas_coords, out vec4 value) -> bool:
+    # Photoshop's and Krita's Hard Mix: each channel is on where the pair reaches
+    # the top of the window and off where it does not, so the result is one of the
+    # eight corners of the RGB cube. It is the formula a module's blend kernel
+    # would ship, kept built in so a picture composites the same either way.
+    #
+    # Above white it extends the way the modes above do, see "Above white" in
+    # libs/composite_blend_ops.gmacs, but on a clip share rather than white_share. A
+    # threshold already reads a value at or past white as white, so a share is the
+    # value up to white and what it leaves out is the light past white, added
+    # whole. The share white_share gives would fall under white again past it, put
+    # a source above white back under the threshold and turn the corner it lit dark
+    # further up. So a channel lit by an input above white stays lit and carries
+    # that input's light above it, and under white nothing moves.
+    vec4 src, dst
+    if not fetch_pixels_rgb_windowed(canvas_coords, src, dst): return false
+    vec3 cs = min(src.rgb, vec3(1.0))
+    vec3 cd = min(dst.rgb, vec3(1.0))
+    vec3 B = step(vec3(1.0), cs + cd) + (src.rgb - cs) + (dst.rgb - cd)
+    value = blended_rgb_windowed(src, dst, B)
+    return true
+
+
+def difference_blended(out ivec2 canvas_coords, out vec4 value) -> bool:
+    vec4 src, dst
+    if not fetch_pixels_rgb(canvas_coords, src, dst): return false
+    vec3 B = abs(dst.rgb - src.rgb)
+    value = blended_rgb(src, dst, B)
+    return true
+
+
+def exclusion_blended(out ivec2 canvas_coords, out vec4 value) -> bool:
+    vec4 src, dst
+    if not fetch_pixels_rgb_windowed(canvas_coords, src, dst): return false
+    vec3 s = sa_positive_channels(src.rgb)
+
+    # On the shares of white, see "Above white" in libs/composite_blend_ops.gmacs,
+    # which written out is s + d - 2 * share(s) * share(d). Inverting a value
+    # above white means nothing, 1 - 40 being no colour, so the inversion fades
+    # with the share and far above white the two inputs add as light. An input
+    # above white brightens the result with every step, and a black source
+    # leaves any backdrop as it is.
+    vec3 ws = white_share(s)
+    vec3 wd = white_share(dst.rgb)
+    vec3 B = past_white(wd + ws - 2.0 * wd * ws, s, dst.rgb)
+    value = blended_rgb_windowed(src, dst, B)
+    return true
+
+
+def hue_blended(out ivec2 canvas_coords, out vec4 value) -> bool:
+    vec4 src, dst
+    if not fetch_pixels(canvas_coords, src, dst): return false
+    vec3 backdrop = document_to_oklch(dst.rgb)
+    vec3 source = document_to_oklch(src.rgb)
+    vec3 B = components_to_document(vec3(backdrop.x, backdrop.y, source.z), src.rgb, dst.rgb)
+    value = porter_duff(src, dst, B)
+    return true
+
+
+def saturation_blended(out ivec2 canvas_coords, out vec4 value) -> bool:
+    vec4 src, dst
+    if not fetch_pixels(canvas_coords, src, dst): return false
+    vec3 backdrop = document_to_oklch(dst.rgb)
+    vec3 source = document_to_oklch(src.rgb)
+    vec3 B = components_to_document(vec3(backdrop.x, source.y, backdrop.z), src.rgb, dst.rgb)
+    value = porter_duff(src, dst, B)
+    return true
+
+
+def lightness_blended(out ivec2 canvas_coords, out vec4 value) -> bool:
+    vec4 src, dst
+    if not fetch_pixels(canvas_coords, src, dst): return false
+    vec3 backdrop = document_to_oklch(dst.rgb)
+    vec3 source = document_to_oklch(src.rgb)
+    vec3 B = components_to_document(vec3(source.x, backdrop.y, backdrop.z), src.rgb, dst.rgb)
+    value = porter_duff(src, dst, B)
+    return true
+
+
+def color_blended(out ivec2 canvas_coords, out vec4 value) -> bool:
+    vec4 src, dst
+    if not fetch_pixels(canvas_coords, src, dst): return false
+    vec3 backdrop = document_to_oklch(dst.rgb)
+    vec3 source = document_to_oklch(src.rgb)
+    vec3 B = components_to_document(vec3(backdrop.x, source.y, source.z), src.rgb, dst.rgb)
+    value = porter_duff(src, dst, B)
+    return true
+
+
+def erase_blended(out ivec2 canvas_coords, out vec4 value) -> bool:
+    vec4 src, dst
+    if not fetch_pixels(canvas_coords, src, dst): return false
+    # Porter-Duff destination-out: the source only carves alpha away, so this
+    # cannot end on porter_duff, which always composites source colour in.
+    value = vec4(dst.rgb, dst.a * (1.0 - src.a))
+    return true
+
+# --- Normal, in a space the user named -------------------------------------
+#
+# Plain `composite` above mixes in whatever the document stores, which is the
+# right default and is why its dropdown label carries the document's space in
+# brackets. These three let a layer say otherwise. On a document that already
+# stores the space one of them names, that kernel is the identity pair and does
+# exactly what plain Normal does.
+
+# Mixing on encoded RGB, which is what Krita and Photoshop do and what Sara has
+# always done in an sRGB document.
+
+
+def composite_srgb_blended(out ivec2 canvas_coords, out vec4 value) -> bool:
+    vec4 src, dst
+    if not fetch_pixels_space(SA_BLEND_IN_RGB, canvas_coords, src, dst): return false
+    value = blended_space(SA_BLEND_IN_RGB, src, dst, src.rgb)
+    return true
+
+# Mixing in light. Two half-covered colours average the photons rather than the
+# encoded numbers, which is what a renderer would do and what a physically
+# minded gradient wants.
+
+
+def composite_linear_blended(out ivec2 canvas_coords, out vec4 value) -> bool:
+    vec4 src, dst
+    if not fetch_pixels_space(SA_BLEND_IN_LINEAR, canvas_coords, src, dst): return false
+    value = blended_space(SA_BLEND_IN_LINEAR, src, dst, src.rgb)
+    return true
+
+# Mixing perceptually. Cartesian Oklab rather than polar, because a mix should
+# travel straight between two colours and interpolating a hue angle would take
+# the long way round the circle for a pair either side of it.
+
+
+def composite_oklab_blended(out ivec2 canvas_coords, out vec4 value) -> bool:
+    vec4 src, dst
+    if not fetch_pixels_space(SA_BLEND_IN_OKLAB, canvas_coords, src, dst): return false
+    value = blended_space(SA_BLEND_IN_OKLAB, src, dst, src.rgb)
+    return true
+
+# --- The stroke buffer's two lock modes -------------------------------------
+#
+# Erase above and this one are what a stroke composites as when the brush is
+# erasing or the layer is alpha locked and the painting mode is wash. Through
+# the buffer the coverage accumulates once and lands here once, rather than each
+# dab applying both rules straight into the layer, which is build-up whatever
+# the painter chose and erases twice where a stroke crosses itself. So wash
+# holds for the eraser and the alpha-locked brush as it holds for an ordinary
+# one.
+#
+# Not offered in any menu. It is a mode the brush selects for a stroke and
+# never something a layer carries, which is what `internal` on the descriptor
+# says (core/loader/skeleton_module.gd).
+
+
+def alpha_lock_blended(out ivec2 canvas_coords, out vec4 value) -> bool:
+    vec4 src, dst
+    if not fetch_pixels(canvas_coords, src, dst): return false
+    # Nothing under the pixel is nothing to paint on, and the alpha that is
+    # there is the alpha that stays. The colour is the ordinary Porter-Duff
+    # over, so an alpha-locked stroke tints what is already there and moves
+    # neither its silhouette nor its edge.
+    if dst.a <= 0.0: return false
+    float blended_a = src.a + dst.a * (1.0 - src.a)
+    vec3 out_rgb = vec3(0.0)
+    if blended_a > 0.0:
+        out_rgb = (src.rgb * src.a + dst.rgb * dst.a * (1.0 - src.a)) / blended_a
+    value = vec4(out_rgb, dst.a)
+    return true
+
+
+def divide_blended(out ivec2 canvas_coords, out vec4 value) -> bool:
+    vec4 src, dst
+    if not fetch_pixels_rgb(canvas_coords, src, dst): return false
+    # Krita's and Photoshop's Divide, the backdrop over the source channel by
+    # channel, in the document's linear light: the RGB view with the
+    # document's curve taken off, which on a linear document is the stored
+    # numbers as they are, and the quotient encoded again. Unwindowed, because
+    # a quotient needs no white to be defined against. Nothing clamps, so a dark
+    # source lifts the backdrop past white as far as the division takes it. A
+    # source at or under the epsilon, black and every negative value with it,
+    # divides by the epsilon, so no texel is an infinity or a NaN.
+    #
+    # The epsilon is 2^-10, exact in a float32 and in a half, and large enough
+    # that a backdrop up to 64 times white over it stays under 65504, the
+    # largest half, so an F16 layer stores a number rather than an infinity. A
+    # source darker than it is under a quarter of one 8-bit level. A literal
+    # rather than a constant of the file, because a constant reaches every
+    # kernel the file makes and moves each one's SPIR-V.
+    vec3 s = document_to_linear(src.rgb)
+    vec3 d = document_to_linear(dst.rgb)
+    vec3 B = linear_to_document(d / max(s, vec3(0.0009765625)))
+    value = blended_rgb(src, dst, B)
+    return true

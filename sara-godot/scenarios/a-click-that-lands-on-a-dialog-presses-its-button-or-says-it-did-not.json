@@ -1,0 +1,48 @@
+[
+  {"comment": "A script's click on Later in the recovery question answered ok and in main, and the question stood on. The question is asked here with the recovery's title and its three labels, as the boot asks it, once with subwindows embedded and once with each dialog a window of its own. At each, a click at Later's centre must press it, which the close after it proves by finding no message window up, and a click in the button row clear of every button must raise an error naming the dialog and the message step that answers it. Each click's line names the dialog, never main. An Escape through the key step is tried too, for the message step's doc. Measured on the running app: the press reaches the dialog and Later is hovered when it lands, embedded or not, by a point or by name, with a move before it or without. The fault was the boot's second question, one per recovery copy, standing where the first stood, which the click's line now names."},
+
+  {"wait": 40},
+  {"docker": "park"},
+  {"wait": 10},
+
+  {"message": {"ask": "Sara kept a recovery copy of an unsaved document from a session that did not end properly.", "title": "Recovered work", "labels": ["Open", "Delete", "Later"], "cancel": 2}},
+  {"wait": 10},
+  {"shot": "01-the-recovery-question-embedded"},
+  {"click": {"control": "Button2", "in": "Question"}},
+  {"wait": 5},
+  {"shot": "02-later-pressed-embedded"},
+  {"message": {"close": "escape"}},
+
+  {"message": {"ask": "Sara kept a recovery copy of an unsaved document from a session that did not end properly.", "title": "Recovered work", "labels": ["Open", "Delete", "Later"], "cancel": 2}},
+  {"wait": 10},
+  {"click": {"at": [897, 569]}},
+  {"wait": 5},
+  {"shot": "03-a-click-beside-later-pressed-nothing-embedded"},
+  {"message": {"close": "escape"}},
+
+  {"message": {"ask": "Sara kept a recovery copy of an unsaved document from a session that did not end properly.", "title": "Recovered work", "labels": ["Open", "Delete", "Later"], "cancel": 2}},
+  {"wait": 10},
+  {"key": "escape"},
+  {"wait": 5},
+  {"shot": "04-after-the-escape-key-embedded"},
+  {"message": {"close": "escape"}},
+
+  {"prefs": {"embed_subwindows": false}},
+  {"wait": 10},
+
+  {"message": {"ask": "Sara kept a recovery copy of an unsaved document from a session that did not end properly.", "title": "Recovered work", "labels": ["Open", "Delete", "Later"], "cancel": 2}},
+  {"wait": 10},
+  {"click": {"control": "Button2", "in": "Question"}},
+  {"wait": 5},
+  {"message": {"close": "escape"}},
+
+  {"message": {"ask": "Sara kept a recovery copy of an unsaved document from a session that did not end properly.", "title": "Recovered work", "labels": ["Open", "Delete", "Later"], "cancel": 2}},
+  {"wait": 10},
+  {"click": {"at": [221, 208]}},
+  {"wait": 5},
+  {"message": {"close": "escape"}},
+
+  {"prefs": {"embed_subwindows": true}},
+  {"wait": 10},
+  {"state": "05-done"}
+]

@@ -1,0 +1,61 @@
+# Kernel: wrap_offset
+# Filter > Wrap Offset. Every texel reads the texel *offset*
+# document pixels up and to the left of it, wrapped round the canvas, so paint
+# pushed off one edge comes back in at the opposite one and a tileable texture
+# shows its seam in the middle of the picture.
+#
+# The pass reads the whole node, so binding 0 is the node's chunks
+# gathered into one texture and read in document pixels through `chunk` and
+# `source`. The mask is at 1 and the target at 2, which may be the chunk the
+# kernel writes, since it never reads it.
+#
+# The read is one whole texel, never a bilinear sample: the offset is whole, and
+# a wrap that resampled would soften a texture every time it was nudged.
+
+kernel wrap_offset
+
+image src: readonly
+image mask: r32f, readonly
+image dst
+
+params:
+    vec2 origin
+    int halo
+    vec2 chunk
+    vec2 source
+    vec2 offset
+    vec2 canvas
+
+# The mask's blend, imported after the params because the
+# library reads `halo` and the three images by name.
+import neighbourhood
+
+# *v* modulo *n*, never negative, through a floor rather than `%`. GLSL leaves
+# `%` undefined for a negative operand, and the NVIDIA driver answers it as an
+# unsigned remainder, so -384 modulo 768 came back 640 and a wrap on a canvas
+# whose width is not a power of two landed a chunk off.
+
+
+def wrapped(int v, int n) -> int:
+    return v - n * int(floor(float(v) / float(n)))
+
+# The gathered node at document pixel *at*, or transparent where the node
+# holds no chunk.
+
+
+def read_node(ivec2 at) -> vec4:
+    ivec2 from = at - ivec2(source)
+    if from.x < 0 or from.y < 0 or from.x >= image_size(src).x or from.y >= image_size(src).y:
+        return vec4(0.0)
+    return src[from]
+
+
+def wrap_offset():
+    ivec2 at = pixel + ivec2(origin)
+    ivec2 size = max(ivec2(canvas), ivec2(1, 1))
+    ivec2 here = ivec2(chunk) + at
+    ivec2 moved = ivec2(offset)
+    ivec2 from = ivec2(wrapped(here.x - moved.x, size.x), wrapped(here.y - moved.y, size.y))
+    vec4 kept = read_node(here)
+    vec4 shifted = read_node(from)
+    sa_finish(at, kept, shifted)

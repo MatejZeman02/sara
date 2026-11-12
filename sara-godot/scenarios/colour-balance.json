@@ -1,0 +1,47 @@
+[
+  {"wait": 40},
+
+  {"colour": "#ffffff"},
+  {"key": "x"},
+  {"colour": "#000000"},
+  {"wait": 5},
+
+  {"tool": {"id": "gradient", "options": {"gradient_shape": 0, "gradient_repeat": 0, "gradient_replace": true}}},
+  {"wait": 5},
+  {"press": {"button": "left", "at": [380, 540]}},
+  {"move": [800, 540]},
+  {"move": [1260, 540]},
+  {"release": "left"},
+  {"wait": 15},
+  {"shot": "ramp"},
+
+  {"tool": "eyedropper"},
+  {"wait": 5},
+  {"press": {"button": "left", "at": [420, 500]}},
+  {"release": "left"},
+  {"wait": 8},
+  {"state": "ramp-dark-end"},
+  {"press": {"button": "left", "at": [1220, 500]}},
+  {"release": "left"},
+  {"wait": 8},
+  {"state": "ramp-light-end"},
+
+  {"preview": {"kind": "color_balance", "shadows_cr": 100, "highlights_yb": 100}},
+  {"wait": 15},
+  {"shot": "balance-dialog"},
+  {"state": "balance-dialog"},
+  {"preview": {"apply": true}},
+  {"wait": 15},
+  {"shot": "balanced"},
+
+  {"tool": "eyedropper"},
+  {"wait": 5},
+  {"press": {"button": "left", "at": [420, 560]}},
+  {"release": "left"},
+  {"wait": 8},
+  {"state": "balanced-dark-end"},
+  {"press": {"button": "left", "at": [1220, 560]}},
+  {"release": "left"},
+  {"wait": 8},
+  {"state": "balanced-light-end"}
+]

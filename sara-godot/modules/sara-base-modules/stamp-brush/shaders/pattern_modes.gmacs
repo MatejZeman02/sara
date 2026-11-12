@@ -1,0 +1,64 @@
+# Include: pattern_modes
+#
+# The alpha arithmetic of three texture modes ported from Krita, colour burn,
+# hard mix softer and linear height, in Krita's own formulas with its tuned
+# constants (the three and two of hard mix softer, the 0.99 of linear height),
+# so a preset naming one paints the stroke Krita paints. A rewrite from what
+# they do would paint a different stroke. Ported from Krita 5.2.13,
+# GPL-2.0-or-later, and the copyright lines are in `../PROVENANCE.md`.
+#
+# Included rather than compiled: it declares no kernel and reads no binding, and
+# `dab_texel.gmacs`'s `sa_pattern_applied` picks one of the three by the band of
+# the texture strength.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# The three modes, each Krita's own alpha arithmetic for
+# the texture option so a preset that names one paints the stroke Krita paints.
+# *sampled* is the paper's texel after the invert, which is Krita's mask value
+# after its own invert in `KisTextureMaskInfo::recalculateMask`, and *amount* is
+# the texture strength Krita hands the composite op as `strength`. The coverage
+# is Krita's `dst`, the dab's alpha, and Krita's `mul(dst, strength)` is the
+# coverage times the amount. Read from `libs/ui/tool/strokes/KisMaskingBrushCompositeOp.h`
+# in the 5.2 tree, which `KisTextureOption::apply` in
+# `plugins/paintops/libpaintop/kis_texture_option.cpp` picks by the preset's
+# `TexturingMode`.
+#
+# **Nothing here clamps the colour**, which never reaches these three: they
+# answer a coverage, and a colour over one is painted at whatever coverage they
+# answer. What they bound is the coverage alone, at nought as subtract does and
+# at one where Krita's formula multiplies a fraction past a whole one, which is
+# the saturation the two modes are made of rather than a clamp on a value.
+
+# Colour burn, from `colorBurnAlpha` and `colorBurnAlphaHelper`: one less the
+# dab's lack of coverage over the paper. A light texel leaves the dab as it was
+# and a dark one closes it, faster the less of the dab there is. A texel of
+# nothing is Krita's own special case, the dab kept only where it is whole.
+
+
+def sa_pattern_burned(float sampled, float coverage, float amount) -> float:
+    float dab = coverage * amount
+    if sampled <= 0.0:
+        return dab >= 1.0 ? dab : 0.0
+    return max(1.0 - (1.0 - dab) / sampled, 0.0)
+
+# Hard mix softer (Photoshop), from `hardMixSofterPhotoshopAlpha`: three times
+# the dab less twice the tooth, bounded to a fraction. A body of the dab over
+# light paper is full and its rim over dark paper is gone, with a short ramp
+# between, which is the flat hard fill the Flat Tip presets are made of.
+
+
+def sa_pattern_hard_mixed(float sampled, float coverage, float amount) -> float:
+    return clamp(3.0 * coverage * amount - 2.0 * (1.0 - sampled), 0.0, 1.0)
+
+# Linear height, from the `KIS_MASKING_BRUSH_COMPOSITE_LINEAR_HEIGHT` function:
+# Krita scales the strength by 0.99 so its inverse is never nought, lifts the
+# coverage by it, and paints the more of a multiply by the tooth and a height
+# rule over the lifted coverage. A light touch paints almost nothing and a full
+# one fills the dab up to the paper's ridges.
+
+
+def sa_pattern_linear_height(float sampled, float coverage, float amount) -> float:
+    float inverted = 1.0 - 0.99 * amount
+    float lifted = coverage / inverted - inverted
+    return clamp(max(lifted * (1.0 - sampled), lifted - sampled), 0.0, 1.0)

@@ -1,0 +1,50 @@
+{
+  "exercise": "box-blur",
+  "scenario": "scenarios/the-box-blur-exercise.json",
+  "dump": "3-applied",
+  "filter_key": "box_blur.box_blur",
+  "tolerance": 0.002,
+  "texels": [
+    {
+      "at": [
+        256,
+        256
+      ],
+      "rgba": [
+        0.163265,
+        0.163265,
+        0.163265,
+        1.0
+      ]
+    },
+    {
+      "at": [
+        280,
+        256
+      ],
+      "rgba": [
+        0.081633,
+        0.081633,
+        0.081633,
+        1.0
+      ]
+    },
+    {
+      "at": [
+        336,
+        256
+      ],
+      "rgba": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    }
+  ],
+  "says": [
+    "on the bar, the box is 49 across and the bar is 8 of it, so 392 of 2401",
+    "twenty-four off the bar, half the bar is in the box, so 196 of 2401",
+    "eighty off it, outside the radius, nothing moved"
+  ]
+}

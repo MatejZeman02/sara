@@ -1,0 +1,89 @@
+# Kernels: vignette
+# Vignette, the darkening of a picture towards its edges. Every output texel
+# reads only its own input texel and rewrites it in place, so this is a point
+# kernel and keeps the contract on SaPointPass: the colour field at binding 0,
+# the selection mask at binding 1 read per pixel and mixed by, the region's
+# origin and the chunk's document corner in the push constant.
+#
+# The falloff is measured from the document's centre, never from the layer's
+# or the dispatched rectangle's: the texel is added to the chunk's document
+# corner, and the distance to the centre is taken in document pixels and
+# divided by the half diagonal, so it is 0 in the middle and 1 in a corner of
+# any canvas. A layer of any size, a stroke's dirty rectangle and a chunk
+# alone therefore agree on what a pixel's distance is.
+#
+# The gain is one at `start` and before it, and falls to one less `amount` on
+# the smoothstep that reaches the far side by `softness` of what is left. It is
+# applied in light, as exposure.gmacs does: a document on a transfer curve is
+# decoded, scaled and encoded again, and an Oklab document, whose L is the
+# cube root of light, has its three coordinates scaled by the cube root of the
+# gain. A negative amount gives a gain above one, which brightens the edges.
+# Nothing clamps (hard rule 5), and alpha is left alone.
+#
+# The colour space matrices the other point kernels take are not in the push
+# constant, because this kernel never leaves the document's own coordinates,
+# so it keeps to sixty-four bytes.
+
+kernel vignette
+
+import transfer_curve
+
+image canvas
+# The document-wide selection, as in adjust.gmacs: a 1 by 1 mask reads as 1.0
+# everywhere through the clamped read (core/api/selection/sa_selection.gd).
+image mask: r32f, readonly
+
+# 64 bytes: the three settings, the node's scale, the region's origin, the
+# chunk's corner on its eight byte boundary, the document's size, then the
+# tail of the colour space push constant after its two matrices, the transfer
+# curve's four numbers, the coordinates and a pad.
+params:
+    float amount  # 1 is black at the far edge, 0 changes nothing, -1 doubles the light
+    float start  # the distance, 0 centre to 1 corner, where the falloff begins
+    float softness  # how much of the way from start to the corner the falloff takes
+    float texel_scale  # the node's texels per document pixel, 1 or 2
+    float origin_x  # the dispatched region's origin in the chunk, in texels
+    float origin_y  # zero for the destructive pass, which covers the chunk
+    vec2 chunk  # the chunk's document corner, in document pixels
+    vec2 canvas_extent  # the document's size, in document pixels
+    float transfer_slope
+    float transfer_threshold
+    float transfer_gain
+    float transfer_exponent
+    float coordinates
+    float pad
+
+const int SA_COORDS_OKLAB = 1
+
+
+def document_is_oklab() -> bool: return int(coordinates + 0.5) == SA_COORDS_OKLAB
+
+
+def gain_at(vec2 doc) -> float:
+    vec2 centre = canvas_extent * 0.5
+    float reach = max(length(centre), 1.0)
+    float d = length(doc - centre) / reach
+    float far = start + max(softness, 0.01) * (1.0 - start)
+    float t = smoothstep(start, max(far, start + 0.0001), d)
+    return 1.0 - amount * t
+
+
+def in_light(vec3 c, float gain) -> vec3:
+    if document_is_oklab(): return c * pow(max(gain, 0.0), 1.0 / 3.0)
+    vec3 linear = sa_transfer_decode(c, transfer_slope, transfer_threshold, transfer_gain, transfer_exponent)
+    return sa_transfer_encode(linear * gain, transfer_slope, transfer_threshold, transfer_gain, transfer_exponent)
+
+
+def coverage_at(ivec2 px) -> float:
+    return mask[min(px, image_size(mask) - 1)].r
+
+
+def vignette():
+    ivec2 px = ivec2(global_id.xy) + ivec2(int(origin_x), int(origin_y))
+    ivec2 size = image_size(canvas)
+    if px.x >= size.x or px.y >= size.y:
+        return
+    vec4 c = canvas[px]
+    vec2 doc = chunk + (vec2(px) + 0.5) / texel_scale
+    vec3 out_rgb = in_light(c.rgb, gain_at(doc))
+    canvas[px] = vec4(mix(c.rgb, out_rgb, coverage_at(px)), c.a)

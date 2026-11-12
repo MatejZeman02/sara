@@ -1,0 +1,53 @@
+[
+  {"wait": 25},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 10},
+  {"document": "srgb"},
+  {"tool": "brush"},
+  {"wait": 10},
+
+  {"layer": {"fill": [0.90, 0.86, 0.78, 1.0]}},
+  {"layer": {"add": "Mass", "fill": [0.18, 0.22, 0.32, 1.0], "chunks": [[1, 1], [2, 1], [2, 2], [3, 1], [3, 2], [4, 2]]}},
+  {"layer": {"add": "Light", "fill": [0.92, 0.72, 0.30, 1.0], "chunks": [[5, 1], [5, 2], [6, 2]]}},
+  {"wait": 8},
+
+  {"brush": {"radius": 0.004, "spacing": 0.08}},
+  {"wait": 6},
+  {"stroke": {"from": [420, 260], "to": [1480, 320], "pressure": 0.9, "steps": 24}},
+  {"stroke": {"from": [420, 380], "to": [1480, 440], "pressure": 0.9, "steps": 24}},
+  {"stroke": {"from": [640, 200], "to": [680, 700], "pressure": 0.9, "steps": 24}},
+  {"stroke": {"from": [1180, 200], "to": [1220, 700], "pressure": 0.9, "steps": 24}},
+  {"wait": 10},
+
+  {"shot": "1-the-painting"},
+  {"texel": [[700, 320], [1100, 400]]},
+  {"state": "1-the-painting"},
+
+  {"key": {"key": "q", "ctrl": true, "shift": true}},
+  {"wait": 20},
+  {"shot": "2-the-shape-check"},
+  {"texel": [[700, 320], [1100, 400]]},
+  {"state": "2-the-shape-check"},
+
+  {"brush": {"radius": 0.03, "spacing": 0.1}},
+  {"wait": 6},
+  {"stroke": {"from": [640, 620], "to": [1240, 520], "pressure": 1.0, "steps": 32}},
+  {"wait": 12},
+  {"shot": "3-a-stroke-painted-through-it"},
+
+  {"zoom": 2.0},
+  {"key": {"key": "bracketright", "ctrl": true}},
+  {"wait": 20},
+  {"shot": "4-zoomed-and-turned"},
+  {"state": "4-zoomed-and-turned"},
+
+  {"key": {"key": "bracketleft", "ctrl": true}},
+  {"zoom": 1.0},
+  {"fit": true},
+  {"wait": 16},
+  {"key": {"key": "q", "ctrl": true, "shift": true}},
+  {"wait": 20},
+  {"shot": "5-the-painting-with-the-new-stroke"},
+  {"texel": [[700, 320], [1100, 400]]},
+  {"state": "5-the-painting-with-the-new-stroke"}
+]

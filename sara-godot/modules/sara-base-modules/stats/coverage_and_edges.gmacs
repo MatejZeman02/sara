@@ -1,0 +1,179 @@
+# The Stats docker's coverage and edge density: how many texels of the
+# composite differ from the background alone, and how much edge they hold by
+# the Laplacian of their Oklab lightness, a chunk's share to a slot.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# **One kernel, one slot a chunk.** The reduction service dispatches once over
+# each painted chunk that changed since its last run, each adding into a slot of
+# its own, `CELLS` uints. The service folds a changed chunk's slot into the total in place
+# of its last, so the result follows the paint without a pass over the whole
+# canvas (hard rules 2 and 3).
+# A slot holds at most 65536 texels, so the count stays far under a uint and the
+# edge cell, at most `QUANT` a texel, reaches 2^31 at the very most, the bound
+# `measure.gmacs` writes down. The canvas no layer holds is the background, adds
+# nothing to either cell and is never dispatched over.
+#
+# **Painted is told against the background alone.** On a transparent document a
+# texel is painted when it holds any alpha past `TOLERANCE`. On one laid on a
+# colour or a ground it is painted when its Oklab colour lies further than
+# `TOLERANCE` from the background's (for a ground, the segment between its two
+# colours), so a paper's grain is background and not paint.
+#
+# **The halo.** The Laplacian takes a texel's four neighbours, so a texel on a
+# chunk's border reads one texel into the next chunk. The composite is one
+# texture over the whole canvas, so that is an ordinary load and an edge along a
+# chunk border counts as one inside a chunk does (hard rule 3). A texel past the
+# canvas reads the nearest one inside, so the canvas border is no edge. Only a
+# painted texel adds its edge. The part re-reads a changed chunk's four
+# neighbours too, whose border texels read into it.
+#
+# **Lightness is of the picture shown.** A texel is laid over the background
+# colour by its alpha in the stored coordinates, then decoded through the
+# document's own colour space into Oklab as `measure.gmacs` does. Nothing is
+# stored, so nothing clamps the canvas (hard rule 5).
+
+kernel coverage_and_edges
+
+# linear_srgb_color_space brings oklab_color_space with it.
+import linear_srgb_color_space
+import transfer_curve
+
+image field
+
+# CELLS uints per chunk slot: the painted texels, then their edge.
+buffer tally: uint cells[]
+
+# Packed by the coverage part in the order written here, every field a float
+# for the reason measure.gmacs gives.
+params:
+    # The chunk's share of the canvas, in composite pixels, where the dispatch
+    # starts and where it ends.
+    float begin_x
+    float begin_y
+    float end_x
+    float end_y
+    # Which CELLS cells of the buffer this chunk adds into.
+    float slot
+    # See SaColorSpace.Coordinates. An Oklab document needs no conversion.
+    float coordinates
+    # The document's transfer curve, for the decode into light.
+    float transfer_slope
+    float transfer_threshold
+    float transfer_gain
+    float transfer_exponent
+    # The document's linear RGB into linear sRGB, white point adapted. A
+    # float[9] and not a mat3 for the reason composite.gmacs records.
+    float to_linear_srgb[9]
+    # 1 when the document is laid on a colour or a ground, 0 when it is
+    # transparent.
+    float laid
+    # The background's colour as the document stores it, and a ground's
+    # second colour, the first again for a plain colour. A transparent
+    # document's paint is laid over the first for its lightness.
+    float first_r
+    float first_g
+    float first_b
+    float second_r
+    float second_g
+    float second_b
+
+# Must match SaColorSpace.Coordinates.
+const int SA_COORDS_OKLAB = 1
+
+# Must match the part's CELLS, QUANT, FULL and TOLERANCE.
+const uint CELLS = 2u
+const uint CELL_PAINTED = 0u
+const uint CELL_EDGE = 1u
+const float QUANT = 32768.0
+# The Laplacian of Oklab L at which a texel counts as wholly edge, which is a
+# hard step of a tenth of the lightness range to one neighbour.
+const float FULL = 0.1
+# How far from the background a texel must be to count as painted, in alpha on
+# a transparent document and in Oklab distance on a laid one.
+const float TOLERANCE = 0.002
+
+
+def to_linear_srgb_matrix() -> mat3:
+    return mat3(
+        to_linear_srgb[0], to_linear_srgb[1], to_linear_srgb[2],
+        to_linear_srgb[3], to_linear_srgb[4], to_linear_srgb[5],
+        to_linear_srgb[6], to_linear_srgb[7], to_linear_srgb[8]
+    )
+
+# One stored triple as Oklab, decoded the way measure.gmacs decodes it.
+
+
+def stored_to_oklab(vec3 stored) -> vec3:
+    if int(coordinates + 0.5) == SA_COORDS_OKLAB:
+        return stored
+    vec3 linear = sa_transfer_decode(
+        stored, transfer_slope, transfer_threshold, transfer_gain, transfer_exponent
+    )
+    return linear_srgb_to_oklab(to_linear_srgb_matrix() * linear)
+
+
+def first_colour() -> vec3:
+    return vec3(first_r, first_g, first_b)
+
+
+def second_colour() -> vec3:
+    return vec3(second_r, second_g, second_b)
+
+# The colour *texel* shows, laid over the background by its own alpha.
+
+
+def shown(vec4 texel) -> vec3:
+    return mix(first_colour(), texel.rgb, clamp(texel.a, 0.0, 1.0))
+
+# How far *lab* lies from the segment between the background's two colours.
+
+
+def from_background(vec3 lab) -> float:
+    vec3 first = stored_to_oklab(first_colour())
+    vec3 along = stored_to_oklab(second_colour()) - first
+    float reach = dot(along, along)
+    float at = 0.0
+    if reach > 0.0:
+        at = clamp(dot(lab - first, along) / reach, 0.0, 1.0)
+    return length(lab - (first + along * at))
+
+
+def painted(vec4 texel) -> bool:
+    if laid < 0.5:
+        return texel.a > TOLERANCE
+    return from_background(stored_to_oklab(shown(texel))) > TOLERANCE
+
+# The Oklab lightness the canvas shows at *px*, the nearest texel inside the
+# canvas for one past its edge.
+
+
+def lightness_at(ivec2 px) -> float:
+    ivec2 size = image_size(field)
+    ivec2 inside = clamp(px, ivec2(0), size - ivec2(1))
+    return stored_to_oklab(shown(field[inside])).x
+
+
+def coverage_and_edges():
+    ivec2 px = ivec2(global_id.xy) + ivec2(int(begin_x), int(begin_y))
+    ivec2 size = image_size(field)
+    if px.x >= size.x or px.y >= size.y:
+        return
+    if px.x >= int(end_x) or px.y >= int(end_y):
+        return
+    if not painted(field[px]):
+        return
+    atomic_add(tally.cells[ uint(slot) * CELLS + CELL_PAINTED ], 1u)
+    float laplacian = (
+        lightness_at(px + ivec2(-1, 0))
+        + lightness_at(px + ivec2(1, 0))
+        + lightness_at(px + ivec2(0, -1))
+        + lightness_at(px + ivec2(0, 1))
+        - 4.0 * lightness_at(px)
+    )
+    # A NaN is no edge, and the clamp below would hand it on as one.
+    if isnan(laplacian):
+        return
+    float ratio = laplacian / FULL
+    float energy = min(ratio * ratio, 1.0)
+    atomic_add(tally.cells[ uint(slot) * CELLS + CELL_EDGE ], uint(energy * QUANT + 0.5))

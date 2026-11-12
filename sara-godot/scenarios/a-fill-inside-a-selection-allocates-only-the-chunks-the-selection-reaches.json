@@ -1,0 +1,11 @@
+[
+  {"wait": 20},
+  {"state": "before"},
+  {"select": [10, 10, 50, 50]},
+  {"fill": [1.0, 0.0, 0.0]},
+  {"wait": 5},
+  {"state": "after"},
+  {"undo": 1},
+  {"wait": 5},
+  {"state": "undone"}
+]

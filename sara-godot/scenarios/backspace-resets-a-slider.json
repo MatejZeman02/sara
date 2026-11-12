@@ -1,0 +1,17 @@
+[
+  {"wait": 30},
+  {"key": {"key": "b", "ctrl": true}},
+  {"wait": 20},
+  {"state": "01-dialog-open"},
+  {"preview": {"kind": "color_balance", "shadows_cr": 60}},
+  {"wait": 10},
+  {"preview": {"read": true}},
+  {"shot": "02-slider-dragged"},
+  {"move": [1000, 326]},
+  {"wait": 5},
+  {"key": "backspace"},
+  {"wait": 10},
+  {"preview": {"read": true}},
+  {"state": "03-after-backspace"},
+  {"shot": "03-after-backspace"}
+]

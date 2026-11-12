@@ -1,0 +1,19 @@
+[
+  {"wait": 20},
+  {"shot": "brush-one-row"},
+  {"state": "brush-one-row"},
+  {"key": "I"},
+  {"wait": 10},
+  {"shot": "eyedropper-one-row"},
+  {"key": "B"},
+  {"prefs": {"second_row": true}},
+  {"wait": 10},
+  {"shot": "brush-two-rows"},
+  {"state": "brush-two-rows"},
+  {"open": "preferences"},
+  {"wait": 10},
+  {"page": "Top Menu Bar"},
+  {"wait": 10},
+  {"shot": "preferences-top-bar"},
+  {"prefs": {"second_row": false}}
+]

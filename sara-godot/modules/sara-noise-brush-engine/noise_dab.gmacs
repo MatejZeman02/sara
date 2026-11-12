@@ -1,0 +1,853 @@
+# Kernel: noise_dab
+#
+# One stretch of a noise stroke into the stroke buffer, always as a wash. The
+# tip's coverage comes from the door's `brush_tip` library and the wash from
+# its `brush_paint_modes`, so this file holds the order the steps run in and
+# the stroke's own geometry. What it paints is a swept stretch of path, not a
+# row of dabs.
+#
+# **Each texel finds its nearest point on the stretch's path** and reads every
+# value there (tip radii, angle, colour, pressure, thickness) interpolated
+# between the two points either side, so no dab is a unit of paint that can
+# show. `noise_stretch.gd` says how a stretch knows what the last one painted
+# (`first_laid`, `open_end`), so each texel is painted once.
+#
+# **The cut is made on the field against the pressure alone**, and the tip's
+# coverage multiplies what passed. A tip therefore bounds the noise and never
+# thresholds it, and the field cannot move a soft tip's edge in or out, which
+# a product of tip and field inside the cut would.
+#
+# **The wash is the strongest pass, a return is the sum.** The alpha is a
+# maximum, not a sum, so the texels two stretches both reach are not painted
+# twice. `noise_build_up.gmacs` says when a return sums instead. The stroke
+# lands on the layer once, through the buffer's own composite, so erasing and
+# alpha lock are the buffer's business.
+#
+# **The lightness goes into the height alone.** The colour never sees it,
+# because a bump baked into colour cannot be relit. The surface moves towards
+# the brush's height by `sa_height_mixed`, and the layer keeps the new surface
+# less the surface beneath. The layer's height and the surface beneath are
+# bound by the state through `SaStrokeHeights`, since the stroke buffer
+# carries none, and a target that lays none binds the one texel stand-in.
+#
+# **The pushed paint is read where it stands, never read back.** `layer_paint`
+# is the layer as it stood before the stroke, so the colour pushed is never the
+# stroke's own. `dab_list/noise_push.gmacs` holds the lanes. Paint weighs by its
+# alpha and body, so a flat fill such as the Background is never pushed.
+#
+# **A non-round tip needs the greatest coverage over the stretch's segments**,
+# not the nearest point's. The texels behind the stroke's first point are left
+# alone once the trail has moved on, or a bend would read an end cap's field
+# and fill up.
+#
+# **The stroke coordinates are the shared contract of the fields.** A texel
+# reads the field through `field_kernel/noise_field_seam.gmacs`, and a Grain or
+# Picture through `field_origin` and `field_axis`, see `noise_fields.gmacs`.
+# The heading is the two points' own rather than the segment's, so an edge texel
+# reads the same whichever short segment of a wobbling pen it is nearest.
+#
+# **The loads come one stretch late**, since a stretch cannot see what it finds
+# itself. They are taken up along the stretch by a smoothstep, because taken up
+# whole at the start they stood the carry up in a step, which the relief lit as
+# a seam every few pixels.
+#
+# **Read through the image's map.** `frame_x`, `frame_y` and `frame_origin` map
+# a chunk texel into the stroke's document pixels, so a mirrored stroke is the
+# path mirrored rather than its box moved.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel noise_dab
+
+import brush_paint_modes
+import height_deposit
+
+image canvas
+# The document's selection on the chunk grid, which `SaPaintContext` binds
+# for every target at binding 1, r32f whatever the canvas is. The 1 by 1
+# everything stand-in reads 1 through the clamped load.
+image mask: r32f, readonly
+# The two bindings `brush_tip` reads and leaves its importer to declare: the
+# Soft Curve generator's falloff table and an image tip's picture. Bound once an
+# update by `SaBrushTipMask.bind`, a stand-in when the tip has neither.
+buffer softness: float curve[]
+sampler tip_image
+# The two bindings `noise_fields` reads and leaves its importer to declare: the
+# field's numbers, written once a stroke, and the picture a Picture field tiles,
+# a white stand-in otherwise. Bound by `NoiseFields.bind`.
+buffer field: float values[]
+sampler field_image
+# The active layer's height in this chunk and the surface beneath the layer
+# there, both from `SaStrokeHeights`. The surface beneath is a chunk at the
+# document's resolution, read at the texel's document pixel. The one texel
+# stand-in `SaStrokeHeights.held` answers for both when the stroke lays no
+# height.
+image height: r16f
+image beneath: r16f, readonly
+# The smudge stage's carry, the stamp's own, written once an update by the
+# door's `smudge_pickup` before this kernel runs. Texel 0 is the carried
+# colour and, in alpha, how much of it replaces the brush's own colour. The
+# stage off binds `SaSmudgeReservoir.stand_in()`, one texel of nothing, whose
+# alpha of nought mixes nothing in, so a stroke without the stage paints the
+# texels it always did.
+image smudge: rgba32f, readonly
+# The stretch's points, [NOISE_POINT_FLOATS] floats a point at the slots below,
+# oldest first, written once an update by `noise_stretch.gd`.
+buffer stretch: float points[]
+# The stroke's path behind the stretch, near it, which `noise_build_up` reads
+# to say where the pen came back over its own paint, written once an update
+# by `build_up/noise_returns.gd` and bound for the body and the front alike.
+buffer returns: float earlier[]
+# The loads each lane of the stroke carried into this stretch and what the last
+# stretch found, and the sums of what this stretch finds under itself, laid out
+# as `dab_list/noise_push.gmacs` says. Bound by `NoiseHeightCarry.bind`, a
+# stand-in of one lane holding nothing while the stroke lays no height.
+buffer push_carry: float lanes[]
+buffer push_found: int sums[]
+# The layer the stroke paints, its chunk under this one, as it stood before the
+# stroke, which a stroke into the stroke buffer never writes. One texel of
+# nothing where the stroke lays no height.
+sampler layer_paint
+# The paint on the layers below that one, composited, and its own height, a
+# chunk each at the document's resolution, read at the texel's document pixel.
+# One texel stand-ins where Push Colour Below is off or no paint below stands
+# there.
+sampler paint_below
+image height_below: r16f, readonly
+
+params:
+    vec2 render_offset  # the dispatch origin in the chunk's own texels
+    # The map from a texel's place in its chunk, in document pixels, to the
+    # stroke's own document pixels: x times `frame_x` plus y times `frame_y`
+    # plus `frame_origin`.
+    vec2 frame_x
+    vec2 frame_y
+    vec2 frame_origin
+    # The frame a Grain or a Picture is read in, fixed to the canvas for the
+    # whole stroke: its first point in the stroke's document pixels, its first
+    # heading, and its along there. A heading of nought reads the field in the
+    # texel's stroke coordinates instead, as a Bristle always is, and as a
+    # field the Drift row carries with the pen is.
+    vec2 field_origin
+    vec2 field_axis
+    float field_along
+    float point_count  # how many points the stretch holds
+    # What of the first segment was painted before: nought none, one all of
+    # it, which is left alone, and two the stretch carries a trail for a tip
+    # that is not round, whose texels are seen again and painted only where
+    # the stretch gives them more than is laid. Three is two with the trail
+    # starting past the stroke's first point, whose texels behind its own
+    # first point are left alone.
+    float first_laid
+    # One while the stroke goes on past the newest point, whose front is then
+    # the next stretch's.
+    float open_end
+    float generator  # 0 default, 1 gauss, 2 soft curve, 3 image
+    float shape  # 0 circle, 1 rectangle
+    float antialias
+    # One where the target binds the layer's height, nought where it binds the
+    # stand-in.
+    float lays_height
+    # How loaded the brush is, nought to one, the settings' paint load: the
+    # share of the gap to its own height the surface closes where the stroke
+    # covers it fully and the surface gives way wholly.
+    float paint_load
+    # The first of this image's lanes in the two buffers above.
+    float carry_lane
+    # How far a carried height goes before it slumps to a share of 1/e, and
+    # the path this stretch paints past the newest point the last one painted,
+    # both in document pixels.
+    float push_reach
+    float push_length
+    # One while the brush's Push Colour Below is on, nought while it is off.
+    float push_below
+    # The stroke's seed folded to 24 bits, which the rounding of the colour's
+    # store into a half canvas draws from, `stochastic_half.gmacs`.
+    float stroke_seed
+
+import brush_tip
+import stochastic_half
+import noise_fields
+import noise_edge
+import noise_field_seam
+import noise_push
+import noise_build_up
+# Where the smudge stage's carry meets the brush's colour, in the brush's mode.
+import smudge_met
+
+# Where each value of a point sits among its floats, `noise_stretch.gd`'s
+# constants of the same names.
+const int NOISE_POINT_FLOATS = 26
+const int NOISE_POINT_AT = 0
+const int NOISE_POINT_ALONG = 2
+const int NOISE_POINT_PRESSURE = 3
+const int NOISE_POINT_HALF_EXTENT = 4
+const int NOISE_POINT_ROTATION = 6
+const int NOISE_POINT_FADE = 8
+const int NOISE_POINT_FALLOFF = 10
+const int NOISE_POINT_SHIFT = 12
+const int NOISE_POINT_BAND = 13
+const int NOISE_POINT_THICKNESS = 14
+const int NOISE_POINT_MIRROR = 15
+const int NOISE_POINT_COLOUR = 16
+const int NOISE_POINT_DIRECTION = 20
+const int NOISE_POINT_LEAN = 22
+const int NOISE_POINT_SIDE = 24
+const int NOISE_POINT_PLACE = 25
+# The lanes the stroke's width is cut into, `NoiseHeightCarry.LANES`.
+const int NOISE_CARRY_LANES = 32
+# How much of the gap to the height load a texel closes where the stroke covers
+# it fully, how much of what the stroke lays is the old paint where a lane's
+# paint load is full, and the share of the brush's thickness old paint must
+# stand at to count in full as a body to push, the engine's weights, set
+# against how a stripe dragged across a band looks at 100 % zoom.
+const float NOISE_PUSH_SHARE = 1.0
+const float NOISE_PUSH_COLOUR = 0.6
+const float NOISE_PUSH_BODY = 0.25
+# The pressure above which paint piles at the stroke's sides, and how much of
+# the brush's own height a full press adds there, the engine's weights, set
+# against how a hard press looks beside a firm one.
+const float NOISE_PILE_ABOVE = 0.7
+const float NOISE_PILE_SHARE = 0.75
+# How far the Texture Tone row at full moves the paint's lightness either way
+# from the field's middle grey, in stops, so the field's darkest reads about a
+# third of the colour picked and its lightest near three times it. A share of
+# the colour either way topped out at a lightness spread of 0.07 on Firm Fill,
+# which the painter could not tell from none.
+const float NOISE_TEXTURE_TONE = 1.5
+
+# How much more a texel must be given than is laid for a stretch that carries a
+# trail to paint it again, a step of an 8-bit channel at its smallest, so a
+# texel two evaluations round to the same alpha is left alone.
+const float NOISE_REPAINT_RISE = 0.002
+
+
+def noise_point(int index, int slot) -> float:
+    return stretch.points[index * NOISE_POINT_FLOATS + slot]
+
+
+def noise_point_pair(int index, int slot) -> vec2:
+    return vec2(noise_point(index, slot), noise_point(index, slot + 1))
+
+# One value of the path between point *index* and point *next*, *t* of the way.
+
+
+def noise_between(int index, int next, float t, int slot) -> float:
+    return mix(noise_point(index, slot), noise_point(next, slot), t)
+
+
+def noise_between_pair(int index, int next, float t, int slot) -> vec2:
+    return mix(noise_point_pair(index, slot), noise_point_pair(next, slot), t)
+
+# The nearest point of the stretch to *p*: the segment it lies on in x, how far
+# along that segment in y, and in z the same before it was clamped to the
+# segment, which says whether *p* lies behind its start or in front of its end.
+# A stretch of one point answers that point. The first segment of two that
+# meet at a point wins, so a texel nearest the joint belongs to the earlier.
+
+
+def noise_nearest(vec2 p) -> vec3:
+    int count = int(point_count)
+    vec3 found = vec3(0.0)
+    float best = 3.0e38
+    for i in range(count - 1):
+        vec2 a = noise_point_pair(i, NOISE_POINT_AT)
+        vec2 ab = noise_point_pair(i + 1, NOISE_POINT_AT) - a
+        float length_squared = dot(ab, ab)
+        float raw = length_squared > 0.0 ? dot(p - a, ab) / length_squared : 0.0
+        float t = clamp(raw, 0.0, 1.0)
+        vec2 off = p - (a + ab * t)
+        float distance_squared = dot(off, off)
+        if distance_squared < best:
+            best = distance_squared
+            found = vec3(i, t, raw)
+    return found
+
+# Whether a texel nearest the stretch at *nearest* is another stretch's to
+# paint: on the first segment the last one painted, behind the first point of
+# a trail that starts past the stroke's own first point, or in front of the
+# newest point while the stroke goes on past it.
+
+
+def noise_not_ours(vec3 nearest) -> bool:
+    int count = int(point_count)
+    if count < 2:
+        return false
+    int index = int(nearest.x)
+    if index == 0 and first_laid > 0.5 and first_laid < 1.5 and nearest.z < 1.0:
+        return true
+    if index == 0 and first_laid > 2.5 and nearest.z < 0.0:
+        return true
+    return open_end > 0.5 and index == count - 2 and nearest.z >= 1.0
+
+# The tip's coverage at *local*, a point in the tip's own frame already
+# mirrored, by whichever falloff the tip names. The spike fold is the stamp's
+# option and not on this brush's page, so the tip is folded at two spikes,
+# which is the identity.
+
+
+def noise_tip_coverage(vec2 local, vec2 half_extent, vec2 fade, vec2 falloff) -> float:
+    if generator > 2.5:
+        return sa_image_coverage(local, half_extent, falloff, fade)
+    vec2 folded = vec2(local.x, abs(local.y))
+    if shape > 0.5:
+        return sa_rectangle_coverage(folded, half_extent, fade, antialias)
+    if generator > 1.5:
+        return sa_soft_coverage(folded, half_extent, antialias)
+    if generator > 0.5:
+        return sa_gauss_coverage(folded, half_extent, fade, antialias)
+    return sa_circle_coverage(folded, half_extent, fade, antialias)
+
+# The tip's turn at *t* of the way from point *index* to point *next*: the
+# two points' directions blended and made a unit again, or the earlier point's
+# own where they cancel.
+
+
+def noise_rotation(int index, int next, float t) -> vec2:
+    vec2 turn = noise_between_pair(index, next, t, NOISE_POINT_ROTATION)
+    float turn_length = length(turn)
+    return turn_length > 0.0 ? turn / turn_length : noise_point_pair(index, NOISE_POINT_ROTATION)
+
+# *offset*, a vector in the stroke's pixels, in the frame of a tip turned by
+# *rotation*.
+
+
+def noise_in_tip_frame(vec2 offset, vec2 rotation) -> vec2:
+    return vec2(
+    offset.x * rotation.x + offset.y * rotation.y,
+    -offset.x * rotation.y + offset.y * rotation.x
+    )
+
+# The heading the field is read along at *t* of the way from point *index* to
+# point *next*: the two points' headings over the tip's radius blended and made
+# a unit again, or *fallback* where they cancel.
+
+
+def noise_heading(int index, int next, float t, vec2 fallback) -> vec2:
+    vec2 heading = noise_between_pair(index, next, t, NOISE_POINT_DIRECTION)
+    float heading_length = length(heading)
+    return heading_length > 0.0 ? heading / heading_length : fallback
+
+# The tip's coverage at *p* with its centre *t* of the way from point *index*
+# to point *next*, every value of the tip there interpolated. The mirror is the
+# nearer point's.
+
+
+def noise_tip_at(vec2 p, int index, int next, float t) -> float:
+    vec2 offset = p - noise_between_pair(index, next, t, NOISE_POINT_AT)
+    vec2 local = noise_in_tip_frame(offset, noise_rotation(index, next, t))
+    local *= sa_mirror_signs(noise_point(t < 0.5 ? index : next, NOISE_POINT_MIRROR))
+    return noise_tip_coverage(
+    local,
+    noise_between_pair(index, next, t, NOISE_POINT_HALF_EXTENT),
+    noise_between_pair(index, next, t, NOISE_POINT_FADE),
+    noise_between_pair(index, next, t, NOISE_POINT_FALLOFF)
+    )
+
+# *value* kept off nought by a hair, so it can divide.
+
+
+def noise_off_nought(float value) -> float:
+    return abs(value) > 1e-6 ? value : 1e-6
+
+# The coverage the tip gives *p* with its centre *distance* pixels along segment
+# *index* from the segment's start, held to the segment of *segment_length*.
+
+
+def noise_tip_along(vec2 p, int index, float distance, float segment_length) -> float:
+    return noise_tip_at(p, index, index + 1, clamp(distance / segment_length, 0.0, 1.0))
+
+# The greatest coverage the tip gives *p* from any centre on the stretch, never
+# less than *nearest_coverage*, which the centre nearest *p* gave.
+#
+# A tip's coverage falls with the norm of *p* in the tip's frame measured in
+# its half extents, the Euclidean one for an ellipse and the larger of the two
+# axes for a box, so the best centre on a segment is where that norm is least.
+# The tip's frame is read at *p*'s own foot on the segment, and the centre is
+# then found in closed form: where the line the centre travels, seen from the
+# tip, comes nearest the tip's middle, which for a box is one of the places an
+# axis is crossed or the two axes are equal. Each is clamped to the segment
+# and read with the tip as it is there. A segment further from *p* than its
+# tips reach paints nothing and is skipped.
+#
+# A picture's coverage falls with no norm, so for one the segment's two ends
+# are read as well. Without them the L of `tips/corner.png` stopped a point's
+# spacing short of a stroke's end across the middle of its bar, where only the
+# last point covers a texel and no centre found in closed form is clamped to it.
+
+
+def noise_swept_coverage(vec2 p, float nearest_coverage) -> float:
+    int count = int(point_count)
+    bool boxed = shape > 0.5 or generator > 2.5
+    float best = nearest_coverage
+    for i in range(count - 1):
+        vec2 a = noise_point_pair(i, NOISE_POINT_AT)
+        vec2 ab = noise_point_pair(i + 1, NOISE_POINT_AT) - a
+        float length_squared = dot(ab, ab)
+        if length_squared <= 0.0:
+            continue
+        float foot = clamp(dot(p - a, ab) / length_squared, 0.0, 1.0)
+        vec2 gap = p - (a + ab * foot)
+        float reach = max(length(noise_point_pair(i, NOISE_POINT_HALF_EXTENT)), length(noise_point_pair(i + 1, NOISE_POINT_HALF_EXTENT)))
+        if dot(gap, gap) > reach * reach:
+            continue
+        vec2 rotation = noise_rotation(i, i + 1, foot)
+        vec2 half_extent = max(noise_between_pair(i, i + 1, foot, NOISE_POINT_HALF_EXTENT), vec2(1e-6))
+        float segment_length = sqrt(length_squared)
+        vec2 start = noise_in_tip_frame(p - a, rotation) / half_extent
+        vec2 heading = noise_in_tip_frame(ab / segment_length, rotation) / half_extent
+        float travel = dot(heading, heading)
+        if travel <= 0.0:
+            continue
+        best = max(best, noise_tip_along(p, i, dot(start, heading) / travel, segment_length))
+        if boxed:
+            best = max(best, noise_tip_along(p, i, start.x / noise_off_nought(heading.x), segment_length))
+            best = max(best, noise_tip_along(p, i, start.y / noise_off_nought(heading.y), segment_length))
+            best = max(best, noise_tip_along(p, i, (start.x - start.y) / noise_off_nought(heading.x - heading.y), segment_length))
+            best = max(best, noise_tip_along(p, i, (start.x + start.y) / noise_off_nought(heading.x + heading.y), segment_length))
+        if generator > 2.5:
+            best = max(best, max(noise_tip_along(p, i, 0.0, segment_length), noise_tip_along(p, i, segment_length, segment_length)))
+    return best
+
+# How much of the stroke a texel takes at *pressure* where it needs *needed*.
+# Full at the value and above it, nothing at the foot of the band below it, and
+# a hard step when the band is nothing, since smoothstep's two edges may not
+# meet.
+
+
+def noise_cut(float pressure, float needed, float band) -> float:
+    if band <= 0.0001:
+        return step(needed, pressure)
+    return smoothstep(needed - band, needed, pressure)
+
+# What a light press lets through of what the cut lays, from nothing at no
+# pressure to all of it from NOISE_SPECK_FULL up. The cut alone cannot thin a
+# light press, because a falling Strength shifts the field furthest down at the
+# lightest touch and a high Fill flattens the field, so Firm Fill passed
+# everywhere at 0.05. A texel passes where *value*, half the field's map
+# *reading* and half a hash of its document pixel salted by the stroke's seed,
+# spread back to an even share, lies below the press's reach. So the first
+# texels to come in are specks where the field is low, scattered by the hash
+# where a field of high contrast is flat at nought, and a press of 0.3 and over
+# lays what the cut alone lays. The reach rises slowly to NOISE_SPECK_KNEE,
+# a few specks at 0.05 and a fifth of the body at 0.15, and fast after it, so
+# the press between gives its cover back over a short span rather than holding
+# a working press of 0.4 in specks too.
+const float NOISE_SPECK_KNEE = 0.15
+const float NOISE_SPECK_AT_KNEE = 0.24
+const float NOISE_SPECK_FULL = 0.3
+const float NOISE_SPECK_BAND = 0.04
+
+
+def noise_speck(float pressure, float reading, ivec2 pixel) -> float:
+    if pressure >= NOISE_SPECK_FULL:
+        return 1.0
+    float press = max(pressure, 0.0)
+    float reach = press < NOISE_SPECK_KNEE ? NOISE_SPECK_AT_KNEE * press / NOISE_SPECK_KNEE : mix(NOISE_SPECK_AT_KNEE, 1.0 + NOISE_SPECK_BAND, (press - NOISE_SPECK_KNEE) / (NOISE_SPECK_FULL - NOISE_SPECK_KNEE))
+    float sum = 0.5 * (clamp(reading, 0.0, 1.0) + noise_hash(vec2(pixel) + vec2(stroke_seed, 0.0)))
+    float value = sum < 0.5 ? 2.0 * sum * sum : 1.0 - 2.0 * (1.0 - sum) * (1.0 - sum)
+    return 1.0 - smoothstep(reach - NOISE_SPECK_BAND, reach, value)
+
+# How far out towards its rim a texel at *offset* from its nearest point of the
+# path lies, nought on the path and one at the rim. Across the stroke's body it
+# is *across*, the texel's distance from the path over the half-width the tip
+# sweeps there, so the rim is the swept band's edge. Past the stroke's two
+# ends and in a stretch of one point, where *capped*, it is the offset in the
+# tip's own half extents, turned by *rotation*: the Euclidean norm for an
+# ellipse and the larger axis for a box or a picture, so a cap's rim is the
+# tip's own outline. For a round tip the two are one measure.
+
+
+def noise_rim_distance(vec2 offset, vec2 rotation, vec2 half_extent, float across, bool capped) -> float:
+    if not capped:
+        return abs(across)
+    vec2 scaled = noise_in_tip_frame(offset, rotation) / max(half_extent, vec2(1e-6))
+    if shape > 0.5 or generator > 2.5:
+        return max(abs(scaled.x), abs(scaled.y))
+    return length(scaled)
+
+# How much of the grain a texel *distance* out towards its rim keeps, where the
+# band under the cut is *band*, one less the Hardness: all of it out to the
+# Hardness's share of the way and none at the rim, by a smoothstep between. A
+# band of nothing keeps all of it everywhere, so a hard stroke lays as it
+# always did, and smoothstep is never asked for two edges that meet.
+
+
+def noise_rim_share(float distance, float band) -> float:
+    if band <= 0.0001:
+        return 1.0
+    return 1.0 - smoothstep(1.0 - band, 1.0, distance)
+
+# The pressure a texel that keeps *share* of the grain is cut with: the
+# point's own *pressure* where it keeps all of it, and less as the share falls,
+# down to the pressure that lays nothing at a share of nothing. That is the
+# *shift* less the *band*, since a field's values run from nought up and a
+# texel fades out over the band below its value. So the rim is a lighter touch
+# than the path, the lowest values of the map are the last to go, and the
+# share thins a light press and a full one alike.
+
+
+def noise_rim_pressure(float pressure, float share, float shift, float band) -> float:
+    if share >= 1.0:
+        return pressure
+    return mix(min(shift - band, pressure), pressure, share)
+
+# How far the tip turned *rotation* reaches from its centre along *normal*,
+# the half-width of the band it sweeps across a path, which across is measured
+# in. A box's reach is its two half extents projected, and every other tip's is
+# the ellipse's through the same two, an image tip's box being its picture's.
+
+
+def noise_half_width(vec2 half_extent, vec2 rotation, vec2 normal) -> float:
+    float reach_x = dot(normal, rotation) * half_extent.x
+    float reach_y = dot(normal, vec2(-rotation.y, rotation.x)) * half_extent.y
+    if shape > 0.5 or generator > 2.5:
+        return max(abs(reach_x) + abs(reach_y), 0.5)
+    return max(length(vec2(reach_x, reach_y)), 0.5)
+
+# What the brush's height is multiplied by at *offset* from a tip turned
+# *rotation* with *half_extent*, for a point whose lean is *lean*: one plus the
+# lean's length times where *offset* lies along it, one at the edge the lean
+# points to and minus one at the opposite edge, the tip's reach that way
+# measured as across is. One where there is no lean.
+
+
+def noise_lean_factor(vec2 offset, vec2 half_extent, vec2 rotation, vec2 lean) -> float:
+    float share = length(lean)
+    if share <= 0.0:
+        return 1.0
+    vec2 axis = lean / share
+    float reach = noise_half_width(half_extent, rotation, axis)
+    return 1.0 + share * clamp(dot(offset, axis) / reach, -1.0, 1.0)
+
+# The length of the stretch's segment from point *index*, nought past its
+# last point.
+
+
+def noise_segment_length(int index) -> float:
+    if index + 1 >= int(point_count):
+        return 0.0
+    return length(noise_point_pair(index + 1, NOISE_POINT_AT) - noise_point_pair(index, NOISE_POINT_AT))
+
+# How far along the path a texel nearest segment *index*, *fraction* of the
+# way along it, lies past the newest point the last stretch painted, which is
+# `push_length` of path before the stretch's last point. Below nought on the
+# segment the last stretch painted and on a trail carried behind it.
+
+
+def noise_ahead(int index, float fraction) -> float:
+    float to_end = -fraction * noise_segment_length(index)
+    for i in range(index, int(point_count) - 1):
+        to_end += noise_segment_length(i)
+    return push_length - to_end
+
+# The lane of the carry a texel *across* of the way out from the path falls
+# in, minus one on one side and one on the other, counted from the first of
+# this image's lanes.
+
+
+def noise_lane(float across) -> int:
+    int lane = int(floor((clamp(across, -1.0, 1.0) * 0.5 + 0.5) * NOISE_CARRY_LANES))
+    return int(carry_lane) + clamp(lane, 0, NOISE_CARRY_LANES - 1)
+
+# Whether the target binds the layer's height, and with it the loads and the
+# layer's paint, at *pixel*: a chunk rather than the one texel stand-in, with
+# the texel inside it.
+
+
+def noise_pushes(ivec2 pixel) -> bool:
+    if lays_height < 0.5:
+        return false
+    ivec2 held = image_size(height)
+    return held.x > 1 and pixel.x < held.x and pixel.y < held.y
+
+# The paint below the layer at *document_pixel*, its colour in `rgb` and in
+# `a` how much of it a lane takes up: its alpha times its body, its own height,
+# less what the layer's *thick* levelled of it, against the share of
+# *thickness* the layer's own paint is weighed by. Nothing while Push Colour
+# Below is off or the target binds the stand-in.
+
+
+def noise_paint_below(ivec2 document_pixel, float thick, float thickness) -> vec4:
+    ivec2 held = image_size(height_below)
+    if push_below < 0.5 or held.x <= 1:
+        return vec4(0.0)
+    ivec2 at = min(document_pixel, held - 1)
+    float stands = height_below[at].r + min(thick, 0.0)
+    float body = clamp(stands / max(NOISE_PUSH_BODY * thickness, 0.001), 0.0, 1.0)
+    vec4 paint = texel_fetch(paint_below, min(at, texture_size(paint_below, 0) - 1), 0)
+    return vec4(paint.rgb, clamp(paint.a, 0.0, 1.0) * body)
+
+# Takes what stands under a texel the tip covers by *cover*, *ahead* past the
+# stretch's start, into *lane*'s sums. The *surface* goes into the lane's
+# tallest, its share by the cover and eased by how far before the stretch's end
+# it stood. The layer's *paint* there goes into the paint's sums, weighed by
+# the cover, its alpha and its body, the layer's own height *thick* against a
+# share of *thickness*, the brush's at full lightness. The paint *below* it,
+# weighed as `noise_paint_below` says, fills what the layer's own alpha leaves
+# bare, and with none below the sums are the layer's own paint's exactly.
+
+
+def noise_picked(int lane, float surface, float thick, vec4 paint, vec4 below, float cover, float thickness, float ahead):
+    int at = lane * NOISE_FOUND_INTS
+    float left = noise_faded(1.0, push_length - ahead, push_reach)
+    float peak = max(surface, 0.0) * cover * noise_laid_share(left)
+    atomic_max(push_found.sums[at + NOISE_FOUND_PEAK], float_bits_to_int(peak))
+    atomic_add(push_found.sums[at + NOISE_FOUND_COVER], int(round(cover * NOISE_FOUND_SCALE)))
+    float body = clamp(max(thick, 0.0) / max(NOISE_PUSH_BODY * thickness, 0.001), 0.0, 1.0)
+    float own = clamp(paint.a, 0.0, 1.0)
+    float weight = cover * own * body
+    float from_below = cover * below.a * (1.0 - own)
+    vec3 found = paint.rgb
+    if from_below > 0.0:
+        found = (paint.rgb * weight + below.rgb * from_below) / (weight + from_below)
+        weight += from_below
+    if weight <= 0.0:
+        return
+    atomic_add(push_found.sums[at + NOISE_FOUND_STRENGTH], int(round(weight * left * NOISE_FOUND_SCALE)))
+    atomic_add(push_found.sums[at + NOISE_FOUND_WEIGHT], int(round(weight * NOISE_FOUND_SCALE)))
+    vec3 colour = clamp(found, vec3(-NOISE_FOUND_CEILING), vec3(NOISE_FOUND_CEILING))
+    for channel in range(3):
+        atomic_add(push_found.sums[at + NOISE_FOUND_COLOUR + channel], int(round(weight * colour[channel] * NOISE_FOUND_SCALE)))
+
+# How much of what the last stretch found this one has taken up by *ahead*.
+
+
+def noise_taken(float ahead) -> float:
+    return push_length > 0.0 ? smoothstep(0.0, push_length, ahead) : 1.0
+
+# The height *lane*'s height load lays a texel *ahead* past the stretch's
+# start: what the lane carried in, or what the last stretch found as far as
+# this one has taken it up where that lays more, fallen over the path since.
+
+
+def noise_height_ahead(int lane, float ahead) -> float:
+    int at = lane * NOISE_CARRY_FLOATS + NOISE_LOAD_HEIGHT
+    int found = at + NOISE_CARRY_FOUND
+    vec2 carried = vec2(push_carry.lanes[at], push_carry.lanes[at + 1])
+    vec2 taken = vec2(push_carry.lanes[found], push_carry.lanes[found + 1] * noise_taken(ahead))
+    vec2 load = noise_height_taller(carried, taken)
+    return noise_height_laid(vec2(noise_faded(load.x, ahead, push_reach), load.y))
+
+# The paint *lane*'s paint load lays a texel *ahead* past the stretch's start:
+# what the last stretch found, as far as this one has taken it up, over what
+# the lane carried in, fallen over the path since.
+
+
+def noise_paint_ahead(int lane, float ahead) -> vec4:
+    int at = lane * NOISE_CARRY_FLOATS + NOISE_LOAD_PAINT
+    int found = at + NOISE_CARRY_FOUND
+    vec4 carried = vec4(push_carry.lanes[at], push_carry.lanes[at + 1], push_carry.lanes[at + 2], push_carry.lanes[at + 3])
+    vec4 taken = vec4(
+    push_carry.lanes[found] * noise_taken(ahead), push_carry.lanes[found + 1], push_carry.lanes[found + 2], push_carry.lanes[found + 3]
+    )
+    vec4 load = noise_paint_over(taken, carried)
+    return vec4(noise_faded(load.x, ahead, push_reach), load.yzw)
+
+# The height at *pixel*, where the stroke lays *alpha* of its own paint and
+# *pushed* of the old, over the surface beneath *under*, from the layer's own
+# *thick*. The surface is first raised towards *raised*, what the lane's height
+# load lays there, by the larger of the two, then moved towards *brush*, the
+# brush's own height with its edges piled, by the brush's own paint alone, and
+# stored less the surface beneath.
+
+
+def noise_deposit(ivec2 pixel, float under, float thick, float raised, float brush, float alpha, float pushed):
+    float laid = thick
+    if raised > 0.0:
+        laid = sa_height_laid_ahead(thick, under, raised, NOISE_PUSH_SHARE, max(alpha, pushed))
+    float mixed = sa_height_mixed(laid, under, brush, paint_load, alpha)
+    height[pixel] = vec4(mixed, 0.0, 0.0, 1.0)
+
+
+def noise_dab():
+    # The texel this invocation writes, `render_offset` being in the canvas's
+    # texels, and its place in document pixels, where the stroke is stated: a
+    # chunk of a double resolution layer is 512 texels over 256 pixels, read off
+    # its width the way the stamp's `dab` reads it. At 1.0 both are the texel,
+    # and the expressions are the ones a single resolution layer always had,
+    # since a division by a one read at run time moves the last bit.
+    ivec2 pixel_coords = ivec2(global_id.xy) + ivec2(render_offset)
+    ivec2 size = image_size(canvas)
+    if pixel_coords.x >= size.x or pixel_coords.y >= size.y:
+        return
+    float texel_scale = max(1.0, size.x / 256.0)
+    vec2 at = vec2(pixel_coords)
+    ivec2 document_pixel = pixel_coords
+    if texel_scale != 1.0:
+        at = (vec2(pixel_coords) + 0.5) / texel_scale - 0.5
+        document_pixel = ivec2(floor(vec2(pixel_coords) / texel_scale))
+    vec2 p = frame_x * at.x + frame_y * at.y + frame_origin
+
+    vec3 nearest = noise_nearest(p)
+    if noise_not_ours(nearest):
+        return
+    int index = int(nearest.x)
+    int next = min(index + 1, int(point_count) - 1)
+    float t = nearest.y
+
+    # The tip at the nearest point, in its frame there, and the greatest it
+    # gives the texel from any centre of the stretch. The angle is the two
+    # points' directions blended, and the mirror the nearer point's.
+    vec2 centre = noise_between_pair(index, next, t, NOISE_POINT_AT)
+    vec2 half_extent = noise_between_pair(index, next, t, NOISE_POINT_HALF_EXTENT)
+    vec2 rotation = noise_rotation(index, next, t)
+    vec2 offset = p - centre
+    float coverage = noise_swept_coverage(p, noise_tip_at(p, index, next, t))
+    if coverage <= 0.0:
+        return
+
+    # The texel's stroke coordinates, from its nearest point of the path, or
+    # along the direction the pen had at a stretch of one point. Along is the
+    # travelled length there and the texel's offset along the path's heading
+    # over the tip's radius, at the segment's rate, and across its distance
+    # from the path. So a texel nearest a joint, out on the side a turn opens,
+    # reads the field spread round the joint rather than one along all the way
+    # out, which laid rings round every short turn a pen's wobble made. Past
+    # the stroke's first point and its last, the only texels nearest an end
+    # that are this stretch's to paint, across is the distance from the line
+    # the heading carries on, so a cap reads the field the body does.
+    vec2 start = noise_point_pair(index, NOISE_POINT_AT)
+    vec2 segment = noise_point_pair(next, NOISE_POINT_AT) - start
+    float segment_length = length(segment)
+    vec2 direction = segment_length > 0.0 ? segment / segment_length : noise_point_pair(index, NOISE_POINT_DIRECTION)
+    vec2 normal = vec2(-direction.y, direction.x)
+    float along = 0.0
+    float aside = 0.0
+    float ahead = 0.0
+    bool capped = true
+    if segment_length > 0.0:
+        bool past = (index == 0 and nearest.z < 0.0) or (index == int(point_count) - 2 and nearest.z > 1.0)
+        capped = past
+        vec2 heading = noise_heading(index, next, t, direction)
+        float rate = (noise_point(next, NOISE_POINT_ALONG) - noise_point(index, NOISE_POINT_ALONG)) / segment_length
+        along = mix(noise_point(index, NOISE_POINT_ALONG), noise_point(next, NOISE_POINT_ALONG), t) + rate * dot(offset, heading)
+        aside = dot(offset, normal) < 0.0 ? -length(offset) : length(offset)
+        if past:
+            aside = dot(offset, vec2(-heading.y, heading.x))
+        ahead = noise_ahead(index, past ? nearest.z : t)
+    else:
+        along = noise_point(index, NOISE_POINT_ALONG) + dot(offset, direction)
+        aside = dot(offset, normal)
+        ahead = noise_ahead(index, 0.0)
+    # Counted on the other side of the path past a reversal, so a streak runs
+    # back along the line it ran out on rather than its mirror.
+    aside *= noise_point(index, NOISE_POINT_SIDE)
+    float half_width = noise_half_width(half_extent, rotation, normal)
+    float across = aside / half_width
+    vec4 under = canvas[pixel_coords]
+    float radius = max(half_extent.x, half_extent.y)
+    bool returning = noise_returning(p, index, noise_between(index, next, t, NOISE_POINT_PLACE), radius, first_laid > 1.5)
+    vec2 read_at = vec2(along, across)
+    bool on_canvas = noise_field_on_canvas(field_axis)
+    if on_canvas:
+        read_at = noise_canvas_place(p, field_origin, field_axis, field_along, half_width)
+    float build_up = max(field.values[NOISE_FIELD_BUILD_UP], 0.0)
+    read_at = noise_return_read(read_at, returning, on_canvas, half_width, build_up)
+    vec2 reading = noise_field_read(read_at.x, read_at.y, half_width)
+
+    # The pressure at the nearest point against the field shifted by Strength
+    # and thinned towards the rim by Hardness, and nothing of the tip in it.
+    # The rim is the outline `noise_edge` moves in along the stroke, and its
+    # band the wider of Hardness's and the edge's own. It moves in by the
+    # share of the texel's way from the path that is square to the segment,
+    # all of it along the body and less in a cap or round the outside of a
+    # turn, so the round end in front of the pen and the point of a hairpin
+    # keep the round tip's outline, and not at all in a stretch of one point,
+    # so a tap is the tip's own shape. What clears the cut takes the tip's coverage as its alpha, at the point's
+    # own opacity, and a feathered selection scales that after, so the
+    # selection's edge stays the stroke's edge rather than a second cut. The
+    # flow is one: Opacity is the one row, and the stroke's opacity is applied
+    # when the buffer lands.
+    vec4 colour = mix(
+    vec4(noise_point_pair(index, NOISE_POINT_COLOUR), noise_point_pair(index, NOISE_POINT_COLOUR + 2)),
+    vec4(noise_point_pair(next, NOISE_POINT_COLOUR), noise_point_pair(next, NOISE_POINT_COLOUR + 2)),
+    t
+    )
+    # A bristle's own tone, its lightness and never its hue, and its own
+    # softness, the cut's band widened about its middle along a strand that
+    # runs dry, so a soft edge is a wider fade and not a wider strand. Strand
+    # Softness past one widens it further, mostly inwards, `noise_strand_look`.
+    vec2 strand = noise_strand_look(along, across, half_width)
+    colour.rgb *= 1.0 + NOISE_STRAND_TONE * strand.x
+    # The brush's Texture Tone, the field's lightness laid into the paint's
+    # as a tone, and its Fill, the map drawn down towards nothing so the body
+    # paints whatever the field says and the field shows in the tone and the
+    # relief instead. Both at nought by default, which leaves both as they were.
+    float tone = field.values[NOISE_FIELD_TONE]
+    if tone > 0.0:
+        colour.rgb *= exp2(NOISE_TEXTURE_TONE * tone * (2.0 * noise_field_tone(reading.y) - 1.0))
+    float shift = noise_between(index, next, t, NOISE_POINT_SHIFT)
+    float needed = reading.x * (1.0 - clamp(field.values[NOISE_FIELD_FILL], 0.0, 1.0)) + shift
+    float pressure = noise_between(index, next, t, NOISE_POINT_PRESSURE)
+    float band = noise_between(index, next, t, NOISE_POINT_BAND)
+    float dry = strand.y * min(NOISE_STRAND_DRY * band, max(NOISE_STRAND_DRY_BAND - band, 0.0))
+    vec2 edge = noise_edge(centre, across, half_width, band, pressure)
+    float outward = noise_rim_distance(offset, rotation, half_extent, across, capped)
+    float sideways = length(offset) > 1e-6 ? abs(dot(offset, normal)) / length(offset) : 1.0
+    if segment_length <= 0.0:
+        sideways = 0.0
+    float rim = outward / (1.0 - edge.x * clamp(sideways * sideways, 0.0, 1.0))
+    float share = noise_rim_share(rim, max(band, edge.y) * (1.0 - clamp(field.values[NOISE_FIELD_RIM_FIRM], 0.0, 1.0)))
+    float cover = coverage * mask[min(document_pixel, image_size(mask) - 1)].r
+    if cover <= 0.0:
+        return
+    float soften = strand.y * NOISE_STRAND_SOFTER * max(field.values[NOISE_FIELD_STRAND_SOFT] - 1.0, 0.0)
+    float full_a = rim < 1.0 ? noise_cut(noise_rim_pressure(pressure, share, shift, band), needed + 0.5 * dry + NOISE_STRAND_SOFTER_IN * soften, band + dry + soften) * noise_speck(pressure, reading.x, document_pixel) * cover * colour.a : 0.0
+    float thickness = noise_between(index, next, t, NOISE_POINT_THICKNESS)
+
+    # The old paint, where the target binds the layer's height. A texel the
+    # stroke has laid nothing on yet gives the lane what stands there, wherever
+    # the tip covers it, and every texel the tip covers takes what the lane's
+    # loads lay at its place along the path: a share of the old colour, laid
+    # alone in the cut's holes, and a height to raise the surface towards. The
+    # front under the pen pushes too, so the paint under its round end is what
+    # the body lays there next, and binds a sums buffer nothing folds, since
+    # what it finds would otherwise reach the loads the next stretch folds.
+    float lifted = 0.0
+    vec3 old_rgb = vec3(0.0)
+    float raised = 0.0
+    float surface_under = 0.0
+    float thick = 0.0
+    bool pushes = noise_pushes(pixel_coords)
+    if pushes:
+        surface_under = beneath[min(document_pixel, image_size(beneath) - 1)].r
+        thick = height[pixel_coords].r
+    if pushes and push_reach > 0.0:
+        int lane = noise_lane(across)
+        if under.a <= 0.0:
+            vec4 paint = texel_fetch(layer_paint, min(pixel_coords, texture_size(layer_paint, 0) - 1), 0)
+            vec4 below = noise_paint_below(document_pixel, thick, thickness)
+            noise_picked(lane, surface_under + thick, thick, paint, below, cover, thickness, ahead)
+        vec4 load = noise_paint_ahead(lane, ahead)
+        lifted = NOISE_PUSH_COLOUR * noise_laid_share(load.x)
+        old_rgb = load.yzw
+        raised = noise_height_ahead(lane, ahead)
+    float pushed_a = lifted * cover
+    float laid_a = max(full_a, pushed_a)
+    if laid_a <= 0.0:
+        return
+    float built = noise_built_up(returning, under.a, laid_a, build_up)
+    if built <= laid_a and first_laid > 1.5 and laid_a <= under.a + NOISE_REPAINT_RISE:
+        return
+
+    # Only the colour moves with a smudge: the alpha is the cut's and the
+    # point's own, so a smudge drags paint along without making the stroke any
+    # more or less opaque than it was set to, as on the stamp. The brush's own
+    # paint keeps the share the old paint leaves it, and the old paint takes
+    # the rest and the holes, so with no old paint it is the brush's own
+    # exactly: the share is not taken at all then, since a division of the
+    # alpha by itself on the card can miss one by its last bit.
+    vec4 carried = smudge[ivec2(0, 0)]
+    vec3 own_rgb = sa_smudge_met(colour.rgb, carried.rgb, carried.a)
+    vec3 paint_rgb = lifted > 0.0 ? mix(old_rgb, own_rgb, full_a * (1.0 - lifted) / laid_a) : own_rgb
+    # Rounded where a half canvas narrows it, the stretch's first along standing
+    # for the dab's seed, since a texel is laid again by a later stretch.
+    vec4 laid = sa_washed(under, paint_rgb, laid_a, built, 1.0, false)
+    sa_store_rounded(pixel_coords, laid, uint(stroke_seed), float_bits_to_uint(noise_point(0, NOISE_POINT_ALONG)))
+    if not pushes or thickness <= 0.0:
+        return
+    float leaning = thickness * noise_lean_factor(offset, half_extent, rotation, noise_between_pair(index, next, t, NOISE_POINT_LEAN))
+    float rise = noise_relief(read_at.x, read_at.y, half_width, reading.y)
+    float brush = noise_built_up_height(returning, under.a, sa_height_piled(rise * leaning, across, pressure, NOISE_PILE_ABOVE, NOISE_PILE_SHARE), leaning, build_up)
+    noise_deposit(pixel_coords, surface_under, thick, raised, brush, full_a, pushed_a)

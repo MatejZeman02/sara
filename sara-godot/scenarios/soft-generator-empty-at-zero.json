@@ -1,0 +1,936 @@
+[
+  {
+    "wait": 35
+  },
+  {
+    "docker": {
+      "id": "ToolBoxDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "LayersDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "ColorDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "InfoDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "RecorderDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "MinimapDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "ToolOptionsDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "GraphDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "HistoryDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "ReferenceDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "BrushPresetsDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "prefs": {
+      "advanced_options": true
+    }
+  },
+  {
+    "colour": "#101010"
+  },
+  {
+    "tool": {
+      "id": "brush",
+      "options": {
+        "radius": 0.03,
+        "hardness": 0.4,
+        "opacity": 1.0,
+        "flow": 1.0,
+        "spacing": 0.25,
+        "painting_mode": 0,
+        "tip_shape": 0,
+        "tip_ratio": 1.0,
+        "tip_softness": 0.0,
+        "tip_spikes": 2.0,
+        "tip_density": 1.0,
+        "tip_randomness": 0.0,
+        "tip_antialias": true,
+        "tip_auto_spacing": false,
+        "sharpness": 0.0,
+        "exposure": 0.0,
+        "tip_mirror_horizontal": false,
+        "tip_mirror_vertical": false,
+        "airbrush_enabled": false,
+        "tip_generator": 2,
+        "tip_image_path": ""
+      }
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "stroke": {
+      "from": [
+        200,
+        250
+      ],
+      "to": [
+        200,
+        250
+      ],
+      "pressure": 1.0,
+      "steps": 1
+    }
+  },
+  {
+    "wait": 14
+  },
+  {
+    "tool": {
+      "id": "brush",
+      "options": {
+        "radius": 0.03,
+        "hardness": 0.4,
+        "opacity": 1.0,
+        "flow": 1.0,
+        "spacing": 0.25,
+        "painting_mode": 0,
+        "tip_shape": 0,
+        "tip_ratio": 1.0,
+        "tip_softness": 0.05,
+        "tip_spikes": 2.0,
+        "tip_density": 1.0,
+        "tip_randomness": 0.0,
+        "tip_antialias": true,
+        "tip_auto_spacing": false,
+        "sharpness": 0.0,
+        "exposure": 0.0,
+        "tip_mirror_horizontal": false,
+        "tip_mirror_vertical": false,
+        "airbrush_enabled": false,
+        "tip_generator": 2,
+        "tip_image_path": ""
+      }
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "stroke": {
+      "from": [
+        330,
+        250
+      ],
+      "to": [
+        330,
+        250
+      ],
+      "pressure": 1.0,
+      "steps": 1
+    }
+  },
+  {
+    "wait": 14
+  },
+  {
+    "tool": {
+      "id": "brush",
+      "options": {
+        "radius": 0.03,
+        "hardness": 0.4,
+        "opacity": 1.0,
+        "flow": 1.0,
+        "spacing": 0.25,
+        "painting_mode": 0,
+        "tip_shape": 0,
+        "tip_ratio": 1.0,
+        "tip_softness": 0.15,
+        "tip_spikes": 2.0,
+        "tip_density": 1.0,
+        "tip_randomness": 0.0,
+        "tip_antialias": true,
+        "tip_auto_spacing": false,
+        "sharpness": 0.0,
+        "exposure": 0.0,
+        "tip_mirror_horizontal": false,
+        "tip_mirror_vertical": false,
+        "airbrush_enabled": false,
+        "tip_generator": 2,
+        "tip_image_path": ""
+      }
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "stroke": {
+      "from": [
+        460,
+        250
+      ],
+      "to": [
+        460,
+        250
+      ],
+      "pressure": 1.0,
+      "steps": 1
+    }
+  },
+  {
+    "wait": 14
+  },
+  {
+    "tool": {
+      "id": "brush",
+      "options": {
+        "radius": 0.03,
+        "hardness": 0.4,
+        "opacity": 1.0,
+        "flow": 1.0,
+        "spacing": 0.25,
+        "painting_mode": 0,
+        "tip_shape": 0,
+        "tip_ratio": 1.0,
+        "tip_softness": 0.3,
+        "tip_spikes": 2.0,
+        "tip_density": 1.0,
+        "tip_randomness": 0.0,
+        "tip_antialias": true,
+        "tip_auto_spacing": false,
+        "sharpness": 0.0,
+        "exposure": 0.0,
+        "tip_mirror_horizontal": false,
+        "tip_mirror_vertical": false,
+        "airbrush_enabled": false,
+        "tip_generator": 2,
+        "tip_image_path": ""
+      }
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "stroke": {
+      "from": [
+        590,
+        250
+      ],
+      "to": [
+        590,
+        250
+      ],
+      "pressure": 1.0,
+      "steps": 1
+    }
+  },
+  {
+    "wait": 14
+  },
+  {
+    "tool": {
+      "id": "brush",
+      "options": {
+        "radius": 0.03,
+        "hardness": 0.4,
+        "opacity": 1.0,
+        "flow": 1.0,
+        "spacing": 0.25,
+        "painting_mode": 0,
+        "tip_shape": 0,
+        "tip_ratio": 1.0,
+        "tip_softness": 0.5,
+        "tip_spikes": 2.0,
+        "tip_density": 1.0,
+        "tip_randomness": 0.0,
+        "tip_antialias": true,
+        "tip_auto_spacing": false,
+        "sharpness": 0.0,
+        "exposure": 0.0,
+        "tip_mirror_horizontal": false,
+        "tip_mirror_vertical": false,
+        "airbrush_enabled": false,
+        "tip_generator": 2,
+        "tip_image_path": ""
+      }
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "stroke": {
+      "from": [
+        720,
+        250
+      ],
+      "to": [
+        720,
+        250
+      ],
+      "pressure": 1.0,
+      "steps": 1
+    }
+  },
+  {
+    "wait": 14
+  },
+  {
+    "tool": {
+      "id": "brush",
+      "options": {
+        "radius": 0.03,
+        "hardness": 0.4,
+        "opacity": 1.0,
+        "flow": 1.0,
+        "spacing": 0.25,
+        "painting_mode": 0,
+        "tip_shape": 0,
+        "tip_ratio": 1.0,
+        "tip_softness": 0.7,
+        "tip_spikes": 2.0,
+        "tip_density": 1.0,
+        "tip_randomness": 0.0,
+        "tip_antialias": true,
+        "tip_auto_spacing": false,
+        "sharpness": 0.0,
+        "exposure": 0.0,
+        "tip_mirror_horizontal": false,
+        "tip_mirror_vertical": false,
+        "airbrush_enabled": false,
+        "tip_generator": 2,
+        "tip_image_path": ""
+      }
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "stroke": {
+      "from": [
+        850,
+        250
+      ],
+      "to": [
+        850,
+        250
+      ],
+      "pressure": 1.0,
+      "steps": 1
+    }
+  },
+  {
+    "wait": 14
+  },
+  {
+    "tool": {
+      "id": "brush",
+      "options": {
+        "radius": 0.03,
+        "hardness": 0.4,
+        "opacity": 1.0,
+        "flow": 1.0,
+        "spacing": 0.25,
+        "painting_mode": 0,
+        "tip_shape": 0,
+        "tip_ratio": 1.0,
+        "tip_softness": 0.85,
+        "tip_spikes": 2.0,
+        "tip_density": 1.0,
+        "tip_randomness": 0.0,
+        "tip_antialias": true,
+        "tip_auto_spacing": false,
+        "sharpness": 0.0,
+        "exposure": 0.0,
+        "tip_mirror_horizontal": false,
+        "tip_mirror_vertical": false,
+        "airbrush_enabled": false,
+        "tip_generator": 2,
+        "tip_image_path": ""
+      }
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "stroke": {
+      "from": [
+        980,
+        250
+      ],
+      "to": [
+        980,
+        250
+      ],
+      "pressure": 1.0,
+      "steps": 1
+    }
+  },
+  {
+    "wait": 14
+  },
+  {
+    "tool": {
+      "id": "brush",
+      "options": {
+        "radius": 0.03,
+        "hardness": 0.4,
+        "opacity": 1.0,
+        "flow": 1.0,
+        "spacing": 0.25,
+        "painting_mode": 0,
+        "tip_shape": 0,
+        "tip_ratio": 1.0,
+        "tip_softness": 1.0,
+        "tip_spikes": 2.0,
+        "tip_density": 1.0,
+        "tip_randomness": 0.0,
+        "tip_antialias": true,
+        "tip_auto_spacing": false,
+        "sharpness": 0.0,
+        "exposure": 0.0,
+        "tip_mirror_horizontal": false,
+        "tip_mirror_vertical": false,
+        "airbrush_enabled": false,
+        "tip_generator": 2,
+        "tip_image_path": ""
+      }
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "stroke": {
+      "from": [
+        1110,
+        250
+      ],
+      "to": [
+        1110,
+        250
+      ],
+      "pressure": 1.0,
+      "steps": 1
+    }
+  },
+  {
+    "wait": 14
+  },
+  {
+    "tool": {
+      "id": "brush",
+      "options": {
+        "radius": 0.03,
+        "hardness": 0.4,
+        "opacity": 1.0,
+        "flow": 1.0,
+        "spacing": 0.25,
+        "painting_mode": 0,
+        "tip_shape": 0,
+        "tip_ratio": 1.0,
+        "tip_softness": 0.0,
+        "tip_spikes": 2.0,
+        "tip_density": 1.0,
+        "tip_randomness": 0.0,
+        "tip_antialias": true,
+        "tip_auto_spacing": false,
+        "sharpness": 0.0,
+        "exposure": 0.0,
+        "tip_mirror_horizontal": false,
+        "tip_mirror_vertical": false,
+        "airbrush_enabled": false,
+        "tip_generator": 2,
+        "tip_image_path": ""
+      }
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "stroke": {
+      "from": [
+        200,
+        400
+      ],
+      "to": [
+        1160,
+        400
+      ],
+      "pressure": 1.0,
+      "steps": 14
+    }
+  },
+  {
+    "wait": 16
+  },
+  {
+    "tool": {
+      "id": "brush",
+      "options": {
+        "radius": 0.03,
+        "hardness": 0.4,
+        "opacity": 1.0,
+        "flow": 1.0,
+        "spacing": 0.25,
+        "painting_mode": 0,
+        "tip_shape": 0,
+        "tip_ratio": 1.0,
+        "tip_softness": 0.05,
+        "tip_spikes": 2.0,
+        "tip_density": 1.0,
+        "tip_randomness": 0.0,
+        "tip_antialias": true,
+        "tip_auto_spacing": false,
+        "sharpness": 0.0,
+        "exposure": 0.0,
+        "tip_mirror_horizontal": false,
+        "tip_mirror_vertical": false,
+        "airbrush_enabled": false,
+        "tip_generator": 2,
+        "tip_image_path": ""
+      }
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "stroke": {
+      "from": [
+        200,
+        480
+      ],
+      "to": [
+        1160,
+        480
+      ],
+      "pressure": 1.0,
+      "steps": 14
+    }
+  },
+  {
+    "wait": 16
+  },
+  {
+    "tool": {
+      "id": "brush",
+      "options": {
+        "radius": 0.03,
+        "hardness": 0.4,
+        "opacity": 1.0,
+        "flow": 1.0,
+        "spacing": 0.25,
+        "painting_mode": 0,
+        "tip_shape": 0,
+        "tip_ratio": 1.0,
+        "tip_softness": 0.15,
+        "tip_spikes": 2.0,
+        "tip_density": 1.0,
+        "tip_randomness": 0.0,
+        "tip_antialias": true,
+        "tip_auto_spacing": false,
+        "sharpness": 0.0,
+        "exposure": 0.0,
+        "tip_mirror_horizontal": false,
+        "tip_mirror_vertical": false,
+        "airbrush_enabled": false,
+        "tip_generator": 2,
+        "tip_image_path": ""
+      }
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "stroke": {
+      "from": [
+        200,
+        560
+      ],
+      "to": [
+        1160,
+        560
+      ],
+      "pressure": 1.0,
+      "steps": 14
+    }
+  },
+  {
+    "wait": 16
+  },
+  {
+    "tool": {
+      "id": "brush",
+      "options": {
+        "radius": 0.03,
+        "hardness": 0.4,
+        "opacity": 1.0,
+        "flow": 1.0,
+        "spacing": 0.25,
+        "painting_mode": 0,
+        "tip_shape": 0,
+        "tip_ratio": 1.0,
+        "tip_softness": 0.3,
+        "tip_spikes": 2.0,
+        "tip_density": 1.0,
+        "tip_randomness": 0.0,
+        "tip_antialias": true,
+        "tip_auto_spacing": false,
+        "sharpness": 0.0,
+        "exposure": 0.0,
+        "tip_mirror_horizontal": false,
+        "tip_mirror_vertical": false,
+        "airbrush_enabled": false,
+        "tip_generator": 2,
+        "tip_image_path": ""
+      }
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "stroke": {
+      "from": [
+        200,
+        640
+      ],
+      "to": [
+        1160,
+        640
+      ],
+      "pressure": 1.0,
+      "steps": 14
+    }
+  },
+  {
+    "wait": 16
+  },
+  {
+    "tool": {
+      "id": "brush",
+      "options": {
+        "radius": 0.03,
+        "hardness": 0.4,
+        "opacity": 1.0,
+        "flow": 1.0,
+        "spacing": 0.25,
+        "painting_mode": 0,
+        "tip_shape": 0,
+        "tip_ratio": 1.0,
+        "tip_softness": 0.5,
+        "tip_spikes": 2.0,
+        "tip_density": 1.0,
+        "tip_randomness": 0.0,
+        "tip_antialias": true,
+        "tip_auto_spacing": false,
+        "sharpness": 0.0,
+        "exposure": 0.0,
+        "tip_mirror_horizontal": false,
+        "tip_mirror_vertical": false,
+        "airbrush_enabled": false,
+        "tip_generator": 2,
+        "tip_image_path": ""
+      }
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "stroke": {
+      "from": [
+        200,
+        720
+      ],
+      "to": [
+        1160,
+        720
+      ],
+      "pressure": 1.0,
+      "steps": 14
+    }
+  },
+  {
+    "wait": 16
+  },
+  {
+    "tool": {
+      "id": "brush",
+      "options": {
+        "radius": 0.03,
+        "hardness": 0.4,
+        "opacity": 1.0,
+        "flow": 1.0,
+        "spacing": 0.25,
+        "painting_mode": 0,
+        "tip_shape": 0,
+        "tip_ratio": 1.0,
+        "tip_softness": 0.7,
+        "tip_spikes": 2.0,
+        "tip_density": 1.0,
+        "tip_randomness": 0.0,
+        "tip_antialias": true,
+        "tip_auto_spacing": false,
+        "sharpness": 0.0,
+        "exposure": 0.0,
+        "tip_mirror_horizontal": false,
+        "tip_mirror_vertical": false,
+        "airbrush_enabled": false,
+        "tip_generator": 2,
+        "tip_image_path": ""
+      }
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "stroke": {
+      "from": [
+        200,
+        800
+      ],
+      "to": [
+        1160,
+        800
+      ],
+      "pressure": 1.0,
+      "steps": 14
+    }
+  },
+  {
+    "wait": 16
+  },
+  {
+    "tool": {
+      "id": "brush",
+      "options": {
+        "radius": 0.03,
+        "hardness": 0.4,
+        "opacity": 1.0,
+        "flow": 1.0,
+        "spacing": 0.25,
+        "painting_mode": 0,
+        "tip_shape": 0,
+        "tip_ratio": 1.0,
+        "tip_softness": 0.85,
+        "tip_spikes": 2.0,
+        "tip_density": 1.0,
+        "tip_randomness": 0.0,
+        "tip_antialias": true,
+        "tip_auto_spacing": false,
+        "sharpness": 0.0,
+        "exposure": 0.0,
+        "tip_mirror_horizontal": false,
+        "tip_mirror_vertical": false,
+        "airbrush_enabled": false,
+        "tip_generator": 2,
+        "tip_image_path": ""
+      }
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "stroke": {
+      "from": [
+        200,
+        880
+      ],
+      "to": [
+        1160,
+        880
+      ],
+      "pressure": 1.0,
+      "steps": 14
+    }
+  },
+  {
+    "wait": 16
+  },
+  {
+    "tool": {
+      "id": "brush",
+      "options": {
+        "radius": 0.03,
+        "hardness": 0.4,
+        "opacity": 1.0,
+        "flow": 1.0,
+        "spacing": 0.25,
+        "painting_mode": 0,
+        "tip_shape": 0,
+        "tip_ratio": 1.0,
+        "tip_softness": 1.0,
+        "tip_spikes": 2.0,
+        "tip_density": 1.0,
+        "tip_randomness": 0.0,
+        "tip_antialias": true,
+        "tip_auto_spacing": false,
+        "sharpness": 0.0,
+        "exposure": 0.0,
+        "tip_mirror_horizontal": false,
+        "tip_mirror_vertical": false,
+        "airbrush_enabled": false,
+        "tip_generator": 2,
+        "tip_image_path": ""
+      }
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "stroke": {
+      "from": [
+        200,
+        960
+      ],
+      "to": [
+        1160,
+        960
+      ],
+      "pressure": 1.0,
+      "steps": 14
+    }
+  },
+  {
+    "wait": 16
+  },
+  {
+    "wait": 25
+  },
+  {
+    "shot": "1-softness-ladder"
+  },
+  {
+    "state": "1-softness-ladder"
+  }
+]

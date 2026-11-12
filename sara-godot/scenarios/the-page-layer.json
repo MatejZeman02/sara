@@ -1,0 +1,36 @@
+[
+  {"wait": 30},
+
+  {"page_demo": "open"},
+  {"wait": 20},
+  {"shot": "page-of-every-kind"},
+  {"state": "page-declared"},
+
+  {"page_demo": {"row": "rolloff", "value": false}},
+  {"wait": 10},
+  {"shot": "rolloff-off"},
+  {"state": "rolloff-off"},
+
+  {"page_demo": {"row": "rolloff", "value": true}},
+  {"wait": 10},
+  {"page_demo": {"behind": "exposure", "value": 3.0}},
+  {"wait": 10},
+  {"shot": "behind-the-page"},
+  {"state": "behind-the-page"},
+
+  {"page_demo": {"row": "radius", "value": 12.0}},
+  {"page_demo": {"row": "mode", "value": 2}},
+  {"page_demo": {"row": "folder", "value": "/tmp/frames"}},
+  {"wait": 10},
+  {"shot": "moved"},
+  {"state": "moved"},
+
+  {"page_demo": "rebuild"},
+  {"wait": 10},
+  {"shot": "rebuilt"},
+  {"state": "rebuilt"},
+
+  {"page_demo": "close"},
+  {"wait": 10},
+  {"shot": "closed"}
+]

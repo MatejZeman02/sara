@@ -1,0 +1,63 @@
+[
+  {"comment": "Feather, Border and Colour Range name their value at the text size of Gaussian Blur. At 1920 by 1080 and a UI scale of 1, on a document with a layer and some paint, each of the three is opened by its own Select menu row and photographed, then closed by the cross on its title strip. Feather and Border read as 'Feather: 5 px' and 'Border: 5 px' inside the slider, each with a muted line under it that says which way the pixels run. Gaussian Blur is photographed after them as the size to match, and then Colour Range, Feather and Border again at a UI scale of 2, Border left open."},
+  {"wait": 45},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 20},
+  {"window": [1920, 1080]},
+  {"wait": 20},
+  {"document": "srgb"},
+  {"wait": 25},
+  {"layer": {"add": "Paint", "fill": [0.12, 0.2, 0.35, 1.0]}},
+  {"wait": 10},
+
+  {"menu_item": {"menu": "Select", "id": 300}},
+  {"wait": 25},
+  {"shot": "1-feather"},
+  {"state": "1-feather"},
+  {"click": {"control": "CloseButton", "in": "RadiusDialog"}},
+  {"wait": 12},
+
+  {"menu_item": {"menu": "Select", "id": 400}},
+  {"wait": 25},
+  {"shot": "2-border"},
+  {"state": "2-border"},
+  {"click": {"at": [1094, 490]}},
+  {"wait": 12},
+
+  {"menu_item": {"menu": "Select", "id": 204}},
+  {"wait": 25},
+  {"shot": "3-colour-range"},
+  {"state": "3-colour-range"},
+  {"click": {"control": "CloseButton", "in": "ColorRangeDialog"}},
+  {"wait": 12},
+
+  {"filter": {"open": "sara-base-modules.gaussian_blur"}},
+  {"wait": 20},
+  {"filter": "describe"},
+  {"shot": "4-gaussian-blur"},
+  {"state": "4-gaussian-blur"},
+  {"filter": "cancel"},
+  {"wait": 10},
+
+  {"prefs": {"ui_scale": 2.0}},
+  {"wait": 25},
+
+  {"menu_item": {"menu": "Select", "id": 204}},
+  {"wait": 25},
+  {"shot": "5-colour-range-at-scale-2"},
+  {"state": "5-colour-range-at-scale-2"},
+  {"click": {"control": "CloseButton", "in": "ColorRangeDialog"}},
+  {"wait": 12},
+
+  {"menu_item": {"menu": "Select", "id": 300}},
+  {"wait": 25},
+  {"shot": "6-feather-at-scale-2"},
+  {"state": "6-feather-at-scale-2"},
+  {"click": {"control": "CloseButton", "in": "RadiusDialog"}},
+  {"wait": 12},
+
+  {"menu_item": {"menu": "Select", "id": 400}},
+  {"wait": 25},
+  {"shot": "7-border-at-scale-2"},
+  {"state": "7-border-at-scale-2"}
+]

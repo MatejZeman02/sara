@@ -1,0 +1,56 @@
+# The document transfer curve, as four numbers rather than as a named curve.
+#
+# Every transfer Sara supports is one shape: a straight line near zero and a
+# power curve above it.
+#
+#     encode( x ) = x < t/s  ?  s*x  :  a * x^(1/g) - b
+#     decode( y ) = y < t    ?  y/s  :  ( (y + b) / a )^g
+#
+# sRGB is s=12.92, t=0.04045, a=1.055, g=2.4. Rec. 709 is the same shape with
+# different constants, a pure gamma curve switches the straight segment off with
+# t=0, and linear is s=1, t=0, a=1, g=1 where both branches are the identity.
+#
+# So a kernel never learns which curve it was handed. That is the point: a
+# document can declare a curve this shader has never heard of and it composites
+# correctly, where a `float transfer` compared against 0.5 could only ever mean
+# two things. It is also one branch fewer on the composite path, not one more.
+#
+# The offset b is not passed. A display transfer is normalised so that full
+# scale encodes to full scale, a * 1^(1/g) - b = 1, which fixes b = a - 1. That
+# is what makes a whole curve fit in a push constant that is already at the 128
+# bytes Vulkan guarantees. See core/api/color/sa_transfer_function.gd.
+#
+# Mirrored through the origin, because pow() of a negative base is undefined and
+# this canvas carries negatives on purpose. mix() is safe here only because both
+# arms are evaluated on abs(c), which is never negative.
+
+# The identity case, taken as a real branch rather than folded into the general
+# form. pow( x, 1.0 ) is not exactly x on a GPU, so a linear document put through
+# the general curve would come back perturbed in its last bits. The branch is
+# uniform across a dispatch because it comes from a push constant, so it is free.
+
+
+def sa_transfer_is_identity(float slope, float gain, float exponent) -> bool:
+    return slope == 1.0 and gain == 1.0 and exponent == 1.0
+
+# Encoded values to light-linear ones.
+
+
+def sa_transfer_decode(vec3 c, float slope, float threshold, float gain, float exponent) -> vec3:
+    if sa_transfer_is_identity(slope, gain, exponent):
+        return c
+    vec3 m = abs(c)
+    vec3 lo = m / slope
+    vec3 hi = pow((m + (gain - 1.0)) / gain, vec3(exponent))
+    return sign(c) * mix(lo, hi, step(vec3(threshold), m))
+
+# Light-linear values to encoded ones.
+
+
+def sa_transfer_encode(vec3 c, float slope, float threshold, float gain, float exponent) -> vec3:
+    if sa_transfer_is_identity(slope, gain, exponent):
+        return c
+    vec3 m = abs(c)
+    vec3 lo = slope * m
+    vec3 hi = gain * pow(m, vec3(1.0 / exponent)) - (gain - 1.0)
+    return sign(c) * mix(lo, hi, step(vec3(threshold / slope), m))

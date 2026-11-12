@@ -1,0 +1,61 @@
+# The hash of a point of an integer lattice, a library the noise library's
+# volume and the simulation library's step both import, so the two read one
+# function rather than two copies of it.
+#
+# **Integers, on purpose.** Both callers need the same number on every machine:
+# a drifting noise whose texel is one value on one card and another on the next
+# is a picture a capture cannot check, and a simulation step that differs is a
+# step forty no shot can hold still. Integers rather than the multiply-and-fract
+# hash of `noise.gmacs`, whose products grow to thousands before the fract, so a
+# driver that fuses a multiply and an add keeps other digits than one that does
+# not. Integer multiplication wraps the same way everywhere.
+#
+# **Whose it is.** Not the `pcg3d` listing of Jarzynski and Olano's "Hash
+# Functions for GPU Rendering", whose only licence is the paper's CC BY-ND 3.0,
+# which allows no adapted work, so GPLv3 cannot carry it. The mixing step below
+# is a public domain one, and the way the three axes are folded through it is
+# Sara's own.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# Christopher Wellons' `lowbias32`, from the README of his Hash Function
+# Prospector, https://github.com/skeeto/hash-prospector, released into the
+# public domain under the Unlicense, which `THIRDPARTY.txt` names. Two rounds
+# of an xorshift and a multiply by an odd constant, so it is a permutation of
+# the 32-bit integers and two inputs never share an output. The README gives
+# it a bias of 0.17, the prospector's measure of how far a flipped input bit is
+# from flipping every output bit half the time, where lower is nearer.
+
+
+def sa_lowbias32(uint x) -> uint:
+    x = x ^ (x >> 16u)
+    x *= 0x7feb352du
+    x = x ^ (x >> 15u)
+    x *= 0x846ca68bu
+    x = x ^ (x >> 16u)
+    return x
+
+# The 32 bits of the lattice point *corner*.
+#
+# Each axis is added to what the axes before it made and mixed again, z first,
+# so a step along any axis passes through at least one whole `sa_lowbias32`
+# before it reaches the bits. Nested rather than the three summed and mixed
+# once, because a sum is the same for (1, 0, 0) and (0, 1, 0), and a fixed
+# multiplier for each axis only moves that collision somewhere else.
+
+
+def sa_lattice_bits(ivec3 corner) -> uint:
+    uvec3 c = uvec3(corner)
+    uint h = sa_lowbias32(c.z)
+    h = sa_lowbias32(h + c.y)
+    return sa_lowbias32(h + c.x)
+
+# One number in 0 to 1 for the lattice point *corner*.
+#
+# The top 24 bits scaled by `ldexp`, which is a float exactly, where dividing
+# all 32 by their largest value is rounded and can land on 1.0 itself. So the
+# return is at least nought and below one, in steps of 2^-24.
+
+
+def sa_lattice_hash(ivec3 corner) -> float:
+    return ldexp(float(sa_lattice_bits(corner) >> 8u), -24)

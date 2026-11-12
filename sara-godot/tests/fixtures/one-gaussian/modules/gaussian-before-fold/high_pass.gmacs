@@ -1,0 +1,102 @@
+# A copy of the base module's `high_pass.gmacs` as it stood before the Gaussian of
+# the three blurs was folded into the `gaussian` library. Every line below this
+# paragraph is the kernel as it was, so
+# `modules/sara-base-modules/base/tests/test_the_shared_gaussian_paints_what_the_three_copies_painted.gd`
+# can run the old arithmetic beside the new and read the two equal texel for
+# texel. It is never edited to follow the kernel it copies.
+#
+# Kernels: high_pass
+# The High Pass of Filter, the picture less its Gaussian blur, drawn about a
+# neutral grey. A neighbourhood kernel under the contract SaNeighbourhoodPass
+# writes: the padded source at binding 0, the selection mask at binding 1, the
+# chunk-sized target at binding 2.
+#
+# The blur is the Gaussian blur's own arithmetic, gaussian_blur.gmacs, step for
+# step: sigma a third of the reach, separable inside one dispatch with the
+# horizontal half in workgroup memory, every tap premultiplied and the sum
+# straightened at the end. It is repeated here rather than taken from the
+# unsharp mask's three steps, because the high pass promises that it and the
+# Gaussian blur at one radius add back to the picture, and the same sums in the
+# same order are what keep that promise to the last bit. A later row may fold
+# the two into one library.
+#
+# The detail is taken in the document's RGB view, which is the identity on an
+# RGB document, and added to the mid grey of that view, so a flat area reads
+# exactly the neutral and Soft Light or Overlay, which blend in that view,
+# leave a backdrop alone for it. The grey goes back through rgb_to_document,
+# since a raw grey in an Oklab document shows orange. The alpha is the texel's
+# own. Nothing clamps (hard rule 5): an edge above one writes past the neutral
+# by the whole of its difference, and the blend decides what shows.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel high_pass
+
+import linear_srgb_color_space
+import transfer_curve
+
+image src: readonly
+image mask: r32f, readonly
+image dst
+
+params:
+    int radius  # the blur's reach, in texels, which is the halo the filter declares
+    int halo  # how far the source is padded, written by the runner
+    vec2 origin  # the dispatched region's corner in the chunk
+    float doc_to_linear_srgb[9]
+    float linear_srgb_to_doc[9]
+    float transfer_slope
+    float transfer_threshold
+    float transfer_gain
+    float transfer_exponent
+    float coordinates
+
+# One row of the group's default eight by eight, which the formatter keeps
+# undeclared, so the array's 64 is that group and nothing else.
+shared vec4 across[64]
+
+# The harness and the document's RGB view, imported after the params because
+# both read them by name.
+import neighbourhood
+import composite_color_space
+
+# What a flat area reads, in the document's RGB view. SaHighPassFilter holds the
+# same number.
+const float NEUTRAL = 0.5
+
+
+def weight(int offset, float sigma) -> float:
+    return exp(-float(offset * offset) / (2.0 * sigma * sigma))
+
+
+def high_pass():
+    ivec2 at = pixel + ivec2(origin)
+    bool inside = at.x < image_size(dst).x and at.y < image_size(dst).y
+    int reach = max(min(radius, halo), 0)
+    float sigma = max(float(reach) / 3.0, 0.001)
+    float line = 0.0
+    for i in range(-reach, reach + 1):
+        line += weight(i, sigma)
+    ivec2 last = image_size(src) - 1
+    int top = at.y - int(local_id.y) - reach
+    int blocks = (8 + 2 * reach + 7) / 8
+    vec4 sum = vec4(0.0)
+    for block in range(0, blocks):
+        int row = top + block * 8 + int(local_id.y)
+        vec4 part = vec4(0.0)
+        for dx in range(-reach, reach + 1):
+            ivec2 tap = clamp(ivec2(at.x + dx, row) + ivec2(halo, halo), ivec2(0, 0), last)
+            part += weight(dx, sigma) * sa_premultiplied(image_load(src, tap))
+        across[local_index] = part
+        barrier()
+        for ly in range(0, 8):
+            int dy = top + block * 8 + ly - at.y
+            if abs(dy) <= reach:
+                sum += weight(dy, sigma) * across[ly * 8 + int(local_id.x)]
+        barrier()
+    if not inside:
+        return
+    vec4 kept = sa_kept(at)
+    vec4 blurred = sa_straight(sum / (line * line))
+    vec3 detail = document_to_rgb(kept.rgb) - document_to_rgb(blurred.rgb)
+    sa_finish(at, kept, vec4(rgb_to_document(vec3(NEUTRAL) + detail), kept.a))

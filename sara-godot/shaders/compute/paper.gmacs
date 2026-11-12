@@ -1,0 +1,148 @@
+# Kernel: generate, raise_tooth
+# A paper ground that stores nothing: three octaves of value noise, the pulp,
+# with what a sheet is made of laid over it, between the layer's two colours,
+# over a region of one chunk. The push constant is packed by the names below,
+# through SaGeneratedLayer.params_of, so a field is read by its name, and `pad`,
+# which names no parameter, is nought.
+#
+# The noise is read at the document position (the chunk's offset plus the
+# texel), the coordinate background.gmacs leaves unused for a second generator.
+# A chunk-local coordinate would repeat the grain every 256 pixels and move it
+# under a pan.
+#
+# `scale` is the width of one noise cell in pixels, as in libs/noise.gmacs.
+#
+# A sheet is made of three things added to the pulp, each by an amount of its
+# own, and an amount of nought adds nothing. *fibre* lays short curling strands,
+# *felt* is the imprint of the felt a cold pressed or rough sheet is pressed
+# between, cells of `felt_size` pixels, and *laid* is the ribbing of a laid
+# sheet, lines nine pixels apart with a chain line every 250. Each is taken less
+# its own mean, so an amount moves the grain and not its tone. paper.gdshader
+# copies every function below by hand, for the reason it gives.
+#
+# `raise_tooth` answers a height: the same noise at the same document position,
+# times *tooth* (the grain's amplitude in virtual millimetres), so the grain the
+# eye sees is the grain the light finds. It runs over the relief's summed height
+# and adds itself whole under the paint however thick. A stroke fills the tooth,
+# not this kernel: it reads the tooth in the surface beneath its layer and keeps
+# the brush's height less it, so a share that faded here as well would turn the
+# grain over under the paint.
+
+import noise
+
+kernel generate
+kernel raise_tooth
+
+image target
+
+params:
+    vec2 offset
+    vec2 region_origin
+    vec2 region_size
+    vec2 pad
+    vec4 color_a
+    vec4 color_b
+    float scale
+    # The grain's height in virtual millimetres, 0 for a flat paper, and how
+    # much of the paper the canvas shows, its opacity and its groups'. Both are
+    # read by `raise_tooth` alone, and `generate` leaves them be.
+    float tooth
+    float weight
+    # How much of each part of the sheet shows, nought for none: the fibres,
+    # the felt's cells and the laid lines, and the felt's cell in pixels.
+    float fibre
+    float felt
+    float felt_size
+    float laid
+
+# The value noise of libs/noise.gmacs on a plane of its own, *plane*, so
+# every part of the sheet reads a lattice no other part reads.
+
+
+def paper_noise(vec2 p, int plane) -> float:
+    vec2 floored = floor(p)
+    ivec3 cell = ivec3(ivec2(floored), plane)
+    vec2 f = p - floored
+    vec2 smoothed = f * f * (3.0 - 2.0 * f)
+    float a = sa_lattice_hash(cell)
+    float b = sa_lattice_hash(cell + ivec3(1, 0, 0))
+    float c = sa_lattice_hash(cell + ivec3(0, 1, 0))
+    float d = sa_lattice_hash(cell + ivec3(1, 1, 0))
+    return mix(mix(a, b, smoothed.x), mix(c, d, smoothed.x), smoothed.y)
+
+# The strands at *doc*, a lighter set, a darker one and a lighter again, less
+# their mean.
+
+
+def paper_fibres(vec2 doc) -> float:
+    float total = 0.0
+    for i in range(3):
+        float turn = 0.6 + 2.0944 * i
+        float c = cos(turn)
+        float s = sin(turn)
+        vec2 slow = doc / 32.0
+        vec2 bent = doc + 16.0 * (vec2(paper_noise(slow, 11 + 2 * i), paper_noise(slow, 12 + 2 * i)) - 0.5)
+        vec2 along = vec2(c * bent.x + s * bent.y, c * bent.y - s * bent.x)
+        float crest = smoothstep(0.76, 0.92, paper_noise(along / vec2(14.0, 1.5), 21 + i))
+        total += crest * (1.0 - 2.0 * (i % 2))
+    return total - 0.060
+
+# The felt's dome at *doc*, high at a cell's point and falling to its edges,
+# less its mean.
+
+
+def paper_felt(vec2 doc) -> float:
+    vec2 p = doc / max(felt_size, 2.0)
+    vec2 floored = floor(p)
+    vec2 f = p - floored
+    float nearest = 8.0
+    for y in range_inclusive(-1, 1):
+        for x in range_inclusive(-1, 1):
+            ivec2 cell = ivec2(floored) + ivec2(x, y)
+            vec2 jitter = vec2(sa_lattice_hash(ivec3(cell, 31)), sa_lattice_hash(ivec3(cell, 32)))
+            nearest = min(nearest, length(vec2(x, y) + jitter - f))
+    return 0.469 - smoothstep(0.0, 0.9, nearest)
+
+# The laid lines and chain lines at *doc*, less their mean.
+
+
+def paper_laid(vec2 doc) -> float:
+    float wobble = 2.0 * (paper_noise(doc / 64.0, 41) - 0.5)
+    float lines = 0.5 * cos(6.2831853 * (doc.y + wobble) / 9.0)
+    float chain = mod(doc.x, 250.0) - 125.0
+    return lines + 0.8 * exp(-chain * chain / 8.0) - 0.016
+
+# The sheet at *doc* in 0 to 1, the pulp's noise and the three parts by their
+# amounts. With every amount nought it is the noise alone, bit for bit.
+
+
+def paper_sheet(vec2 doc) -> float:
+    float sheet = sa_value_fbm(doc / max(scale, 1.0))
+    if fibre > 0.0:
+        sheet += 0.18 * fibre * paper_fibres(doc)
+    if felt > 0.0:
+        sheet += 0.45 * felt * paper_felt(doc)
+    if laid > 0.0:
+        sheet += 0.12 * laid * paper_laid(doc)
+    return clamp(sheet, 0.0, 1.0)
+
+
+def generate():
+    ivec2 local = ivec2(global_id.xy)
+    if local.x >= int(region_size.x) or local.y >= int(region_size.y):
+        return
+    ivec2 texel = local + ivec2(region_origin)
+    if texel.x >= image_size(target).x or texel.y >= image_size(target).y:
+        return
+    target[texel] = mix(color_a, color_b, paper_sheet(offset + vec2(texel)))
+
+
+def raise_tooth():
+    ivec2 local = ivec2(global_id.xy)
+    if local.x >= int(region_size.x) or local.y >= int(region_size.y):
+        return
+    ivec2 pixel = local + ivec2(region_origin)
+    if pixel.x >= image_size(target).x or pixel.y >= image_size(target).y:
+        return
+    float paint = target[pixel].r
+    target[pixel] = vec4(paint + tooth * weight * paper_sheet(offset + vec2(pixel)), 0.0, 0.0, 1.0)

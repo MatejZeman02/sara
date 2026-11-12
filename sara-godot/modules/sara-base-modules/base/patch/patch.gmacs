@@ -1,0 +1,194 @@
+# Kernels: patch_clear, patch_gather, patch_sweep, patch_scatter
+# The patch tool's two ends and its Smooth method: what is inside the selection
+# is thrown away, and Smooth draws it again out of the ring of paint just
+# outside it, by a normalised convolution run inwards a few dozen times.
+# It knows nothing about texture, so a blemish across an edge comes back as a
+# blur. The Texture method, `patch_match.gmacs`, shares the gather and scatter.
+#
+# `patch_clear` puts a flat pair into the state a position with no layer chunk
+# is read in: transparent and known. It is a kernel rather than `texture_clear`
+# because a clear is a transfer and the rest is compute, and the two are not
+# ordered against each other on this driver (a tile cleared by transfer kept
+# the texels of whatever last owned that memory).
+# `patch_gather` reads the chunks under the work rectangle into the colour and a
+# confidence, one outside the selection (the ring) and zero inside (the hole).
+# `patch_sweep` is the pass run again and again, ping-ponging between two pairs.
+# A texel of confidence exactly one is copied through. A hole texel takes the
+# confidence-weighted average of its eight neighbours and itself and gains
+# confidence in proportion to what it found, so the front advances a texel a
+# pass. `patch_scatter` writes the colour back in proportion to the mask, so a
+# feathered selection patches softly.
+#
+# **Confidence inside the hole stops just short of one**, at `SA_PATCH_SETTLED`.
+# Reaching one would freeze each shell as the front crossed it and the middle
+# would average whatever the shell held three passes earlier. Held short, a
+# texel behind the front is still rewritten every pass, so the passes after the
+# front closes are Jacobi smoothing against the ring as a fixed boundary.
+#
+# **The colour is carried premultiplied.** An unpremultiplied colour under a
+# transparent texel is a colour nothing is wearing, and averaging it in drags
+# the fill towards it. The gather multiplies by alpha and the scatter divides.
+#
+# The mask binds at 1 as in every kernel that honours the selection, and a
+# chunk stored smaller than the mask is read at its own scale through `flags.x`.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel patch_clear
+kernel patch_gather
+kernel patch_sweep
+kernel patch_scatter
+
+image canvas
+# The document-wide selection: a chunk's own mask, or the 1 by 1 stand-in that
+# reads as nothing for a chunk of the ring the selection never entered.
+image mask: r32f, readonly
+# The flat pair over the work rectangle, read by the sweep and the scatter.
+image patch_in
+image patch_out
+image weight_in: r32f
+image weight_out: r32f
+
+params:
+    # The chunk-local pixel this dispatch starts at, and the chunk-local end it
+    # stops before. The sweep runs over the work rectangle instead and reads
+    # neither.
+    vec4 region
+    # Where this chunk's document texel (0, 0) sits in the work rectangle, and
+    # how wide and tall that rectangle is.
+    vec4 place
+    # Colour texels per mask texel, whether the layer's alpha is locked, how
+    # fast confidence saturates behind the front, and one when every texel of
+    # the hole was drawn.
+    vec4 flags
+
+# What the nine taps of the sweep add up to, so the confidence a texel gains is
+# a fraction of a full neighbourhood rather than a number that grows with the
+# weights chosen below.
+const float SA_PATCH_TAPS = 16.0
+
+# How confident a texel inside the hole is allowed to become. Anything below one
+# keeps it in the averaging, and one is reserved for the ring, which is the only
+# thing this fill is allowed to treat as given.
+const float SA_PATCH_SETTLED = 0.999
+
+# The 3 by 3 tent every sweep convolves with: four at the centre, two on the
+# edges, one on the corners. A tent rather than a box because a box leaves the
+# diagonal of a filled hole visibly straighter than its axes.
+
+
+def sa_patch_tap(int dx, int dy) -> float:
+    if dx == 0 and dy == 0:
+        return 4.0
+    if dx == 0 or dy == 0:
+        return 2.0
+    return 1.0
+
+# This chunk texel as a texel of the work rectangle, or (-1, -1) when it falls
+# outside it. The division is hard rule 3: a chunk stored at a reduced
+# resolution holds fewer texels than the document pixels it covers.
+
+
+def sa_patch_place(ivec2 px) -> ivec2:
+    vec2 doc = vec2(px) / max(flags.x, 0.0001)
+    ivec2 at = ivec2(place.xy) + ivec2(doc)
+    if at.x < 0 or at.y < 0 or at.x >= int(place.z) or at.y >= int(place.w):
+        return ivec2(-1, -1)
+    return at
+
+# The selection's coverage under this chunk texel, read at the mask's own
+# scale. The clamped read is what lets a 1 by 1 stand-in stand for a whole
+# chunk, the way paint.gmacs and fill.gmacs read it.
+
+
+def sa_patch_coverage(ivec2 px) -> float:
+    ivec2 doc = ivec2(vec2(px) / max(flags.x, 0.0001))
+    return mask[min(doc, image_size(mask) - ivec2(1))].r
+
+
+def patch_clear():
+    ivec2 px = ivec2(global_id.xy)
+    ivec2 size = image_size(patch_out)
+    if px.x >= size.x or px.y >= size.y:
+        return
+    patch_out[px] = vec4(0.0)
+    weight_out[px] = vec4(1.0, 0.0, 0.0, 0.0)
+
+
+def patch_gather():
+    ivec2 px = ivec2(global_id.xy) + ivec2(int(region.x), int(region.y))
+    if px.x >= int(region.z) or px.y >= int(region.w):
+        return
+    ivec2 size = image_size(canvas)
+    if px.x >= size.x or px.y >= size.y:
+        return
+    ivec2 at = sa_patch_place(px)
+    if at.x < 0:
+        return
+    vec4 c = canvas[px]
+    patch_out[at] = vec4(c.rgb * c.a, c.a)
+    weight_out[at] = vec4(1.0 - clamp(sa_patch_coverage(px), 0.0, 1.0), 0.0, 0.0, 0.0)
+
+
+def patch_sweep():
+    ivec2 px = ivec2(global_id.xy)
+    ivec2 size = image_size(patch_in)
+    if px.x >= size.x or px.y >= size.y:
+        return
+    float here = weight_in[px].r
+    vec4 was = patch_in[px]
+    if here >= 1.0:
+        patch_out[px] = was
+        weight_out[px] = vec4(here, 0.0, 0.0, 0.0)
+        return
+
+    vec4 sum = vec4(0.0)
+    float total = 0.0
+    for y in range_inclusive(-1, 1):
+        for x in range_inclusive(-1, 1):
+            # Clamped rather than skipped, so a work rectangle that ran into
+            # the canvas edge draws from the edge instead of from nothing.
+            ivec2 tap = clamp(px + ivec2(x, y), ivec2(0), size - ivec2(1))
+            float w = sa_patch_tap(x, y) * weight_in[tap].r
+            sum += w * patch_in[tap]
+            total += w
+
+    if total <= 0.0:
+        # The front has not reached this texel yet. Nothing known is near
+        # enough to average, so it waits rather than settling on nothing.
+        patch_out[px] = was
+        weight_out[px] = vec4(here, 0.0, 0.0, 0.0)
+        return
+    patch_out[px] = sum / total
+    weight_out[px] = vec4(min(SA_PATCH_SETTLED, total / SA_PATCH_TAPS * flags.z), 0.0, 0.0, 0.0)
+
+
+def patch_scatter():
+    ivec2 px = ivec2(global_id.xy) + ivec2(int(region.x), int(region.y))
+    if px.x >= int(region.z) or px.y >= int(region.w):
+        return
+    ivec2 size = image_size(canvas)
+    if px.x >= size.x or px.y >= size.y:
+        return
+    ivec2 at = sa_patch_place(px)
+    if at.x < 0:
+        return
+    float coverage = sa_patch_coverage(px)
+    if coverage <= 0.0:
+        return
+    if flags.w < 0.5 and weight_in[at].r <= 0.0:
+        # The hole was wider than the passes could cross from both sides, so
+        # this texel was never reached and what was painted there stays. The
+        # Texture method draws every texel and says so, and its weight is the
+        # hole's own, which is zero across it.
+        return
+
+    vec4 filled = patch_in[at]
+    vec3 rgb = filled.a > 0.0 ? filled.rgb / filled.a : vec3(0.0)
+    vec4 was = canvas[px]
+    vec4 result = vec4(rgb, filled.a)
+    if flags.y > 0.5:
+        # Alpha lock: the layer's own coverage decides where the patch shows,
+        # and no texel gains or loses any.
+        result.a = was.a
+    canvas[px] = mix(was, result, coverage)

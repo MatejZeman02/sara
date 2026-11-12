@@ -1,0 +1,38 @@
+# Select opaque: a layer's alpha, written as coverage into one
+# r32f selection chunk. What a Ctrl click on a layer's thumbnail makes the
+# selection, by the name Krita gives it.
+#
+# One dispatch per chunk the layer holds, and nothing is read back. Alpha is
+# copied as it is stored and clamped to a mask's own zero and one, which is a
+# clamp on coverage and never on a colour.
+
+kernel select_opaque
+
+# The coverage chunk this dispatch writes, single channel whatever depth the
+# document paints at.
+image mask: r32f
+# The layer's colour chunk at the same grid position, at its own resolution.
+# The document's depth.
+image colour: readonly
+
+params:
+    # The region the dispatch covers in the mask chunk, exclusive at the end.
+    float end_x
+    float end_y
+    # Texels of the colour chunk per texel of the mask, the layer chunk's own
+    # resolution scale, so a chunk stored at twice the resolution is read at the
+    # texel each document pixel starts on.
+    float colour_scale
+    float pad
+
+
+def select_opaque():
+    ivec2 px = ivec2(global_id.xy)
+    ivec2 size = image_size(mask)
+    if px.x >= size.x or px.y >= size.y:
+        return
+    if px.x >= int(end_x) or px.y >= int(end_y):
+        return
+    ivec2 at = ivec2(vec2(px) * colour_scale)
+    vec4 c = colour[min(at, image_size(colour) - 1)]
+    mask[px] = vec4(clamp(c.a, 0.0, 1.0))

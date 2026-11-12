@@ -1,0 +1,140 @@
+# The freehand and cage warps: the lifted picture drawn through a mesh of
+# side by side control points, a bilinear patch per cell. Freehand's mesh is
+# three by three and the cage's is dense, its points moved by the cage.
+#
+# **Why bilinear and not a homography per cell.** A homography through a
+# cell's four corners is a different map on each side of a shared edge, so
+# two neighbouring cells tear or overlap along it. A bilinear patch is linear
+# along every edge and fixed by that edge's two corners alone, so the
+# neighbours agree and the mesh is one continuous picture. The cost is that
+# the inverse is a quadratic per texel rather than a divide, which is
+# `sa_inverse_bilinear` below.
+#
+# **The destination texel finds its cell.** Each cell's four control points
+# are where its corners went, in document positions, and the texel asks each
+# cell in turn for the (u, v) that lands on it, after a test of the cell's
+# own box that turns most of a dense mesh away for four reads. Inside one cell
+# that pair is the texel's place in the cell's own part of the lifted
+# picture, and the read is the resample's own, `transform_read`. In no cell
+# it is transparent, which is what a texel outside a picture is.
+#
+# **The points in a storage buffer**, because a push constant is 128 bytes
+# and a cage's mesh is hundreds of points. Its own file rather than a second
+# kernel in `transform.gmacs`, since a file's kernels share one push constant
+# block and the buffer is this kernel's alone.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel warp
+
+image source: readonly
+image destination: writeonly
+# The mesh's points in document texels, row by row from the top left.
+buffer grid: vec2 points[]
+
+params:
+    # Where the dispatch starts inside the destination chunk, and how big it is.
+    vec4 dest
+    # The document position of the destination chunk's own (0, 0), and the size
+    # of the source texture.
+    vec4 world
+    # The mesh's points along a side in `mesh.x`, and the filter in `mesh.y`,
+    # 0 for bilinear and 1 for nearest.
+    vec4 mesh
+    # The document's transfer curve, the four numbers `transfer_curve.gmacs`
+    # takes, and the identity for a field that is not colour.
+    vec4 curve
+
+import transform_read
+
+
+def sa_cross2(vec2 a, vec2 b) -> float:
+    return a.x * b.y - a.y * b.x
+
+# Where *p* sits inside the quad a, b, c, d, taken round it from the top left,
+# as the (u, v) of the bilinear patch, or a pair outside the unit square when
+# it is not inside. v is a root of the quadratic k2 v² + k1 v + k0 = 0, and u
+# is read off whichever axis the denominator is larger on, so a cell with a
+# vertical edge does not divide by nought.
+#
+# **The roots in the form that stays exact.** A cell that is a parallelogram
+# up to float32 rounding, which every cell of the at-rest grid over a turned
+# box is, has a k2 of a fraction of a square texel beside a k1 of the cell's
+# area. The plain formula's (-k1 + w) / 2 k2 is then the difference of two
+# numbers that agree to within k2, which float32 loses, and the texel lands
+# hundreds of texels off or outside the cell. With q = -(k1 + sign(k1) w) / 2
+# the roots are q / k2 and k0 / q, and neither subtracts near equals. Whether
+# the cell is linear is k2 against k1, a ratio, since an absolute bound in
+# square texels reads a large turned cell as twisted.
+
+
+def sa_inverse_bilinear(vec2 p, vec2 a, vec2 b, vec2 c, vec2 d) -> vec2:
+    vec2 e = b - a
+    vec2 f = d - a
+    vec2 g = a - b + c - d
+    vec2 h = p - a
+    float k2 = sa_cross2(g, f)
+    float k1 = sa_cross2(e, f) + sa_cross2(h, g)
+    float k0 = sa_cross2(h, e)
+    float v = 0.0
+    if abs(k2) <= 0.000001 * abs(k1):
+        if abs(k1) < 0.000001: return vec2(-1.0)
+        v = -k0 / k1
+    else:
+        float w = k1 * k1 - 4.0 * k0 * k2
+        if w < 0.0: return vec2(-1.0)
+        w = sqrt(w)
+        float q = -0.5 * (k1 + (k1 < 0.0 ? -w : w))
+        v = q / k2
+        if (v < -0.0001 or v > 1.0001) and q != 0.0: v = k0 / q
+    vec2 den = e + g * v
+    vec2 num = h - f * v
+    float u = abs(den.x) > abs(den.y) ? num.x / den.x : num.y / den.y
+    return vec2(u, v)
+
+# How many source texels one document texel spans at `uv` of the cell with
+# corners `a`, `b`, `c` and `d`, from the inverse of the cell's own Jacobian,
+# so a cell the mesh squeezed averages what it squeezed. A cell folded flat has
+# no inverse and reads the widest box `transform_read.gmacs` allows.
+
+
+def sa_cell_footprint(vec2 uv, vec2 a, vec2 b, vec2 c, vec2 d, vec2 cell_size) -> vec2:
+    vec2 g = a - b + c - d
+    vec2 along_u = b - a + g * uv.y
+    vec2 along_v = d - a + g * uv.x
+    float det = sa_cross2(along_u, along_v)
+    if abs(det) < 1.0e-9:
+        return vec2(SA_FOOTPRINT_MOST)
+    vec2 along_x = vec2(along_v.y, -along_u.y) / det * cell_size
+    vec2 along_y = vec2(-along_v.x, along_u.x) / det * cell_size
+    return sa_footprint(along_x, along_y)
+
+
+def warp():
+    ivec2 local = ivec2(global_id.xy) + ivec2(dest.xy)
+    if local.x >= int(dest.x + dest.z) or local.y >= int(dest.y + dest.w):
+        return
+    vec2 world_pos = vec2(local) + world.xy + vec2(0.5)
+    vec2 size = world.zw
+    int side = int(mesh.x + 0.5)
+    vec2 cell_size = size / (side - 1)
+    for cell_y in range(side - 1):
+        for cell_x in range(side - 1):
+            int first = cell_y * side + cell_x
+            vec2 a = grid.points[first]
+            vec2 b = grid.points[first + 1]
+            vec2 c = grid.points[first + side + 1]
+            vec2 d = grid.points[first + side]
+            vec2 low = min(min(a, b), min(c, d)) - vec2(0.5)
+            vec2 high = max(max(a, b), max(c, d)) + vec2(0.5)
+            if world_pos.x < low.x or world_pos.y < low.y or world_pos.x > high.x or world_pos.y > high.y:
+                continue
+            vec2 uv = sa_inverse_bilinear(world_pos, a, b, c, d)
+            if uv.x < -0.0001 or uv.x > 1.0001 or uv.y < -0.0001 or uv.y > 1.0001:
+                continue
+            vec2 held = clamp(uv, vec2(0.0), vec2(1.0))
+            vec2 at = (vec2(cell_x, cell_y) + held) * cell_size - vec2(0.5)
+            vec2 footprint = sa_cell_footprint(held, a, b, c, d, cell_size)
+            destination[local] = sa_read_source(at, ivec2(size), mesh.y > 0.5, footprint, curve)
+            return
+    destination[local] = vec4(0.0)

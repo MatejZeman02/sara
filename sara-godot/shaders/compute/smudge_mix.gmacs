@@ -1,0 +1,213 @@
+# Kernel: smudge_mix
+#
+# The smudge stage's mixes taken in the brush's own blend mode: the found paint
+# entering the carry, and the carry meeting the brush's colour. This kernel only
+# moves colours between the carry and the two images a composite reads. The mix
+# itself is the mode's own composite kernel, which `SaCompositor` records
+# between two stages of this one.
+#
+# A mode's composite of *over* at coverage *t* onto *under* at alpha one is that
+# mode's mix of the two colours, and Normal's is the straight line the stage
+# always drew. So the carry's colours go into `mix_under` and `mix_over` (the
+# second with *t* in alpha), the composite runs, and the result is written
+# back. A Normal brush records none of this.
+#
+# Five stages, a push constant apart, with a composite between stages 0 and 1,
+# 2 and 3, and 3 and 4:
+#
+#   0. The carry's own mix staged, from row 0 of the carry.
+#   1. The result into the carry's own colour and texel 0.
+#   2. A carried picture's cells: the result into the lattice's memory and the
+#      carry's rows (`smudge_field.gmacs` staged them).
+#   3. The meeting staged: the brush's colour under, and over it the carry's
+#      colour, texel 0 and each cell of a lattice, at the carry's strength.
+#   4. The meeting written back where the dab reads it, and texel 8 marked, the
+#      flag `smudge_met.gmacs` reads.
+#
+# A gradient map has no one brush colour. With `ramped` on, stage 3 puts the
+# ramp's colour under each cell, stage 4 writes each cell as
+# `met - ramp * (1 - share)` and texel 0 as the carry's share alone, with
+# texel 8 marked two rather than one, and the dab adds its own texel's ramp
+# colour at its share.
+#
+# Every texel a composite covers is written by the stage before it, a share of
+# nought where there is nothing to mix, because a composite writes only where its
+# source holds paint and a stale texel would be mixed again.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel smudge_mix
+
+# The carry, row 0 the pickup's texels and the rows from 1 a lattice when it is
+# taller than one.
+image reservoir: rgba32f
+# The composite's destination, at the carry's coordinates.
+image mix_under: rgba32f
+# The composite's source, at the same coordinates, the share in alpha.
+image mix_over: rgba32f
+# The lattice's memory, `smudge_field.gmacs`'s own, or the stand-in.
+image held: rgba32f
+# A gradient map's tip, whose green is the lightness its ramp is read at, and
+# the ramp itself, in the document's values. The stand-in, one texel wide,
+# while `ramped` is nought.
+sampler tip
+sampler ramp
+params:
+    vec4 brush  # the brush's colour the meeting is taken against
+    vec2 count  # the lattice's cells along x and y, nought for none
+    float stage  # which of the five stages this dispatch runs
+    float ramped  # 1 when the brush's colour is a gradient map's, read per cell
+    vec2 rotation  # the dab's cos and sin, as the dab's own block holds them
+    vec2 half_extent  # the dab's major and minor radii in pixels
+    float mirror  # bit 0 horizontal, bit 1 vertical, as the dab's
+    float generator  # the tip's generator, 3 being its picture
+
+# Row 0, as `smudge_pickup.gmacs` lays it out.
+const int SA_MIX_HELD = 5
+const int SA_MIX_PICKED = 6
+const int SA_MIX_FROM = 7
+const int SA_MIX_MET = 8
+# Where the lattice's frame is, texels 2 and 3 of row 0, as
+# `smudge_field.gmacs` and `smudge_blur.gmacs` write it.
+const int SA_MIX_FRAME = 2
+# The lightness a texel off the tip's picture reads, `dab_texel.gmacs`'s own.
+const float SA_MIX_NEUTRAL = 0.5
+
+# Whether *at* is a cell of the lattice, which lives in the carry's rows from 1.
+
+
+def sa_mix_cell(ivec2 at) -> bool:
+    return at.y >= 1 and at.x < int(count.x) and at.y <= int(count.y) and at.y < image_size(reservoir).y
+
+
+def sa_mix_carry_in(ivec2 at):
+    if at.x != 0 or at.y != 0:
+        return
+    mix_under[at] = reservoir[ivec2(SA_MIX_FROM, 0)]
+    mix_over[at] = reservoir[ivec2(SA_MIX_PICKED, 0)]
+
+
+def sa_mix_carry_out(ivec2 at):
+    if at.x != 0 or at.y != 0:
+        return
+    vec3 mixed = mix_under[at].rgb
+    reservoir[ivec2(SA_MIX_HELD, 0)] = vec4(mixed, 1.0)
+    reservoir[at] = vec4(mixed, reservoir[at].a)
+
+
+def sa_mix_cells_out(ivec2 at):
+    if not sa_mix_cell(at):
+        return
+    ivec2 cell = ivec2(at.x, at.y - 1)
+    float load = held[cell].a
+    vec4 laid = vec4(mix_under[at].rgb * load, load)
+    held[cell] = laid
+    reservoir[at] = laid
+
+# The carry's colour at *at*, straight, and whether it holds any.
+
+
+def sa_mix_carried(ivec2 at, out vec3 colour) -> bool:
+    vec4 carried = reservoir[at]
+    if at.y == 0:
+        colour = carried.rgb
+        return true
+    if carried.a <= 0.0:
+        colour = vec3(0.0)
+        return false
+    colour = carried.rgb / carried.a
+    return true
+
+# Whether this dispatch meets a gradient map's ramp rather than one colour.
+
+
+def sa_mix_ramped() -> bool:
+    return ramped > 0.5
+
+# The gradient map's colour where the cell at *at* sits under the dab: the
+# cell's offset from the dab's centre in document pixels, through the lattice's
+# frame, then the tip's lightness there and the ramp at that lightness, which is
+# `sa_ramp_color` in `dab_texel.gmacs` read at that offset. The brush's colour
+# where the tip has no picture or there is no ramp, as the dab does.
+
+
+def sa_mix_ramp(ivec2 at) -> vec3:
+    if generator < 2.5 or texture_size(ramp, 0).x < 2:
+        return brush.rgb
+    vec4 frame = reservoir[ivec2(SA_MIX_FRAME, 0)]
+    vec2 offset = (vec2(at.x, at.y - 1) - frame.xy) / max(frame.z, 1e-6)
+    vec2 local = vec2(offset.x * rotation.x + offset.y * rotation.y, -offset.x * rotation.y + offset.y * rotation.x)
+    int bits = int(mirror + 0.5)
+    local *= vec2((bits & 1) != 0 ? -1.0 : 1.0, (bits & 2) != 0 ? -1.0 : 1.0)
+    vec2 uv = local / max(half_extent * 2.0, vec2(1e-6)) + vec2(0.5)
+    float lightness = SA_MIX_NEUTRAL
+    if uv.x >= 0.0 and uv.x <= 1.0 and uv.y >= 0.0 and uv.y <= 1.0:
+        lightness = clamp(texture(tip, uv).g, 0.0, 1.0)
+    return texture(ramp, vec2(lightness, 0.5)).rgb
+
+# The colour the carry meets at *at*: the ramp's under a cell of a gradient
+# map, and the brush's own everywhere else.
+
+
+def sa_mix_own(ivec2 at) -> vec3:
+    if sa_mix_ramped() and sa_mix_cell(at):
+        return sa_mix_ramp(at)
+    return brush.rgb
+
+# The meeting of a gradient map written back in the form the dab adds its own
+# texel's ramp colour to: each cell the meeting less the ramp's share of it,
+# texel 0 the carry's share alone, and texel 8 marked two.
+
+
+def sa_mix_meet_ramp_out(ivec2 at, bool texel, vec3 met, vec4 carried):
+    float share = clamp(reservoir[ivec2(0, 0)].a, 0.0, 1.0)
+    if texel:
+        reservoir[at] = vec4(carried.rgb * share, carried.a)
+        reservoir[ivec2(SA_MIX_MET, 0)] = vec4(0.0, 0.0, 0.0, 2.0)
+    elif carried.a > 0.0:
+        vec3 rest = met - sa_mix_ramp(at) * (1.0 - share)
+        reservoir[at] = vec4(rest * carried.a, carried.a)
+
+
+def sa_mix_meet_in(ivec2 at):
+    bool texel = at.x == 0 and at.y == 0
+    if not texel and not sa_mix_cell(at):
+        if at.x < image_size(mix_over).x and at.y < image_size(mix_over).y:
+            mix_over[at] = vec4(0.0)
+        return
+    float share = clamp(reservoir[ivec2(0, 0)].a, 0.0, 1.0)
+    vec3 colour = vec3(0.0)
+    bool holds = sa_mix_carried(at, colour)
+    mix_under[at] = vec4(sa_mix_own(at), 1.0)
+    mix_over[at] = vec4(colour, holds ? share : 0.0)
+
+
+def sa_mix_meet_out(ivec2 at):
+    bool texel = at.x == 0 and at.y == 0
+    if not texel and not sa_mix_cell(at):
+        return
+    vec3 met = mix_under[at].rgb
+    vec4 carried = reservoir[at]
+    if sa_mix_ramped():
+        sa_mix_meet_ramp_out(at, texel, met, carried)
+        return
+    if texel:
+        reservoir[at] = vec4(met, carried.a)
+        reservoir[ivec2(SA_MIX_MET, 0)] = vec4(brush.rgb, 1.0)
+    elif carried.a > 0.0:
+        reservoir[at] = vec4(met * carried.a, carried.a)
+
+
+def smudge_mix():
+    ivec2 at = ivec2(global_id.xy)
+    int phase = int(stage + 0.5)
+    if phase == 0:
+        sa_mix_carry_in(at)
+    elif phase == 1:
+        sa_mix_carry_out(at)
+    elif phase == 2:
+        sa_mix_cells_out(at)
+    elif phase == 3:
+        sa_mix_meet_in(at)
+    else:
+        sa_mix_meet_out(at)

@@ -1,0 +1,77 @@
+# Kernel: frame_copy
+#
+# Copies a rectangle of a frame another program sent, uploaded into a staging
+# texture, into one of a frame layer's chunks, converting on the way from the
+# frame's space into the document's. SaFrameLayer dispatches it once for each
+# chunk the frame holds paint in. A depth goes through it as well, into the
+# one channel of the depth field, with no conversion.
+#
+# An image rather than a sampler for the frame, because the frame is read
+# texel for texel and never filtered, and the staging texture keeps its own
+# format through a binding of its own. Nothing clamps: a frame past white
+# carries past white into the document, and a half float's subnormals, down to
+# 0.00000006, arrive as they were sent.
+
+kernel frame_copy
+
+import linear_srgb_color_space
+import transfer_curve
+
+const int SA_COORDS_OKLAB = 1
+
+image target
+image source
+
+# 112 bytes, packed by SaFrameLayer.push_constant: the rectangle, then the tail
+# SaColorSpace.to_conversion_push_constant packs for the frame's space into the
+# document, then the pad the packer rounds up to.
+params:
+    # Where the rectangle starts in the frame and in the chunk, and its size.
+    vec2 source_origin
+    vec2 target_origin
+    vec2 region_size
+    float to_target[9]
+    float source_slope
+    float source_threshold
+    float source_gain
+    float source_exponent
+    float target_slope
+    float target_threshold
+    float target_gain
+    float target_exponent
+    float source_coordinates
+    float target_coordinates
+    float pad[3]
+
+
+def to_target_matrix() -> mat3:
+    return mat3(
+        to_target[0], to_target[1], to_target[2],
+        to_target[3], to_target[4], to_target[5],
+        to_target[6], to_target[7], to_target[8]
+    )
+
+# Out of the frame's linear RGB and into whatever the document stores. For an
+# Oklab document the matrix has already taken the frame into linear sRGB,
+# which is what Oklab is defined against.
+
+
+def encode_target(vec3 c) -> vec3:
+    if int(target_coordinates + 0.5) == SA_COORDS_OKLAB:
+        return linear_srgb_to_oklab(c)
+    return sa_transfer_encode(c, target_slope, target_threshold, target_gain, target_exponent)
+
+
+def frame_copy():
+    ivec2 local = ivec2(global_id.xy)
+    if local.x >= int(region_size.x) or local.y >= int(region_size.y):
+        return
+    ivec2 to = local + ivec2(target_origin)
+    if to.x >= image_size(target).x or to.y >= image_size(target).y:
+        return
+    ivec2 from = local + ivec2(source_origin)
+    if from.x >= image_size(source).x or from.y >= image_size(source).y:
+        return
+    vec4 texel = source[from]
+    # Alpha is coverage and comes across untouched.
+    target[to] = vec4(encode_target(to_target_matrix() * texel.rgb), texel.a)

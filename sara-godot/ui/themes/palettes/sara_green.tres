@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="SaPalette" load_steps=2 format=3]
+
+[ext_resource type="Script" uid="uid://dufcweud0h0ju" path="res://ui/themes/sa_palette.gd" id="1_palette"]
+
+[resource]
+script = ExtResource("1_palette")
+display_name = "Sara Green"

@@ -1,0 +1,94 @@
+[
+  {
+    "comment": "A short form kernel that declares a second layer as image blue: readonly runs and reads it. Paint holds a half-covering red and Noise a half-covering blue, each over the first chunk, and the cell writes their sum into Out over a rectangle, which before the fix failed with the kernel declares no binding named sa_source."
+  },
+  {
+    "wait": 45
+  },
+  {
+    "document": "srgb"
+  },
+  {
+    "wait": 25
+  },
+  {
+    "layer": {
+      "add": "Paint",
+      "fill": [
+        0.6,
+        0.1,
+        0.1,
+        0.5
+      ],
+      "chunks": [
+        [
+          0,
+          0
+        ]
+      ]
+    }
+  },
+  {
+    "layer": {
+      "add": "Noise",
+      "fill": [
+        0.0,
+        0.2,
+        0.7,
+        0.5
+      ],
+      "chunks": [
+        [
+          0,
+          0
+        ]
+      ]
+    }
+  },
+  {
+    "layer": {
+      "add": "Out"
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "kernel": {
+      "source": "image blue: readonly\n\ndef pixel(ivec2 at) -> vec4:\n    return src(at) + blue[at]\n",
+      "name": "pixels",
+      "layer": "Paint",
+      "into": "Out",
+      "rect": [
+        0,
+        0,
+        256,
+        256
+      ],
+      "inputs": {
+        "blue": "Noise"
+      }
+    }
+  },
+  {
+    "wait": 15
+  },
+  {
+    "texel": [
+      [
+        100,
+        100
+      ],
+      [
+        128,
+        200
+      ]
+    ]
+  },
+  {
+    "state": "01-summed"
+  },
+  {
+    "shot": "01-summed"
+  }
+]

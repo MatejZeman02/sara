@@ -1,0 +1,16 @@
+[
+  {"wait": 45},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 10},
+  {"document": "srgb"},
+  {"wait": 12},
+  {"fill": [0.94, 0.93, 0.90]},
+  {"colour": "#141414"},
+  {"tool": "brush"},
+  {"docker": {"id": "ToolOptionsDocker", "at": [100, 300], "size": [420, 420]}},
+  {"wait": 12},
+  {"stroke": {"from": [300, 500], "to": [1400, 500], "pressure": 1.0, "steps": 40}},
+  {"wait": 15},
+  {"shot": "a-stroke-that-started-under-a-docker"},
+  {"state": "a-stroke-that-started-under-a-docker"}
+]

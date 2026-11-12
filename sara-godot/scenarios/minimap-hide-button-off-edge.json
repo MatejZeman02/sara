@@ -1,0 +1,29 @@
+[
+ {"wait": 30},
+ {"prefs": {"docker_hide_button": true}},
+ {"layout_preset": {"delete": "full (custom)"}},
+ {"layout_preset": {"load": "full"}},
+ {"wait": 25},
+ {"hide": ""},
+ {"state": "01-every-docker-at-the-default-width"},
+ {"shot": "01-every-docker-at-the-default-width"},
+
+ {"docker_resize": {"id": "MinimapDocker", "by": [-600, -600], "grip": true}},
+ {"wait": 12},
+ {"hide": ""},
+ {"state": "02-the-minimap-dragged-as-small-as-it-goes"},
+ {"shot": "02-the-minimap-dragged-as-small-as-it-goes"},
+
+ {"layout_preset": {"load": "full"}},
+ {"wait": 20},
+ {"state": "03-back-at-the-default-width"},
+ {"hide": "Minimap"},
+ {"wait": 12},
+ {"state": "04-the-click-on-its-own-hide-button"},
+ {"shot": "04-the-click-on-its-own-hide-button"},
+
+ {"prefs": {"docker_hide_button": true}},
+ {"layout_preset": {"load": "default"}},
+ {"wait": 15},
+ {"layout_preset": {"delete": "full (custom)"}}
+]

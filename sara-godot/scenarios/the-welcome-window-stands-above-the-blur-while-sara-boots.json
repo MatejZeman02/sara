@@ -1,0 +1,21 @@
+[
+  {"comment": "The welcome window stands above the boot cover and takes a press, while the dockers built during the boot stay under the cover. A capture run refuses the boot's own welcome window, so the boot is held at the modules stage with the cover up and the door opens the window the way Help does. Once with subwindows embedded, where the window drew under the blur, and once with each window its own."},
+  {"args": ["--hold-boot-at=ui_built"]},
+  {"wait": 30},
+  {"shot": "0-the-cover-alone"},
+  {"open": "welcome"},
+  {"wait": 20},
+  {"shot": "1-embedded-the-welcome-window-above-the-cover"},
+  {"state": "1-embedded-the-welcome-window-above-the-cover"},
+  {"click": {"control": "Panes"}},
+  {"wait": 11},
+  {"state": "2-embedded-a-press-on-its-pane-reaches-it"},
+  {"shot": "2-embedded-a-press-on-its-pane-reaches-it"},
+
+  {"prefs": {"embed_subwindows": false}},
+  {"wait": 40},
+  {"open": "welcome"},
+  {"wait": 20},
+  {"shot": "3-its-own-window-above-the-cover"},
+  {"state": "3-its-own-window-above-the-cover"}
+]

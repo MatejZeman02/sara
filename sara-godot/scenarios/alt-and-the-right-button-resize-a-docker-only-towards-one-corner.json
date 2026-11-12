@@ -1,0 +1,37 @@
+[
+  {"wait": 25},
+  {"docker": {"id": "LayersDocker", "at": [420, 200], "size": [300, 400]}},
+  {"wait": 10},
+  {"shot": "before"},
+  {"state": "before"},
+
+  {"docker_resize": {"id": "LayersDocker", "by": [40, -30], "from": "top_right"}},
+  {"wait": 10},
+  {"state": "top-right-grown"},
+  {"docker_resize": {"id": "LayersDocker", "by": [-40, 30], "from": "top_right"}},
+  {"wait": 10},
+  {"state": "top-right-back"},
+
+  {"docker_resize": {"id": "LayersDocker", "by": [-40, 30], "from": "bottom_left"}},
+  {"wait": 10},
+  {"shot": "bottom-left-grown"},
+  {"state": "bottom-left-grown"},
+  {"docker_resize": {"id": "LayersDocker", "by": [40, -30], "from": "bottom_left"}},
+  {"wait": 10},
+  {"state": "bottom-left-back"},
+
+  {"docker_resize": {"id": "LayersDocker", "by": [40, 30], "from": "top_left"}},
+  {"wait": 10},
+  {"state": "top-left-shrunk"},
+  {"docker_resize": {"id": "LayersDocker", "by": [-40, -30], "from": "top_left"}},
+  {"wait": 10},
+  {"state": "top-left-back"},
+
+  {"docker_resize": {"id": "LayersDocker", "by": [-40, -30], "from": "bottom_right"}},
+  {"wait": 10},
+  {"state": "bottom-right-shrunk"},
+  {"docker_resize": {"id": "LayersDocker", "by": [40, 30], "grip": true}},
+  {"wait": 10},
+  {"shot": "grip-back-and-the-grip-ignores-from"},
+  {"state": "grip-back-and-the-grip-ignores-from"}
+]

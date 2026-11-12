@@ -1,0 +1,82 @@
+# The translated messages code glued into sentences when check_glued_words.py
+# arrived, one line per hit: the file under sara-godot, the kind, and the code
+# that hits. A line leaves when its sentence is written whole, and no line is
+# ever added. A line that stays says why after a tab, and the reason is
+# ignored when the line is matched. A sentence is written whole with a placeholder
+# for each part that varies, so a translator can reorder it.
+core/api/color/sa_gamut.gd dropped TranslationServer.translate("%s, so colours outside %s are clipped.") % [head, display_name]	open set: head is a whole clause the function wrote, and the gamut's name is a proper name any colour space a module registers carries
+core/api/color/sa_gamut.gd dropped TranslationServer.translate("%s, so nothing inside the document's gamut is clipped.") % head	open set: head is a whole clause the function wrote, with no word of its own dropped in
+core/api/color/sa_gamut.gd glued " " + TranslationServer.translate("Preferences > Canvas and colour offers no narrower proof gamut.")
+core/app/sa_file_picker.gd glued "%s (%s)" % [TranslationServer.translate("All Recognized"), shown]
+core/app/sa_file_picker.gd glued "%s (*.*)" % TranslationServer.translate("All Files")
+core/layers/simulation/sa_simulation.gd dropped TranslationServer.translate("No simulation went on. %s") % refused	open set: refused is a whole sentence, a refusal any simulation rule a module registers may give
+core/layers/transform/linked-file/sa_linked_file.gd dropped TranslationServer.translate("The linked layer '%s' lost its file. %s") % [layer.name, why]	open set: the layer's name is the painter's and why is a whole sentence, the file system's own
+core/loader/skeleton_layer_commands.gd glued " " + TranslationServer.translate("%s turns it off.")
+core/loader/skeleton_layer_commands.gd glued " " + TranslationServer.translate("Lock Alpha on the Layer menu turns it off.")
+core/registry/sa_command_registry.gd dropped tr("Show the %s docker first (%s).") % [title, toggle_chord]	open set: SaWholeSentences.DOCKER_FIRST_CHORD has every shipped docker, and this is the fallback for a module's docker or one the painter composed
+core/registry/sa_command_registry.gd dropped tr("Show the %s docker first, from the Window menu.") % title	open set: SaWholeSentences.DOCKER_FIRST_MENU has every shipped docker, and this is the fallback for a module's docker or one the painter composed
+core/registry/sa_command_registry.gd dropped tr('%s would run "%s".') % [pressed, tr(descriptor.title)]	open set: every command any module registers, hundreds, and the title stands in quotation marks as a name
+core/registry/sa_filter_registry.gd glued "%s > %s" % [tr("Filter"), tr(section.label)]
+core/registry/sa_image_format_registry.gd glued "%s ; %s" % [", ".join(patterns), TranslationServer.translate(word)]	the " ; " is the file dialog's own syntax between patterns and a description, not prose
+core/registry/sa_layer_type_registry.gd dropped tr("New %s") % tr(named)	open set: SaWholeSentences.LAYER_NEW has every shipped kind, and this is the fallback for a module's own
+modules/sara-base-modules/midi/midi_learning.gd glued " " + TranslationServer.translate("It drove %s before.")
+modules/sara-base-modules/midi/midi_learning.gd glued TranslationServer.translate("Listen is on now.") + " "
+modules/sara-base-modules/base/ui/sa_color_ramp_control.gd glued tr("Alpha") + ": "
+modules/sara-noise-brush-engine/randomise/randomise_control.gd glued tr("Random") + ": "
+modules/sara-tutorials/player/lesson_player.gd dropped tr("Your turn. %s") % tr(String(spec.get("instruction", "")))	open set: the instruction is a whole sentence, any lesson's own
+ui/brush_editor/editor_pages.gd dropped tr("Turns %s on for this brush. Off, the brush paints as if the page were not there.") % tr(String(page["title"]))	open set: SaWholeSentences.PAGE_SWITCH has every shipped page, and this is the fallback for a brush engine module's own
+ui/dialogs/document/canvas_size_dialog.gd glued " " + tr("The new area is filled with the background.")
+ui/dialogs/document/export_dialog.gd glued tr("Quality") + ": "
+ui/dialogs/sa_relief_light_dialog.gd glued tr("Light direction") + ": "
+ui/dialogs/sa_relief_light_dialog.gd glued tr("Relief strength") + ": "
+ui/dockers/color/sa_exposure_row.gd glued "%s: " % TranslationServer.translate("Exposure")
+ui/dockers/layers/ground_dialog.gd glued TranslationServer.translate("Ground") + ": "
+ui/dockers/layers/ground_rows.gd glued tr("Colours") + ":"
+ui/dockers/layers/ground_rows.gd glued tr("Tooth") + ": "
+ui/dockers/layers/ground_rows.gd glued tr(row["label"]) + ": "
+ui/dockers/layers/ground_rows.gd glued tr(scale_row["label"]) + ": "
+ui/dockers/layers/kind_browser/layer_kind_browser.gd dropped tr("Add %s") % tr(SaLayerMenuRows.kind_words(kind))	open set: SaWholeSentences.LAYER_ADD has every shipped kind that holds a filter, and this is the fallback for a module's own
+ui/dockers/layers/lut/effects_lut_dialog.gd glued tr(NOTHING_CARRIED) + " "
+ui/dockers/palette/palette_brush_hud.gd glued tr(spec.label) + ": "
+ui/dockers/panels/info_section.gd glued ", " + tr("development build")
+ui/dockers/panels/info_section.gd glued ", " + tr("development build")
+ui/dockers/minimap/minimap_docker.gd glued " " + tr("%s does the same.")
+ui/dockers/tool_options/tool_options_docker.gd dropped tr("%s dynamics") % tr(spec.label)	open set: SaWholeSentences.OPTION_DYNAMICS has every shipped curve option, and this is the fallback for a brush engine module's own
+ui/dockers/tool_options/tool_options_rolls.gd dropped TranslationServer.translate("%s jitter") % TranslationServer.translate(slider.label)	open set: SaWholeSentences.OPTION_JITTER has every shipped slider, and this is the fallback for a brush engine module's own
+ui/dockers/toolbox/toolbox_docker.gd dropped tr("%s and %s") % [", ".join(others.slice(0, - 1)), listed]	open set: a list of the tools a group holds, any module's, each a name standing alone
+ui/dockers/toolbox/toolbox_docker.gd dropped tr("%s. Right-click for %s.") % [_tooltip_for(face), listed]	open set: a whole tooltip sentence and a list of the tools a group holds, any module's
+ui/dockers/toolbox/toolbox_docker.gd glued "%s (%s)" % [text, chord]
+ui/dockers/toolbox/toolbox_views.gd glued "%s (%s)" % [named, chord]
+ui/filters/sa_filter_dialog_window.gd glued " " + tr("The selection becomes the filter's mask.")
+ui/main/sa_window_title.gd dropped tr("%s%s (%s) - Sara") % [SaDocumentFiles.display_name(_watched), mark, words]	open set: the document's name is the painter's, and the brackets hold names standing alone as a label
+ui/main/sa_window_title.gd dropped tr("%s, %s") % [words, tr(SaDisplayFill.display_name(SaSettings.display_fill))]	open set: two names side by side, a gamut any module's colour space may add and how the display is filled, neither in a sentence
+ui/menus/filter_menu.gd dropped tr("Apply %s Again") % tr(SaFilterAgain.last_title(registry))	open set: SaWholeSentences.FILTER_AGAIN has every shipped filter, and this is the fallback for a module's own or a saved look
+ui/menus/filter_menu.gd dropped tr("The %s filters of every module.") % tr(section["label"])	open set: SaWholeSentences.FILTER_SECTION has every shipped section, and this is the fallback for a module's own
+ui/menus/tools_menu.gd dropped tr("Switches to the %s tool.") % label	open set: SaWholeSentences.TOOL_SWITCHES has every shipped tool, and this is the fallback for a module's own
+ui/presets/brush_presets_chooser.gd glued tr("Size") + ": "
+ui/projection/sa_projection_dialog.gd glued tr("Yaw") + ": "
+ui/quick_commands/sa_quick_commands.gd dropped TranslationServer.translate("%s cannot run now.") % TranslationServer.translate(descriptor.menu_label())	open set: every command any module registers, hundreds, its name the sentence's subject
+ui/search/sa_search_window.gd glued "%s (%s)" % [words, chord]
+ui/search/search_index.gd glued "%s > %s" % [_translated(SHORTCUTS_PAGE), _translated(String(group[1]))]
+ui/settings/arrange/dockers_page.gd dropped tr("%s docker settings") % tr(title)	open set: SaWholeSentences.DOCKER_SETTINGS has every shipped docker, and this is the fallback for a module's docker or one the painter composed
+ui/settings/arrange/dockers_page.gd dropped tr("Choose which parts the %s docker shows, and their order.") % tr(title)	open set: SaWholeSentences.DOCKER_PARTS has every shipped docker, and this is the fallback for a module's docker or one the painter composed
+ui/settings/arrange/workspace_page.gd glued " " + tr("At this scale the dockers open now would leave less than %s of the window to paint in.")
+ui/settings/keyboard/shortcuts_page.gd glued " " + tr("%s runs %s.")
+ui/settings/keyboard/shortcuts_page.gd glued " " + tr("%s runs this command.")
+ui/settings/look/color_themes_page.gd glued tr(sentence) + " "
+ui/settings/pages/brush_slots_page.gd glued " " + tr("%s shows the pop-up palette, these ten slots round a colour wheel, either way.")
+ui/settings/pages/languages_page.gd glued " " + TranslationServer.translate_plural("%d sentence", "%d sentences", sentences)
+ui/settings/pages/languages_page.gd glued "%d. %s" % [place, tr(TranslationServer.get_locale_name(String(entry["locale"])))]
+ui/settings/pages/modules_page.gd glued " " + TranslationServer.translate("Off at this start, %s.")
+ui/settings/pages/modules_page.gd glued " " + TranslationServer.translate("Refused at this start, %s.")
+ui/simulation/sa_simulation_frames_dialog.gd glued "%s: " % tr("Steps")
+ui/simulation/sa_simulation_panel.gd dropped tr("%s on %s") % [rule_label, layer.name]	open set: a rule any module registers and the layer's name the painter typed
+ui/simulation/sa_simulation_panel.gd glued "%s: " % tr("Speed")
+ui/status_line/sa_status_line.gd glued "%s, %s" % [named, SaInfoSection.depth_text(space)]
+ui/tool_options/tool_option_controls.gd glued _host.tr(spec.label) + ": "
+ui/top_bar/top_bar_rotation.gd glued TranslationServer.translate("Rotate") + ": "
+ui/widgets/blend_mode_button.gd glued " " + tr("On this document it mixes in %s.")
+ui/widgets/curve_option/sa_curve_option_control.gd glued "%s, %s" % [percent, TranslationServer.translate("Constant")]
+ui/widgets/curve_option/sa_curve_option_control.gd glued "%s, %s" % [percent, TranslationServer.translate("No sensor")]
+ui/widgets/curve_option/sa_curve_option_control.gd glued tr("Strength") + ": "
+ui/widgets/sa_slider.gd glued "%s: " % SaPage.translated(label)

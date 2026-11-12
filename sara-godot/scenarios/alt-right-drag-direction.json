@@ -1,0 +1,16 @@
+[
+  {"comment": "Reading the direction an ALT-right drag moves a window. The dialog is the filter window, since Levels is the base module's filter, so the id it is found by is FilterDialog and not LevelsDialog. The drags are the two this scenario has always made, up by 80 and right by 80 from the bottom right corner, and what they show is not what an older rule showed: the rule now reads the sign of each axis from the quadrant the press fell in, so from the bottom right a drag towards the centre shrinks and one away from it grows, where the rule grew the height on an upward drag wherever the press was. The shots are named for what they show, and each name says what it shows."},
+  {"wait": 30},
+  {"open": "levels"},
+  {"wait": 20},
+  {"shot": "before"},
+  {"state": "before"},
+  {"docker_resize": {"id": "FilterDialog", "by": [0, -80]}},
+  {"wait": 10},
+  {"shot": "up-by-80-shorter"},
+  {"state": "up-by-80-shorter"},
+  {"docker_resize": {"id": "FilterDialog", "by": [80, 0]}},
+  {"wait": 10},
+  {"shot": "right-by-80-wider"},
+  {"state": "right-by-80-wider"}
+]

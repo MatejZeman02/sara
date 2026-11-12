@@ -1,0 +1,115 @@
+[
+  {
+    "window": [
+      1600,
+      1200
+    ]
+  },
+  {
+    "wait": 60
+  },
+  {
+    "document": "srgb"
+  },
+  {
+    "wait": 20
+  },
+  {
+    "open": "preferences"
+  },
+  {
+    "wait": 15
+  },
+  {
+    "page": "Top Menu Bar"
+  },
+  {
+    "layout_gesture": {"elements": "Top Bar"}
+  },
+  {
+    "wait": 12
+  },
+  {
+    "layout_rows": true
+  },
+  {
+    "shot": "01-the-page-as-it-opens"
+  },
+  {
+    "wheel": {
+      "at": [
+        914,
+        900
+      ],
+      "notches": -60
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "layout_rows": true
+  },
+  {
+    "state": "02-scrolled-to-the-end"
+  },
+  {
+    "shot": "02-scrolled-to-the-end"
+  },
+  {
+    "layout_gesture": {
+      "switch": "wand_tolerance"
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "layout_rows": true
+  },
+  {
+    "state": "03-after-the-click-on-the-last-row"
+  },
+  {
+    "shot": "03-after-the-click-on-the-last-row"
+  },
+  {
+    "window": [
+      1900,
+      1160
+    ]
+  },
+  {
+    "wait": 30
+  },
+  {
+    "page": "Top Menu Bar"
+  },
+  {
+    "layout_gesture": {"elements": "Top Bar"}
+  },
+  {
+    "wait": 12
+  },
+  {
+    "wheel": {
+      "at": [
+        1050,
+        860
+      ],
+      "notches": -60
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "layout_rows": true
+  },
+  {
+    "state": "04-the-other-size-the-filing-names"
+  },
+  {
+    "shot": "04-the-other-size-the-filing-names"
+  }
+]

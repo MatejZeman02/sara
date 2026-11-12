@@ -1,0 +1,22 @@
+[
+  {"comment": "The welcome window's Recent tab leads with New and Open. A capture run starts on a scratch profile, so the first shot is the empty Recent tab a first start meets: New and Open should stand as two large actions across the top of the tab, at least as tall as the tab bar, and the middle of the tab should offer Open a file with the sentence that says what fills the list under it. The foot keeps the Show this at start switch alone. A picture is then opened through File > Open, which lists it as recent, and the second shot is the same window with a card in the list, New and Open still on top and the Open a file offer gone."},
+  {"wait": 40},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 20},
+  {"menu_item": {"menu": "Help", "id": 505}},
+  {"wait": 15},
+  {"shot": "01-the-empty-recent-tab"},
+  {"state": "01-the-empty-recent-tab"},
+  {"key": "escape"},
+  {"wait": 10},
+  {"menu_item": {"menu": "File", "id": 200}},
+  {"wait": 8},
+  {"file_picker": {"choose": "res://tests/data/import_gradient.png"}},
+  {"wait": 12},
+  {"key": "enter"},
+  {"wait": 25},
+  {"open": "welcome"},
+  {"wait": 20},
+  {"shot": "02-the-full-recent-tab"},
+  {"state": "02-the-full-recent-tab"}
+]

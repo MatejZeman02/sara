@@ -1,0 +1,30 @@
+# Kernels: sad_snapshot_round
+#
+# What a save does to its own copy of a texture on the card before the copy is
+# read back. SaSadSnapshot, beside this, runs it on a full precision colour
+# field of a save the painter asked for.
+#
+# Each channel's bit pattern keeps 12 significant bits, as the library
+# save_rounding says, where SaSadSnapshot.round_bits is the same arithmetic on
+# the CPU for a suite.
+
+kernel sad_snapshot_round
+
+image field
+
+params:
+    int width
+    int height
+
+import save_rounding
+
+
+@workgroup_size(8, 8)
+def sad_snapshot_round():
+    if pixel.x >= width or pixel.y >= height:
+        return
+    vec4 texel = field[pixel]
+    vec4 kept = vec4(0.0)
+    for channel in range(4):
+        kept[channel] = uint_bits_to_float(sa_save_rounded(float_bits_to_uint(texel[channel])))
+    field[pixel] = kept

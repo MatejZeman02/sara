@@ -1,0 +1,11 @@
+[
+  {"comment": "The third start, on the profile the second left with Box Blur switched on again. The dump's modules block lists box_blur under loaded and nothing under off, and the Filter menu in the dump has its Box Blur row back."},
+  {"settings": "keep"},
+  {"window": [1920, 1080]},
+  {"wait": 40},
+  {"state": "1-box-blur-is-back"},
+  {"menu": "Filter"},
+  {"wait": 10},
+  {"state": "2-the-filter-menu-with-box-blur"},
+  {"shot": "2-the-filter-menu-with-box-blur"}
+]

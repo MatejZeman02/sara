@@ -1,0 +1,29 @@
+# Writes one value over part of one field of a chunk.
+#
+# `clear.gmacs` writes zero and is right for the compositor, whose targets are
+# all colour. A geometry pass blanks every field of a chunk it allocated, and
+# zero is no paint for a colour field and fully hidden for a mask, so the pass
+# hands over the field's own blank from `SaChunk.blanks` and this kernel
+# writes it. A compute write rather than a transfer clear, for the reason the
+# crop gives: a transfer is not ordered against the copies around it.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel blank_region
+image target
+
+params:
+    vec4 value
+    # The part of the texture to write, in its own texels.
+    vec2 region_origin
+    vec2 region_size
+
+
+def blank_region():
+    ivec2 local = ivec2(global_id.xy)
+    if local.x >= int(region_size.x) or local.y >= int(region_size.y):
+        return
+    ivec2 pixel = local + ivec2(region_origin)
+    if pixel.x >= image_size(target).x or pixel.y >= image_size(target).y:
+        return
+    target[pixel] = value

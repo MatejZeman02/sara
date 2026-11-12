@@ -1,0 +1,178 @@
+# The Oklab cloud: the document's gamut drawn as a wireframe, and a mark per
+# cell of what the painting holds, laid over the graph's background.
+#
+# Apart from graph.gmacs because the cloud's picture is one responsibility: the
+# frame, a cell's colour, a mark's size and the way a mark covers what is under
+# it change together and no other mode reads them. Included after
+# `project_point`, `frame_point`, `frame_colour`, `segment_away`, `square_unit`,
+# `cloud_cells` and `BACKGROUND`, and before `graph_draw`, whose mode chain calls
+# `draw_cloud`.
+#
+# `draw_cloud` answers the texel's final colour, background included, where
+# every other mode answers a trace that `graph_draw` lifts onto the
+# background. A lift adds the background to a mark, so a black cell would draw
+# exactly the background's grey and a dark one barely above it. A mark is laid
+# over the background by its coverage instead, so its body is the cell's own
+# colour, and a black one is darker than the grey it sits on.
+
+# The document's own gamut, drawn as a coloured wireframe so the picture reads
+#   as three dimensions rather than as a smear.
+#
+#   It was the twelve edges of a fixed grey cube, which said the same thing about
+#   every document: an sRGB painting and an ACEScg one drew the same box, and the
+#   note asked for "the colored oklab wireframe geometry around instead of the
+#   wireframe gray cube. Use the gamut as the document is in." So the edges are
+#   the document's RGB cube taken into Oklab, where they bow, and each segment
+#   wears the colour it stands for. A wide gamut bows further out, and that is
+#   the whole picture.
+#
+#   The vertices come from `graph_frame`, which projected them once for the
+#   pass. The nearest segment's colour wins rather than the sum of them, or two
+#   edges crossing would draw a colour neither of them is.
+#
+#   The lightness axis through neutral stays a plain grey line, because it is not
+#   part of the gamut: it is the line every grey in the painting sits on, and it
+#   is drawn brighter for that reason.
+
+
+def draw_cloud_frame(vec2 unit, float width) -> vec3:
+    vec3 frame = vec3(0.0)
+    float nearest = 1e6
+    for uint e in range(0u, FRAME_EDGES):
+        uint base = e * (FRAME_SEGMENTS + 1u)
+        for uint sgm in range(0u, FRAME_SEGMENTS):
+            vec2 from = frame_point(base + sgm)
+            vec2 to = frame_point(base + sgm + 1u)
+            float away = segment_away(from, to, unit)
+            if away < nearest:
+                nearest = away
+                frame = frame_colour(base + sgm)
+    float on_edge = 1.0 - smoothstep(width * 0.5, width * 1.5, nearest)
+    # Dimmed, because the wireframe is the room the cloud is in rather than
+    #       the reading. At full brightness a saturated edge is louder than the
+    #       points inside it and the picture reads as the frame.
+    frame *= on_edge * 0.55
+
+    vec2 low = project_point(vec3(0.0, -1.0, 0.0))
+    vec2 high = project_point(vec3(0.0, 1.0, 0.0))
+    float on_axis = 1.0 - smoothstep(width * 0.5, width * 1.5, segment_away(low, high, unit))
+    return max(frame, vec3(0.34) * on_axis)
+
+# The Oklab colour a cloud cell holds, the average of what landed in it.
+
+
+def cloud_cell_lab(uint cell, float count) -> vec3:
+    float lightness = float(counts.values[PLANE + cell]) / count / CLOUD_QUANT
+    float a = (float(counts.values[2u * PLANE + cell]) / count / CLOUD_QUANT * 2.0 - 1.0) * SCOPE_RANGE
+    float b = (float(counts.values[3u * PLANE + cell]) / count / CLOUD_QUANT * 2.0 - 1.0) * SCOPE_RANGE
+    return vec3(lightness, a, b)
+
+# How far across a cell's mark reaches, in cells: the floor every cell gets
+#   and the span the log of its count adds on top, on the log a reference scope
+#   sizes its points by.
+#
+# Cells sit one apart, so a floor of 0.9 keeps a mark visible without every
+#   disc overlapping its neighbours into one fused mass, and a span of 2.5 lets
+#   the busiest cell reach 3.4 cells, so a cluster is a larger mark and a stray
+#   sample a dot.
+
+const float CLOUD_MARK_MIN = 0.9
+const float CLOUD_MARK_SPAN = 2.5
+
+# How many cells each way `draw_cloud` looks for a mark that covers this
+#   texel: the ceiling of the largest radius the two above can answer, 3.4, so
+#   no disc is clipped square at its corners.
+
+const int CLOUD_MARK_SCAN = 4
+
+
+def cloud_mark_radius(float count, float largest) -> float:
+    float level = log(1.0 + count) / log(1.0 + largest)
+    return CLOUD_MARK_MIN + CLOUD_MARK_SPAN * level
+
+# Coverage alone is not enough. A mark whose lightness is near the
+#   background's, a dark brown at about Oklab L 0.2, covers the grey with a
+#   colour of the same lightness and still cannot be told from it. So a mark
+#   whose body differs from the background's lightness by less than
+#   CLOUD_RIM_NEED wears a rim of neutral grey CLOUD_RIM_LIFT lighter than the
+#   lighter of the two. A bright mark already stands out and has no rim, so a
+#   bright cluster reads as it did.
+
+const float CLOUD_RIM_NEED = 0.25
+const float CLOUD_RIM_LIFT = 0.3
+# How wide the rim is, in texels of the plot, the one texel the disc's edge
+#   fades over included. Never more than half the mark's radius, so a lone
+#   sample on a small plot keeps a centre of its own colour.
+const float CLOUD_RIM_TEXELS = 2.0
+
+# The Oklab lightness of the graph's background grey.
+
+
+def cloud_background_lightness() -> float:
+    vec3 grey = sa_transfer_decode(vec3(BACKGROUND), 12.92, 0.04045, 1.055, 2.4)
+    return linear_srgb_to_oklab(grey).x
+
+# The neutral grey of Oklab lightness *lightness*, as the screen shows it.
+
+
+def cloud_grey(float lightness) -> vec3:
+    float light = lightness * lightness * lightness
+    return to_screen(vec3(light))
+
+# A mark per cell rather than a texel per cell. The cells around this
+#   texel are read, each a disc the size its count earns, and the disc whose
+#   centre is nearest by its own radius wins, which is the painter's order of
+#   the page without a sort. A cell's mark is drawn at the cell's own colour
+#   and a lone sample still shows, so a colour the painter used once is a dot
+#   and a colour they lived in is a disc.
+#
+# The mark covers the frame and the background, fading over its outer texel
+#   so the disc reads as a disc and not as a square of texels. It was the
+#   cell's colour dimmed by its count and by the rim and then added to the
+#   background, so a dark mark's edge faded to black under the lift and a dark
+#   lone sample was dimmer still. Size alone now says how crowded a cell is.
+
+
+def draw_cloud(vec2 texel, float largest) -> vec3:
+    vec2 unit = square_unit(texel)
+    if off_graph(unit):
+        return vec3(BACKGROUND)
+    float side = min(plot_size().x, plot_size().y)
+    vec3 under = vec3(BACKGROUND) + draw_cloud_frame(unit, 1.0 / side) * (1.0 - BACKGROUND)
+
+    uint cells = cloud_cells()
+    vec2 at_cell = unit * cells
+    int cx = int(at_cell.x + 0.5)
+    int cy = int(at_cell.y + 0.5)
+    float best = 1e6
+    float mark_radius = 1.0
+    vec3 lab = vec3(0.0)
+    for dy in range_inclusive(-CLOUD_MARK_SCAN, CLOUD_MARK_SCAN):
+        for dx in range_inclusive(-CLOUD_MARK_SCAN, CLOUD_MARK_SCAN):
+            int x = cx + dx
+            int y = cy + dy
+            if x < 0 or y < 0 or x >= int(cells) or y >= int(cells):
+                continue
+            uint cell = uint(y) * cells + uint(x)
+            float count = float(counts.values[cell])
+            if count <= 0.0:
+                continue
+            float radius = cloud_mark_radius(count, largest)
+            float away = length(at_cell - vec2(x, y)) / radius
+            if away < 1.0 and away < best:
+                best = away
+                mark_radius = radius
+                lab = cloud_cell_lab(cell, count)
+    if best >= 1.0:
+        return under
+
+    float texel_cells = cells / side
+    float reach = best * mark_radius
+    float coverage = 1.0 - smoothstep(mark_radius - texel_cells, mark_radius, reach)
+    vec3 ink = to_screen(oklab_to_linear_srgb(lab))
+    float ground = cloud_background_lightness()
+    if abs(lab.x - ground) < CLOUD_RIM_NEED:
+        float rim = min(texel_cells * CLOUD_RIM_TEXELS, mark_radius * 0.5)
+        if reach > mark_radius - rim:
+            ink = cloud_grey(max(lab.x, ground) + CLOUD_RIM_LIFT)
+    return mix(under, ink, coverage)

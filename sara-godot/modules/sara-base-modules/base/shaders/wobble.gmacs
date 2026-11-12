@@ -1,0 +1,68 @@
+# The wobble, one neighbourhood kernel under the contract SaNeighbourhoodPass
+# writes: the padded source at binding 0, the selection mask at binding 1, the
+# chunk-sized target at binding 2.
+#
+# Each texel reads the source a little to one side of itself, by a shift that
+# is a function of its document pixel and of nothing else, so a ripple lines up
+# across chunks and does not crawl when the painter strokes beside it. Across
+# horizontal ripples, the default and water's own, the shift runs along x and
+# changes with the row, so a vertical edge is drawn as a wave. Vertical ripples
+# are the same turned a quarter.
+#
+# The shift is a sine of the row over the wavelength, whose phase a value noise
+# of the document pixel pushes by up to the turbulence of a whole turn. At no
+# turbulence it is a pure sine, which is what the suite measures, and above it
+# the crests wander along their own length the way a water surface's do. The
+# shift never passes the amplitude, so the halo the filter asks for, the
+# amplitude and one texel for the bilinear read, holds every read.
+#
+# Colour is straight alpha, so the read is premultiplied and straightened after
+# the bilinear mix. Nothing clamps.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel wobble
+
+import noise
+
+image src: readonly
+image mask: r32f, readonly
+image dst
+
+params:
+    float amplitude  # the widest shift, in document pixels
+    float wavelength  # one crest to the next, in document pixels
+    float turbulence  # 0 to 1, of a whole turn of phase
+    int vertical  # 0 horizontal ripples, 1 vertical
+    vec2 origin  # the dispatched region's corner in the chunk
+    int halo  # how far the source is padded, written by the runner
+    vec2 chunk  # the chunk's corner in the chunk's texels, written by the runner
+    float scale  # the chunk's texels per document pixel, written by the runner
+
+# The premultiplied read, the bilinear sample and the mask's blend, imported
+# after the params because the library reads `halo` and the three images by
+# name.
+import neighbourhood
+
+const float WOBBLE_TAU = 6.28318530718
+
+
+def wobble():
+    ivec2 at = pixel + ivec2(origin)
+    # The runner hands `chunk` in the chunk's own texels, as it does `origin`,
+    # so the texel's document place is its texel place over the density.
+    float density = scale > 0.0 ? scale : 1.0
+    vec2 document = (chunk + vec2(at)) / density
+    float span = max(wavelength, 1.0)
+    float across = document.y
+    if vertical != 0:
+        across = document.x
+    float phase = WOBBLE_TAU * across / span
+    phase += WOBBLE_TAU * turbulence * sa_value_fbm(document / span)
+    float shift = amplitude * density * sin(phase)
+    vec2 offset = vec2(shift, 0.0)
+    if vertical != 0:
+        offset = vec2(0.0, shift)
+    vec2 centre = vec2(at + ivec2(halo, halo))
+    vec4 moved = sa_straight(sa_sample(centre + offset))
+    sa_finish(at, sa_kept(at), moved)

@@ -1,0 +1,30 @@
+[
+  {"wait": 25},
+  {"prefs": {"minimap_proof_mode": "lightness_check", "canvas_proof_mode": "lightness_check"}},
+  {"layer": {"fill": [0.85, 0.15, 0.1, 1.0]}},
+  {"layer": {"add": "Blues", "fill": [0.1, 0.35, 0.9, 1.0], "chunks": [[0, 0], [2, 1], [4, 0], [6, 1]]}},
+  {"layer": {"add": "Greens", "fill": [0.2, 0.75, 0.25, 1.0], "chunks": [[1, 1], [3, 0], [5, 1]]}},
+  {"wait": 5},
+  {"stroke": {"from": [500, 300], "to": [1500, 700], "pressure": 0.9, "steps": 24}},
+  {"wait": 5},
+  {"docker": {"id": "MinimapDocker", "at": [1300, 160], "size": [320, 260]}},
+
+  {"zoom": 2.0},
+  {"wait": 20},
+  {"shot": "rim-close"},
+
+  {"zoom": 0.35},
+  {"wait": 20},
+  {"shot": "rim-far"},
+  {"state": "rim-far"},
+
+  {"key": {"key": "y", "ctrl": true, "shift": true}},
+  {"wait": 20},
+  {"shot": "minimap-grey"},
+  {"state": "minimap-grey"},
+
+  {"key": {"key": "y", "ctrl": true}},
+  {"wait": 20},
+  {"shot": "both-grey"},
+  {"state": "both-grey"}
+]

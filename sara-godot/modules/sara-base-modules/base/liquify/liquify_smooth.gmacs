@@ -1,0 +1,127 @@
+# The liquify tool's smooth, its reading half: where the strokes under the
+# brush run and how they bend, read off the picture into the ring the smooth
+# branch of `liquify.gmacs` moves the field by. Nothing here touches paint.
+# The picture read is the layer as the session last drew it, so a held smooth
+# keeps straightening what it straightened.
+#
+# One kernel, five steps selected by `step.x`, run over a grid of cells with a
+# cell to every `step.y` texels of the layer's. A wide brush reads a coarser
+# grid, so a smooth costs about the same at any size.
+#
+# Lightness (step 0) is Oklab L in an Oklab document (`step.w` 1) and the stored
+# numbers' luma otherwise, enough to find an edge by and never shown.
+# The structure tensor (steps 1 and 2, a separable bell of `step.z` cells'
+# sigma) has its main axis along the edges' normal whichever side is darker, so
+# the two edges of a thin stroke add rather than cancel.
+#
+# The bend (step 3) is read from the doubled angle of the axis, which turns
+# smoothly where the axis itself would flip end for end. It is weighed by the
+# square of the tensor's coherence, so a crossing, a corner or a stroke's end
+# barely moves, and by the edge's strength against `bend.x`. `bend.y` is the
+# sign it is added with and `bend.z` 1 keeps what the ring held: the session
+# writes the bend at the brush's softening and takes away the bend at twice it,
+# so a wobble the brush sees is straightened and a curve as wide as the brush
+# is kept. Step 4 writes the doubled angle at a fine softening into the ring's
+# last two channels, which give the stroke's own normal and, by their length,
+# where its edges are.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel liquify_smooth
+
+# The picture at the document's depth for step 0, a step before at `rgba32f`
+# for the rest.
+image source: readonly
+image destination: rgba32f
+
+params:
+    # Where the dispatch starts inside the destination, and how big it is.
+    vec4 dest
+    # The step, the layer's texels to a cell, the bell's sigma in cells, and 1
+    # for an Oklab document.
+    vec4 step
+    # For step 3, the edge strength at which the bend counts by half, the sign
+    # it is added with, and 1 to add to what the ring holds.
+    vec4 bend
+
+
+def sa_smooth_read(ivec2 at) -> vec4:
+    return source[clamp(at, ivec2(0), image_size(source) - 1)]
+
+# The structure tensor of the cells at *at*, its three numbers.
+
+
+def sa_smooth_tensor(ivec2 at) -> vec3:
+    vec2 across = (sa_smooth_read(at + ivec2(1, 0)).xy - sa_smooth_read(at - ivec2(1, 0)).xy) * 0.5
+    vec2 down = (sa_smooth_read(at + ivec2(0, 1)).xy - sa_smooth_read(at - ivec2(0, 1)).xy) * 0.5
+    return vec3(dot(across, across), dot(across, down), dot(down, down))
+
+# The doubled angle of the softened tensor at *at*, unnormalised.
+
+
+def sa_smooth_doubled(ivec2 at) -> vec2:
+    vec3 tensor = sa_smooth_read(at).xyz
+    return vec2(tensor.x - tensor.z, 2.0 * tensor.y)
+
+# The bend of the softened tensor at *at*, step 3.
+
+
+def sa_smooth_bend(ivec2 at) -> vec2:
+    vec3 tensor = sa_smooth_read(at).xyz
+    vec2 doubled = vec2(tensor.x - tensor.z, 2.0 * tensor.y)
+    float strength = tensor.x + tensor.z
+    float square = dot(doubled, doubled)
+    if strength <= 0.0 or square <= 1e-24:
+        return vec2(0.0)
+    vec2 across = (sa_smooth_doubled(at + ivec2(1, 0)) - sa_smooth_doubled(at - ivec2(1, 0))) * 0.5
+    vec2 down = (sa_smooth_doubled(at + ivec2(0, 1)) - sa_smooth_doubled(at - ivec2(0, 1))) * 0.5
+    # How fast the doubled angle turns across and down, a turn per cell.
+    vec2 turn = vec2(doubled.x * across.y - doubled.y * across.x, doubled.x * down.y - doubled.y * down.x) / square
+    vec2 unit = doubled / sqrt(square)
+    float c = sqrt(max(0.5 * (1.0 + unit.x), 0.0))
+    float s = sqrt(max(0.5 * (1.0 - unit.x), 0.0))
+    if unit.y < 0.0:
+        s = -s
+    # The axis's half angle gives the normal, (c, s), and the tangent along
+    # it, (-s, c). The bend along the tangent is half the doubled angle's turn.
+    float bend_rate = dot(vec2(-s, c), turn) * 0.5 / step.y
+    float coherence = sqrt(square) / strength
+    float sure = coherence * coherence * strength / (strength + bend.x)
+    return vec2(-c, -s) * (bend_rate * sure)
+
+
+def liquify_smooth():
+    ivec2 local = ivec2(global_id.xy) + ivec2(dest.xy)
+    if local.x >= int(dest.x + dest.z) or local.y >= int(dest.y + dest.w):
+        return
+    if local.x >= image_size(destination).x or local.y >= image_size(destination).y:
+        return
+    if step.x < 0.5:
+        int cell = int(step.y)
+        vec2 sum = vec2(0.0)
+        for dy in range(cell):
+            for dx in range(cell):
+                vec4 texel = sa_smooth_read(local * cell + ivec2(dx, dy))
+                float light = step.w > 0.5 ? texel.r : dot(texel.rgb, vec3(0.2126, 0.7152, 0.0722))
+                sum += vec2(texel.a, texel.a * light)
+        destination[local] = vec4(sum / float(cell * cell), 0.0, 0.0)
+        return
+    if step.x > 2.5:
+        vec4 held = destination[local]
+        if step.x < 3.5:
+            vec2 kept = bend.z > 0.5 ? held.xy : vec2(0.0)
+            destination[local] = vec4(kept + bend.y * sa_smooth_bend(local), held.zw)
+        else:
+            destination[local] = vec4(held.xy, sa_smooth_doubled(local))
+        return
+    int reach = int(ceil(3.0 * step.z))
+    vec3 sum = vec3(0.0)
+    float total = 0.0
+    for offset in range_inclusive(-reach, reach):
+        float weight = exp(-float(offset * offset) / (2.0 * step.z * step.z))
+        total += weight
+        if step.x < 1.5:
+            sum += weight * sa_smooth_tensor(local + ivec2(offset, 0))
+        else:
+            sum += weight * sa_smooth_read(local + ivec2(0, offset)).xyz
+    destination[local] = vec4(sum / total, 0.0)

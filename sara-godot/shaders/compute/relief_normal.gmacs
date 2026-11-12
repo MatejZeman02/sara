@@ -1,0 +1,49 @@
+# The second half of the view's relief: the surface's normal,
+# derived from the summed height `relief_sum.gmacs` wrote, and stored beside
+# that height, so the view's shader reads one texture for both.
+#
+# The height is dense by now, so the texel past a chunk's edge is the next
+# chunk's own height and a normal at the seam reads it like any other: the
+# halo the impasto spec asks for is the dense texture itself. The caller grows
+# every rectangle by one texel, because a changed height moves the normal of
+# the texel beside it too.
+#
+# The normal is in the canvas's own axes, x to the right, y down and z towards
+# the viewer, and it is the surface's true slope: height and distance both in
+# millimetres, a pixel being as wide as the document's resolution says. How
+# steep the view draws it is the view's to scale.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel derive_normal
+image relief
+image total: readonly
+
+params:
+    # The rectangle this dispatch covers, in canvas pixels.
+    vec2 origin
+    vec2 extent
+    # How many millimetres one canvas pixel spans.
+    float pixel_mm
+
+
+def derive_normal():
+    ivec2 local = ivec2(global_id.xy)
+    if local.x >= int(extent.x) or local.y >= int(extent.y):
+        return
+    ivec2 pixel = local + ivec2(origin)
+    ivec2 last = image_size(relief) - 1
+    if pixel.x > last.x or pixel.y > last.y:
+        return
+    # Central differences, one-sided at the canvas's edge, where nothing lies
+    # beyond to read.
+    ivec2 left = ivec2(max(pixel.x - 1, 0), pixel.y)
+    ivec2 right = ivec2(min(pixel.x + 1, last.x), pixel.y)
+    ivec2 up = ivec2(pixel.x, max(pixel.y - 1, 0))
+    ivec2 down = ivec2(pixel.x, min(pixel.y + 1, last.y))
+    float across = max(right.x - left.x, 1) * pixel_mm
+    float along = max(down.y - up.y, 1) * pixel_mm
+    float slope_x = (total[right].r - total[left].r) / across
+    float slope_y = (total[down].r - total[up].r) / along
+    vec3 normal = normalize(vec3(-slope_x, -slope_y, 1.0))
+    relief[pixel] = vec4(normal, total[pixel].r)

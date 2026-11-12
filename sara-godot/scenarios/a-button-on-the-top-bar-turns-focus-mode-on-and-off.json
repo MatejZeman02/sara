@@ -1,0 +1,22 @@
+[
+  {"comment": "The main window at the tablet's size, 2944 by 1840 at scale 1.70, as a tablet shows Sara. A press on the bar's Focus Mode button hides the dockers and the button stays on the bar held down, a second press brings them back, and a Tab holds the button down too."},
+  {"window": [2944, 1840]},
+  {"prefs": {"ui_scale": 1.7}},
+  {"wait": 60},
+  {"document": "srgb"},
+  {"wait": 30},
+  {"state": "01-before-the-press"},
+  {"shot": "01-before-the-press"},
+  {"click": {"control": "FocusModeBtn"}},
+  {"wait": 30},
+  {"state": "02-focus-mode-on-from-the-button"},
+  {"shot": "02-focus-mode-on-from-the-button"},
+  {"click": {"control": "FocusModeBtn"}},
+  {"wait": 30},
+  {"state": "03-focus-mode-off-from-the-button"},
+  {"shot": "03-focus-mode-off-from-the-button"},
+  {"key": "tab"},
+  {"wait": 30},
+  {"state": "04-focus-mode-on-from-tab"},
+  {"shot": "04-focus-mode-on-from-tab"}
+]

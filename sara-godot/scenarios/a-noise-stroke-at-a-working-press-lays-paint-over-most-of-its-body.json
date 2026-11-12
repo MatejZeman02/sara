@@ -1,0 +1,254 @@
+[
+  {
+    "comment": "A noise stroke at a working press lays paint over most of its body. On a white 1200 by 900 document, in black and with randomness at nought, Grain Round paints three level strokes from x 100 to 1100 at y 120, 240 and 360, at presses 0.3, 0.5 and 0.8, and Bristle Flat three more at y 540, 660 and 780 at the same presses, each through the door's stroke step on the tool's own route in document space. A look of the whole document follows each brush's three, to judge how much paint a stroke lays, a light one keeping more holes than the working press of 0.8."
+  },
+  {
+    "wait": 60
+  },
+  {
+    "prefs": {
+      "ui_scale": 1.0,
+      "autosave_interval_minutes": 0
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "layout_preset": {
+      "load": "minimalistic"
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "document": "srgb",
+    "size": [
+      1200,
+      900
+    ]
+  },
+  {
+    "wait": 10
+  },
+  {
+    "fit": true
+  },
+  {
+    "wait": 5
+  },
+  {
+    "fill": [
+      1.0,
+      1.0,
+      1.0
+    ]
+  },
+  {
+    "layer": {
+      "add": "Strokes"
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "colour": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "preset": {
+      "load": "Grain Round"
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "tool": {
+      "id": "noise_brush",
+      "options": {
+        "randomness": 0.0
+      }
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "stroke": {
+      "from": [
+        100,
+        120
+      ],
+      "to": [
+        1100,
+        120
+      ],
+      "pressure": 0.3,
+      "steps": 250,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "stroke": {
+      "from": [
+        100,
+        240
+      ],
+      "to": [
+        1100,
+        240
+      ],
+      "pressure": 0.5,
+      "steps": 250,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "stroke": {
+      "from": [
+        100,
+        360
+      ],
+      "to": [
+        1100,
+        360
+      ],
+      "pressure": 0.8,
+      "steps": 250,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "wait": 20
+  },
+  {
+    "look": {
+      "path": "1-grain-round-look.png",
+      "rect": [
+        0,
+        0,
+        1200,
+        900
+      ],
+      "scale": 1
+    }
+  },
+  {
+    "preset": {
+      "load": "Bristle Flat"
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "tool": {
+      "id": "noise_brush",
+      "options": {
+        "randomness": 0.0
+      }
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "stroke": {
+      "from": [
+        100,
+        540
+      ],
+      "to": [
+        1100,
+        540
+      ],
+      "pressure": 0.3,
+      "steps": 250,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "stroke": {
+      "from": [
+        100,
+        660
+      ],
+      "to": [
+        1100,
+        660
+      ],
+      "pressure": 0.5,
+      "steps": 250,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "stroke": {
+      "from": [
+        100,
+        780
+      ],
+      "to": [
+        1100,
+        780
+      ],
+      "pressure": 0.8,
+      "steps": 250,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "wait": 20
+  },
+  {
+    "look": {
+      "path": "2-bristle-flat-look.png",
+      "rect": [
+        0,
+        0,
+        1200,
+        900
+      ],
+      "scale": 1
+    }
+  },
+  {
+    "shot": "3-the-window-after-the-six-strokes"
+  }
+]

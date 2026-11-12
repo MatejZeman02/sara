@@ -1,0 +1,19 @@
+[
+  {"comment": "A document made from the Welcome window's New puts the window away once Create has run, and Cancel in New Document leaves it up. Help opens the window, since a capture run refuses the boot's, and the dump's windows array says which windows are visible after each press."},
+  {"wait": 11},
+  {"menu_item": {"menu": "Help", "id": 505}},
+  {"wait": 15},
+  {"click": {"control": "NewButton"}},
+  {"wait": 15},
+  {"state": "0-new-document-over-the-welcome-window"},
+  {"shot": "0-new-document-over-the-welcome-window"},
+  {"click": {"control": "CancelButton"}},
+  {"wait": 11},
+  {"state": "1-cancel-leaves-the-welcome-window-up"},
+  {"click": {"control": "NewButton"}},
+  {"wait": 15},
+  {"click": {"control": "CreateButton"}},
+  {"wait": 20},
+  {"state": "2-create-puts-the-welcome-window-away"},
+  {"shot": "2-create-puts-the-welcome-window-away"}
+]

@@ -1,0 +1,116 @@
+[
+  {
+    "wait": 30
+  },
+  {
+    "open": "export"
+  },
+  {
+    "wait": 15
+  },
+  {
+    "state": "export-opened"
+  },
+  {
+    "key": "tab"
+  },
+  {
+    "wait": 5
+  },
+  {
+    "state": "export-on-cancel"
+  },
+  {
+    "shot": "export-on-cancel"
+  },
+  {
+    "key": "enter"
+  },
+  {
+    "wait": 15
+  },
+  {
+    "state": "export-cancelled"
+  },
+  {
+    "open": "new_document"
+  },
+  {
+    "wait": 15
+  },
+  {
+    "state": "new-document-opened"
+  },
+  {
+    "key": "tab"
+  },
+  {
+    "key": "tab"
+  },
+  {
+    "key": "tab"
+  },
+  {
+    "key": "tab"
+  },
+  {
+    "key": "tab"
+  },
+  {
+    "key": "tab"
+  },
+  {
+    "key": "tab"
+  },
+  {
+    "key": "tab"
+  },
+  {
+    "wait": 5
+  },
+  {
+    "state": "new-document-in-a-field"
+  },
+  {
+    "shot": "new-document-in-a-field"
+  },
+  {
+    "key": "escape"
+  },
+  {
+    "wait": 15
+  },
+  {
+    "state": "new-document-escaped"
+  },
+  {
+    "open": "preferences"
+  },
+  {
+    "wait": 20
+  },
+  {
+    "state": "preferences-opened"
+  },
+  {
+    "key": "tab"
+  },
+  {
+    "wait": 5
+  },
+  {
+    "state": "preferences-tabbed"
+  },
+  {
+    "shot": "preferences-tabbed"
+  },
+  {
+    "key": "escape"
+  },
+  {
+    "wait": 15
+  },
+  {
+    "state": "preferences-escaped"
+  }
+]

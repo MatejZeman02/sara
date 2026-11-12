@@ -1,0 +1,7 @@
+[
+    {"comment": "Between two lights the Welcome picture shows one sun and one reflection. Run with SARA_WELCOME_ZONE=Europe/Prague, SARA_WELCOME_MONTH=7, SARA_WELCOME_ROLL=0 and SARA_WELCOME_HOUR=5.74, which is half way from summer's dawn to its clear day there. The band shows one sun at the place between the two lights' and one glitter path on the lake under it, where the two lights each showed their own before."},
+    {"wait": 11},
+    {"open": "welcome"},
+    {"wait": 20},
+    {"shot": "0-half-from-dawn-to-day"}
+]

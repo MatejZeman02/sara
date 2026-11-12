@@ -1,0 +1,173 @@
+# Kernel: gradient
+# A linear or radial ramp from the foreground colour to the background one,
+# across one chunk, through the document-wide selection.
+#
+# The ramp is walked in Oklab, so the middle of a red to blue gradient is the
+# perceptual middle rather than the grey a linear-light mix gives. It arrives as
+# a texture of Oklab texels (L, a, b, alpha in w) built once per dispatch run by
+# SaColorRamp, and only the way back out to document coordinates is here.
+#
+# **A texture rather than the stops themselves.** A ramp has any number of
+# stops and the push constant is already at the 128 bytes Vulkan guarantees. A
+# storage buffer would carry them exactly but costs a loop per pixel, and the
+# compiler prints `OpArrayLength is not supported yet` for every kernel that
+# declares one. A 1024-texel lookup is one filtered fetch per pixel, and since
+# the walk between two stops is linear in Oklab the sampler's linear filter
+# reproduces it exactly. The only error is a stop that falls between two
+# texels, at most half a texel (two pixels on a 4K canvas).
+#
+# The ramp never reads a stored colour as colour, it only writes one, so the
+# document to linear sRGB matrix and the decode curve are not needed. The over
+# blend is arithmetic on stored values, like the separable blend modes (hard
+# rule 5).
+#
+# The selection binds as `paint.gmacs` and `fill.gmacs` bind it: a 1 by 1 mask
+# reads as 1.0 everywhere through the clamped read, so no selection needs no
+# special case. The drag arrives in this chunk's own texel coordinates, which
+# saves the two floats an origin would cost.
+
+kernel gradient
+
+import oklab_color_space
+import transfer_curve
+import noise
+
+image canvas
+image mask: r32f, readonly
+# The ramp, 1024 by 1 texels of Oklab with alpha in w, sampled by t below.
+sampler ramp_lookup
+
+# 112 bytes of the 128 Vulkan guarantees: the drag, the flags, the wobble, then
+# half the colour space tail. It was 128 with the ramp's two ends in it, they
+# left when the ramp became a texture, and four of the sixteen
+# bytes that freed are spent again.
+params:
+    # Where the press was and where the pointer is, in this chunk's texels.
+    vec4 from_to
+    # shape (0 linear, 1 radial), repeat (0 none, 1 mirror, 2 repeat,
+    # 3 steps), mode (0 over, 1 replace), and whether the layer's alpha is
+    # locked.
+    vec4 flags
+    # How many bands the stepped repeat cuts the ramp into, which kind of
+    # wobble runs (0 none, 1 noise, 2 Voronoi), how far it pushes the ramp in
+    # ramp units, and one spare.
+    vec4 wobble
+    float linear_srgb_to_doc[9]
+    float transfer_slope
+    float transfer_threshold
+    float transfer_gain
+    float transfer_exponent
+    float coordinates
+    # The block ends on a multiple of four floats because
+    # SaCompute.set_push_constant_float_array rounds what it sends up to one and
+    # the layout reader does not, so 88 declared bytes would be sent as 96.
+
+const int SA_COORDS_OKLAB = 1
+
+# Must match SaGradient.Repeat and SaGradient.Wobble.
+const int SA_REPEAT_MIRROR = 1
+const int SA_REPEAT_TILE = 2
+const int SA_REPEAT_STEPS = 3
+const int SA_WOBBLE_NOISE = 1
+const int SA_WOBBLE_VORONOI = 2
+
+# How many wobble features fit across the drag. Relative to the drag rather
+# than measured in pixels, so a short drag and a long one wobble the same
+# amount and the option needs no second slider for a size.
+const float SA_WOBBLE_FEATURES = 4.0
+
+
+def from_linear_srgb_matrix() -> mat3:
+    return mat3(
+    linear_srgb_to_doc[0], linear_srgb_to_doc[1], linear_srgb_to_doc[2],
+    linear_srgb_to_doc[3], linear_srgb_to_doc[4], linear_srgb_to_doc[5],
+    linear_srgb_to_doc[6], linear_srgb_to_doc[7], linear_srgb_to_doc[8])
+
+
+def oklab_to_document(vec3 lab) -> vec3:
+    if int(coordinates + 0.5) == SA_COORDS_OKLAB:
+        return lab
+    vec3 linear = from_linear_srgb_matrix() * oklab_to_linear_srgb(lab)
+    return sa_transfer_encode(linear, transfer_slope, transfer_threshold, transfer_gain, transfer_exponent)
+
+
+def gradient():
+    ivec2 px = ivec2(global_id.xy)
+    ivec2 size = image_size(canvas)
+    if px.x >= size.x or px.y >= size.y:
+        return
+
+    float coverage = mask[min(px * image_size(mask) / image_size(canvas), image_size(mask) - 1)].r
+    if coverage <= 0.0:
+        return
+
+    vec2 here = vec2(px) + vec2(0.5)
+    vec2 from = from_to.xy
+    vec2 along = from_to.zw - from
+    float span = dot(along, along)
+
+    float t = 0.0
+    if span > 0.0:
+        # Radial reads the drag as a radius, linear as an axis: how far along
+        # the axis the pixel projects, over the axis's own length.
+        bool radial = flags.x > 0.5
+        t = radial ? length(here - from) / sqrt(span) : dot(here - from, along) / span
+
+    # The wobble goes on before the repeat, so a tiled ramp's seams move with
+    # it rather than staying arrow-straight through a wobbly picture. Sampled
+    # at the position relative to the press, which is the same number in this
+    # chunk's coordinates as in the document's, because both had the chunk
+    # origin taken off: sampling at `here` would restart the field at every
+    # chunk boundary and draw a 256 pixel grid across the canvas.
+    int wobble_kind = int(wobble.y + 0.5)
+    if wobble_kind != 0 and span > 0.0:
+        vec2 at = (here - from) / (sqrt(span) / SA_WOBBLE_FEATURES)
+        float field = wobble_kind == SA_WOBBLE_NOISE ? sa_value_fbm(at) : sa_voronoi(at)
+        t += (field - 0.5) * wobble.z
+
+    int repeat = int(flags.y + 0.5)
+    if repeat == SA_REPEAT_MIRROR:
+        # Mirror: the ramp runs out and back, period two.
+        float wrapped = mod(t, 2.0)
+        t = wrapped > 1.0 ? 2.0 - wrapped : wrapped
+    elif repeat == SA_REPEAT_TILE:
+        # Repeat: the ramp starts again, period one, with a hard edge where the
+        # far colour meets the near one.
+        t = fract(t)
+    t = clamp(t, 0.0, 1.0)
+
+    if repeat == SA_REPEAT_STEPS:
+        # Steps: the ramp in bands rather than a blend, which is the posterised
+        # look a hard-edged gradient wants. The last band reaches the far
+        # colour exactly, which dividing by the count rather than by one less
+        # than it would not.
+        float bands = max(wobble.x, 2.0)
+        t = clamp(floor(t * bands) / (bands - 1.0), 0.0, 1.0)
+
+    vec4 stop = texture(ramp_lookup, vec2(t, 0.5))
+    vec3 ramp = oklab_to_document(stop.rgb)
+    float ramp_alpha = stop.a
+
+    vec4 was = canvas[px]
+    vec4 result = vec4(ramp, ramp_alpha)
+    if flags.z < 0.5:
+        # Over, the way the compositor does it: premultiply, add, unpremultiply.
+        float out_a = ramp_alpha + was.a * (1.0 - ramp_alpha)
+        vec3 out_rgb = out_a > 0.0 ? (ramp * ramp_alpha + was.rgb * was.a * (1.0 - ramp_alpha)) / out_a : vec3(0.0)
+        result = vec4(out_rgb, out_a)
+
+    if flags.w > 0.5:
+        # Alpha lock: the layer's own coverage decides where the ramp shows,
+        # and no pixel gains or loses any.
+        result.a = was.a
+
+    # A feathered edge takes the ramp in proportion, with the colours
+    # premultiplied and the result put back, as fill.gmacs does and for its
+    # reason. Sara stores straight alpha, and mixed channel by channel toward a
+    # transparent texel, whose colour is black, the ramp's colour fell with the
+    # coverage while its alpha fell too, so the edge composited as coverage
+    # squared and went darker than both sides of it.
+    float out_a = mix(was.a, result.a, coverage)
+    vec3 premultiplied = mix(was.rgb * was.a, result.rgb * result.a, coverage)
+    vec3 out_rgb = out_a > 0.0 ? premultiplied / out_a : vec3(0.0)
+    canvas[px] = vec4(out_rgb, out_a)

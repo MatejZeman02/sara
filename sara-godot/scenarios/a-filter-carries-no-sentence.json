@@ -1,0 +1,27 @@
+[
+  {"args": ["--modules-dir=res://tests/fixtures/modules"]},
+  {"wait": 45},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 20},
+  {"document": "srgb"},
+  {"wait": 25},
+  {"fill": [0.1, 0.1, 0.12]},
+  {"wait": 10},
+
+  {"menu": "Filter"},
+  {"wait": 15},
+  {"shot": "1-the-filter-menu-with-the-fixtures-loaded"},
+  {"menu_item": {"menu": "Filter", "id": 407}},
+  {"wait": 25},
+
+  {"filter_browser": {"search": "threshold"}},
+  {"wait": 15},
+  {"filter_browser": "describe"},
+  {"state": "2-searched-for-threshold"},
+
+  {"filter_browser": {"select": "pixel-filter-fixture.threshold"}},
+  {"wait": 20},
+  {"filter_browser": "describe"},
+  {"shot": "3-the-pixel-filter-says-its-leading-comment"},
+  {"state": "3-the-pixel-filter-says-its-leading-comment"}
+]

@@ -1,0 +1,103 @@
+# The Stats docker's value groups: a histogram of Oklab L over the composite,
+# a chunk's share of it to a slot, of which the bins alone are read back.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# **One kernel, one slot a chunk.** The reduction service dispatches once over
+# each painted chunk that changed since its last run, and each dispatch adds
+# into a slot of its own, `BINS` uints. A slot holds one chunk, at most 65536
+# texels each adding at most `WHOLE`, so a bin reaches 2^24 and never
+# overflows the uint the bound `measure.gmacs` writes down for the same reason.
+# The service keeps every chunk's slot and folds a changed one into the total
+# in place of its last, so the groups follow the paint without a pass over the
+# whole canvas (hard rules 2 and 3).
+#
+# **A texel weighs what it covers.** The composite holds straight alpha, so a
+# texel adds its alpha in steps of one `WHOLE`th to the bin of its own value,
+# and what it leaves uncovered is the background it shows through. The caller
+# knows the canvas's size, so it adds that remainder at the background's value
+# itself, every chunk no layer holds with it, and nothing is dispatched over
+# canvas no layer holds.
+#
+# **Value is Oklab L**, through the document's own colour space, as the shape
+# check's levels and `measure.gmacs` read it. A value past white goes into the
+# last bin and one below black into the first: the bins are counted and never
+# stored, so the canvas keeps every value it holds (hard rule 5).
+
+kernel value_histogram
+
+# linear_srgb_color_space brings oklab_color_space with it.
+import linear_srgb_color_space
+import transfer_curve
+
+image field
+
+# BINS uints per chunk slot, the darkest first.
+buffer tally: uint cells[]
+
+# Packed by the value groups part in the order written here, every field a
+# float for the reason measure.gmacs gives.
+params:
+    # The chunk's share of the canvas, in composite pixels, where the dispatch
+    # starts and where it ends.
+    float begin_x
+    float begin_y
+    float end_x
+    float end_y
+    # Which BINS cells of the buffer this chunk adds into.
+    float slot
+    # See SaColorSpace.Coordinates. An Oklab document needs no conversion.
+    float coordinates
+    # The document's transfer curve, for the decode into light.
+    float transfer_slope
+    float transfer_threshold
+    float transfer_gain
+    float transfer_exponent
+    # The document's linear RGB into linear sRGB, white point adapted. A
+    # float[9] and not a mat3 for the reason composite.gmacs records.
+    float to_linear_srgb[9]
+
+# Must match SaColorSpace.Coordinates.
+const int SA_COORDS_OKLAB = 1
+
+# Must match the part's BINS and WHOLE.
+const uint BINS = 64u
+const float WHOLE = 255.0
+
+
+def to_linear_srgb_matrix() -> mat3:
+    return mat3(
+        to_linear_srgb[0], to_linear_srgb[1], to_linear_srgb[2],
+        to_linear_srgb[3], to_linear_srgb[4], to_linear_srgb[5],
+        to_linear_srgb[6], to_linear_srgb[7], to_linear_srgb[8]
+    )
+
+# The lightness of one stored triple, decoded the way measure.gmacs decodes it.
+
+
+def lightness_of(vec3 stored) -> float:
+    if int(coordinates + 0.5) == SA_COORDS_OKLAB:
+        return stored.x
+    vec3 linear = sa_transfer_decode(
+        stored, transfer_slope, transfer_threshold, transfer_gain, transfer_exponent
+    )
+    return linear_srgb_to_oklab(to_linear_srgb_matrix() * linear).x
+
+
+def value_histogram():
+    ivec2 px = ivec2(global_id.xy) + ivec2(int(begin_x), int(begin_y))
+    ivec2 size = image_size(field)
+    if px.x >= size.x or px.y >= size.y:
+        return
+    if px.x >= int(end_x) or px.y >= int(end_y):
+        return
+    vec4 texel = field[px]
+    uint weight = uint(clamp(texel.a, 0.0, 1.0) * WHOLE + 0.5)
+    if weight == 0u:
+        return
+    float lightness = lightness_of(texel.rgb)
+    # A NaN has no bin, and the clamp below would hand it on to an index.
+    if isnan(lightness):
+        return
+    float bin = clamp(floor(lightness * BINS), 0.0, float(BINS - 1u))
+    atomic_add(tally.cells[ uint(slot) * BINS + uint(bin) ], weight)

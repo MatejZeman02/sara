@@ -1,0 +1,47 @@
+[
+  {"wait": 40},
+  {"docker": {"id": "ColorDocker", "at": [900, 160], "size": [320, 620]}},
+  {"wait": 20},
+
+  {"colour": "#2f6fd6"},
+  {"wait": 10},
+  {"shot": "f18-01-picker-open"},
+  {"state": "f18-01-picker-open"},
+
+  {"press": {"button": "left", "control": "HexInput"}},
+  {"release": {"button": "left", "control": "HexInput"}},
+  {"wait": 10},
+  {"shot": "f18-02-hex-box-clicked"},
+  {"state": "f18-02-hex-box-clicked"},
+
+  {"key": "enter"},
+  {"wait": 10},
+  {"state": "f18-03-after-enter"},
+
+  {"key": "x"},
+  {"wait": 10},
+  {"shot": "f18-04-x-swaps-the-pair"},
+  {"state": "f18-04-x-swaps-the-pair"},
+
+  {"press": {"button": "left", "control": "HexInput"}},
+  {"release": {"button": "left", "control": "HexInput"}},
+  {"wait": 10},
+  {"state": "f18-05-hex-box-clicked-again"},
+
+  {"key": {"key": "f", "shape": "label"}},
+  {"key": {"key": "f", "shape": "label"}},
+  {"key": {"key": "f", "shape": "label"}},
+  {"wait": 10},
+  {"shot": "f18-06-a-code-half-typed"},
+  {"state": "f18-06-a-code-half-typed"},
+
+  {"key": "escape"},
+  {"wait": 10},
+  {"shot": "f18-07-after-escape"},
+  {"state": "f18-07-after-escape"},
+
+  {"key": "x"},
+  {"wait": 10},
+  {"shot": "f18-08-x-swaps-after-escape"},
+  {"state": "f18-08-x-swaps-after-escape"}
+]

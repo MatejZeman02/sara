@@ -1,0 +1,163 @@
+[
+ {
+  "wait": 60
+ },
+ {
+  "prefs": {
+   "ui_scale": 1.0
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "layout_preset": {
+   "load": "minimalistic"
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "document": "srgb"
+ },
+ {
+  "tool": {
+   "id": "brush",
+   "options": {
+    "radius": 0.04,
+    "opacity": 1.0,
+    "flow": 1.0
+   }
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "colour": "#202020"
+ },
+ {
+  "brush_editor": {
+   "open": true,
+   "page": "General"
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "brush_editor": {
+   "scratch": {
+    "paint": {
+     "from": [
+      40,
+      128
+     ],
+     "to": [
+      216,
+      128
+     ],
+     "pressure": 0.9,
+     "steps": 24
+    }
+   }
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "brush_editor": {
+   "scratch": {
+    "editor_size": [
+     660,
+     460
+    ]
+   }
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "brush_editor": {}
+ },
+ {
+  "state": "1-asked-for-660"
+ },
+ {
+  "shot": "1-asked-for-660"
+ },
+ {
+  "brush_editor": {
+   "scratch": {
+    "editor_size": [
+     640,
+     420
+    ]
+   }
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "brush_editor": {}
+ },
+ {
+  "state": "2-asked-for-the-old-minimum"
+ },
+ {
+  "shot": "2-asked-for-the-old-minimum"
+ },
+ {
+  "brush_editor": {
+   "scratch": {
+    "editor_size": [
+     400,
+     300
+    ]
+   }
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "brush_editor": {}
+ },
+ {
+  "state": "3-asked-for-less-than-anything-fits"
+ },
+ {
+  "shot": "3-asked-for-less-than-anything-fits"
+ },
+ {
+  "brush_editor": {
+   "presets": {
+    "fold": true
+   }
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "brush_editor": {}
+ },
+ {
+  "state": "4-the-presets-fold-opened-at-the-floor"
+ },
+ {
+  "shot": "4-the-presets-fold-opened-at-the-floor"
+ },
+ {
+  "brush_editor": {
+   "close": true
+  }
+ },
+ {
+  "wait": 10
+ }
+]

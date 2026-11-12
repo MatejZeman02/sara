@@ -1,0 +1,86 @@
+[
+  {
+    "wait": 30
+  },
+  {
+    "open": "preferences"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "page": "Colour Spaces"
+  },
+  {
+    "wait": 18
+  },
+  {
+    "shot": "01-the-document-space"
+  },
+  {
+    "state": "01-the-document-space"
+  },
+  {
+    "document": "srgb"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "page": "General"
+  },
+  {
+    "wait": 8
+  },
+  {
+    "page": "Colour Spaces"
+  },
+  {
+    "wait": 18
+  },
+  {
+    "shot": "02-srgb-selected"
+  },
+  {
+    "state": "02-srgb-selected"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "page": "General"
+  },
+  {
+    "wait": 8
+  },
+  {
+    "page": "Colour Spaces"
+  },
+  {
+    "wait": 18
+  },
+  {
+    "document": "acescg"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "page": "General"
+  },
+  {
+    "wait": 8
+  },
+  {
+    "page": "Colour Spaces"
+  },
+  {
+    "wait": 18
+  },
+  {
+    "shot": "03-the-widest-gamut-sara-knows"
+  },
+  {
+    "state": "03-the-widest-gamut-sara-knows"
+  }
+]

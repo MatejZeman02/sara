@@ -1,0 +1,27 @@
+[
+  {"wait": 40},
+  {"docker": {"id": "ColorDocker", "at": [900, 160], "size": [320, 620]}},
+  {"wait": 20},
+
+  {"colour": "#2f6fd6"},
+  {"wait": 10},
+  {"state": "1-before-the-click"},
+
+  {"click": {"control": "HexInput"}},
+  {"wait": 10},
+  {"shot": "2-aimed-by-name"},
+  {"state": "2-aimed-by-name"},
+
+  {"key": "escape"},
+  {"wait": 10},
+  {"docker": {"id": "ColorDocker", "at": [400, 300], "size": [320, 620]}},
+  {"wait": 20},
+  {"click": {"control": "HexInput"}},
+  {"wait": 10},
+  {"shot": "3-the-docker-moved-and-the-name-followed"},
+  {"state": "3-the-docker-moved-and-the-name-followed"},
+
+  {"click": {"control": "NoSuchControl"}},
+  {"wait": 5},
+  {"state": "4-a-name-nothing-answers-to"}
+]

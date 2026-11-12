@@ -1,0 +1,22 @@
+[
+  {"comment": "TIFF, Radiance and OpenRaster are the image formats module's now, registered after the skeleton's PNG, JPG and EXR. The Export dialog is opened the way File > Export opens it, as the scenario does, and OpenRaster is picked off the format row, so the shot shows its layered notice and its two depth rows as the module's registration gives them."},
+  {"wait": 30},
+  {"open": "export"},
+  {"wait": 12},
+  {"comment": "OpenRaster is the fifth format, the module's last, after TIFF"},
+  {"choice": {"open": "FormatOption"}},
+  {"wait": 8},
+  {"shot": "01-the-format-row"},
+  {"choice": {"pick": 4}},
+  {"wait": 8},
+  {"shot": "02-openraster-chosen"},
+  {"state": "02-openraster-chosen"},
+  {"comment": "The depth row open on OpenRaster's own pair, eight and sixteen bits"},
+  {"choice": {"open": "DepthOption"}},
+  {"wait": 8},
+  {"shot": "03-openraster-depth-rows"},
+  {"choice": {"pick": 1}},
+  {"wait": 8},
+  {"shot": "04-openraster-at-sixteen"},
+  {"state": "04-openraster-at-sixteen"}
+]

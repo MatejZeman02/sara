@@ -1,0 +1,69 @@
+# Gray-Scott's field joined to the paint: seeded from the paint's cover, and
+# coloured into `albedo` by a ramp from the painted colour. The two kernels a
+# rule with a field of its own declares beside its step, under the contract
+# `SaSimulation.State` keeps: the paint at `paint`, the field at `field` and
+# the painted colour at `tint`, one texel of straight colour, the mean of the
+# seed weighted by its cover.
+#
+# **The seed** is nuclei of reaction in a field at rest, where the paint
+# covers. A disc of reaction the size of a painted disc dies out at the rates
+# that give spots, measured at radii of ten and twenty-four texels, and so does
+# a nucleus at half strength, which is all the middle of a soft dab covers. So
+# the paint is seeded as a nucleus the size of a spot in every cell of sixteen
+# texels a side, half the substrate spent and a quarter of catalyst standing,
+# whole wherever the paint covers a quarter or more and fading to nothing with
+# the cover below that. A hash of the cell places each
+# nucleus in the middle half of its cell, the same on every run, so the spots
+# that split from them do not line up on the grid, and a nucleus astride two
+# chunks is the same disc in both.
+#
+# **The colour** is the painted colour wherever the catalyst stands, its cover
+# rising from nought at a catalyst of a twentieth to whole at a quarter, so a
+# spot is a soft disc of the colour the painter chose, on any chunk the pattern
+# grew into, painted or not.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel gray_scott_seed
+kernel gray_scott_colour
+
+image paint
+image field: rgba32f
+image tint: rgba32f, readonly
+
+params:
+    vec2 chunk  # where the chunk starts in the layer's texels
+    int step  # nought, since the seed comes before any step
+
+import simulation
+
+# A nucleus a cell of this many texels a side, and its radius, the size of a
+# spot at the default rates.
+const int GRAY_SCOTT_SPACING = 16
+const float GRAY_SCOTT_RADIUS = 4.0
+# The cover from which a nucleus is whole, a soft brush's middle.
+const float GRAY_SCOTT_COVER = 0.25
+
+
+def gray_scott_cell(ivec2 corner) -> float:
+    return sa_step_random(corner - ivec2(chunk))
+
+
+def gray_scott_seed():
+    ivec2 at = pixel
+    float cover = paint[at].a
+    ivec2 texel = ivec2(chunk) + at
+    ivec2 corner = (texel / GRAY_SCOTT_SPACING) * GRAY_SCOTT_SPACING
+    vec2 place = vec2(gray_scott_cell(corner), gray_scott_cell(corner + ivec2(1, 0)))
+    vec2 nucleus = vec2(corner) + GRAY_SCOTT_SPACING * (vec2(0.25) + 0.5 * place)
+    float apart = distance(vec2(texel) + vec2(0.5), nucleus)
+    float inside = 1.0 - smoothstep(GRAY_SCOTT_RADIUS - 1.0, GRAY_SCOTT_RADIUS, apart)
+    float strength = smoothstep(0.0, GRAY_SCOTT_COVER, cover)
+    field[at] = vec4(0.5, 0.25, 0.0, 0.0) * (strength * inside)
+
+
+def gray_scott_colour():
+    ivec2 at = pixel
+    float catalyst = field[at].g
+    vec4 painted = tint[ivec2(0, 0)]
+    paint[at] = vec4(painted.rgb, smoothstep(0.05, 0.25, catalyst))

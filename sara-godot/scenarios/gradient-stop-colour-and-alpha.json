@@ -1,0 +1,200 @@
+[
+ {
+  "wait": 45
+ },
+ {
+  "docker": "park"
+ },
+ {
+  "wait": 12
+ },
+ {
+  "fill": [
+   0.38,
+   0.33,
+   0.3
+  ]
+ },
+ {
+  "colour": "#2f4fd0"
+ },
+ {
+  "key": "x"
+ },
+ {
+  "wait": 3
+ },
+ {
+  "colour": "#e8b23c"
+ },
+ {
+  "wait": 3
+ },
+ {
+  "tool": {
+   "id": "gradient",
+   "options": {
+    "gradient_shape": 0,
+    "gradient_repeat": 0,
+    "gradient_replace": false
+   }
+  }
+ },
+ {
+  "docker": {
+   "id": "ToolOptionsDocker",
+   "at": [
+    1160,
+    120
+   ],
+   "size": [
+    440,
+    560
+   ]
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "state": "1-the-ends-are-the-pair"
+ },
+ {
+  "shot": "1-the-ends-are-the-pair"
+ },
+ {
+  "ramp": {
+   "select": 0
+  }
+ },
+ {
+  "ramp": {
+   "open": true
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "shot": "2-the-picker-under-the-swatch"
+ },
+ {
+  "state": "2-the-picker-under-the-swatch"
+ },
+ {
+  "ramp": {
+   "pick": "#20c040"
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "ramp": {
+   "alpha": 0.4
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "state": "3-picked-and-faded"
+ },
+ {
+  "shot": "3-picked-and-faded"
+ },
+ {
+  "ramp": {
+   "open": false
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "ramp": {
+   "add": 0.5
+  }
+ },
+ {
+  "ramp": {
+   "open": true
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "ramp": {
+   "pick": "#ffffff"
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "ramp": {
+   "open": false
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "state": "4-a-third-stop-picked"
+ },
+ {
+  "shot": "4-a-third-stop-picked"
+ },
+ {
+  "press": {
+   "button": "left",
+   "at": [
+    200,
+    760
+   ]
+  }
+ },
+ {
+  "move": [
+   600,
+   760
+  ]
+ },
+ {
+  "move": [
+   1000,
+   760
+  ]
+ },
+ {
+  "release": "left"
+ },
+ {
+  "wait": 12
+ },
+ {
+  "shot": "5-the-gradient-it-paints"
+ },
+ {
+  "state": "5-the-gradient-it-paints"
+ },
+ {
+  "ramp": {
+   "select": 0,
+   "alpha": 1.0
+  }
+ },
+ {
+  "ramp": {
+   "select": 2,
+   "alpha": 1.0
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "state": "6-the-alphas-put-back"
+ }
+]

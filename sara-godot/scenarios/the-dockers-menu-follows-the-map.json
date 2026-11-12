@@ -1,0 +1,252 @@
+[
+ {
+  "renderer": "pixman"
+ },
+ {
+  "window": [
+   1920,
+   1080
+  ]
+ },
+ {
+  "wait": 40
+ },
+ {
+  "answer": 2
+ },
+ {
+  "wait": 6
+ },
+ {
+  "answer": 2
+ },
+ {
+  "wait": 10
+ },
+ {
+  "docker": "park"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "docker": {
+   "id": "BrushPresetsDocker",
+   "at": [
+    1400,
+    620
+   ],
+   "size": [
+    280,
+    400
+   ]
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "tool": "brush"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "presets_docker": {
+   "close": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "presets_docker": {}
+ },
+ {
+  "state": "00-the-build-map-with-the-docker-closed"
+ },
+ {
+  "shot": "00-the-build-map-with-the-docker-closed"
+ },
+ {
+  "key": "z"
+ },
+ {
+  "wait": 15
+ },
+ {
+  "presets_docker": {}
+ },
+ {
+  "state": "01-z-opens-it-on-the-build-map"
+ },
+ {
+  "shot": "01-z-opens-it-on-the-build-map"
+ },
+ {
+  "key": "z"
+ },
+ {
+  "wait": 15
+ },
+ {
+  "presets_docker": {}
+ },
+ {
+  "state": "02-z-closes-it-again"
+ },
+ {
+  "open": "preferences"
+ },
+ {
+  "wait": 20
+ },
+ {
+  "page": "Keyboard Shortcuts"
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shortcut": {
+   "search": "presets",
+   "show": "docker_brush_presets"
+  }
+ },
+ {
+  "state": "03-the-row-before-the-rebind"
+ },
+ {
+  "shot": "03-the-row-before-the-rebind"
+ },
+ {
+  "shortcut": {
+   "action": "docker_brush_presets",
+   "chord": "Shift+K",
+   "show": "docker_brush_presets"
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "state": "04-the-row-after-the-rebind"
+ },
+ {
+  "shot": "04-the-row-after-the-rebind"
+ },
+ {
+  "open": "preferences"
+ },
+ {
+  "wait": 15
+ },
+ {
+  "tool": "brush"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "key": "z"
+ },
+ {
+  "wait": 15
+ },
+ {
+  "presets_docker": {}
+ },
+ {
+  "state": "05-the-old-chord-reaches-nothing"
+ },
+ {
+  "shot": "05-the-old-chord-reaches-nothing"
+ },
+ {
+  "key": {
+   "key": "k",
+   "shift": true
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "presets_docker": {}
+ },
+ {
+  "state": "06-the-new-chord-opens-it"
+ },
+ {
+  "shot": "06-the-new-chord-opens-it"
+ },
+ {
+  "presets_docker": {
+   "close": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "presets_docker": {}
+ },
+ {
+  "open": "preferences"
+ },
+ {
+  "wait": 20
+ },
+ {
+  "page": "Keyboard Shortcuts"
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shortcut_profile": "Photoshop"
+ },
+ {
+  "wait": 20
+ },
+ {
+  "shortcut": {
+   "show": "tool_zoom"
+  }
+ },
+ {
+  "shortcut": {
+   "show": "docker_brush_presets"
+  }
+ },
+ {
+  "state": "07-the-photoshop-profile-is-on"
+ },
+ {
+  "open": "preferences"
+ },
+ {
+  "wait": 15
+ },
+ {
+  "tool": "brush"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "key": "z"
+ },
+ {
+  "wait": 15
+ },
+ {
+  "presets_docker": {}
+ },
+ {
+  "state": "08-z-under-photoshop-reaches-the-zoom-tool"
+ },
+ {
+  "shot": "08-z-under-photoshop-reaches-the-zoom-tool"
+ }
+]

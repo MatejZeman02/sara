@@ -1,0 +1,13 @@
+[
+  {"settings": "keep"},
+  {"comment": "The profile the delete left, opened again. A restart is the whole of `{\"settings\": \"keep\"}`, and the count on the first refresh is the claim, because the install pass behind it reads the marker rather than the directory."},
+  {"wait": 40},
+  {"wait": 15},
+  {"preset": {"open": true, "icon_size": 48}},
+  {"preset": {}},
+  {"wait": 12},
+  {"shot": "1-still-twenty-after-a-restart"},
+  {"state": "1-still-twenty-after-a-restart"},
+  {"preset": {"finish": true}},
+  {"wait": 10}
+]

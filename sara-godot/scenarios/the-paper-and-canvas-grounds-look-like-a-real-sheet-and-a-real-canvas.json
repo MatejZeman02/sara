@@ -1,0 +1,674 @@
+[
+ {
+  "wait": 60
+ },
+ {
+  "prefs": {
+   "ui_scale": 1.0
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "layout_preset": {
+   "load": "minimalistic"
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "comment": "a paper ground, each preset at 100 and 400 per cent"
+ },
+ {
+  "document": "srgb",
+  "size": [
+   480,
+   320
+  ],
+  "background": {
+   "kind": "colour",
+   "color": "#ffffff",
+   "ground": "paper"
+  }
+ },
+ {
+  "wait": 30
+ },
+ {
+  "layer": {
+   "of": "Background",
+   "generator": {
+    "color": [
+     0.93,
+     0.91,
+     0.86,
+     1.0
+    ],
+    "second": [
+     0.82,
+     0.79,
+     0.72,
+     1.0
+    ],
+    "scale": 20.0,
+    "tooth": 0.9,
+    "fibre": 0.35,
+    "felt": 0.0,
+    "felt_size": 16.0,
+    "laid": 0.0,
+    "edge": 0.0
+   }
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "zoom": 1.0
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "01-paper-cartridge-100"
+ },
+ {
+  "zoom": 4.0
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "01-paper-cartridge-400"
+ },
+ {
+  "layer": {
+   "of": "Background",
+   "generator": {
+    "color": [
+     0.95,
+     0.94,
+     0.91,
+     1.0
+    ],
+    "second": [
+     0.86,
+     0.84,
+     0.79,
+     1.0
+    ],
+    "scale": 10.0,
+    "tooth": 0.3,
+    "fibre": 0.5,
+    "felt": 0.0,
+    "felt_size": 16.0,
+    "laid": 0.0,
+    "edge": 0.0
+   }
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "zoom": 1.0
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "02-paper-hot-pressed-100"
+ },
+ {
+  "zoom": 4.0
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "02-paper-hot-pressed-400"
+ },
+ {
+  "layer": {
+   "of": "Background",
+   "generator": {
+    "color": [
+     0.94,
+     0.92,
+     0.87,
+     1.0
+    ],
+    "second": [
+     0.8,
+     0.77,
+     0.7,
+     1.0
+    ],
+    "scale": 16.0,
+    "tooth": 0.8,
+    "fibre": 0.4,
+    "felt": 0.6,
+    "felt_size": 16.0,
+    "laid": 0.0,
+    "edge": 0.0
+   }
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "zoom": 1.0
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "03-paper-cold-pressed-100"
+ },
+ {
+  "zoom": 4.0
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "03-paper-cold-pressed-400"
+ },
+ {
+  "layer": {
+   "of": "Background",
+   "generator": {
+    "color": [
+     0.94,
+     0.92,
+     0.87,
+     1.0
+    ],
+    "second": [
+     0.85,
+     0.82,
+     0.75,
+     1.0
+    ],
+    "scale": 24.0,
+    "tooth": 1.0,
+    "fibre": 0.4,
+    "felt": 1.0,
+    "felt_size": 28.0,
+    "laid": 0.0,
+    "edge": 0.0
+   }
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "zoom": 1.0
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "04-paper-rough-100"
+ },
+ {
+  "zoom": 4.0
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "04-paper-rough-400"
+ },
+ {
+  "comment": "The paper's edges at a corner, on a page small enough that 400 per cent shows all four"
+ },
+ {
+  "document": "srgb",
+  "size": [
+   96,
+   64
+  ],
+  "background": {
+   "kind": "colour",
+   "color": "#ffffff",
+   "ground": "paper"
+  }
+ },
+ {
+  "wait": 30
+ },
+ {
+  "layer": {
+   "of": "Background",
+   "generator": {
+    "color": [
+     0.94,
+     0.92,
+     0.87,
+     1.0
+    ],
+    "second": [
+     0.8,
+     0.77,
+     0.7,
+     1.0
+    ],
+    "scale": 16.0,
+    "tooth": 0.8,
+    "fibre": 0.4,
+    "felt": 0.6,
+    "felt_size": 16.0,
+    "laid": 0.0,
+    "edge": 1.0
+   }
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "zoom": 4.0
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "05-paper-edge-cut-400"
+ },
+ {
+  "layer": {
+   "of": "Background",
+   "generator": {
+    "color": [
+     0.94,
+     0.92,
+     0.87,
+     1.0
+    ],
+    "second": [
+     0.8,
+     0.77,
+     0.7,
+     1.0
+    ],
+    "scale": 16.0,
+    "tooth": 0.8,
+    "fibre": 0.4,
+    "felt": 0.6,
+    "felt_size": 16.0,
+    "laid": 0.0,
+    "edge": 2.0
+   }
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "zoom": 4.0
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "06-paper-edge-deckle-400"
+ },
+ {
+  "layer": {
+   "of": "Background",
+   "generator": {
+    "color": [
+     0.94,
+     0.92,
+     0.87,
+     1.0
+    ],
+    "second": [
+     0.8,
+     0.77,
+     0.7,
+     1.0
+    ],
+    "scale": 16.0,
+    "tooth": 0.8,
+    "fibre": 0.4,
+    "felt": 0.6,
+    "felt_size": 16.0,
+    "laid": 0.0,
+    "edge": 3.0
+   }
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "zoom": 4.0
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "07-paper-edge-torn-400"
+ },
+ {
+  "comment": "a canvas ground, each preset at 100 and 400 per cent"
+ },
+ {
+  "document": "srgb",
+  "size": [
+   480,
+   320
+  ],
+  "background": {
+   "kind": "colour",
+   "color": "#ffffff",
+   "ground": "canvas"
+  }
+ },
+ {
+  "wait": 30
+ },
+ {
+  "layer": {
+   "of": "Background",
+   "generator": {
+    "color": [
+     0.93,
+     0.91,
+     0.87,
+     1.0
+    ],
+    "second": [
+     0.72,
+     0.69,
+     0.63,
+     1.0
+    ],
+    "scale": 4.0,
+    "thickness": 0.55,
+    "irregularity": 0.25,
+    "slub": 0.2,
+    "fuzz": 0.3,
+    "crimp": 0.5,
+    "priming": 0.7,
+    "tooth": 0.6,
+    "edge": 0.0
+   }
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "zoom": 1.0
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "08-canvas-fine-cotton-100"
+ },
+ {
+  "zoom": 4.0
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "08-canvas-fine-cotton-400"
+ },
+ {
+  "layer": {
+   "of": "Background",
+   "generator": {
+    "color": [
+     0.88,
+     0.84,
+     0.76,
+     1.0
+    ],
+    "second": [
+     0.58,
+     0.52,
+     0.42,
+     1.0
+    ],
+    "scale": 6.4,
+    "thickness": 0.6,
+    "irregularity": 0.45,
+    "slub": 0.6,
+    "fuzz": 0.5,
+    "crimp": 0.25,
+    "priming": 0.4,
+    "tooth": 0.9,
+    "edge": 0.0
+   }
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "zoom": 1.0
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "09-canvas-medium-linen-100"
+ },
+ {
+  "zoom": 4.0
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "09-canvas-medium-linen-400"
+ },
+ {
+  "layer": {
+   "of": "Background",
+   "generator": {
+    "color": [
+     0.82,
+     0.76,
+     0.64,
+     1.0
+    ],
+    "second": [
+     0.5,
+     0.44,
+     0.34,
+     1.0
+    ],
+    "scale": 14.9,
+    "thickness": 0.62,
+    "irregularity": 0.5,
+    "slub": 0.7,
+    "fuzz": 0.6,
+    "crimp": 0.7,
+    "priming": 0.15,
+    "tooth": 1.0,
+    "edge": 0.0
+   }
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "zoom": 1.0
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "10-canvas-coarse-linen-100"
+ },
+ {
+  "zoom": 4.0
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "10-canvas-coarse-linen-400"
+ },
+ {
+  "layer": {
+   "of": "Background",
+   "generator": {
+    "color": [
+     0.74,
+     0.62,
+     0.44,
+     1.0
+    ],
+    "second": [
+     0.3,
+     0.24,
+     0.16,
+     1.0
+    ],
+    "scale": 32.0,
+    "thickness": 0.55,
+    "irregularity": 0.6,
+    "slub": 0.8,
+    "fuzz": 0.8,
+    "crimp": 0.8,
+    "priming": 0.0,
+    "tooth": 1.0,
+    "edge": 0.0
+   }
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "zoom": 1.0
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "11-canvas-hessian-100"
+ },
+ {
+  "zoom": 4.0
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "11-canvas-hessian-400"
+ },
+ {
+  "comment": "The canvas's edges at a corner, on a page small enough that 400 per cent shows all four"
+ },
+ {
+  "document": "srgb",
+  "size": [
+   96,
+   64
+  ],
+  "background": {
+   "kind": "colour",
+   "color": "#ffffff",
+   "ground": "canvas"
+  }
+ },
+ {
+  "wait": 30
+ },
+ {
+  "layer": {
+   "of": "Background",
+   "generator": {
+    "color": [
+     0.88,
+     0.84,
+     0.76,
+     1.0
+    ],
+    "second": [
+     0.58,
+     0.52,
+     0.42,
+     1.0
+    ],
+    "scale": 6.4,
+    "thickness": 0.6,
+    "irregularity": 0.45,
+    "slub": 0.6,
+    "fuzz": 0.5,
+    "crimp": 0.25,
+    "priming": 0.4,
+    "tooth": 0.9,
+    "edge": 1.0
+   }
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "zoom": 4.0
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "12-canvas-edge-cut-400"
+ },
+ {
+  "layer": {
+   "of": "Background",
+   "generator": {
+    "color": [
+     0.88,
+     0.84,
+     0.76,
+     1.0
+    ],
+    "second": [
+     0.58,
+     0.52,
+     0.42,
+     1.0
+    ],
+    "scale": 6.4,
+    "thickness": 0.6,
+    "irregularity": 0.45,
+    "slub": 0.6,
+    "fuzz": 0.5,
+    "crimp": 0.25,
+    "priming": 0.4,
+    "tooth": 0.9,
+    "edge": 4.0
+   }
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "zoom": 4.0
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "13-canvas-edge-wrapped-400"
+ },
+ {
+  "state": "end"
+ }
+]

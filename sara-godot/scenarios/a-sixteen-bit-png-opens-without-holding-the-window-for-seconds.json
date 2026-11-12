@@ -1,0 +1,16 @@
+[
+  {"comment": "A 1920 by 1080 sixteen-bit RGBA PNG whose scanlines carry all five of PNG's filters, opened through File > Open while every frame is traced. The decode runs on a worker, so the window goes on drawing while it reads and no frame of the trace is longer than 250 ms. Enter answers the depth question, and the state reads the document the picture became, F32 with one layer. The file is made by gen16.py in a scratch folder and copied to a scratch path as hd16-filters.png before the run, and open_traced.py beside it sends these steps through the door one at a time."},
+  {"wait": 30},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 10},
+  {"measure": {"perf": "begin", "trace": true}},
+  {"menu_item": {"menu": "File", "id": 200}},
+  {"wait": 8},
+  {"file_picker": {"choose": "/tmp/sara-h302/hd16-filters.png"}},
+  {"wait": 120},
+  {"key": "enter"},
+  {"wait": 60},
+  {"measure": {"perf": "end"}},
+  {"state": "opened"},
+  {"shot": "opened"}
+]

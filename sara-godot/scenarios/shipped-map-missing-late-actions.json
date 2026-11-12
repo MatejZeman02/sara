@@ -1,0 +1,27 @@
+[
+ {"wait": 30},
+ {"open": "preferences"},
+ {"wait": 20},
+ {"page": "Keyboard Shortcuts"},
+ {"wait": 10},
+
+ {"shortcut": {"search": "undo", "show": "edit_undo"}},
+ {"shortcut": {"search": "undo", "action": "edit_undo", "chord": "Ctrl+Alt+Z"}},
+ {"wait": 6},
+ {"state": "01-edit-undo-rebound"},
+ {"shortcut_profile": "Sara Default"},
+ {"wait": 8},
+ {"shortcut": {"search": "undo", "show": "edit_undo"}},
+ {"state": "02-edit-undo-after-the-switch"},
+ {"shot": "02-edit-undo-after-the-switch"},
+
+ {"shortcut": {"search": "zoom", "show": "view_zoom_in"}},
+ {"shortcut": {"search": "zoom", "action": "view_zoom_in", "chord": "Ctrl+Alt+K"}},
+ {"wait": 6},
+ {"state": "03-view-zoom-in-rebound"},
+ {"shortcut_profile": "Sara Default"},
+ {"wait": 8},
+ {"shortcut": {"search": "zoom", "show": "view_zoom_in"}},
+ {"state": "04-view-zoom-in-after-the-switch"},
+ {"shot": "04-view-zoom-in-after-the-switch"}
+]

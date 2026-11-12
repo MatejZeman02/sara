@@ -1,0 +1,32 @@
+[
+ {
+  "wait": 40
+ },
+ {
+  "state": "01-before-prefs"
+ },
+ {
+  "prefs": {
+   "theme_name": "default",
+   "ui_scale": 1.0
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "02-after-prefs"
+ },
+ {
+  "shot": "02-after-prefs"
+ },
+ {
+  "wait": 60
+ },
+ {
+  "state": "03-settled"
+ },
+ {
+  "shot": "03-settled"
+ }
+]

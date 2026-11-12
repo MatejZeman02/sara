@@ -1,0 +1,37 @@
+# The form Help > Report a Problem opens. The button fills the version and
+# system fields through the address, by their ids, so keep those two ids.
+name: Report a problem
+description: Something in Sara went wrong or did what you did not expect
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what you expected
+    validations:
+      required: true
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: Screenshot
+      description: Drag a screenshot of Sara into this box. A picture says more than any description.
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes (optional)
+      description: >-
+        In Sara, press Ctrl+Alt+N (Help > Take a Note), click the part of the
+        window the problem is about and write what happened. Then press Export
+        in the note box and attach the zip it writes, which holds your notes,
+        their pictures and Sara's log.
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Filled in when you open this form from Help > Report a Problem. Otherwise Help > About shows it.
+  - type: textarea
+    id: system
+    attributes:
+      label: System
+      description: Filled in by Help > Report a Problem, the graphics card and the system Sara runs on.
+      render: text

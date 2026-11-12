@@ -1,0 +1,22 @@
+[
+ {"comment": "Preferences > Top Menu Bar's Overflow switch turned off and on again on a fresh profile at 1920, the way the ninth run turned it off. That run hung and crashed with signal 11. Each switch sits in a perf window, whose frame gap and longest iteration say the app kept answering, and the state beside each shot says where every element went."},
+ {"wait": 40},
+ {"open": "preferences"},
+ {"wait": 20},
+ {"page": "Top Menu Bar"},
+ {"wait": 10},
+ {"shot": "d01-overflow-on"},
+ {"state": "d01-overflow-on"},
+ {"measure": {"perf": "begin"}},
+ {"page_row": {"row": "overflow", "value": false}},
+ {"wait": 30},
+ {"measure": {"perf": "end"}},
+ {"shot": "d02-overflow-off"},
+ {"state": "d02-overflow-off"},
+ {"measure": {"perf": "begin"}},
+ {"page_row": {"row": "overflow", "value": true}},
+ {"wait": 30},
+ {"measure": {"perf": "end"}},
+ {"shot": "d03-overflow-on-again"},
+ {"state": "d03-overflow-on-again"}
+]

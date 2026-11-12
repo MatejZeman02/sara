@@ -1,0 +1,32 @@
+[
+  {"comment": "New Document is cut into its facade, the colour space rows and the capture door, in ui/dialogs/document/new_document. The same scenario run on the base branch and on the branch under test says the page draws and behaves as it did: the size, colour space, bit depth and ground rows closed, the five detail rows open, a preset filling the gamut and the curve, a template filling the ground, and the dialog's own dump read through the cut-out capture."},
+  {"wait": 40},
+
+  {"open": "new_document"},
+  {"wait": 20},
+  {"shot": "01-file-new-opens-on-the-size-the-colour-space-the-depth-and-the-ground"},
+  {"state": "01-file-new-opens-on-the-size-the-colour-space-the-depth-and-the-ground"},
+
+  {"page_row": {"page": "NewDocumentPage", "row": "details", "value": true}},
+  {"wait": 20},
+  {"shot": "02-the-details-show-the-gamut-the-white-the-curve-the-gamma-and-the-coordinates"},
+  {"state": "02-the-details-show-the-gamut-the-white-the-curve-the-gamma-and-the-coordinates"},
+
+  {"new_document_row": {"space": "ACEScg", "depth": "16-bit float"}},
+  {"wait": 10},
+  {"shot": "03-acescg-fills-the-gamut-and-the-curve"},
+  {"state": "03-acescg-fills-the-gamut-and-the-curve"},
+
+  {"new_document_row": {"transfer": "Gamma 2.2"}},
+  {"wait": 10},
+  {"shot": "04-a-curve-no-preset-pairs-with-ap1-moves-the-preset-to-custom"},
+  {"state": "04-a-curve-no-preset-pairs-with-ap1-moves-the-preset-to-custom"},
+
+  {"page_row": {"page": "NewDocumentPage", "row": "details", "value": false}},
+  {"new_document_row": {"template": "Painting on canvas, linear"}},
+  {"wait": 20},
+  {"shot": "05-a-template-fills-the-size-the-space-and-the-ground"},
+  {"state": "05-a-template-fills-the-size-the-space-and-the-ground"},
+
+  {"new_document_row": {"close": true}}
+]

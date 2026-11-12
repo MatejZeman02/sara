@@ -1,0 +1,32 @@
+[
+  {"wait": 30},
+
+  {"colour": "#1c1c1c"},
+  {"wait": 4},
+  {"stroke": {"from": [500, 300], "to": [1300, 700], "pressure": 1.0, "steps": 12}},
+  {"stroke": {"from": [500, 700], "to": [1300, 300], "pressure": 1.0, "steps": 12}},
+  {"wait": 10},
+
+  {"probe": [[1400, 300], [900, 500]]},
+  {"state": "before-wheel"},
+  {"shot": "before-wheel"},
+
+  {"wheel": {"at": [1400, 300], "notches": 3}},
+  {"wait": 5},
+  {"state": "after-wheel-in"},
+  {"shot": "after-wheel-in"},
+
+  {"wheel": {"at": [1400, 300], "notches": -1}},
+  {"wait": 5},
+  {"state": "after-wheel-out"},
+
+  {"press": {"button": "middle", "at": [900, 500]}},
+  {"move": [960, 530]},
+  {"move": [1020, 560]},
+  {"move": [1060, 580]},
+  {"wait": 3},
+  {"release": "middle"},
+  {"wait": 5},
+  {"state": "after-middle-drag"},
+  {"shot": "after-middle-drag"}
+]

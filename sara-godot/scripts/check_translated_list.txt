@@ -1,0 +1,8 @@
+# The words on screen that skipped the translation when check_translated.py
+# arrived, one line per hit: the file under sara-godot, the form, and the
+# string as the source writes it. A line leaves when its string goes through
+# tr(), or through tr_n() for a count, and no line is ever added.
+ui/dialogs/sa_dialog_window.gd built "X"
+ui/dockers/docker_lock.gd built "L"
+ui/dockers/docker_window.gd built "X"
+ui/layout/docker_pin.gd built "P"

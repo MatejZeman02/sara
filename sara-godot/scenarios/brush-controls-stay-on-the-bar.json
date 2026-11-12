@@ -1,0 +1,41 @@
+[
+  {"wait": 40},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 20},
+  {"layout_preset": {"load": "default"}},
+  {"wait": 25},
+
+  {"tool": "brush"},
+  {"wait": 12},
+  {"shot": "1-the-bar-with-the-brush-chosen"},
+  {"state": "1-the-bar-with-the-brush-chosen"},
+
+  {"tool": "eyedropper"},
+  {"wait": 15},
+  {"shot": "2-the-bar-with-the-eyedropper-chosen"},
+  {"state": "2-the-bar-with-the-eyedropper-chosen"},
+
+  {"bar_option": {"key": "radius", "value": 0.06}},
+  {"wait": 12},
+  {"state": "3-a-size-change-through-the-bar-while-the-eyedropper-is-chosen"},
+  {"shot": "3-a-size-change-through-the-bar-while-the-eyedropper-is-chosen"},
+
+  {"tool": "brush"},
+  {"wait": 12},
+  {"state": "4-back-on-the-brush-with-the-size-it-was-given"},
+  {"shot": "4-back-on-the-brush-with-the-size-it-was-given"},
+
+  {"tool": "pan"},
+  {"wait": 12},
+  {"state": "5-the-pan-declares-nothing-and-the-group-is-still-there"},
+
+  {"window": [1280, 800]},
+  {"wait": 25},
+  {"tool": "eyedropper"},
+  {"wait": 15},
+  {"state": "6-the-eyedropper-at-1280-where-the-rows-are-tight"},
+  {"shot": "6-the-eyedropper-at-1280-where-the-rows-are-tight"},
+  {"tool": "brush"},
+  {"wait": 15},
+  {"state": "7-the-brush-at-1280-for-the-same-rows"}
+]

@@ -1,0 +1,91 @@
+# Builds a chunk's padded neighbourhood source in one dispatch, for the
+# neighbourhood runner, rather than a clear of the padding, a copy of the chunk
+# and a copy of each of its eight neighbours, ten dispatches a chunk whose CPU
+# cost would be most of an Apply's. This writes every texel of the
+# padded area once: the chunk over the work rectangle, a neighbour the runner
+# holds over its part of the halo, and transparent everywhere else, which is
+# what the clear and the copies left between them.
+#
+# An image nothing is held at is bound to the target and never read, since a
+# set has to name an image at every binding. SaChunkPadding owns the dispatch.
+#
+# On a document that wraps, the part of the padding past the seam is written by
+# a dispatch of its own over that part alone, with the chunks at the far side of
+# the canvas bound around the centre and a margin that takes a padded texel to
+# its place among them. A texel whose place falls outside the nine bound is
+# written as transparent rather than read from an image it does not belong to.
+
+kernel pad_chunk
+image target
+image center
+image left_up
+image up
+image right_up
+image left
+image right
+image left_down
+image down
+image right_down
+
+params:
+    # The part of the padded texture to write, in its own pixels.
+    vec2 area_origin
+    vec2 area_size
+    # What a padded texel less this is in the centre chunk's pixels, the reach
+    # past the chunk for its own padding and a shift onto the far side of the
+    # canvas for a part past the seam, and the chunk's side.
+    vec2 margin
+    vec2 chunk_side
+    # The rectangle of the chunk read from center, in chunk pixels.
+    vec2 work_origin
+    vec2 work_size
+    # One bit a neighbour in the order of the images above, set for each one
+    # held, and bit 8 for the chunk itself.
+    vec2 held
+
+
+def holds(int bit) -> bool:
+    return (int(held.x + 0.5) & (1 << bit)) != 0
+
+
+def pad_chunk():
+    ivec2 local = ivec2(global_id.xy)
+    if local.x >= int(area_size.x) or local.y >= int(area_size.y):
+        return
+    ivec2 pixel = local + ivec2(area_origin)
+    if pixel.x >= image_size(target).x or pixel.y >= image_size(target).y:
+        return
+    int side = int(chunk_side.x)
+    ivec2 at = pixel - ivec2(margin)
+    ivec2 cell = ivec2(floor(vec2(at) / side))
+    ivec2 inner = at - cell * side
+    vec4 texel = vec4(0.0)
+    bool bound = abs(cell.x) <= 1 and abs(cell.y) <= 1
+    if bound and cell == ivec2(0, 0):
+        ivec2 low = ivec2(work_origin)
+        ivec2 high = low + ivec2(work_size)
+        bool inside = at.x >= low.x and at.y >= low.y and at.x < high.x and at.y < high.y
+        if inside and holds(8) and at.x < image_size(center).x and at.y < image_size(center).y:
+            texel = center[at]
+    elif bound:
+        int index = (cell.y + 1) * 3 + cell.x + 1
+        if index > 4:
+            index -= 1
+        if holds(index):
+            if index == 0:
+                texel = left_up[inner]
+            elif index == 1:
+                texel = up[inner]
+            elif index == 2:
+                texel = right_up[inner]
+            elif index == 3:
+                texel = left[inner]
+            elif index == 4:
+                texel = right[inner]
+            elif index == 5:
+                texel = left_down[inner]
+            elif index == 6:
+                texel = down[inner]
+            else:
+                texel = right_down[inner]
+    target[pixel] = texel

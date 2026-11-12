@@ -1,0 +1,32 @@
+# Kernel: generate
+# A background that stores nothing: fills a region of one chunk
+# with a flat colour. SaGeneratedLayer.params_of packs the push constant by
+# the names below, so a field is read by its name and never by its place.
+#
+# The pattern coordinate, the chunk's document offset plus the texel, is
+# computed and unused: it is what a second generator would read, and it says
+# which space a pattern lives in.
+
+kernel generate
+
+image target
+
+params:
+    vec2 offset
+    vec2 region_origin
+    vec2 region_size
+    vec2 pad
+    vec4 color_a
+    vec4 color_b
+    float scale
+
+
+def generate():
+    ivec2 local = ivec2(global_id.xy)
+    if local.x >= int(region_size.x) or local.y >= int(region_size.y):
+        return
+    ivec2 texel = local + ivec2(region_origin)
+    if texel.x >= image_size(target).x or texel.y >= image_size(target).y:
+        return
+    # A pattern would read offset + vec2(texel), the document position.
+    target[texel] = color_a

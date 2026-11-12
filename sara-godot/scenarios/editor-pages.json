@@ -1,0 +1,212 @@
+[
+  {
+    "wait": 60
+  },
+  {
+    "prefs": {
+      "ui_scale": 1.0
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "layout_preset": {
+      "load": "minimalistic"
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "document": "srgb"
+  },
+  {
+    "tool": "brush"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "brush_editor": {
+      "open": true
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "state": "s8-01-the-editor-open-on-its-first-page"
+  },
+  {
+    "shot": "s8-01-the-editor-open-on-its-first-page"
+  },
+  {
+    "brush_editor": {
+      "page": "Size"
+    }
+  },
+  {
+    "wait": 4
+  },
+  {
+    "brush_editor": {
+      "page": "Opacity"
+    }
+  },
+  {
+    "wait": 4
+  },
+  {
+    "brush_editor": {
+      "page": "Flow"
+    }
+  },
+  {
+    "wait": 4
+  },
+  {
+    "brush_editor": {
+      "page": "Rotation"
+    }
+  },
+  {
+    "wait": 4
+  },
+  {
+    "brush_editor": {
+      "page": "Ratio"
+    }
+  },
+  {
+    "wait": 4
+  },
+  {
+    "brush_editor": {
+      "page": "Softness"
+    }
+  },
+  {
+    "wait": 4
+  },
+  {
+    "brush_editor": {
+      "page": "Spacing Dynamics"
+    }
+  },
+  {
+    "wait": 4
+  },
+  {
+    "brush_editor": {
+      "page": "Scatter"
+    }
+  },
+  {
+    "wait": 4
+  },
+  {
+    "brush_editor": {
+      "page": "Airbrush Rate"
+    }
+  },
+  {
+    "wait": 4
+  },
+  {
+    "brush_editor": {
+      "page": "General"
+    }
+  },
+  {
+    "wait": 4
+  },
+  {
+    "brush_editor": {
+      "page": "Brush Tip"
+    }
+  },
+  {
+    "wait": 4
+  },
+  {
+    "shot": "s8-02-the-last-page-in-the-list"
+  },
+  {
+    "brush_editor": {
+      "page": "Scatter",
+      "check": true
+    }
+  },
+  {
+    "wait": 4
+  },
+  {
+    "state": "s8-03-scatter-ticked"
+  },
+  {
+    "brush_editor": {
+      "page": "Rotation",
+      "check": true
+    }
+  },
+  {
+    "brush_editor": {
+      "page": "Softness",
+      "check": true
+    }
+  },
+  {
+    "wait": 4
+  },
+  {
+    "state": "s8-04-three-pages-ticked"
+  },
+  {
+    "brush_editor": {
+      "page": "Softness"
+    }
+  },
+  {
+    "brush_editor": {
+      "close": true
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "state": "s8-05-closed-on-softness"
+  },
+  {
+    "brush_editor": {
+      "open": true
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "state": "s8-06-reopened"
+  },
+  {
+    "shot": "s8-06-reopened"
+  },
+  {
+    "brush_editor": {
+      "page": "Scatter",
+      "check": false
+    }
+  },
+  {
+    "wait": 4
+  },
+  {
+    "state": "s8-07-scatter-unticked"
+  },
+  {
+    "brush_editor": {
+      "close": true
+    }
+  }
+]

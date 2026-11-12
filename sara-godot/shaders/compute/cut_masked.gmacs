@@ -1,0 +1,27 @@
+# Kernel: cut_masked
+# Clears the selected part of a rectangle of a chunk: the alpha is scaled by
+# one minus the mask, so a feathered selection cuts a feathered hole. The
+# colour is kept, the way the eraser keeps it.
+
+kernel cut_masked
+
+image canvas
+# The document-wide selection, as in paint.gmacs (core/api/selection/sa_selection.gd).
+image mask: r32f, readonly
+params:
+    float offset_x
+    float offset_y
+    float width
+    float height
+
+
+def cut_masked():
+    ivec2 px = ivec2(global_id.xy) + ivec2(int(offset_x), int(offset_y))
+    ivec2 size = image_size(canvas)
+    if px.x >= size.x or px.y >= size.y:
+        return
+    if px.x >= int(offset_x + width) or px.y >= int(offset_y + height):
+        return
+    vec4 c = canvas[px]
+    float coverage = mask[min(px * image_size(mask) / image_size(canvas), image_size(mask) - 1)].r
+    canvas[px] = vec4(c.rgb, c.a * (1.0 - coverage))

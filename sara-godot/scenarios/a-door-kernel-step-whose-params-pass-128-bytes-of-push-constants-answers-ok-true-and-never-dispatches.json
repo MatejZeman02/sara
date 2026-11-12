@@ -1,0 +1,89 @@
+[
+  {
+    "comment": "A kernel step whose params block is 144 bytes, 34 floats and a vec2 origin, is refused with ok false and an error naming 144 and 128, and adds no layer. The same kernel at 29 floats, exactly 128 bytes, runs and writes the layer spray."
+  },
+  {
+    "wait": 45
+  },
+  {
+    "document": "srgb"
+  },
+  {
+    "wait": 25
+  },
+  {
+    "layer": {
+      "add": "Paint",
+      "fill": [
+        0.6,
+        0.4,
+        0.2,
+        1.0
+      ],
+      "chunks": [
+        [
+          0,
+          0
+        ]
+      ]
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "kernel": {
+      "source": "kernel spray\n\nimage src: readonly\nimage dst\n\nparams:\n    float f0\n    float f1\n    float f2\n    float f3\n    float f4\n    float f5\n    float f6\n    float f7\n    float f8\n    float f9\n    float f10\n    float f11\n    float f12\n    float f13\n    float f14\n    float f15\n    float f16\n    float f17\n    float f18\n    float f19\n    float f20\n    float f21\n    float f22\n    float f23\n    float f24\n    float f25\n    float f26\n    float f27\n    float f28\n    float f29\n    float f30\n    float f31\n    float f32\n    float f33\n    vec2 origin\n\ndef spray():\n    vec4 c = image_load(src, pixel)\n    image_store(dst, pixel, vec4(f0, c.g, c.b, c.a))\n",
+      "name": "spray",
+      "layer": "Paint",
+      "rect": [
+        0,
+        0,
+        64,
+        64
+      ],
+      "params": {
+        "f0": 0.25
+      }
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "state": "01-refused-144"
+  },
+  {
+    "kernel": {
+      "source": "kernel spray\n\nimage src: readonly\nimage dst\n\nparams:\n    float f0\n    float f1\n    float f2\n    float f3\n    float f4\n    float f5\n    float f6\n    float f7\n    float f8\n    float f9\n    float f10\n    float f11\n    float f12\n    float f13\n    float f14\n    float f15\n    float f16\n    float f17\n    float f18\n    float f19\n    float f20\n    float f21\n    float f22\n    float f23\n    float f24\n    float f25\n    float f26\n    float f27\n    float f28\n    vec2 origin\n\ndef spray():\n    vec4 c = image_load(src, pixel)\n    image_store(dst, pixel, vec4(f0, c.g, c.b, c.a))\n",
+      "name": "spray",
+      "layer": "Paint",
+      "rect": [
+        0,
+        0,
+        64,
+        64
+      ],
+      "params": {
+        "f0": 0.25
+      }
+    }
+  },
+  {
+    "wait": 15
+  },
+  {
+    "texel": [
+      [
+        7,
+        9
+      ]
+    ]
+  },
+  {
+    "state": "02-ran-128"
+  },
+  {
+    "shot": "02-ran-128"
+  }
+]

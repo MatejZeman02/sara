@@ -1,0 +1,12 @@
+[
+  {"comment": "Quick settings hold both interface sliders, the scale of everything and the scale of text. The welcome window opens on Quick settings at a text size above 1, showing both the UI scale and the Font size rows and their readouts whole."},
+  {"wait": 45},
+  {"prefs": {"ui_text_size": 1.2}},
+  {"wait": 20},
+  {"open": "welcome", "launch": "first"},
+  {"wait": 25},
+  {"workspace": {"welcome": true, "rows": "Font size"}},
+  {"wait": 20},
+  {"state": "01-welcome-quick-settings-with-both-scale-and-font-size-sliders"},
+  {"shot": "01-welcome-quick-settings-with-both-scale-and-font-size-sliders"}
+]

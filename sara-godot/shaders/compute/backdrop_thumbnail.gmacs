@@ -1,0 +1,154 @@
+# Kernels: backdrop_block
+#
+# Chunks of a layer brought down into their blocks of an adjustment layer's
+# plate, for the row's picture in the layers docker. The plate holds the whole
+# document a power of two smaller, so a chunk lands in a square block of it,
+# and `SaBackdropThumbnail` dispatches this over sixteen chunks at a time,
+# one a slice of z, into a plate of that layer's own, before the plates are
+# composited in the layers' modes. Sixteen to a dispatch rather than one,
+# because each dispatch waits on the one before for writing the same image, and
+# sixteen to a dispatch is a sixteenth of the waits. No two chunks own one
+# block. Nothing is read back, and a dispatch covers sixteen blocks, never the
+# canvas.
+#
+# The values stay the document's own: the plate is composited and filtered
+# before `thumbnail.gmacs` turns it into display values.
+
+kernel backdrop_block
+
+image target
+sampler source0
+sampler source1
+sampler source2
+sampler source3
+sampler source4
+sampler source5
+sampler source6
+sampler source7
+sampler source8
+sampler source9
+sampler source10
+sampler source11
+sampler source12
+sampler source13
+sampler source14
+sampler source15
+
+params:
+    # A block's side in plate texels, and how many of the slots hold a chunk.
+    float side
+    float count
+    # Each slot's block corner, x plus y times the plate's width, in texels.
+    float at0
+    float at1
+    float at2
+    float at3
+    float at4
+    float at5
+    float at6
+    float at7
+    float at8
+    float at9
+    float at10
+    float at11
+    float at12
+    float at13
+    float at14
+    float at15
+
+
+def corner_of(int slot) -> float:
+    if slot == 0:
+        return at0
+    elif slot == 1:
+        return at1
+    elif slot == 2:
+        return at2
+    elif slot == 3:
+        return at3
+    elif slot == 4:
+        return at4
+    elif slot == 5:
+        return at5
+    elif slot == 6:
+        return at6
+    elif slot == 7:
+        return at7
+    elif slot == 8:
+        return at8
+    elif slot == 9:
+        return at9
+    elif slot == 10:
+        return at10
+    elif slot == 11:
+        return at11
+    elif slot == 12:
+        return at12
+    elif slot == 13:
+        return at13
+    elif slot == 14:
+        return at14
+    elif slot == 15:
+        return at15
+    return at15
+
+
+def tap_of(int slot, vec2 uv) -> vec4:
+    if slot == 0:
+        return texture(source0, uv)
+    elif slot == 1:
+        return texture(source1, uv)
+    elif slot == 2:
+        return texture(source2, uv)
+    elif slot == 3:
+        return texture(source3, uv)
+    elif slot == 4:
+        return texture(source4, uv)
+    elif slot == 5:
+        return texture(source5, uv)
+    elif slot == 6:
+        return texture(source6, uv)
+    elif slot == 7:
+        return texture(source7, uv)
+    elif slot == 8:
+        return texture(source8, uv)
+    elif slot == 9:
+        return texture(source9, uv)
+    elif slot == 10:
+        return texture(source10, uv)
+    elif slot == 11:
+        return texture(source11, uv)
+    elif slot == 12:
+        return texture(source12, uv)
+    elif slot == 13:
+        return texture(source13, uv)
+    elif slot == 14:
+        return texture(source14, uv)
+    elif slot == 15:
+        return texture(source15, uv)
+    return texture(source15, uv)
+
+# The mean of sixteen taps over the texel's footprint in the chunk, summed
+#   premultiplied, because a chunk holds straight colour and a transparent
+#   texel's colour is whatever was left in it, as in `thumb_chunk`.
+
+
+def backdrop_block():
+    ivec2 local = ivec2(global_id.xy)
+    int slot = int(global_id.z)
+    if slot >= count or local.x >= side or local.y >= side:
+        return
+    float packed = corner_of(slot)
+    int width = image_size(target).x
+    ivec2 corner = ivec2(int(packed) % width, int(packed) / width)
+    ivec2 texel = local + corner
+    if texel.x >= width or texel.y >= image_size(target).y:
+        return
+    vec4 sum = vec4(0.0)
+    for y in range(4):
+        for x in range(4):
+            vec2 uv = (vec2(local) + (vec2(x, y) + 0.5) / 4.0) / side
+            vec4 tap = tap_of(slot, uv)
+            sum += vec4(tap.rgb * tap.a, tap.a)
+    vec3 mean = sum.rgb / max(sum.a, 0.000001)
+    target[texel] = vec4(mean, sum.a / 16.0)

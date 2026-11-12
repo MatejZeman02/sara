@@ -1,0 +1,88 @@
+# The harness of a neighbourhood kernel, a library and not a kernel.
+#
+# A neighbourhood pass binds the padded source at 0, the mask at 1 and the
+# target at 2, and a kernel run on it spends most of its lines on the same
+# chores: reading a texel premultiplied, reading between four of them, taking
+# the texel as it was, and blending the result into it by the mask. This holds
+# them once, as a read, a sample and a finish, rather than every kernel writing
+# its own copy round the one function that is its effect.
+#
+# **Text, after the images and the params.** An import is pasted in where it
+# stands, so a kernel imports this below its `params:` block. It reads the
+# `src`, `mask` and `dst` images and the `halo` param by those names, which
+# every neighbourhood kernel declares, and a kernel that names one otherwise
+# fails to compile rather than reading the wrong image.
+#
+# Nothing here clamps a colour, because colour is float throughout. `sa_read`
+# answers transparent black for a texel outside the padded source, the shape the
+# kaleidoscope and the motion blur read with, and a kernel that wants the
+# nearest edge instead clamps its coordinate before it reads, as the lens blur
+# and the Gaussian blur do.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# A straight colour premultiplied by its own alpha.
+
+
+def sa_premultiplied(vec4 colour) -> vec4:
+    return vec4(colour.rgb * colour.a, colour.a)
+
+# A premultiplied colour back to straight alpha, transparent where it holds
+# none.
+
+
+def sa_straight(vec4 premultiplied) -> vec4:
+    if premultiplied.a == 0.0:
+        return vec4(0.0)
+    return vec4(premultiplied.rgb / premultiplied.a, premultiplied.a)
+
+# The read: the padded source at *texel*, premultiplied, or transparent outside
+# the image.
+
+
+def sa_read(ivec2 texel) -> vec4:
+    ivec2 size = image_size(src)
+    if texel.x < 0 or texel.y < 0 or texel.x >= size.x or texel.y >= size.y:
+        return vec4(0.0)
+    return sa_premultiplied(image_load(src, texel))
+
+# The sample: the padded source at the point *at*, bilinear over the four
+# texels round it and premultiplied, so a soft edge does not pick up the colour
+# of the transparent black around it. Four reads rather than a sampler, since
+# the pass binds images only.
+
+
+def sa_sample(vec2 at) -> vec4:
+    vec2 base = floor(at)
+    vec2 t = at - base
+    ivec2 corner = ivec2(base)
+    vec4 top = mix(sa_read(corner), sa_read(corner + ivec2(1, 0)), t.x)
+    vec4 bottom = mix(sa_read(corner + ivec2(0, 1)), sa_read(corner + ivec2(1, 1)), t.x)
+    return mix(top, bottom, t.y)
+
+# The texel the dispatch writes at *at*, as the source holds it, straight.
+
+
+def sa_kept(ivec2 at) -> vec4:
+    return image_load(src, at + ivec2(halo, halo))
+
+# How much of the result the mask lets through at the dispatch texel *at*.
+
+
+def sa_chosen(ivec2 at) -> float:
+    return image_load(mask, min(at, image_size(mask) - 1)).r
+
+# The finish: *changed* blended into *kept* by the mask and stored at *at*,
+# both straight.
+
+
+def sa_finish(ivec2 at, vec4 kept, vec4 changed):
+    image_store(dst, at, mix(kept, changed, sa_chosen(at)))
+
+# The finish of a kernel that works premultiplied: the blend is taken on the
+# premultiplied colours, so a partly selected texel does not lean to the colour
+# of whichever side is more transparent, and only the result is straightened.
+
+
+def sa_finish_premultiplied(ivec2 at, vec4 kept, vec4 changed):
+    image_store(dst, at, sa_straight(mix(kept, changed, sa_chosen(at))))

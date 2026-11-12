@@ -1,0 +1,31 @@
+# Copies a rectangle of one texture into another at a place of its own, for the
+# filter chain: a node's chunk into the chain's scratch before
+# the node's attached filters rewrite it there, and for the document's root the
+# canvas's chunk, which sits at the chunk's origin in the canvas and at zero in
+# the scratch. A dispatch rather than a texture copy, because a copy is a
+# transfer and what it would read here was written by compute a moment ago, and
+# the two are not ordered against each other inside a frame.
+
+kernel copy_region
+image target
+image source
+
+params:
+    # Where the rectangle starts in the source and in the target, and its size.
+    vec2 source_origin
+    vec2 target_origin
+    vec2 region_size
+    vec2 spare
+
+
+def copy_region():
+    ivec2 local = ivec2(global_id.xy)
+    if local.x >= int(region_size.x) or local.y >= int(region_size.y):
+        return
+    ivec2 from = local + ivec2(source_origin)
+    ivec2 to = local + ivec2(target_origin)
+    if from.x >= image_size(source).x or from.y >= image_size(source).y:
+        return
+    if to.x >= image_size(target).x or to.y >= image_size(target).y:
+        return
+    target[to] = source[from]

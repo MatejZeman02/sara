@@ -1,0 +1,79 @@
+# Life, the base module's Game of Life: a cell lives where the layer's
+# coverage is above a half, and each step it lives on, is born or dies by how
+# many of its eight neighbours live, Conway's rule unless the painter counts
+# otherwise.
+#
+# A simulation's step under the contract `SaSimulation` keeps, a neighbourhood
+# pass's: the previous state padded by one texel at binding 0, the mask at
+# binding 1, the next state at binding 2. Its reach is one, since the diagonals
+# sit inside the one texel of padding.
+#
+# **The counts.** `birth` and `survival` name the neighbour counts as a
+# rulestring does, one digit a count in any order, so Conway's B3/S23 is a birth
+# of 3 and a survival of 23. Nought names no count, so a survival of 0 lets
+# nothing live on, and a count of nought is a digit after another (30 is three
+# or none).
+#
+# **The colour.** A cell that lives on keeps its colour and alpha. A cell born
+# takes the mean of its living neighbours' colours, premultiplied, so a pattern
+# in one colour stays that colour and two colours meeting bear a mix. Each of
+# those neighbours holds more than half, so the mean does too and the newborn
+# reads as alive on the next step. A birth on nought neighbours bears nothing.
+# A cell that dies or stays dead is cleared. Nothing clamps the colour (hard
+# rule 5).
+#
+# Past the canvas the step reads the nearest texel inside it, so a pattern
+# behaves as Conway's only away from the edge.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel life
+
+image src: readonly
+image mask: r32f, readonly
+image dst
+
+params:
+    int birth  # the counts an empty cell is born on, one digit each, 3 for Conway's
+    int survival  # the counts a living cell lives on, one digit each, 23 for Conway's
+    vec2 origin  # the dispatched region's corner in the chunk
+    int halo  # how far the source is padded, written by the runner
+
+import neighbourhood
+
+# Whether one of the digits of *counts* is *count*. Ten digits hold any int,
+# and the loop stops once no digit is left.
+
+
+def life_names(int counts, int count) -> bool:
+    int rest = max(counts, 0)
+    for i in range(10):
+        if rest == 0:
+            return false
+        if rest % 10 == count:
+            return true
+        rest = rest / 10
+    return false
+
+
+def life():
+    ivec2 at = pixel + ivec2(origin)
+    ivec2 centre = at + ivec2(halo, halo)
+    int living = 0
+    vec4 parents = vec4(0.0)
+    for dy in range(-1, 2):
+        for dx in range(-1, 2):
+            if dx == 0 and dy == 0:
+                continue
+            vec4 neighbour = sa_read(centre + ivec2(dx, dy))
+            if neighbour.a > 0.5:
+                living += 1
+                parents += neighbour
+    vec4 own = sa_kept(at)
+    vec4 stepped = vec4(0.0)
+    if own.a > 0.5:
+        if life_names(survival, living):
+            stepped = own
+    elif life_names(birth, living):
+        stepped = sa_straight(parents / max(living, 1))
+    sa_finish(at, own, stepped)

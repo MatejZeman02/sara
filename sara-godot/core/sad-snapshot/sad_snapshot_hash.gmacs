@@ -1,0 +1,119 @@
+# Kernels: sad_snapshot_hash, sad_snapshot_unrounded
+#
+# A hash of one texture's texels, 128 bits, which a save the painter asked for
+# compares with the hash the same texture had at the last save, so a chunk
+# whose texels are as they were is copied from the file the save replaces and
+# never read back. SaSadHash, beside this, dispatches it for SaSadSnapshot over
+# every field of every chunk a layer has allocated, all in one compute list,
+# and reads back only the hashes, four words a texture, outside any stroke
+# (hard rule 1).
+#
+# Each texel is mixed with its place in the texture, x and y, through four
+# lanes of the MurmurHash3 finaliser started from four different seeds, so the
+# lanes are four independent 32 bit hashes of the texel. A lane of the texture
+# is the sum of its texels' lanes, modulo 2^32, so the order the card adds them
+# in changes nothing. A change to any texels moves each lane by a sum of
+# differences of mixed values, and the four lanes stay where they were together
+# with a chance of about 2^-128. A row is one workgroup, its lanes add their
+# share in shared memory, and the first lane adds the row's sum with one atomic
+# a word, so a 256 by 256 chunk costs 1,024 atomics and not a quarter million.
+#
+# sad_snapshot_unrounded fills the same four words a texture with the count of
+# its channels a save's rounding would move, in the first word, so a texture
+# whose words are all zero is rounded already. SaLiveRounding asks it before an
+# export, where it once took two hashes, one of the texture and one of a rounded
+# copy, and compared them: one pass that reads each texel once and writes
+# nothing but the counts, in the same one list and through the same kept
+# descriptor sets.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel sad_snapshot_hash
+kernel sad_snapshot_unrounded
+
+# The texture as it stands, at any of the four storage formats.
+image field: readonly
+# Four words a texture, the save's every hash in a row.
+buffer hashes: uint words[]
+
+params:
+    int width
+    int height
+    # Which four words of the buffer this texture's hash adds to.
+    int slot
+
+import save_rounding
+
+const int ROW_LANES = 256
+const int ROW_LANE_BITS = 8
+# The four seeds, one a lane.
+const uvec4 SEEDS = uvec4(0x9E3779B9u, 0x85EBCA6Bu, 0xC2B2AE35u, 0x27D4EB2Fu)
+
+shared uvec4 lane_sums[ROW_LANES]
+
+
+def mixed(uvec4 h) -> uvec4:
+    """The MurmurHash3 finaliser on each lane."""
+    h = h ^ (h >> 16u)
+    h = h * 0x85EBCA6Bu
+    h = h ^ (h >> 13u)
+    h = h * 0xC2B2AE35u
+    h = h ^ (h >> 16u)
+    return h
+
+
+def texel_hash(int x, int y) -> uvec4:
+    """The four lanes of the texel at x, y, mixed with its place."""
+    vec4 texel = field[ivec2(x, y)]
+    uvec4 h = mixed(SEEDS ^ uvec4(uint(y * width + x)))
+    for channel in range(4):
+        h = mixed(h ^ uvec4(float_bits_to_uint(texel[channel])))
+    return h
+
+
+@workgroup_size(256, 1)
+def sad_snapshot_hash():
+    int y = int(group_id.y)
+    if y >= height:
+        return
+    int lane = int(local_id.x)
+    uvec4 total = uvec4(0u)
+    for k in range((width + ROW_LANES - 1) / ROW_LANES):
+        int x = lane + k * ROW_LANES
+        if x < width:
+            total += texel_hash(x, y)
+    lane_sums[lane] = total
+    barrier()
+    for step in range(ROW_LANE_BITS):
+        int reach = ROW_LANES >> (step + 1)
+        if lane < reach:
+            lane_sums[lane] += lane_sums[lane + reach]
+        barrier()
+    if lane == 0:
+        for word in range(4):
+            atomic_add(hashes.words[slot * 4 + word], lane_sums[0][word])
+
+
+@workgroup_size(256, 1)
+def sad_snapshot_unrounded():
+    int y = int(group_id.y)
+    if y >= height:
+        return
+    int lane = int(local_id.x)
+    uint moved = 0u
+    for k in range((width + ROW_LANES - 1) / ROW_LANES):
+        int x = lane + k * ROW_LANES
+        if x < width:
+            uvec4 bits = float_bits_to_uint(field[ivec2(x, y)])
+            uvec4 kept = uvec4(sa_save_rounded(bits.x), sa_save_rounded(bits.y), sa_save_rounded(bits.z), sa_save_rounded(bits.w))
+            bvec4 same = equal(kept, bits)
+            moved += 4u - uint(same.x) - uint(same.y) - uint(same.z) - uint(same.w)
+    lane_sums[lane] = uvec4(moved, 0u, 0u, 0u)
+    barrier()
+    for step in range(ROW_LANE_BITS):
+        int reach = ROW_LANES >> (step + 1)
+        if lane < reach:
+            lane_sums[lane] += lane_sums[lane + reach]
+        barrier()
+    if lane == 0 and lane_sums[0].x > 0u:
+        atomic_add(hashes.words[slot * 4], lane_sums[0].x)

@@ -1,0 +1,35 @@
+[
+  {"wait": 30},
+  {"colour": "#d24a1c"},
+  {"stroke": {"from": [400, 300], "to": [900, 500], "pressure": 1.0, "steps": 20}},
+  {"wait": 8},
+  {"save": "scratch/d5-a-document-to-open.sad"},
+  {"wait": 8},
+
+  {"colour": "#1c6ad2"},
+  {"stroke": {"from": [400, 600], "to": [900, 800], "pressure": 1.0, "steps": 20}},
+  {"wait": 8},
+  {"state": "modified-and-nothing-asked"},
+
+  {"menu_item": {"menu": "File", "id": 200}},
+  {"wait": 10},
+  {"shot": "the-picker-comes-first"},
+  {"state": "the-picker-comes-first"},
+
+  {"file_picker": {"cancel": true}},
+  {"wait": 10},
+  {"shot": "cancelling-asks-nothing"},
+  {"state": "cancelling-asks-nothing"},
+
+  {"menu_item": {"menu": "File", "id": 200}},
+  {"wait": 8},
+  {"file_picker": {"choose": "scratch/d5-a-document-to-open.sad"}},
+  {"wait": 10},
+  {"shot": "the-question-waits-for-a-file"},
+  {"state": "the-question-waits-for-a-file"},
+
+  {"answer": 1},
+  {"wait": 15},
+  {"shot": "discard-then-it-opens"},
+  {"state": "discard-then-it-opens"}
+]

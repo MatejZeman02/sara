@@ -1,0 +1,14 @@
+[
+  {"comment": "Preferences > Display, its Proof gamut row ends in Custom..., which opens the colour space picker as a dialog over the page. The shot is that dialog whole, its rows, the note that the display and the proof take the gamut and the white alone, and Cancel and Use."},
+  {"wait": 30},
+  {"prefs": {"proof_profile": "srgb"}},
+  {"open": "preferences"},
+  {"wait": 20},
+  {"page": "Display"},
+  {"wait": 15},
+  {"shot": "1-the-display-page"},
+  {"dropdown": {"name": "ProofGamutOption", "row": "Custom..."}},
+  {"wait": 20},
+  {"shot": "2-the-picker-open-from-proof-gamut"},
+  {"state": "2-the-picker-open-from-proof-gamut"}
+]

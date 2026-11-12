@@ -1,0 +1,71 @@
+[
+  {
+    "comment": "A pen press on the Brush Presets docker's grid, away from its scroll bar, and a drag up scroll the presets by the drag's length and pick none. The comment that names the virtual pen is where its suite, scripts/test_a_pen_drag_on_the_brush_presets_scrolls_them_and_picks_none.py, puts the pen's records from virtual_pen.py, turned into the driver's pen steps."
+  },
+  {
+    "wait": 40
+  },
+  {
+    "docker": "park"
+  },
+  {
+    "docker": {
+      "id": "BrushPresetsDocker",
+      "at": [
+        420,
+        200
+      ],
+      "size": [
+        300,
+        420
+      ]
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "presets_docker": {}
+  },
+  {
+    "state": "1-before"
+  },
+  {
+    "shot": "1-before"
+  },
+  {
+    "wheel": {
+      "at": [
+        520,
+        470
+      ],
+      "notches": 0,
+      "read": true
+    }
+  },
+  {
+    "comment": "The virtual pen drags the presets up from the middle of the grid"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "presets_docker": {}
+  },
+  {
+    "state": "2-after-the-drag"
+  },
+  {
+    "shot": "2-after-the-drag"
+  },
+  {
+    "wheel": {
+      "at": [
+        520,
+        470
+      ],
+      "notches": 0,
+      "read": true
+    }
+  }
+]

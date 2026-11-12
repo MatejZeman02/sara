@@ -1,0 +1,340 @@
+[
+ {
+  "args": [
+   "--machine-console"
+  ]
+ },
+ {
+  "wait": 1200
+ },
+ {
+  "docker": "park"
+ },
+ {
+  "fill": [
+   0.86,
+   0.8,
+   0.68
+  ]
+ },
+ {
+  "wait": 10
+ },
+ {
+  "colour": [
+   0.12,
+   0.2,
+   0.4
+  ]
+ },
+ {
+  "preset": {
+   "load": "Grain Round"
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "measure": {
+   "perf": "begin"
+  }
+ },
+ {
+  "stroke": {
+   "from": [
+    200,
+    140
+   ],
+   "to": [
+    1300,
+    180
+   ],
+   "pressure": 1.0,
+   "steps": 40
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "measure": {
+   "perf": "end"
+  }
+ },
+ {
+  "state": "grain-round"
+ },
+ {
+  "preset": {
+   "load": "Bristle Flat"
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "measure": {
+   "perf": "begin"
+  }
+ },
+ {
+  "stroke": {
+   "from": [
+    200,
+    250
+   ],
+   "to": [
+    1300,
+    290
+   ],
+   "pressure": 1.0,
+   "steps": 40
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "measure": {
+   "perf": "end"
+  }
+ },
+ {
+  "state": "bristle-flat"
+ },
+ {
+  "preset": {
+   "load": "Canvas Scumble"
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "measure": {
+   "perf": "begin"
+  }
+ },
+ {
+  "stroke": {
+   "from": [
+    200,
+    360
+   ],
+   "to": [
+    1300,
+    400
+   ],
+   "pressure": 1.0,
+   "steps": 40
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "measure": {
+   "perf": "end"
+  }
+ },
+ {
+  "state": "canvas-scumble"
+ },
+ {
+  "preset": {
+   "load": "Thick Impasto"
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "measure": {
+   "perf": "begin"
+  }
+ },
+ {
+  "stroke": {
+   "from": [
+    200,
+    470
+   ],
+   "to": [
+    1300,
+    510
+   ],
+   "pressure": 1.0,
+   "steps": 40
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "measure": {
+   "perf": "end"
+  }
+ },
+ {
+  "state": "thick-impasto"
+ },
+ {
+  "preset": {
+   "load": "Dry Brush"
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "measure": {
+   "perf": "begin"
+  }
+ },
+ {
+  "stroke": {
+   "from": [
+    200,
+    580
+   ],
+   "to": [
+    1300,
+    620
+   ],
+   "pressure": 1.0,
+   "steps": 40
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "measure": {
+   "perf": "end"
+  }
+ },
+ {
+  "state": "dry-brush"
+ },
+ {
+  "preset": {
+   "load": "Living Colour"
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "measure": {
+   "perf": "begin"
+  }
+ },
+ {
+  "stroke": {
+   "from": [
+    200,
+    690
+   ],
+   "to": [
+    1300,
+    730
+   ],
+   "pressure": 1.0,
+   "steps": 40
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "measure": {
+   "perf": "end"
+  }
+ },
+ {
+  "state": "living-colour"
+ },
+ {
+  "preset": {
+   "load": "Watery Lift"
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "measure": {
+   "perf": "begin"
+  }
+ },
+ {
+  "stroke": {
+   "from": [
+    200,
+    800
+   ],
+   "to": [
+    1300,
+    840
+   ],
+   "pressure": 1.0,
+   "steps": 40
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "measure": {
+   "perf": "end"
+  }
+ },
+ {
+  "state": "watery-lift"
+ },
+ {
+  "preset": {
+   "load": "Broken Chalk"
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "measure": {
+   "perf": "begin"
+  }
+ },
+ {
+  "stroke": {
+   "from": [
+    200,
+    910
+   ],
+   "to": [
+    1300,
+    950
+   ],
+   "pressure": 1.0,
+   "steps": 40
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "measure": {
+   "perf": "end"
+  }
+ },
+ {
+  "state": "broken-chalk"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "shot": "eight-noise-presets"
+ }
+]

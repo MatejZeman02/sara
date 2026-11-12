@@ -1,0 +1,37 @@
+[
+  {"comment": "The shape check's Levels half reads the painter's count of steps rather than the five the shader held. The count is set to 3 and the Shape check row to Levels, a black to white ramp is dragged across the whole canvas with the gradient tool, and the view goes to Shape Check. Shot 2 is three flat bands, black, a middle grey and white, and the state's canvas.shape_check block reads level_count 3. Shot 3 puts the count back to five, the default, and shows five bands."},
+  {"wait": 25},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 10},
+  {"document": "srgb", "size": [1920, 1080]},
+  {"docker": "park"},
+  {"wait": 10},
+
+  {"prefs": {"shape_check_level_count": 3, "shape_check_method": "none", "shape_check_levels": true}},
+  {"wait": 5},
+
+  {"colour": "#ffffff"},
+  {"key": "x"},
+  {"wait": 3},
+  {"colour": "#000000"},
+  {"wait": 3},
+  {"tool": {"id": "gradient", "options": {"gradient_shape": 0, "gradient_repeat": 0, "gradient_replace": true}}},
+  {"wait": 5},
+  {"gradient": {"from": [0, 540], "to": [1920, 540], "steps": 10}},
+  {"wait": 10},
+  {"shot": "1-the-ramp"},
+  {"texel": [[100, 540], [960, 540], [1820, 540]]},
+
+  {"view": "shape_check"},
+  {"wait": 20},
+  {"shot": "2-three-bands"},
+  {"state": "2-three-bands"},
+
+  {"prefs": {"shape_check_level_count": 5}},
+  {"wait": 20},
+  {"shot": "3-five-bands-the-default"},
+  {"state": "3-five-bands-the-default"},
+
+  {"view": ""},
+  {"wait": 10}
+]

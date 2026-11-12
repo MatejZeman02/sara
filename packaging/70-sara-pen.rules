@@ -1,0 +1,7 @@
+# Lets the user at the seat read a tablet's input nodes, which Sara's pen
+# module reads the pen's buttons from, so the upper barrel button let go in the
+# air is heard under Wayland. `uaccess` grants the active session's user alone,
+# and only these nodes. Joining the input group would give every program that
+# user runs every input device, the keyboard among them. The number is under
+# 73, where systemd's seat rules apply the tag.
+SUBSYSTEM=="input", KERNEL=="event*", ENV{ID_INPUT_TABLET}=="1", TAG+="uaccess"

@@ -1,0 +1,11 @@
+[
+  {
+    "wait": 40
+  },
+  {
+    "shot": "01-rendered-under-a-compositor-that-dies-with-its-parent"
+  },
+  {
+    "state": "01-rendered-under-a-compositor-that-dies-with-its-parent"
+  }
+]

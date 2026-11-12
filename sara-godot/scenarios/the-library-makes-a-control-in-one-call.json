@@ -1,0 +1,65 @@
+[
+  {"wait": 45},
+  {"tool": "brush"},
+  {"wait": 10},
+  {"move": [900, 600]},
+  {"wait": 5},
+  {"shot": "1-the-top-bar-with-the-brush"},
+  {"state": "1-the-top-bar-with-the-brush"},
+
+  {"docker": {"id": "ToolOptionsDocker", "at": [700, 200], "size": [360, 520]}},
+  {"wait": 20},
+  {"shot": "2-the-tool-options-docker"},
+  {"state": "2-the-tool-options-docker"},
+
+  {"dropdown": "StabilizerModeOpt"},
+  {"wait": 10},
+  {"shot": "3-a-choice-list-open"},
+  {"state": "3-a-choice-list-open"},
+  {"key": "escape"},
+  {"wait": 10},
+
+  {"tool": "gradient"},
+  {"wait": 10},
+  {"shot": "4-the-top-bar-with-the-gradient"},
+  {"state": "4-the-top-bar-with-the-gradient"},
+
+  {"menu": "File"},
+  {"wait": 15},
+  {"shot": "5-the-file-menu"},
+  {"state": "5-the-file-menu"},
+  {"key": "escape"},
+  {"wait": 10},
+
+  {"move": {"control": "ResetRotationBtn"}},
+  {"wait": 90},
+  {"tooltip": {"report": true}},
+  {"shot": "6-a-tooltip-on-the-top-bar"},
+  {"state": "6-a-tooltip-on-the-top-bar"},
+
+  {"prefs": {"second_row": true}},
+  {"wait": 20},
+  {"move": [900, 600]},
+  {"wait": 5},
+  {"shot": "7-the-second-row"},
+  {"state": "7-the-second-row"},
+  {"prefs": {"second_row": false}},
+  {"wait": 10},
+
+  {"docker": {"id": "InfoDocker", "at": [700, 200], "size": [360, 520]}},
+  {"wait": 20},
+  {"shot": "8-the-info-docker-and-its-scratchpad"},
+  {"state": "8-the-info-docker-and-its-scratchpad"},
+
+  {"key": "tab"},
+  {"wait": 20},
+  {"shot": "9-focus-mode"},
+  {"state": "9-focus-mode"},
+  {"key": "tab"},
+  {"wait": 20},
+
+  {"brush_editor": {"open": true, "page": "General"}},
+  {"wait": 30},
+  {"shot": "10-the-brush-editor"},
+  {"state": "10-the-brush-editor"}
+]

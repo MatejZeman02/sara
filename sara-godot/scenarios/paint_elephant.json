@@ -1,0 +1,294 @@
+[
+  {"docker": "park"},
+  {"docker": {"id": "ColorDocker", "at": [1584, 800], "size": [321, 240]}},
+  {"wait": 10},
+  {
+    "stroke": {
+      "from": [
+        900,
+        180
+      ],
+      "to": [
+        655,
+        345
+      ],
+      "pressure": 0.8,
+      "steps": 4
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        655,
+        345
+      ],
+      "to": [
+        550,
+        530
+      ],
+      "pressure": 0.8,
+      "steps": 4
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        550,
+        530
+      ],
+      "to": [
+        555,
+        770
+      ],
+      "pressure": 0.8,
+      "steps": 4
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        555,
+        770
+      ],
+      "to": [
+        650,
+        770
+      ],
+      "pressure": 0.8,
+      "steps": 4
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        650,
+        770
+      ],
+      "to": [
+        655,
+        590
+      ],
+      "pressure": 0.8,
+      "steps": 4
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        655,
+        590
+      ],
+      "to": [
+        970,
+        590
+      ],
+      "pressure": 0.8,
+      "steps": 4
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        970,
+        590
+      ],
+      "to": [
+        970,
+        770
+      ],
+      "pressure": 0.8,
+      "steps": 4
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        970,
+        770
+      ],
+      "to": [
+        1065,
+        770
+      ],
+      "pressure": 0.8,
+      "steps": 4
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        1065,
+        770
+      ],
+      "to": [
+        1065,
+        570
+      ],
+      "pressure": 0.8,
+      "steps": 4
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        900,
+        180
+      ],
+      "to": [
+        1285,
+        300
+      ],
+      "pressure": 0.8,
+      "steps": 4
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        1285,
+        300
+      ],
+      "to": [
+        1455,
+        365
+      ],
+      "pressure": 0.8,
+      "steps": 4
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        1455,
+        365
+      ],
+      "to": [
+        1520,
+        470
+      ],
+      "pressure": 0.8,
+      "steps": 4
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        1520,
+        470
+      ],
+      "to": [
+        1670,
+        515
+      ],
+      "pressure": 0.8,
+      "steps": 4
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        1670,
+        515
+      ],
+      "to": [
+        1380,
+        530
+      ],
+      "pressure": 0.8,
+      "steps": 4
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        1380,
+        530
+      ],
+      "to": [
+        1065,
+        570
+      ],
+      "pressure": 0.8,
+      "steps": 4
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        900,
+        180
+      ],
+      "to": [
+        1130,
+        415
+      ],
+      "pressure": 0.8,
+      "steps": 4
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        1130,
+        415
+      ],
+      "to": [
+        1285,
+        300
+      ],
+      "pressure": 0.8,
+      "steps": 4
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        1130,
+        415
+      ],
+      "to": [
+        1065,
+        570
+      ],
+      "pressure": 0.8,
+      "steps": 4
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        900,
+        180
+      ],
+      "to": [
+        655,
+        590
+      ],
+      "pressure": 0.8,
+      "steps": 4
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        655,
+        345
+      ],
+      "to": [
+        655,
+        590
+      ],
+      "pressure": 0.8,
+      "steps": 4
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "shot": "elephant"
+  },
+  {
+    "state": "elephant"
+  }
+]

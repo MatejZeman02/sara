@@ -1,0 +1,356 @@
+[
+ {
+  "comment": "Grain Round with its Thickness paints a patch of grain whose right edge runs down x 640, the middle of the document, and a Bristle Flat stroke is dragged left to right across the patch and on past its edge, with View > Show Relief on. The stroke picks the grain's height up under it and lays it down ahead along the motion before its own height is mixed in, so past the patch's edge the grain's ridges carry on into the bristle's grooves for about a radius, and before the fix the bristle's own relief starts clean at the edge. Shot 0 and the first look are the grain alone, shot 1 and the second look the stripe across it, both shots at three times over the patch's edge, and shot 2 the whole document. The looks are the composite, which carries no relief, so the shots are where the push shows."
+ },
+ {
+  "wait": 40
+ },
+ {
+  "prefs": {
+   "ui_scale": 1.0,
+   "show_relief": true,
+   "relief_light_angle": 315.0,
+   "relief_strength": 4.0,
+   "tonemap_highlights": false
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "layout_preset": {
+   "load": "minimalistic"
+  }
+ },
+ {
+  "wait": 25
+ },
+ {
+  "document": "srgb",
+  "size": [
+   1280,
+   1280
+  ]
+ },
+ {
+  "wait": 12
+ },
+ {
+  "fill": [
+   0.86,
+   0.8,
+   0.68
+  ]
+ },
+ {
+  "wait": 10
+ },
+ {
+  "layer": {
+   "add": "Paint"
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "brush": {
+   "preset": "Grain Round",
+   "colour": "#b0703c",
+   "radius_px": 40
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "stroke": {
+   "space": "document",
+   "from": [
+    300,
+    470
+   ],
+   "to": [
+    640,
+    470
+   ],
+   "pressure": 1.0,
+   "steps": 30
+  }
+ },
+ {
+  "wait": 4
+ },
+ {
+  "stroke": {
+   "space": "document",
+   "from": [
+    300,
+    510
+   ],
+   "to": [
+    640,
+    510
+   ],
+   "pressure": 1.0,
+   "steps": 30
+  }
+ },
+ {
+  "wait": 4
+ },
+ {
+  "stroke": {
+   "space": "document",
+   "from": [
+    300,
+    550
+   ],
+   "to": [
+    640,
+    550
+   ],
+   "pressure": 1.0,
+   "steps": 30
+  }
+ },
+ {
+  "wait": 4
+ },
+ {
+  "stroke": {
+   "space": "document",
+   "from": [
+    300,
+    590
+   ],
+   "to": [
+    640,
+    590
+   ],
+   "pressure": 1.0,
+   "steps": 30
+  }
+ },
+ {
+  "wait": 4
+ },
+ {
+  "stroke": {
+   "space": "document",
+   "from": [
+    300,
+    630
+   ],
+   "to": [
+    640,
+    630
+   ],
+   "pressure": 1.0,
+   "steps": 30
+  }
+ },
+ {
+  "wait": 4
+ },
+ {
+  "stroke": {
+   "space": "document",
+   "from": [
+    300,
+    670
+   ],
+   "to": [
+    640,
+    670
+   ],
+   "pressure": 1.0,
+   "steps": 30
+  }
+ },
+ {
+  "wait": 4
+ },
+ {
+  "stroke": {
+   "space": "document",
+   "from": [
+    300,
+    710
+   ],
+   "to": [
+    640,
+    710
+   ],
+   "pressure": 1.0,
+   "steps": 30
+  }
+ },
+ {
+  "wait": 4
+ },
+ {
+  "stroke": {
+   "space": "document",
+   "from": [
+    300,
+    750
+   ],
+   "to": [
+    640,
+    750
+   ],
+   "pressure": 1.0,
+   "steps": 30
+  }
+ },
+ {
+  "wait": 4
+ },
+ {
+  "stroke": {
+   "space": "document",
+   "from": [
+    300,
+    790
+   ],
+   "to": [
+    640,
+    790
+   ],
+   "pressure": 1.0,
+   "steps": 30
+  }
+ },
+ {
+  "wait": 4
+ },
+ {
+  "wait": 15
+ },
+ {
+  "height_span": -0.1
+ },
+ {
+  "texel": [
+   [
+    600,
+    640
+   ],
+   [
+    660,
+    640
+   ],
+   [
+    700,
+    640
+   ],
+   [
+    900,
+    640
+   ]
+  ]
+ },
+ {
+  "look": {
+   "path": "0-the-grain-alone-look.png",
+   "long_edge": 1280
+  }
+ },
+ {
+  "zoom": 3.0
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "0-the-grain-alone"
+ },
+ {
+  "state": "0-the-grain-alone"
+ },
+ {
+  "fit": true
+ },
+ {
+  "wait": 10
+ },
+ {
+  "brush": {
+   "preset": "Bristle Flat",
+   "colour": "#3c6cb0",
+   "radius_px": 70
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "stroke": {
+   "space": "document",
+   "from": [
+    150,
+    640
+   ],
+   "to": [
+    1130,
+    640
+   ],
+   "pressure": 1.0,
+   "steps": 60
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "height_span": -0.1
+ },
+ {
+  "texel": [
+   [
+    600,
+    640
+   ],
+   [
+    660,
+    640
+   ],
+   [
+    700,
+    640
+   ],
+   [
+    900,
+    640
+   ]
+  ]
+ },
+ {
+  "look": {
+   "path": "1-the-stripe-across-the-grain-look.png",
+   "long_edge": 1280
+  }
+ },
+ {
+  "zoom": 3.0
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "1-the-stripe-pushes-the-grain-past-its-edge"
+ },
+ {
+  "state": "1-the-stripe-pushes-the-grain-past-its-edge"
+ },
+ {
+  "fit": true
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "2-the-whole-document"
+ }
+]

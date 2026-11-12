@@ -1,0 +1,20 @@
+[
+  {"wait": 30},
+  {"docker": "park"},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 10},
+  {"canvas": [512, 512]},
+  {"wait": 10},
+  {"layer": {"fill": [0.0, 0.0, 1.0, 1.0]}},
+  {"wait": 6},
+  {"layer": {"add": "Upper", "fill": [1.0, 0.0, 0.0, 1.0]}},
+  {"wait": 6},
+  {"layer": {"of": "Layer 1", "visible": false}},
+  {"wait": 10},
+  {"state": "01-layer-1-hidden-upper-shown"},
+  {"shot": "01-layer-1-hidden-upper-shown"},
+  {"layer": {"merge_down": true}},
+  {"wait": 10},
+  {"state": "02-merge-down-refused"},
+  {"shot": "02-merge-down-refused"}
+]

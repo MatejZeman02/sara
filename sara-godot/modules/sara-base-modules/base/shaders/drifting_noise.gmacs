@@ -1,0 +1,58 @@
+# Kernel: drifting_noise
+# Drifting Noise: a value noise added to one chunk of a colour field, through
+# the selection mask, at the time the filter's record holds.
+#
+# Dispatched as a neighbourhood pass of radius zero, as add_noise.gmacs is,
+# because the noise is a function of the document pixel and only the
+# neighbourhood runner hands a kernel the chunk's place in the document. Noise
+# drawn from the chunk-local pixel would crawl as an attached filter is
+# evaluated over one dirty rectangle and then another. With no halo the source
+# is the chunk itself, read at the pixel the target is written at.
+#
+# The noise is the noise library's time input, `sa_value_fbm_at`, read in
+# cells, `frequency` of them a document pixel, and carried by `drift` and
+# `turnover` for the record's `seconds`. The filter turns its scale into that
+# frequency and its speed and direction into that velocity, so neither a
+# division nor a sine runs here, the two calls a driver may round its own way.
+#
+# Monochrome, centred on nought and scaled by the texel's own alpha, so an
+# unpainted texel stays empty and alpha is never written. Nothing clamps (hard
+# rule 5): the noise is added to whatever the texel holds, above one and below
+# nought alike.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel drifting_noise
+
+import noise
+
+image src: readonly
+image mask: r32f, readonly
+image dst
+
+params:
+    float amount  # the widest the noise moves a channel, 0 to 1
+    float frequency  # cells a document pixel, one over the feature size
+    vec2 drift  # how far the field slides a second, in cells, x and y
+    float turnover  # how far it turns over in place a second, in cells
+    float seconds  # the record's time
+    vec2 origin  # the dispatched region's corner in the chunk
+    int halo  # how far the source is padded, written by the runner
+    vec2 chunk  # the chunk's corner in the chunk's texels, written by the runner
+    float scale  # the chunk's texels per document pixel, written by the runner
+
+# The mask's blend and the texel as it was, imported after the params because
+# the library reads `halo` and the three images by name.
+import neighbourhood
+
+
+def drifting_noise():
+    ivec2 at = pixel + ivec2(origin)
+    vec4 kept = sa_kept(at)
+    # The runner hands `chunk` in the chunk's own texels, as it does `origin`,
+    # so the texel's document place is its texel place over the density.
+    float density = scale > 0.0 ? scale : 1.0
+    vec2 document = (chunk + vec2(at) + 0.5) / density
+    float n = sa_value_fbm_at(document * frequency, vec3(drift, turnover), seconds)
+    vec4 changed = vec4(kept.rgb + vec3(2.0 * n - 1.0) * amount * kept.a, kept.a)
+    sa_finish(at, kept, changed)

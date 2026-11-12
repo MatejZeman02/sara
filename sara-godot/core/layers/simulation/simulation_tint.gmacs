@@ -1,0 +1,54 @@
+# The painted colour a rule with a field of its own colours its pattern in: the
+# mean of the seed's straight colour, each texel weighted by its cover, so a
+# disc of red on a transparent layer is red and not a red darkened by the
+# transparent black round it.
+#
+# One workgroup of sixty-four lanes a chunk of the seed. Each lane sums every
+# sixty-fourth texel of the chunk, and the lanes fold in shared memory, a tree
+# as `reduce.gmacs` folds, into one sum that lane 0 adds to `sum`, the running
+# sum over the chunks dispatched so far, and writes out again as the colour at
+# `tint`, a texel of straight colour at full cover. `first` starts the running
+# sum from nought. Each chunk is a dispatch of its own, and a dispatch waits
+# for the one before it, so the sum is taken in the order the seed lists its
+# chunks and no atomic decides it, the same colour on every run.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel simulation_tint
+
+image paint: readonly
+image sum: rgba32f
+image tint: rgba32f
+
+params:
+    float first  # one for the first chunk of the seed
+
+shared vec4 lane_sum[64]
+
+
+def simulation_tint():
+    uint lane = local_index
+    ivec2 size = image_size(paint)
+    int texels = size.x * size.y
+    vec4 own = vec4(0.0)
+    for at in range(int(lane), texels, 64):
+        vec4 texel = paint[ivec2(at % size.x, at / size.x)]
+        own += vec4(texel.rgb * texel.a, texel.a)
+    lane_sum[lane] = own
+    barrier()
+    # Six rounds, thirty-two lanes folded onto thirty-two, down to one.
+    for level in range(6):
+        uint width = 32u >> uint(level)
+        if lane < width:
+            lane_sum[lane] += lane_sum[lane + width]
+        barrier()
+    if lane != 0u:
+        return
+    vec4 total = lane_sum[0]
+    if first < 0.5:
+        total += sum[ivec2(0, 0)]
+    sum[ivec2(0, 0)] = total
+    vec4 colour = vec4(0.0)
+    if total.a > 0.0:
+        colour = vec4(total.rgb / total.a, 1.0)
+    tint[ivec2(0, 0)] = colour

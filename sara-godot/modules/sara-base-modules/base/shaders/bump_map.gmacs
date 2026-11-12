@@ -1,0 +1,87 @@
+# Kernels: bump_map
+# A light over a height, item 13's "bump map" of the usual set.
+# The normal is the normal map's, the same central differences over the same
+# luminance, and what this adds is one Lambert term: the layer's own colour is
+# shaded rather than replaced, which is what "a light direction over a height"
+# means and what separates this row's two halves.
+#
+# The light is built in the frame the normal is in, +X right, +Y up and +Z out,
+# so an azimuth of 135 degrees is the upper left every painter reads a relief by
+# and an elevation of 45 is a light halfway up the sky. The helpers are
+# normal_map.gmacs's, repeated for the reason the two files both give, and only
+# the half of the colour space tail this kernel reads is declared.
+
+kernel bump_map
+
+import linear_srgb_color_space
+import transfer_curve
+
+image src: readonly
+image mask: r32f, readonly
+image dst
+
+params:
+    # Where the light stands: an azimuth in radians measured anticlockwise from
+    # +X, and an elevation in radians above the surface.
+    float azimuth
+    float elevation
+    # How deep the relief is cut. One is the slope itself, the same number
+    # normal_map.gmacs calls strength.
+    float depth
+    # What a face the light does not reach keeps, so a face turned away is dark
+    # rather than black.
+    float ambient
+    # The padding the runner gathered around this chunk, and where the
+    # dispatched region starts in it. Both written per dispatch with
+    # SaNeighbourhoodPass.
+    int halo
+    vec2 origin
+    # The document's own coordinates back into linear sRGB, and the transfer
+    # curve that takes linear back out into them.
+    float linear_srgb_to_doc[9]
+    float transfer_slope
+    float transfer_threshold
+    float transfer_gain
+    float transfer_exponent
+    float coordinates
+
+# The mask's blend and the texel as it was, imported after
+# the params because the library reads `halo` and the three images by name.
+import neighbourhood
+
+const int SA_COORDS_OKLAB = 1
+
+
+def from_linear_srgb_matrix() -> mat3:
+    return mat3(
+        linear_srgb_to_doc[0], linear_srgb_to_doc[1], linear_srgb_to_doc[2],
+        linear_srgb_to_doc[3], linear_srgb_to_doc[4], linear_srgb_to_doc[5],
+        linear_srgb_to_doc[6], linear_srgb_to_doc[7], linear_srgb_to_doc[8])
+
+
+def document_is_oklab() -> bool: return int(coordinates + 0.5) == SA_COORDS_OKLAB
+
+
+def document_to_rgb(vec3 c) -> vec3:
+    if not document_is_oklab(): return c
+    return sa_transfer_encode(
+        from_linear_srgb_matrix() * oklab_to_linear_srgb(c),
+        transfer_slope, transfer_threshold, transfer_gain, transfer_exponent)
+
+
+def height_at(ivec2 at) -> float:
+    return dot(document_to_rgb(src[at].rgb), vec3(0.2126, 0.7152, 0.0722))
+
+
+def bump_map():
+    ivec2 at = pixel + ivec2(origin)
+    ivec2 c = at + ivec2(halo, halo)
+    float dx = (height_at(c + ivec2(1, 0)) - height_at(c - ivec2(1, 0))) * 0.5
+    float dv = (height_at(c + ivec2(0, 1)) - height_at(c - ivec2(0, 1))) * 0.5
+    vec3 n = normalize(vec3(-dx * depth, dv * depth, 1.0))
+    vec3 light = vec3(cos(elevation) * cos(azimuth), cos(elevation) * sin(azimuth), sin(elevation))
+    # The shade is between zero and one, so it can only darken, and a source
+    # colour above one stays above one where the light is full (hard rule 5).
+    float shade = ambient + (1.0 - ambient) * max(dot(n, light), 0.0)
+    vec4 source = sa_kept(at)
+    sa_finish(at, source, vec4(source.rgb * shade, source.a))

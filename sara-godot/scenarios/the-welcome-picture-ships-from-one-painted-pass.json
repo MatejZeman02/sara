@@ -1,0 +1,7 @@
+[
+    {"comment": "The Welcome picture ships from a large painted picture. Run with SARA_WELCOME_ZONE=Europe/Prague, SARA_WELCOME_ROLL=1, SARA_WELCOME_MONTH at 1, 4, 7 and 10 and SARA_WELCOME_HOUR at the hour the sun stands at naught rising there, which is dawn alone, and at twelve below setting, which is night alone, each worked out from WelcomeSun's own formula for the second of the month. The band is compared with the light of the same season and hour in exports-set7/after/ of the reference folder."},
+    {"wait": 11},
+    {"open": "welcome"},
+    {"wait": 20},
+    {"shot": "0-the-band"}
+]

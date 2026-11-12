@@ -1,0 +1,62 @@
+# The first half of the view's relief: the height of every
+# visible layer that carries one, each weighted by how much of its paint the
+# canvas shows, summed into one dense texture the size of the view's
+# composite. One dispatch is one layer over one dirty rectangle of one cell of
+# the output's grid, and the first layer of a cell writes where the rest add,
+# so the cell needs no clear of its own.
+#
+# Heights of visible layers add by opacity.
+# A merge and a flatten add them the same way, `height_added` of
+# `height.gmacs`, so a merge leaves the surface the view showed, and the
+# surface a stroke stands on is this sum over the layers below its own, into
+# one chunk, `SaRelief.beneath`.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel sum_height
+image total
+image layer_height: readonly
+# The layer's mask, a chunk of it or its 1 by 1 rest, read only when *masked*
+# says the layer has one here.
+image cover: r32f, readonly
+
+params:
+    # The rectangle this dispatch covers, in canvas pixels.
+    vec2 origin
+    vec2 extent
+    # The cell's corner in canvas pixels, and how many canvas pixels a cell
+    # spans. A chunk stored at a reduced resolution spans the same pixels with
+    # fewer texels, so its texel is found by its own size.
+    vec2 cell_origin
+    float cell_span
+    # The layer's opacity times its groups'.
+    float weight
+    # 0 for the first layer of a cell, which overwrites what the total held,
+    # and 1 for every layer after it, which adds.
+    float keep
+    # 1 when *layer_height* is the layer's height here, 0 when it is a
+    # stand-in nothing reads and the dispatch writes the cell back to bare.
+    float present
+    # 1 when *cover* is the layer's mask here, 0 when the layer shows whole.
+    float masked
+
+
+def sum_height():
+    ivec2 local = ivec2(global_id.xy)
+    if local.x >= int(extent.x) or local.y >= int(extent.y):
+        return
+    ivec2 pixel = local + ivec2(origin)
+    if pixel.x >= image_size(total).x or pixel.y >= image_size(total).y:
+        return
+    float below = 0.0
+    if keep > 0.5:
+        below = total[pixel].r
+    float above = 0.0
+    if present > 0.5:
+        vec2 across = (vec2(pixel) + vec2(0.5) - cell_origin) / cell_span
+        ivec2 size = image_size(layer_height)
+        above = layer_height[min(ivec2(across * vec2(size)), size - 1)].r * weight
+        if masked > 0.5:
+            ivec2 cover_size = image_size(cover)
+            above *= cover[min(ivec2(across * vec2(cover_size)), cover_size - 1)].r
+    total[pixel] = vec4(below + above, 0.0, 0.0, 1.0)

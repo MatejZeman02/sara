@@ -1,0 +1,181 @@
+# Include: masking_tip
+#
+# The masking brush, the stamp's second tip: its falloff, its coverage at a
+# texel and the five ways it meets the painted tip's coverage. It is the one
+# block that reads the second tip's buffer for a shape rather than a colour.
+#
+# Included rather than compiled: it declares no kernel and reads only the
+# bindings `dab_texel.gmacs` declares, which calls `sa_mask_applied` on every
+# texel's coverage.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# The five ops, the order `SaMaskingBrush` writes them in.
+const float SA_MASK_OP_MULTIPLY = 0.0
+const float SA_MASK_OP_SUBTRACT = 1.0
+const float SA_MASK_OP_DARKEN = 2.0
+const float SA_MASK_OP_BURN = 3.0
+const float SA_MASK_OP_OVERLAY = 4.0
+
+# The masking brush's own falloff curve, read the way `sa_softness_at` reads the
+# painted tip's.
+#
+# **A second function rather than an argument on the first**, and that is the
+# dialect rather than a preference: GLSL 450 has no unsized array parameter, so
+# a reader that took the table to read would have to take the buffer, which is a
+# uniform and cannot be passed. The two are eight lines each and both are here
+# rather than in the door's `brush_tip`, which is the painted tip's library,
+# and the masking brush is the stamp's own.
+
+
+def sa_mask_softness_at(float squared_radius) -> float:
+    float last = float(masking.second_tip.length() - SA_MASK_HEADER - 1)
+    float at = clamp(squared_radius, 0.0, 1.0) * last
+    int lower = SA_MASK_HEADER + int(floor(at))
+    int upper = min(lower + 1, SA_MASK_HEADER + int(last))
+    float t = at - floor(at)
+    return clamp(mix(masking.second_tip[lower], masking.second_tip[upper], t), 0.0, 1.0)
+
+# The SOFT generator over the mask's own table, which is `sa_soft_coverage` with
+# the other curve under it. The edge ramp is the same one for the same reason:
+# a mask that ends on a cliff puts the cliff into the dab it masks.
+
+
+def sa_mask_soft_coverage(vec2 point, vec2 half_extent, float antialias) -> float:
+    vec2 rim_coefficient = 1.0 / max(half_extent, vec2(1e-6))
+    float rim = sa_squared_radius(point, rim_coefficient)
+    if rim > 1.0:
+        return 0.0
+
+    float coverage = sa_mask_softness_at(rim)
+    if antialias > 0.5:
+        vec2 inside = max(vec2(0.0), vec2(1.0) - rim_coefficient)
+        float ramp_start = 0.5 * (inside.x + inside.y)
+        ramp_start *= ramp_start
+        if rim > ramp_start:
+            coverage = sa_ramp_to_nothing(sa_mask_softness_at(ramp_start), rim, ramp_start, 1.0)
+    return clamp(coverage, 0.0, 1.0)
+
+# The masking brush's share of one texel's coverage, which is
+# what the deferred entry meant by "a mask is a second tip".
+#
+# **The same texel, the same centre, a different shape.** The second tip is
+# evaluated at the point the dab is being evaluated at, about the dab's own
+# centre, at its own half-extents, its own angle, its own fades and its own
+# generator. Everything the painted tip is read through above, this is read
+# through as well, and the two answers are multiplied.
+#
+# **Its centre is the dab's moved by its own scatter**, which the CPU draws
+# per dab and hands over as an offset. It can move the mask
+# anywhere and the box stays the painted tip's, because a mask only ever takes
+# coverage away.
+#
+# **Its angle is its own and is not added to the dab's**, which is the one
+# decision in this function. Its own rotation option turns it, and that turn
+# arrives folded into the cosine and sine. A mask that turned with the dab would be a mask
+# whose grain travelled along the stroke, which is the thing the pattern's
+# document-space tiling exists to avoid and is not what a second shape is for. A
+# rectangular mask over a round dab stays square to the page at every angle the
+# painter's rotation dynamics ask the dab for.
+#
+# **An image second tip is read as the default ramp**, because a picture is a
+# sampler and a second sampler is a seventh binding and a second file load per
+# dab. So a mask whose tip carries a picture masks with a plain ellipse of that
+# tip's own size rather than with the picture, and giving the mask a sampler of
+# its own is a unit after this one rather than a line here.
+#
+# It answers the shape alone, nought outside the mask and one inside, and
+# `sa_mask_applied` below is what meets it with the dab, reads the mask's
+# strength and answers for a mask that is off.
+
+
+def sa_mask_coverage(vec2 at) -> float:
+    vec2 mask_center = dab_center + vec2(masking.second_tip[SA_MASK_OFFSET_X], masking.second_tip[SA_MASK_OFFSET_Y])
+    vec2 offset = at - mask_center
+    float mask_cos = masking.second_tip[SA_MASK_COS]
+    float mask_sin = masking.second_tip[SA_MASK_SIN]
+    vec2 local = vec2(
+    offset.x * mask_cos + offset.y * mask_sin,
+    -offset.x * mask_sin + offset.y * mask_cos
+    )
+    local *= sa_mirror_signs(masking.second_tip[SA_MASK_MIRROR])
+    local = sa_fold_into_wedge(vec2(local.x, abs(local.y)), masking.second_tip[SA_MASK_SPIKES])
+
+    vec2 mask_extent = vec2(masking.second_tip[SA_MASK_HALF_X], masking.second_tip[SA_MASK_HALF_Y])
+    vec2 mask_fade = vec2(masking.second_tip[SA_MASK_FADE_X], masking.second_tip[SA_MASK_FADE_Y])
+    float mask_antialias = masking.second_tip[SA_MASK_ANTIALIAS]
+    float mask_generator = masking.second_tip[SA_MASK_GENERATOR]
+
+    float covered = 0.0
+    if masking.second_tip[SA_MASK_SHAPE] > 0.5:
+        covered = sa_rectangle_coverage(local, mask_extent, mask_fade, mask_antialias)
+    elif mask_generator > 1.5 and mask_generator < 2.5:
+        covered = sa_mask_soft_coverage(local, mask_extent, mask_antialias)
+    elif mask_generator > 0.5 and mask_generator < 1.5:
+        covered = sa_gauss_coverage(local, mask_extent, mask_fade, mask_antialias)
+    else:
+        covered = sa_circle_coverage(local, mask_extent, mask_fade, mask_antialias)
+
+    return covered
+
+# Krita's masking composite of *mask* over the dab's *coverage*, read
+# off `KisMaskingBrushCompositeOp.h` and its factory, where the mask
+# is the source and the dab's alpha the destination. Krita keeps the variants
+# written for an alpha rather than a colour, and those are the ones here.
+#
+# - **Subtract** is the dab less the mask, held at nought, so the mask cuts a
+#   hole where it is and leaves the dab whole where it is not. Krita's alpha
+#   variant clamps for its bug 424210, a negative alpha.
+# - **Darken** is the lower of the two, `cfDarkenOnly`.
+# - **Burn** is `colorBurnAlpha`: one less the dab's clear part divided by the
+#   mask, held in the unit range, so a thin mask eats the dab from its thin
+#   edges inwards. Where the mask is nought the answer is one for a dab that is
+#   whole and nought for any other, which is Krita's own guard against the
+#   division.
+# - **Overlay** is `cfOverlay`, which is `cfHardLight` with the two swapped:
+#   under half the dab is doubled and multiplied by the mask, over it the
+#   doubled excess is screened with the mask. Overlay can raise a coverage,
+#   which the other four cannot, and only where the dab was above nought.
+#
+# **Held in the unit range because a coverage is a fraction.** Every op answers
+# nought where the dab laid nought, so none of them paints outside the painted
+# tip's own box and the dirty rectangle stays the tip's. The two clamps are
+# Krita's own, on a coverage that `sa_mask_coverage` and the tip already hold
+# between nought and one, and no colour passes through here, so rule 5 has
+# nothing new to say about them.
+
+
+def sa_mask_composite(float op, float mask, float coverage) -> float:
+    if op < SA_MASK_OP_SUBTRACT + 0.5:
+        return clamp(coverage - mask, 0.0, 1.0)
+    if op < SA_MASK_OP_DARKEN + 0.5:
+        return min(mask, coverage)
+    if op < SA_MASK_OP_BURN + 0.5:
+        if mask <= 0.0:
+            return coverage >= 1.0 ? 1.0 : 0.0
+        return 1.0 - clamp((1.0 - coverage) / mask, 0.0, 1.0)
+    if coverage > 0.5:
+        float lifted = 2.0 * coverage - 1.0
+        return clamp(lifted + mask - lifted * mask, 0.0, 1.0)
+    return clamp(2.0 * coverage * mask, 0.0, 1.0)
+
+# The masking brush met with the dab's *coverage* at *at*, which is the line
+# `sa_dab_texel` calls. Off answers the coverage exactly as it came in.
+#
+# **Multiply is a line of its own**, the coverage scaled by the mask mixed
+# towards one by the strength, so a multiply preset's texels do not hang on how
+# the other ops are written. They mix from the dab to their answer by the same
+# strength, which for multiply would be the same number: nought is the dab
+# untouched and one is the composite whole, which is what the strength means for
+# every op.
+
+
+def sa_mask_applied(vec2 at, float coverage) -> float:
+    if masking.second_tip[SA_MASK_ACTIVE] < 0.5:
+        return coverage
+    float mask = sa_mask_coverage(at)
+    float strength = clamp(masking.second_tip[SA_MASK_STRENGTH], 0.0, 1.0)
+    float op = masking.second_tip[SA_MASK_OP]
+    if op < SA_MASK_OP_MULTIPLY + 0.5:
+        return coverage * mix(1.0, mask, strength)
+    return mix(coverage, sa_mask_composite(op, mask, coverage), strength)

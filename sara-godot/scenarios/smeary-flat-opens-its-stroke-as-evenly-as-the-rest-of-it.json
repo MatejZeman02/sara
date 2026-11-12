@@ -1,0 +1,180 @@
+[
+ {
+  "comment": "Smeary Flat opens its stroke as evenly as the rest of it. On a white 1200 by 600 document, black, Smeary Flat at its own radius with randomness at nought paints four level strokes from x 100 to 1100 on an empty layer of their own, at y 100, 220, 400 and 520 and presses 0.4, 0.15, 0.4 and 0.15, and a look of the four is kept for review."
+ },
+ {
+  "wait": 60
+ },
+ {
+  "prefs": {
+   "ui_scale": 1.0,
+   "autosave_interval_minutes": 0
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "layout_preset": {
+   "load": "minimalistic"
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "document": "srgb",
+  "size": [
+   1200,
+   600
+  ]
+ },
+ {
+  "wait": 10
+ },
+ {
+  "fit": true
+ },
+ {
+  "wait": 5
+ },
+ {
+  "fill": [
+   1.0,
+   1.0,
+   1.0
+  ]
+ },
+ {
+  "layer": {
+   "add": "Strokes"
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "colour": [
+   0.0,
+   0.0,
+   0.0
+  ]
+ },
+ {
+  "preset": {
+   "load": "Smeary Flat"
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "tool": {
+   "id": "noise_brush",
+   "options": {
+    "randomness": 0.0
+   }
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "stroke": {
+   "from": [
+    100,
+    100
+   ],
+   "to": [
+    1100,
+    100
+   ],
+   "pressure": 0.4,
+   "steps": 250,
+   "space": "document",
+   "route": "tool",
+   "smoothing": false
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "stroke": {
+   "from": [
+    100,
+    220
+   ],
+   "to": [
+    1100,
+    220
+   ],
+   "pressure": 0.15,
+   "steps": 250,
+   "space": "document",
+   "route": "tool",
+   "smoothing": false
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "stroke": {
+   "from": [
+    100,
+    400
+   ],
+   "to": [
+    1100,
+    400
+   ],
+   "pressure": 0.4,
+   "steps": 250,
+   "space": "document",
+   "route": "tool",
+   "smoothing": false
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "stroke": {
+   "from": [
+    100,
+    520
+   ],
+   "to": [
+    1100,
+    520
+   ],
+   "pressure": 0.15,
+   "steps": 250,
+   "space": "document",
+   "route": "tool",
+   "smoothing": false
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "wait": 20
+ },
+ {
+  "look": {
+   "path": "1-the-openings.png",
+   "rect": [
+    0,
+    0,
+    1200,
+    600
+   ],
+   "scale": 1
+  }
+ },
+ {
+  "shot": "2-the-window-after-the-strokes"
+ }
+]

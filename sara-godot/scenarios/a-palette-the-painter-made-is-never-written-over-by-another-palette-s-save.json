@@ -1,0 +1,34 @@
+[
+  {"timeout": 300},
+  {"wait": 30},
+  {"open": "preferences"},
+  {"wait": 15},
+  {"page": "Colour Themes"},
+  {"wait": 10},
+  {"prefs": {"theme_name": "default"}},
+  {"wait": 10},
+  {"theme_rows": {"swatch": "accent_primary", "color": "#FF00AA"}},
+  {"wait": 10},
+  {"theme_rows": {}},
+  {"state": "the-first-fork-holds-pink"},
+
+  {"prefs": {"theme_name": "default"}},
+  {"wait": 10},
+  {"theme_rows": {"swatch": "accent_primary", "color": "#00AAFF"}},
+  {"wait": 10},
+  {"theme_rows": {}},
+  {"shot": "the-second-fork-sits-beside-the-first"},
+  {"state": "the-second-fork-sits-beside-the-first"},
+
+  {"theme_rows": {"save_as": "Ink/Night"}},
+  {"wait": 10},
+  {"theme_rows": {"save_as": "ink night"}},
+  {"wait": 10},
+  {"theme_rows": {"save_as": "Mist ? * \" < > | Dawn"}},
+  {"wait": 10},
+  {"theme_rows": {}},
+  {"shot": "names-that-share-a-file-and-a-name-windows-refuses"},
+  {"state": "names-that-share-a-file-and-a-name-windows-refuses"},
+
+  {"prefs": {"theme_name": "default"}}
+]

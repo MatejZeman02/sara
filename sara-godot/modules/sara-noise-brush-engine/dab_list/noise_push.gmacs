@@ -1,0 +1,96 @@
+# Library: noise_push
+#
+# The paint a noise stroke pushes ahead of itself, a load a lane, shared by the
+# kernel that lays it, `noise_dab`, and the kernel that hands it from one
+# stretch to the next, `noise_height_carry`.
+#
+# **Two loads a lane**, across the stroke's width, each a strength of nought to
+# one beside what it holds: the height (the tallest surface the lane crossed,
+# as the view sums it) and the paint (the colour crossed on the layer the stroke
+# paints, weighed by how much of it there was). A strength is how much of what
+# the stroke lays there is the load rather than the brush's.
+#
+# **A strength falls by the share of the reach walked**, not by a factor, so a
+# load is laid out to nothing over exactly one reach of path. A factor never
+# reaches nought, and a height slumping by 1/e every reach would still leave a
+# fifth of the ridge five radii on. What a strength lays is eased out
+# (`noise_laid_share`), so the load stays near full at first and falls fastest
+# at its end.
+#
+# **Two copies of each load a lane**: what the lane carried into the stretch,
+# and what the stretch before found, which `noise_dab` takes up along the
+# stretch so a load has no step where two stretches meet.
+#
+# **What a stretch finds** is summed per lane in `push_found` as integers, since
+# `atomic_add` has no float form here. The tallest surface goes in as a float's
+# bits through `atomic_max`, a positive float's bits ordering as the float does.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# Where each value of a lane sits among its floats in `push_carry`, the
+# carried loads first and what the last stretch found after them,
+# `NoiseHeightCarry`'s constants of the same names. A height load is its
+# strength and the height, a paint load its strength and three channels.
+const int NOISE_CARRY_FLOATS = 12
+const int NOISE_CARRY_FOUND = 6
+const int NOISE_LOAD_HEIGHT = 0
+const int NOISE_LOAD_PAINT = 2
+
+# Where each sum of a lane sits among its integers in `push_found`: the tallest
+# surface's bits, the cover, the paint weighed by its cover and by how much of
+# the reach is left at the stretch's end, the paint weighed by its cover
+# alone, and the colour weighed the same.
+const int NOISE_FOUND_INTS = 8
+const int NOISE_FOUND_PEAK = 0
+const int NOISE_FOUND_COVER = 1
+const int NOISE_FOUND_STRENGTH = 2
+const int NOISE_FOUND_WEIGHT = 3
+const int NOISE_FOUND_COLOUR = 4
+# The integer a sum counts one in, and the largest channel a colour is summed
+# at, so a lane of a wide brush over a long stretch cannot overflow. A colour
+# past it is carried at it, which only a channel of paint sixty-four times
+# white reaches.
+const float NOISE_FOUND_SCALE = 1024.0
+const float NOISE_FOUND_CEILING = 64.0
+
+# What is left of a load's *strength* after *distance* more path, at a reach of
+# *reach*, both in document pixels: down by the share of the reach walked, and
+# never below nought.
+
+
+def noise_faded(float strength, float distance, float reach) -> float:
+    return max(strength - max(distance, 0.0) / max(reach, 0.0001), 0.0)
+
+# How much of a load of *strength* is laid, eased out: all of it at full, the
+# most of it while the load is fresh, and falling fastest as it runs out.
+
+
+def noise_laid_share(float strength) -> float:
+    float held = clamp(strength, 0.0, 1.0)
+    return held * (2.0 - held)
+
+# The height a load lays, its height times the share its strength gives.
+
+
+def noise_height_laid(vec2 load) -> float:
+    return load.y * noise_laid_share(load.x)
+
+# Of a lane's carried height load and what the last stretch *found*, the one
+# that lays the more, which is the tallest surface the lane has crossed as it
+# stands now.
+
+
+def noise_height_taller(vec2 carried, vec2 found) -> vec2:
+    return noise_height_laid(found) > noise_height_laid(carried) ? found : carried
+
+# A paint load *top* laid over *under*: the strengths' union, and the colours
+# by how much of each shows, so a lane that crosses fresh paint carries more
+# of it and less of what it carried before.
+
+
+def noise_paint_over(vec4 top, vec4 under) -> vec4:
+    float strength = top.x + under.x * (1.0 - top.x)
+    if strength <= 0.0:
+        return vec4(0.0)
+    vec3 colour = (top.yzw * top.x + under.yzw * under.x * (1.0 - top.x)) / strength
+    return vec4(strength, colour)

@@ -1,0 +1,34 @@
+[
+  {"wait": 45},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 20},
+  {"document": "srgb"},
+  {"wait": 25},
+  {"fill": [0.1, 0.1, 0.12]},
+  {"wait": 10},
+  {"colour": [1.0, 0.85, 0.2]},
+  {"wait": 5},
+  {"stroke": {"from": [700, 300], "to": [1200, 800], "pressure": 1.0}},
+  {"wait": 15},
+
+  {"filter_browser": "open"},
+  {"wait": 25},
+  {"filter_browser": "describe"},
+  {"shot": "1-the-browser-as-it-opens"},
+  {"state": "1-the-browser-as-it-opens"},
+
+  {"filter_browser": {"select": "sara-base-modules.levels"}},
+  {"wait": 25},
+  {"filter_browser": "describe"},
+  {"shot": "2-levels-picked-and-the-three-buttons"},
+  {"state": "2-levels-picked-and-the-three-buttons"},
+
+  {"filter_browser": {"search": "blur"}},
+  {"wait": 20},
+  {"filter_browser": "describe"},
+  {"shot": "3-a-search-that-leaves-one-row"},
+  {"state": "3-a-search-that-leaves-one-row"},
+
+  {"filter_browser": "close"},
+  {"wait": 10}
+]

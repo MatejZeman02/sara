@@ -1,0 +1,120 @@
+# Library: noise_build_up
+#
+# How much a noise stroke lays on paint it laid itself further back along its
+# path, which `noise_dab` asks of every texel before the wash, in alpha and,
+# on a brush that lays height, in the height its paint aims at.
+#
+# **A single pass is a wash, a return builds up.** Where the pen comes back
+# over paint the same stroke laid earlier, the texel takes the alpha it holds
+# plus what this part gives, capped at one. A field that stays on the canvas
+# is read shifted by `NOISE_RETURN_FIELD_SHIFT` while the Build Up row is above
+# nought, so a return reads the field somewhere the first pass did not.
+#
+# **Earlier is measured in place, not in along.** A place is the length of path
+# from the press, and a texel counts as come back over when a part of the path
+# more than `NOISE_RETURN_GAP` of the tip's radius before its own covered it.
+# Along would not do, since Drift slides the field with the pen and the along
+# then grows by a share of the path only, so a Bristle Flat stroke would need
+# twenty radii of path to build up. The gap of three keeps a turn, whose legs'
+# places differ by up to the square root of five radii on the inside, a wash.
+#
+# **The path behind is the stretch's `returns` buffer.** `build_up/noise_returns.gd`
+# keeps the path at points a quarter of a radius apart, each with its place and
+# radius, and writes those near the stretch about to be laid. Slot nought is how
+# many follow, and slot one the first point of the stretch that is new to the
+# stroke.
+#
+# **A texel is built up once a pass.** A non-round tip's trail meets again
+# texels an earlier update painted, and those keep the wash, or each update the
+# trail spans would add again. So a texel builds up only where its nearest point
+# lies on a segment ending at a point new to the stroke.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# How far back along the path, in the tip's radii, a part of the stroke has to
+# lie for a texel it covered to be built up rather than washed.
+const float NOISE_RETURN_GAP = 3.0
+# Where the count and the first fresh point sit, and the floats a point takes
+# after them: where it lies, its place and its radius.
+const int NOISE_RETURN_COUNT = 0
+const int NOISE_RETURN_FRESH = 1
+const int NOISE_RETURN_FIRST = 2
+const int NOISE_RETURN_FLOATS = 4
+
+# Whether a part of the stroke more than the gap back from *place* covered
+# *p*, with *radius* the tip's at the texel's nearest point.
+
+
+def noise_came_back(vec2 p, float place, float radius) -> bool:
+    int count = int(returns.earlier[NOISE_RETURN_COUNT])
+    float before = place - NOISE_RETURN_GAP * radius
+    for i in range(count):
+        int at = NOISE_RETURN_FIRST + i * NOISE_RETURN_FLOATS
+        if returns.earlier[at + 2] >= before:
+            continue
+        vec2 off = p - vec2(returns.earlier[at], returns.earlier[at + 1])
+        float reach = returns.earlier[at + 3]
+        if dot(off, off) < reach * reach:
+            return true
+    return false
+
+# Whether the texel at *p* is one the stroke came back over, nearest segment
+# *index* at *place* with a tip of *radius*, whether or not the first pass laid
+# anything there, since a hole it left is read again too. A stretch with a
+# trail, *repaints*, builds up only on segments that end at a fresh point.
+
+
+def noise_returning(vec2 p, int index, float place, float radius, bool repaints) -> bool:
+    if repaints and index + 1 < int(returns.earlier[NOISE_RETURN_FRESH]):
+        return false
+    return noise_came_back(p, place, radius)
+
+# How far, in pixels, a return reads a field that stays on the canvas from where
+# the first pass read it. Such a field cuts its holes in the same places at
+# every pass, so a scrub would never fill one, and the second reading is a
+# draw of its own the way the stroke coordinates' were.
+const vec2 NOISE_RETURN_FIELD_SHIFT = vec2(1543.0, 877.0)
+# Where a texel the stroke is *returning* over reads a field that stays on
+# the canvas, from *read_at*, where the first pass read it, with *half_width*
+# the stroke's and *rate* the Build Up row. A first pass reads where it always
+# did, and so does a return at a Build Up of nought, which is a wash and lays
+# no more than the first pass.
+
+
+def noise_return_read(vec2 read_at, bool returning, bool on_canvas, float half_width, float rate) -> vec2:
+    if not returning or not on_canvas or rate <= 0.0:
+        return read_at
+    return read_at + vec2(NOISE_RETURN_FIELD_SHIFT.x, NOISE_RETURN_FIELD_SHIFT.y / half_width)
+
+# The alpha a texel that holds *held* and is given *laid* by this stretch
+# takes: *held* plus *rate* of *laid*, capped at one, where the stroke is
+# *returning* over it, and *laid* otherwise, which the wash keeps as the
+# strongest. The rate is the brush's Build Up row, one at its rest, so a return
+# adds the whole of what it lays, and nought a return that lays a wash like
+# the first pass.
+
+
+def noise_built_up(bool returning, float held, float laid, float rate) -> float:
+    if not returning or held <= 0.0:
+        return laid
+    return max(laid, min(1.0, held + laid * rate))
+
+# The height the paint aims at on a texel that holds *held* of the stroke's
+# own paint and is given *brush* by this part of it, with *thickness* the
+# point's: *brush* lifted by *rate* of `NOISE_RETURN_LIFT` of the thickness
+# where the stroke is *returning* over it, and *brush* otherwise. A return can
+# add little alpha to strands that lie opaque already, so on a brush that lays
+# height the paint a return adds stands higher instead, as a loaded brush
+# going back over its stroke leaves a thicker ridge. The lift is flat, not a
+# share of the field's relief, since a grain's height scaled up steepens every
+# wall the light shades, and a scrub of Firm Fill then lit dark specks. It
+# lifts the aim and not the held height, so a second return aims no higher
+# than the first, and a surface above the aim gives way by the door's
+# mobility, the less the higher it stands.
+const float NOISE_RETURN_LIFT = 0.25
+
+
+def noise_built_up_height(bool returning, float held, float brush, float thickness, float rate) -> float:
+    if not returning or held <= 0.0:
+        return brush
+    return brush + max(rate, 0.0) * NOISE_RETURN_LIFT * thickness

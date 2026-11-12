@@ -1,0 +1,6 @@
+[
+  {"measure": {"perf": "begin"}},
+  {"wait": 5},
+  {"measure": {"perf": "end"}},
+  {"state": "device"}
+]

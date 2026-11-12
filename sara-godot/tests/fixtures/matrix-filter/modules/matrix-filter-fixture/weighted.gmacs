@@ -1,0 +1,22 @@
+# Adds a 3 by 3 convolution to a 7 by 7 one. The 3 by 3 is written as its
+# rows and halves the picture, and the 7 by 7 has no default, so it opens on a
+# one in the middle and passes the picture through. Forty-nine numbers do not
+# fit the push constant, so the dialect moves them into a storage buffer.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+uniform float near[9] = {
+    0.0, 0.0, 0.0,
+    0.0, 0.5, 0.0,
+    0.0, 0.0, 0.0}
+uniform float wide[49]
+
+def pixel(ivec2 at) -> vec4:
+    vec4 sum = vec4(0.0)
+    for row in range(0, 3):
+        for column in range(0, 3):
+            sum += src(at + ivec2(column - 1, row - 1)) * near[row * 3 + column]
+    for row in range(0, 7):
+        for column in range(0, 7):
+            sum += src(at + ivec2(column - 3, row - 3)) * wide[row * 7 + column]
+    return vec4(sum.rgb, src(at).a)

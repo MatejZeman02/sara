@@ -1,0 +1,16 @@
+[
+  {"wait": 45},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 20},
+  {"document": "srgb"},
+  {"wait": 25},
+  {"message": {"close": "escape"}},
+  {"wait": 10},
+  {"fill": [0.55, 0.55, 0.55]},
+  {"wait": 10},
+
+  {"menu_item": {"menu": "Help", "id": 503}},
+  {"wait": 40},
+  {"shot": "1-report-a-problem-with-no-browser-names-the-address-and-take-a-note"},
+  {"state": "1-report-a-problem-with-no-browser-names-the-address-and-take-a-note"}
+]

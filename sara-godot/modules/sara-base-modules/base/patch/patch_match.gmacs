@@ -1,0 +1,306 @@
+# Kernels: patch_match_down, patch_match_seed, patch_match_search, patch_match_vote
+# The patch tool's Texture method: what the selection covers is drawn again out
+# of patches of the picture around it, so a hole in a texture comes back as
+# texture rather than as the blur `patch.gmacs` gives.
+#
+# PatchMatch (Barnes, Shechtman, Finkelstein and Goldman, SIGGRAPH 2009) inside
+# the coarse-to-fine completion of Wexler, Shechtman and Irani (2007), as
+# Krita's Smart Patch runs it on the CPU. Every texel near the hole keeps the
+# centre of the outside patch that looks most like its own, and the hole is
+# drawn as the vote of the patches its texels point at. `sa_patch_match.gd`
+# holds the pyramid and the order. Krita's numbers owe its lines, which are on
+# `PROVENANCE.md` beside this file.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# A GPU search pass has no scanline order, so a match moves a step a pass
+# (the neighbours `tune.y` away) and the random jumps, halving from the whole
+# level to one texel, carry it further. `patch_match_seed` also lays the coarser
+# level's colour into the hole, so a texel the vote cannot reach still holds it.
+#
+# **The finest vote takes the best patch, not the mean.** The mean of patches
+# that disagree is a blur and the grain is the first thing lost. Wexler et al.
+# take a mode at the finest scale, and the highest-weight patch is the
+# cheapest mode there is.
+#
+# **A source texel inside the hole costs the most a texel can**, which stops a
+# hole texel pointing at itself (a perfect match that copies nothing). It is
+# Krita's rule. The target's own patch is read whole, hole included, because
+# the hole holds the current answer once the coarsest level has its smooth start.
+#
+# **The vote reads picture and writes hole, never one texel as both**, so it
+# runs in place. Picture is a weight of exactly one, which is what the gather
+# writes outside the selection and the down pass writes for a coarse texel with
+# a known child. The colour is premultiplied, as in `patch.gmacs`.
+
+kernel patch_match_down
+kernel patch_match_seed
+kernel patch_match_search
+kernel patch_match_vote
+
+# This level of the pyramid, the colour and its weight.
+image colour
+image weight: r32f
+# The level above, half the size. The down pass writes it and the seed reads it.
+image coarse
+image coarse_weight: r32f
+# A field to read, and the field a pass writes. Each texel is the centre of its
+# source patch, the distance to it, and one when the texel needs a field at all.
+image field: rgba32f, readonly
+image field_out: rgba32f
+
+params:
+    # The rectangle of this level the dispatch covers, its start and its end.
+    vec4 region
+    # Where this level's field starts in the level, and where the level
+    # above's field starts in that level.
+    vec4 fields
+    # The random stream of this dispatch, the propagation step, the widest
+    # random jump, and one on the coarsest level.
+    vec4 tune
+    # The patch's radius, the least total weight a vote is taken at, and one
+    # when the vote takes the best patch alone.
+    vec4 shape
+
+# A weight at or above this is picture, and below it is hole.
+const float SA_PM_KNOWN = 1.0
+
+# Krita's similarity curve, `0.5 - 0.5 tanh(k (d - 0.1))`, which is 0.999 at a
+# distance of zero and a half at a tenth. The steepness is
+# `atanh(2 * 0.999 - 1) / 0.1`.
+const float SA_PM_HALF = 0.1
+const float SA_PM_STEEPNESS = 34.534
+
+# How many random texels the coarsest seed tries before it settles for one in
+# the hole.
+const int SA_PM_TRIES = 8
+
+
+def sa_pm_hash(uint value) -> uint:
+    """PCG's output permutation, one 32-bit word to another."""
+    uint state = value * 747796405u + 2891336453u
+    uint word = ((state >> ((state >> 28u) + 4u)) ^ state) * 277803737u
+    return (word >> 22u) ^ word
+
+
+def sa_pm_unit(uint value) -> float:
+    """The top 24 bits of *value* as a number in 0 to 1, exact in a float."""
+    return (value >> 8u) / 16777216.0
+
+
+def sa_pm_stream(ivec2 at) -> uint:
+    """Where this texel's random numbers start, for this dispatch."""
+    return sa_pm_hash(uint(at.x) + sa_pm_hash(uint(at.y) + sa_pm_hash(uint(tune.x))))
+
+
+def sa_pm_inside(ivec2 at, ivec2 size) -> bool:
+    return at.x >= 0 and at.y >= 0 and at.x < size.x and at.y < size.y
+
+
+def sa_pm_known(ivec2 at) -> bool:
+    return weight[at].r >= SA_PM_KNOWN
+
+
+def sa_pm_similarity(float cost) -> float:
+    return 0.5 - 0.5 * tanh(SA_PM_STEEPNESS * (cost - SA_PM_HALF))
+
+
+def sa_pm_side(int side, int step) -> ivec2:
+    """Right, left, down and up, *step* texels away."""
+    if side == 0:
+        return ivec2(step, 0)
+    if side == 1:
+        return ivec2(-step, 0)
+    if side == 2:
+        return ivec2(0, step)
+    return ivec2(0, -step)
+
+
+def sa_pm_near(ivec2 at, ivec2 size, int radius) -> bool:
+    """Whether the patch round *at* holds a texel of the hole."""
+    for y in range_inclusive(-radius, radius):
+        for x in range_inclusive(-radius, radius):
+            ivec2 tap = at + ivec2(x, y)
+            if sa_pm_inside(tap, size) and not sa_pm_known(tap):
+                return true
+    return false
+
+# The distance from the patch round *at* to the patch round *source*, in 0 to
+# 1: the mean over the patch of each texel's squared difference over three,
+# Krita's scale, with a texel past the level or of the hole on the source side
+# costing one. It stops counting once it passes *limit*, which no candidate it
+# could still beat is under.
+
+
+def sa_pm_distance(ivec2 at, ivec2 source, ivec2 size, int radius, float limit) -> float:
+    float taps = (2 * radius + 1) * (2 * radius + 1)
+    float total = 0.0
+    float stop = limit * taps
+    for y in range_inclusive(-radius, radius):
+        for x in range_inclusive(-radius, radius):
+            ivec2 here = at + ivec2(x, y)
+            ivec2 there = source + ivec2(x, y)
+            if not sa_pm_inside(here, size) or not sa_pm_inside(there, size) or not sa_pm_known(there):
+                total += 1.0
+                continue
+            vec4 apart = colour[here] - colour[there]
+            total += min(dot(apart, apart) / 3.0, 1.0)
+        if total >= stop:
+            return total / taps
+    return total / taps
+
+
+def sa_pm_random_source(uint stream, ivec2 size) -> ivec2:
+    """A random texel of picture, or the last one tried when none of them was."""
+    ivec2 pick = ivec2(0)
+    for attempt in range(SA_PM_TRIES):
+        stream = sa_pm_hash(stream)
+        float u = sa_pm_unit(stream)
+        stream = sa_pm_hash(stream)
+        float v = sa_pm_unit(stream)
+        pick = min(ivec2(vec2(u, v) * vec2(size)), size - ivec2(1))
+        if sa_pm_known(pick):
+            return pick
+    return pick
+
+
+def patch_match_down():
+    ivec2 at = ivec2(global_id.xy) + ivec2(region.xy)
+    if at.x >= int(region.z) or at.y >= int(region.w):
+        return
+    ivec2 fine = image_size(colour)
+    vec4 sum = vec4(0.0)
+    float known = 0.0
+    for y in range(2):
+        for x in range(2):
+            ivec2 child = at * 2 + ivec2(x, y)
+            if child.x >= fine.x or child.y >= fine.y or not sa_pm_known(child):
+                continue
+            sum += colour[child]
+            known += 1.0
+    if known > 0.0:
+        coarse[at] = sum / known
+        coarse_weight[at] = vec4(SA_PM_KNOWN, 0.0, 0.0, 0.0)
+        return
+    coarse[at] = vec4(0.0)
+    coarse_weight[at] = vec4(0.0)
+
+
+def patch_match_seed():
+    ivec2 at = ivec2(global_id.xy) + ivec2(region.xy)
+    if at.x >= int(region.z) or at.y >= int(region.w):
+        return
+    ivec2 size = image_size(colour)
+    ivec2 slot = at - ivec2(fields.xy)
+    if not sa_pm_near(at, size, int(shape.x)):
+        # A texel whose patch holds no hole votes for nothing, so it needs no
+        # field, and the search passes it by.
+        field_out[slot] = vec4(0.0)
+        return
+
+    vec4 seeded = vec4(0.0)
+    if tune.w < 0.5:
+        ivec2 parent = at / 2
+        ivec2 above = parent - ivec2(fields.zw)
+        if sa_pm_inside(above, image_size(field)):
+            vec4 pointed = field[above]
+            if pointed.w > 0.5:
+                ivec2 source = ivec2(pointed.xy) * 2 + (at - parent * 2)
+                seeded = vec4(vec2(clamp(source, ivec2(0), size - ivec2(1))), pointed.z, 1.0)
+        if not sa_pm_known(at):
+            colour[at] = coarse[min(parent, image_size(coarse) - ivec2(1))]
+    if seeded.w < 0.5:
+        # The coarsest level, or a texel whose parent needed no field because
+        # the hole had shrunk away under it.
+        seeded = vec4(vec2(sa_pm_random_source(sa_pm_stream(at), size)), 1.0, 1.0)
+    field_out[slot] = seeded
+
+
+def patch_match_search():
+    ivec2 at = ivec2(global_id.xy) + ivec2(region.xy)
+    if at.x >= int(region.z) or at.y >= int(region.w):
+        return
+    ivec2 slot = at - ivec2(fields.xy)
+    vec4 here = field[slot]
+    if here.w < 0.5:
+        field_out[slot] = here
+        return
+
+    ivec2 size = image_size(colour)
+    ivec2 slots = image_size(field)
+    int radius = int(shape.x)
+    int step = int(tune.y)
+    # Measured again rather than trusted, because the vote has redrawn the
+    # hole since the distance on the field was taken.
+    ivec2 best = ivec2(here.xy)
+    float best_cost = sa_pm_distance(at, best, size, radius, 2.0)
+
+    for side in range(4):
+        ivec2 toward = sa_pm_side(side, step)
+        ivec2 neighbour = slot + toward
+        if not sa_pm_inside(neighbour, slots):
+            continue
+        vec4 there = field[neighbour]
+        if there.w < 0.5:
+            continue
+        ivec2 candidate = clamp(ivec2(there.xy) - toward, ivec2(0), size - ivec2(1))
+        float cost = sa_pm_distance(at, candidate, size, radius, best_cost)
+        if cost < best_cost:
+            best = candidate
+            best_cost = cost
+
+    uint stream = sa_pm_stream(at)
+    float reach = tune.z
+    while reach >= 1.0:
+        stream = sa_pm_hash(stream)
+        float u = sa_pm_unit(stream)
+        stream = sa_pm_hash(stream)
+        float v = sa_pm_unit(stream)
+        ivec2 jump = ivec2(round((vec2(u, v) * 2.0 - 1.0) * reach))
+        ivec2 candidate = clamp(best + jump, ivec2(0), size - ivec2(1))
+        float cost = sa_pm_distance(at, candidate, size, radius, best_cost)
+        if cost < best_cost:
+            best = candidate
+            best_cost = cost
+        reach *= 0.5
+    field_out[slot] = vec4(vec2(best), best_cost, 1.0)
+
+
+def patch_match_vote():
+    ivec2 at = ivec2(global_id.xy) + ivec2(region.xy)
+    if at.x >= int(region.z) or at.y >= int(region.w):
+        return
+    if sa_pm_known(at):
+        return
+    ivec2 size = image_size(colour)
+    ivec2 slots = image_size(field)
+    int radius = int(shape.x)
+    vec4 sum = vec4(0.0)
+    float total = 0.0
+    float best_weight = 0.0
+    vec4 best = vec4(0.0)
+    for y in range_inclusive(-radius, radius):
+        for x in range_inclusive(-radius, radius):
+            # The patch centred at *at* plus this offset covers *at*, and says
+            # *at* is what lies the same offset back from where it points.
+            ivec2 slot = at + ivec2(x, y) - ivec2(fields.xy)
+            if not sa_pm_inside(slot, slots):
+                continue
+            vec4 pointed = field[slot]
+            if pointed.w < 0.5:
+                continue
+            ivec2 source = ivec2(pointed.xy) - ivec2(x, y)
+            if not sa_pm_inside(source, size) or not sa_pm_known(source):
+                continue
+            float w = sa_pm_similarity(pointed.z)
+            vec4 said = colour[source]
+            sum += w * said
+            total += w
+            if w > best_weight:
+                best_weight = w
+                best = said
+    if total < shape.y:
+        # Krita's floor: too little agreement to trust, so the texel keeps the
+        # coarser level's answer the seed laid down.
+        return
+    colour[at] = shape.z > 0.5 ? best : sum / total

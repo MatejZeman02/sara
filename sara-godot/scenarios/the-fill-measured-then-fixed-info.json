@@ -1,0 +1,13 @@
+[
+  {"wait": 30},
+  {"docker": "park"},
+  {"colour": "#e0a040"},
+  {"stroke": {"from": [500, 350], "to": [1200, 700], "pressure": 0.9, "steps": 24}},
+  {"wait": 10},
+  {"docker": {"id": "InfoDocker", "at": [1450, 120], "size": [420, 880]}},
+  {"wait": 20},
+  {"stroke": {"from": [300, 750], "to": [1300, 300], "pressure": 0.9, "steps": 24}},
+  {"wait": 20},
+  {"shot": "info-the-mean-of-60-in-microseconds"},
+  {"state": "info-the-mean-of-60-in-microseconds"}
+]

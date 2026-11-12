@@ -1,0 +1,270 @@
+{
+ "build": {
+  "built": "",
+  "commit": "030601b",
+  "commit_full": "030601bff8a9ce12cb66f41b87ce7c6b813a96cc",
+  "dirty": false,
+  "source": "working tree",
+  "version": "0.12.0"
+ },
+ "perf": {
+  "commit": {
+   "cpu_usec": 1366,
+   "gpu": 101376,
+   "gpu_max": 61440,
+   "load": {
+    "chunks": 6
+   },
+   "pairs": 1,
+   "skipped": 0
+  },
+  "composite": {
+   "count": 26,
+   "cpu_usec": 29907,
+   "gpu": 991689,
+   "gpu_max": 64544,
+   "issue_usec": 18143,
+   "load": {
+    "dirty_chunks": 48,
+    "dirty_texels": 2188800,
+    "full": 0
+   },
+   "pairs": 26,
+   "skipped": 0
+  },
+  "copies": {
+   "bytes": 0,
+   "copies": 0
+  },
+  "counters": {
+   "dispatches": 907,
+   "lists": 552,
+   "uniform_sets": 254,
+   "workgroups": 86228
+  },
+  "device": {
+   "api": "vulkan 1.4.351",
+   "local": false,
+   "name": "NVIDIA GeForce RTX 3070 Laptop GPU"
+  },
+  "frames": {
+   "dab_frame_interval": {
+    "max": 16937,
+    "mean": 16673,
+    "min": 16415,
+    "n": 24,
+    "sum": 400167
+   },
+   "drawn": 36,
+   "process_usec_max": 548501
+  },
+  "gpu_time": {
+   "frame_delay": 2,
+   "frames_collected": 28,
+   "pairs": 303,
+   "readable_after_max": 1,
+   "readable_after_min": 1,
+   "skipped": 0,
+   "ticks_per_usec": 1000
+  },
+  "kernels": {
+   "clear/clear_chunk": {
+    "dispatches": 180,
+    "gpu": 604982,
+    "gpu_max": 26928,
+    "lists": 136,
+    "pairs": 136,
+    "skipped": 0,
+    "workgroups": 21912
+   },
+   "composite/composite": {
+    "dispatches": 288,
+    "gpu": 1429401,
+    "gpu_max": 45619,
+    "lists": 234,
+    "pairs": 234,
+    "skipped": 0,
+    "workgroups": 51300
+   },
+   "dab/dab": {
+    "dispatches": 254,
+    "gpu": 1426022,
+    "gpu_max": 16896,
+    "lists": 170,
+    "pairs": 170,
+    "skipped": 0,
+    "workgroups": 10880
+   },
+   "filler/k0": {
+    "dispatches": 1,
+    "gpu": 1000,
+    "gpu_max": 1000,
+    "lists": 1,
+    "pairs": 1,
+    "skipped": 0,
+    "workgroups": 4
+   },
+   "filler/k1": {
+    "dispatches": 1,
+    "gpu": 2000,
+    "gpu_max": 2000,
+    "lists": 1,
+    "pairs": 1,
+    "skipped": 0,
+    "workgroups": 4
+   },
+   "filler/k2": {
+    "dispatches": 1,
+    "gpu": 3000,
+    "gpu_max": 3000,
+    "lists": 1,
+    "pairs": 1,
+    "skipped": 0,
+    "workgroups": 4
+   },
+   "filler/k3": {
+    "dispatches": 1,
+    "gpu": 4000,
+    "gpu_max": 4000,
+    "lists": 1,
+    "pairs": 1,
+    "skipped": 0,
+    "workgroups": 4
+   },
+   "filler/k4": {
+    "dispatches": 1,
+    "gpu": 5000,
+    "gpu_max": 5000,
+    "lists": 1,
+    "pairs": 1,
+    "skipped": 0,
+    "workgroups": 4
+   },
+   "filler/k5": {
+    "dispatches": 1,
+    "gpu": 6000,
+    "gpu_max": 6000,
+    "lists": 1,
+    "pairs": 1,
+    "skipped": 0,
+    "workgroups": 4
+   },
+   "filler/k6": {
+    "dispatches": 1,
+    "gpu": 7000,
+    "gpu_max": 7000,
+    "lists": 1,
+    "pairs": 1,
+    "skipped": 1,
+    "workgroups": 4
+   },
+   "thumbnail/thumb_chunk": {
+    "dispatches": 172,
+    "gpu": 104755,
+    "gpu_max": 25344,
+    "lists": 6,
+    "pairs": 6,
+    "skipped": 0,
+    "workgroups": 2064
+   },
+   "thumbnail/thumb_clear": {
+    "dispatches": 6,
+    "gpu": 33792,
+    "gpu_max": 8448,
+    "lists": 6,
+    "pairs": 6,
+    "skipped": 0,
+    "workgroups": 72
+   }
+  },
+  "startup": {
+   "cache_hits": 123,
+   "compiles": 0,
+   "engine_to_ready_ms": 2009.915,
+   "first_frame_ms": 499.129,
+   "kernels_ms": 467.143,
+   "marks": {
+    "bootstrap_begin": 4079.58,
+    "first_frame_after_ready": 6588.624,
+    "kernels_begin": 896.447,
+    "kernels_end": 1363.59,
+    "layout_restored": 6089.443,
+    "main_init": 4064.297,
+    "modules_registered": 4937.121,
+    "ready": 6089.495,
+    "settings_loaded": 4079.348,
+    "ui_built": 4383.786
+   },
+   "modules": {
+    "box_blur": 2.817,
+    "pga_hard_mix": 0.032,
+    "sara-base-modules": 0.895,
+    "sara-stamp-brush": 3.772
+   }
+  },
+  "stroke": {
+   "dabs": 170,
+   "dabs_per_frame_max": 4,
+   "events": 27,
+   "frames_with_dabs": 25,
+   "input_to_composite": {
+    "max": 112064,
+    "mean": 25787,
+    "min": 12795,
+    "n": 25,
+    "sum": 644701
+   },
+   "input_to_dispatch": {
+    "max": 107254,
+    "mean": 2800,
+    "min": 750,
+    "n": 85,
+    "sum": 238139
+   },
+   "input_to_post_draw": {
+    "max": 129295,
+    "mean": 52202,
+    "min": 39725,
+    "n": 25,
+    "sum": 1305102
+   },
+   "input_to_redraw": {
+    "max": 119684,
+    "mean": 33716,
+    "min": 20501,
+    "n": 25,
+    "sum": 842933
+   },
+   "motions": 25,
+   "motions_per_frame_max": 1,
+   "targets": 300
+  },
+  "vram": {
+   "chunk_edge": 256,
+   "chunks": {
+    "layers": {
+     "Background": 40,
+     "Layer 1": 6
+    },
+    "selection": 0,
+    "stroke": 0,
+    "total": 46
+   },
+   "device": "NVIDIA GeForce RTX 3070 Laptop GPU",
+   "device_buffers": 7764608,
+   "device_textures": 57819648,
+   "device_total": 97833728,
+   "history_bytes": 4096,
+   "sara_buffers": 2124,
+   "sara_textures": 41239576,
+   "unaccounted_textures": 16580072
+  },
+  "window": {
+   "forced_draws": 2,
+   "frames_drawn": 34,
+   "open": false,
+   "process_frames": 36,
+   "usec": 654000
+  }
+ }
+}

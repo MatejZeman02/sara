@@ -1,0 +1,245 @@
+[
+ {
+  "comment": "Graphite Pencil's grain is as fine as a pencil's. On a white 900 by 400 document, in the ochre drawn at size 21.6 (Radius 10.8 px), Graphite Pencil paints three level lines at the presses 0.3, 0.6 and 0.9 through the door's stroke step in document space, first with the grain scale of 4 px it shipped with, at the top, then as it ships now, at the bottom. A look of each half at three times, near 303 percent, shows the grain before and after."
+ },
+ {
+  "wait": 60
+ },
+ {
+  "prefs": {
+   "ui_scale": 1.0,
+   "autosave_interval_minutes": 0
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "layout_preset": {
+   "load": "minimalistic"
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "document": "srgb",
+  "size": [
+   900,
+   400
+  ]
+ },
+ {
+  "wait": 10
+ },
+ {
+  "fit": true
+ },
+ {
+  "wait": 5
+ },
+ {
+  "fill": [
+   1.0,
+   1.0,
+   1.0
+  ]
+ },
+ {
+  "layer": {
+   "add": "Lines"
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "brush": {
+   "preset": "Graphite Pencil",
+   "colour": "#cc8c33",
+   "radius_px": 10.8,
+   "seed": 7
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "tool": {
+   "id": "noise_brush",
+   "options": {
+    "grain_scale": 4.0
+   }
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "stroke": {
+   "from": [
+    100,
+    50
+   ],
+   "to": [
+    800,
+    50
+   ],
+   "pressure": 0.3,
+   "steps": 350,
+   "space": "document",
+   "route": "tool",
+   "smoothing": false
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "stroke": {
+   "from": [
+    100,
+    95
+   ],
+   "to": [
+    800,
+    95
+   ],
+   "pressure": 0.6,
+   "steps": 350,
+   "space": "document",
+   "route": "tool",
+   "smoothing": false
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "stroke": {
+   "from": [
+    100,
+    140
+   ],
+   "to": [
+    800,
+    140
+   ],
+   "pressure": 0.9,
+   "steps": 350,
+   "space": "document",
+   "route": "tool",
+   "smoothing": false
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "look": {
+   "path": "1-before-grain-4px.png",
+   "rect": [
+    80,
+    20,
+    300,
+    150
+   ],
+   "scale": 3
+  }
+ },
+ {
+  "brush": {
+   "preset": "Graphite Pencil",
+   "colour": "#cc8c33",
+   "radius_px": 10.8,
+   "seed": 7
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "stroke": {
+   "from": [
+    100,
+    230
+   ],
+   "to": [
+    800,
+    230
+   ],
+   "pressure": 0.3,
+   "steps": 350,
+   "space": "document",
+   "route": "tool",
+   "smoothing": false
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "stroke": {
+   "from": [
+    100,
+    275
+   ],
+   "to": [
+    800,
+    275
+   ],
+   "pressure": 0.6,
+   "steps": 350,
+   "space": "document",
+   "route": "tool",
+   "smoothing": false
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "stroke": {
+   "from": [
+    100,
+    320
+   ],
+   "to": [
+    800,
+    320
+   ],
+   "pressure": 0.9,
+   "steps": 350,
+   "space": "document",
+   "route": "tool",
+   "smoothing": false
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "look": {
+   "path": "2-after-as-it-ships.png",
+   "rect": [
+    80,
+    200,
+    300,
+    150
+   ],
+   "scale": 3
+  }
+ },
+ {
+  "look": {
+   "path": "3-both-whole.png",
+   "rect": [
+    0,
+    0,
+    900,
+    400
+   ],
+   "scale": 1
+  }
+ }
+]

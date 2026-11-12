@@ -1,0 +1,19 @@
+[
+  {"wait": 40},
+  {"docker": "park"},
+  {"wait": 10},
+  {"docker": {"id": "BrushPresetsDocker", "at": [900, 200], "size": [280, 420]}},
+  {"wait": 20},
+  {"presets_docker": {}},
+  {"state": "1-at-the-dockers-default-width-both-dropdowns-say-their-word"},
+  {"shot": "1-at-the-dockers-default-width-both-dropdowns-say-their-word"},
+  {"docker": {"id": "BrushPresetsDocker", "at": [900, 200], "size": [120, 420]}},
+  {"wait": 20},
+  {"presets_docker": {}},
+  {"state": "2-as-narrow-as-it-goes-and-the-search-field-is-not-pushed-out"},
+  {"shot": "2-as-narrow-as-it-goes-and-the-search-field-is-not-pushed-out"},
+  {"dropdown": "ChooserTag"},
+  {"wait": 15},
+  {"state": "3-the-tag-dropdown-still-opens-its-list"},
+  {"shot": "3-the-tag-dropdown-still-opens-its-list"}
+]

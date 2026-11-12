@@ -1,0 +1,59 @@
+# The height half of a masked copy and a masked cut.
+#
+# `copy_masked` and `cut_masked` act on a colour's alpha, and a height has no
+# alpha of its own: it is one half float a texel, the thickness of the paint
+# there. So the selection acts on the thickness itself. What a copy takes is
+# the height times the selection's coverage, and what a cut leaves is the
+# height times one minus it, so a copy and a cut of the same texel sum to the
+# height that stood there, a feathered selection lifts a feathered ridge, and
+# a texel outside the selection is taken as bare. Nothing clamps.
+#
+# The two kernels share the bindings of the colour pair, the height at 0, the
+# selection at `SaSelection.BINDING` and the copy's destination at 2, so the
+# callers dispatch them through the helper they already run the colour with.
+# A cut never reads 2 and the kernel does not keep it.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel height_copy_masked
+kernel height_cut_masked
+
+image height
+# The document-wide selection, as in paint.gmacs: a 1 by 1 mask reads as 1.0
+# everywhere through the clamped read (core/api/selection/sa_selection.gd).
+image mask: r32f, readonly
+image destination: writeonly
+params:
+    float offset_x
+    float offset_y
+    float width
+    float span
+
+
+def inside(ivec2 px) -> bool:
+    # Whether *px* lies in the rectangle the dispatch was asked for and in the
+    # texture, since the dispatch starts on a workgroup boundary.
+    ivec2 size = image_size(height)
+    if px.x >= size.x or px.y >= size.y:
+        return false
+    return px.x < int(offset_x + width) and px.y < int(offset_y + span)
+
+
+def coverage_at(ivec2 px) -> float:
+    return mask[min(px * image_size(mask) / image_size(height), image_size(mask) - 1)].r
+
+
+def height_copy_masked():
+    ivec2 px = ivec2(global_id.xy) + ivec2(int(offset_x), int(offset_y))
+    if not inside(px):
+        return
+    float h = height[px].r
+    destination[px] = vec4(h * coverage_at(px), 0.0, 0.0, 1.0)
+
+
+def height_cut_masked():
+    ivec2 px = ivec2(global_id.xy) + ivec2(int(offset_x), int(offset_y))
+    if not inside(px):
+        return
+    float h = height[px].r
+    height[px] = vec4(h * (1.0 - coverage_at(px)), 0.0, 0.0, 1.0)

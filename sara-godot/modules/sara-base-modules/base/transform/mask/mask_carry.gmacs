@@ -1,0 +1,80 @@
+# The mask's half of a transform's lift and landing.
+#
+# A layer's mask is a field of its chunks, one float a texel, that belongs to
+# the paint it hides, so what the transform lifts of the paint it lifts of the
+# mask too and lays down where the paint lands. A mask has no alpha to say how
+# much of a texel the lift took, so the lift writes it into a carry of its own,
+# a colour picture whose colour channels are the mask and whose alpha is the
+# selection's coverage. The resample kernel of `shaders/compute/transform.gmacs`
+# moves that carry through the same map as the paint, alpha premultiplied for
+# the interpolation, and a texel the carry does not reach comes out with no alpha.
+#
+# `mask_take` reads one chunk's mask where the selection covers it into the
+# carry and leaves the mask in the hole at its rest, which is what a chunk the
+# layer allocates later opens at. A feathered selection takes a feathered part
+# of the mask and leaves a feathered part behind.
+#
+# `mask_land` lays the moved carry over a chunk's mask: the mask goes towards
+# the carried mask by the carried coverage, so outside the moved selection it
+# keeps what it held. Nothing clamps.
+#
+# Both run over a rectangle of the chunk that starts on a workgroup boundary,
+# and the push constant carries the rectangle's end.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel mask_take
+kernel mask_land
+
+# The layer's mask field in the chunk the dispatch runs over.
+image field: r32f
+# The document's selection, a 1 by 1 texture of one when nothing is selected,
+# read across the chunk as `height_masked.gmacs` reads it. Binding 1 is
+# `SaSelection.BINDING`.
+image selection: r32f, readonly
+# The carry: the whole lifted box for `mask_take`, and for `mask_land` the
+# chunk's own texels of the carry moved through the map.
+image carry: rgba32f
+
+params:
+    # Where the dispatch starts in the chunk's texels.
+    float offset_x
+    float offset_y
+    # Where the rectangle ends in the chunk's texels, exclusive.
+    float end_x
+    float end_y
+    # The carry's texel that the chunk's (0, 0) falls on, for `mask_take`.
+    float carry_x
+    float carry_y
+    # What the mask reads where the layer holds no chunk, which the hole takes.
+    float rest
+
+
+def inside(ivec2 px) -> bool:
+    ivec2 size = image_size(field)
+    if px.x >= size.x or px.y >= size.y:
+        return false
+    return px.x < int(end_x) and px.y < int(end_y)
+
+
+def mask_take():
+    ivec2 px = ivec2(global_id.xy) + ivec2(int(offset_x), int(offset_y))
+    if not inside(px):
+        return
+    ivec2 cell = min(px * image_size(selection) / image_size(field), image_size(selection) - 1)
+    float covered = selection[cell].r
+    float held = field[px].r
+    ivec2 at = px + ivec2(int(carry_x), int(carry_y))
+    ivec2 room = image_size(carry)
+    if at.x >= 0 and at.y >= 0 and at.x < room.x and at.y < room.y:
+        carry[at] = vec4(held, held, held, covered)
+    field[px] = vec4(mix(held, rest, covered), 0.0, 0.0, 1.0)
+
+
+def mask_land():
+    ivec2 px = ivec2(global_id.xy) + ivec2(int(offset_x), int(offset_y))
+    if not inside(px):
+        return
+    vec4 moved = carry[px]
+    float held = field[px].r
+    field[px] = vec4(mix(held, moved.r, moved.a), 0.0, 0.0, 1.0)

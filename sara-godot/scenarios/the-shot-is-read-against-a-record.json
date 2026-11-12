@@ -1,0 +1,40 @@
+[
+  {"window": [1280, 800]},
+  {"wait": 40},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 15},
+  {"layout_preset": {"load": "minimalistic"}},
+  {"wait": 25},
+  {"document": "srgb"},
+  {"wait": 12},
+  {"fill": [1.0, 1.0, 1.0]},
+  {"colour": [0.0, 0.0, 0.0]},
+  {"wait": 12},
+
+  {"move": [40, 760]},
+  {"wait": 30},
+  {"shot": "1-the-white-canvas"},
+  {"state": "1-the-white-canvas"},
+
+  {"tool": {"id": "brush", "options": {
+    "radius": 0.05,
+    "hardness": 0.8,
+    "opacity": 1.0,
+    "flow": 1.0,
+    "spacing": 0.1,
+    "painting_mode": 0,
+    "tip_generator": 0,
+    "tip_ratio": 1.0
+  }}},
+  {"wait": 20},
+  {"stroke": {"from": [400, 500], "to": [1400, 900], "pressure": 1.0, "steps": 40}},
+  {"wait": 30},
+  {"move": [40, 760]},
+  {"wait": 30},
+  {"shot": "2-one-stroke"},
+  {"state": "2-one-stroke"},
+
+  {"wait": 30},
+  {"shot": "3-the-same-frame-again"},
+  {"state": "3-the-same-frame-again"}
+]

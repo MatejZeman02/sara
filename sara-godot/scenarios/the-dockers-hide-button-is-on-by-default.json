@@ -1,0 +1,17 @@
+[
+  {"wait": 30},
+  {"docker": {"id": "MinimapDocker", "at": [1180, 140], "size": [320, 260]}},
+  {"wait": 12},
+
+  {"hide": ""},
+  {"shot": "1-a-factory-profile"},
+  {"state": "1-a-factory-profile"},
+
+  {"prefs": {"docker_hide_button": false}},
+  {"wait": 10},
+  {"hide": ""},
+  {"shot": "2-switched-off"},
+  {"state": "2-switched-off"},
+
+  {"prefs": {"docker_hide_button": true}}
+]

@@ -1,0 +1,12 @@
+[
+ {"comment": "Five Grain Round strokes after one brush step that sets a seed, the painting scripts/test_a_brush_step_can_set_the_noise_brush_s_seed.py runs through scripts/session_runner.py in one session and again split over two, each session a Sara of its own. The suite takes the seed out for the case with none. Run alone it paints and photographs nothing, the runner's folder is its proof."},
+ {"document": "srgb", "size": [640, 480], "background": {"kind": "colour", "color": "#e8dcc4"}},
+ {"fit": true},
+ {"wait": 10},
+ {"brush": {"preset": "Grain Round", "colour": "#28323c", "radius_px": 36, "seed": 4242}},
+ {"stroke": {"from": [60, 70], "to": [580, 130], "space": "document", "route": "tool", "pressure": 0.8, "steps": 24}},
+ {"stroke": {"from": [60, 150], "to": [580, 210], "space": "document", "route": "tool", "pressure": 0.8, "steps": 24}},
+ {"stroke": {"from": [60, 230], "to": [580, 290], "space": "document", "route": "tool", "pressure": 0.8, "steps": 24}},
+ {"stroke": {"from": [60, 310], "to": [580, 370], "space": "document", "route": "tool", "pressure": 0.8, "steps": 24}},
+ {"stroke": {"from": [60, 390], "to": [580, 450], "space": "document", "route": "tool", "pressure": 0.8, "steps": 24}}
+]

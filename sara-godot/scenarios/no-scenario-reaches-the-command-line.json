@@ -1,0 +1,16 @@
+[
+ {
+  "args": [
+   "user://f100-from-the-command-line.sad"
+  ]
+ },
+ {
+  "wait": 60
+ },
+ {
+  "state": "f100-1-the-command-line-document"
+ },
+ {
+  "shot": "f100-1-the-command-line-document"
+ }
+]

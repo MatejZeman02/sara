@@ -1,0 +1,6 @@
+[
+  {"load": "res://tests/data/painted_two_layers.sad"},
+  {"wait": 20},
+  {"shot": "legacy-v3-opened"},
+  {"state": "legacy-v3-opened"}
+]

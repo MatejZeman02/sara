@@ -1,0 +1,24 @@
+[
+ {"wait": 45},
+ {"docker": "park"},
+ {"wait": 15},
+
+ {"menu": "Modules"},
+ {"wait": 15},
+ {"shot": "1-the-modules-menu"},
+ {"state": "1-the-modules-menu"},
+
+ {"key": "down"},
+ {"wait": 10},
+ {"shot": "2-the-keyboard-lands-on-the-first-loaded-row"},
+ {"state": "2-the-keyboard-lands-on-the-first-loaded-row"},
+
+ {"key": "enter"},
+ {"wait": 12},
+ {"shot": "3-enter-on-a-loaded-row-runs-nothing"},
+ {"state": "3-enter-on-a-loaded-row-runs-nothing"},
+
+ {"key": "escape"},
+ {"wait": 12},
+ {"state": "4-every-menu-closed"}
+]

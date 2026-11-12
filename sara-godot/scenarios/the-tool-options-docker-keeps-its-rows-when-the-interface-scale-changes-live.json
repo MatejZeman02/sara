@@ -1,0 +1,25 @@
+[
+  {"wait": 30},
+  {"state": "launched"},
+  {"shot": "launched"},
+
+  {"prefs": {"ui_scale": 1.25}},
+  {"wait": 20},
+  {"state": "live-1.25"},
+  {"shot": "live-1.25"},
+
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 20},
+  {"state": "back-at-1"},
+  {"shot": "back-at-1"},
+
+  {"prefs": {"ui_scale": 1.25}},
+  {"wait": 20},
+  {"state": "live-1.25-again"},
+  {"shot": "live-1.25-again"},
+
+  {"key": {"key": "f", "shift": true}},
+  {"wait": 20},
+  {"state": "reference-at-1.25"},
+  {"shot": "reference-at-1.25"}
+]

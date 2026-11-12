@@ -1,0 +1,279 @@
+# Reading the pair of pixels a blend needs, and storing what it produced.
+#
+# Split out of composite.gmacs for the same reason as the colour-space library
+# beside it, and included after the bindings and the push constant these read.
+# Every kernel goes through one of the fetch functions here and one of the
+# store functions, so the region bounds and the blending space are decided in
+# one place rather than seventeen. Each store has a `blended` sibling that
+# answers the value instead of storing it, which is what the formulas of
+# `composite_blend_modes.gmacs` end on, so the brush's commit can store the
+# same number rounded where `composite.gmacs` stores it plainly.
+
+# --- The display-referred window ---------------------------------------------
+#
+# A display-referred formula is only defined on 0-1: screen(a, b) = a + b - ab
+# means nothing at a = 40, which the section below answers for a value still
+# above white inside the window. The document declares a blend reference white W, and
+# those modes evaluate
+#
+#     out = W * f( src / W, dst / W )
+#
+# so the formula always sees the window it was written for while storage keeps
+# whatever magnitude it had. W = 1 makes both directions exactly the identity,
+# bit for bit, which is why landing this changed no pixel.
+#
+# Only the DISPLAY_REFERRED modes call these, and of those not the four that
+# swap components in Oklab LCh, which take "The component modes" below. An
+# arithmetic-safe mode (over, add, multiply, difference, darken, lighten) is
+# well defined unbounded and windowing it would be a lie about what it
+# computes.
+#
+# The window is entered and left by scaling, and Porter-Duff compositing is
+# linear in src.rgb, dst.rgb and B alike, so scaling all three back by W is
+# exactly the same as scaling the composite result. That is why leave_window
+# takes all three rather than just the blend output.
+
+
+def window_scale() -> float: return blend_white > 0.0 ? blend_white : 1.0
+
+# --- Above white ---------------------------------------------------------------
+#
+# The window keeps a formula's meaning for values up to W, and a value above it
+# still arrives above 1. A mode whose formula reads wrong there runs it on each
+# input's share of white instead, and adds back what the shares left out:
+#
+#     f_above(s, d) = f( share(s), share(d) ) + (s - share(s)) + (d - share(d))
+#
+# A share is the value itself up to white, so at or under white this is the
+# formula bit for bit, the two remainders being exactly zero. Above white the
+# share falls from 1 as 1 / (1 + (c - 1)^2), continuously and with no slope at
+# white, so the result is continuous there, and what the share no longer holds
+# passes through as light, the way two lights shone on one wall add. A value far
+# above white therefore takes almost no part in the formula and the other input
+# adds to it almost whole. Screen takes it in composite.gmacs, and the
+# display-referred modes after it take it the same way, each saying what its
+# own formula keeps. A formula that already reads a value at or past white as
+# white, Colour Dodge's clamp on its source and Hard Mix's threshold, takes the
+# value up to white as that input's share instead, and adds what lies past
+# white whole, because this share falls under white again past it and would
+# take the input back out of the clamp or under the threshold.
+
+
+def white_share(vec3 c) -> vec3:
+    vec3 over = max(c - 1.0, vec3(0.0))
+    return min(c, 1.0 / (1.0 + over * over))
+
+
+def past_white(vec3 on_shares, vec3 s, vec3 d) -> vec3: return on_shares + (s - white_share(s)) + (d - white_share(d))
+
+# Whether a channel of either input is above white, so the extension above
+# rather than the formula drew the pair. The probe kernel at the end of
+# composite.gmacs asks it for a file saved before the extension.
+
+
+def either_above_white(vec3 s, vec3 d) -> bool: return any(greater_than(max(s, d), vec3(1.0)))
+
+# --- The component modes, over the whole range --------------------------------
+#
+# Hue, Saturation, Colour and Lightness take one colour's Oklab lightness,
+# chroma or hue and the other's rest. Oklab LCh is defined at any lightness, so
+# they read their inputs as stored rather than through the window, and a
+# lightness above white survives the swap, where a share of white would have no
+# meaning for a mode that is not channel by channel.
+#
+# What white still decides is the gamut step. A swap can land outside the cube
+# its two inputs came from, and oklch_to_document_under then lowers chroma
+# alone, holding lightness and hue, until the colour is back inside. That cube
+# is the display cube up to W, and taller where either input holds more light:
+# its top is the brightest channel of the two in linear light. Up to white it
+# is the cube the windowed modes mapped into, so a swap there is held where it
+# always was, and above white a colour keeps the chroma the light its inputs
+# hold, with no channel held at W and no lightness ever lowered. The top moves
+# with the inputs and never jumps, so the result is continuous at W. The slack
+# below zero is W's, as the window gave it, so a black read at any W keeps the
+# sliver of chroma it kept before.
+#
+# The swapped *lch* back in the document's numbers, mapped into the cube stored
+# inputs *s* and *d* span.
+
+
+def components_to_document(vec3 lch, vec3 s, vec3 d) -> vec3:
+    vec3 top = max(document_to_linear(s), document_to_linear(d))
+    float white = document_to_linear(vec3(window_scale())).x
+    return oklch_to_document_under(lch, white, max(white, max(top.x, max(top.y, top.z))))
+
+# --- The source's density ----------------------------------------------------
+#
+# How many of the source's texels lie along one destination pixel. 2 is a chunk
+# at twice the document's resolution drawn into the document's picture, 1 is
+# every chunk at 1.0, and 0.5 is a chunk at 1.0 drawn at twice the density, each
+# texel repeated over a two by two block the way the view's nearest filter
+# magnifies it. It rides in the block's last spare float, and a zero there reads
+# as 1, so a caller that packs 0.0 composites as it always did.
+
+
+def source_density() -> float: return density > 0.0 ? density : 1.0
+
+# The texel under a destination pixel at a density of 1 or below, and above it
+# the mean of the n by n block under it. The colour is straight, so the mean
+# weighs each texel's colour by its alpha and a transparent texel lends it none.
+# A block whose alphas are equal takes the plain mean, which returns a solid
+# colour exactly rather than a division away from it.
+
+
+def read_source(ivec2 texel, ivec2 chunk_size, float d) -> vec4:
+    int n = int(round(d))
+    if n <= 1: return image_load(chunk, texel)
+    vec3 plain = vec3(0.0)
+    vec4 weighted = vec4(0.0)
+    float lowest = 3.4e38
+    float highest = -3.4e38
+    for y in range(n):
+        for x in range(n):
+            vec4 t = image_load(chunk, min(texel + ivec2(x, y), chunk_size - 1))
+            plain += t.rgb
+            weighted += vec4(t.rgb * t.a, t.a)
+            lowest = min(lowest, t.a)
+            highest = max(highest, t.a)
+    float count = n * n
+    if lowest == highest: return vec4(plain / count, highest)
+    if weighted.a <= 0.0: return vec4(0.0)
+    return vec4(weighted.rgb / weighted.a, weighted.a / count)
+
+
+def fetch_pixels(out ivec2 canvas_coords, out vec4 src, out vec4 dst) -> bool:
+    ivec2 local = ivec2(global_id.xy)
+
+    # A dispatch covers whole 8x8 workgroups, so the last one along each axis
+    # overhangs a region whose size is not a multiple of eight. A thread writing
+    # there would blend a pixel the clear pass never cleared, which composites it
+    # twice and reads as a darker band rather than as an error.
+    if local.x >= int(region_w) or local.y >= int(region_h):
+        return false
+
+    # The region and the offset are in destination pixels. The source is read
+    # at the destination pixel times the density, see read_source below.
+    ivec2 chunk_coords = local + ivec2(region_x, region_y)
+    canvas_coords = chunk_coords + ivec2(offset)
+
+    ivec2 canvas_size = image_size(canvas)
+    ivec2 chunk_size = image_size(chunk)
+    float d = source_density()
+    ivec2 texel = ivec2(floor(vec2(chunk_coords) * d))
+
+    if texel.x >= chunk_size.x or texel.y >= chunk_size.y:
+        return false
+    if canvas_coords.x >= canvas_size.x or canvas_coords.y >= canvas_size.y or canvas_coords.x < 0 or canvas_coords.y < 0:
+        return false
+
+    src = read_source(texel, chunk_size, d)
+    if src.a <= 0.0:
+        return false
+
+    src.a *= opacity
+    dst = image_load(canvas, canvas_coords)
+    return true
+
+# fetch_pixels, then into the 0-to-W window. Display-referred kernels use this
+# in place of fetch_pixels and pair it with blend_and_store_windowed.
+
+
+def fetch_pixels_windowed(out ivec2 canvas_coords, out vec4 src, out vec4 dst) -> bool:
+    if not fetch_pixels(canvas_coords, src, dst): return false
+    float w = window_scale()
+    src.rgb /= w
+    dst.rgb /= w
+    return true
+
+
+def porter_duff(vec4 src, vec4 dst, vec3 B) -> vec4:
+    float out_a = src.a + dst.a * (1.0 - src.a)
+    vec3 out_rgb = vec3(0.0)
+    if out_a > 0.0:
+        out_rgb = (src.a * (1.0 - dst.a) * src.rgb + src.a * dst.a * B + (1.0 - src.a) * dst.a * dst.rgb) / out_a
+    return vec4(out_rgb, out_a)
+
+
+def blend_and_store(ivec2 canvas_coords, vec4 src, vec4 dst, vec3 B):
+    image_store(canvas, canvas_coords, porter_duff(src, dst, B))
+
+# Leaves the window again on the way to storage.
+
+
+def blended_windowed(vec4 src, vec4 dst, vec3 B) -> vec4:
+    float w = window_scale()
+    src.rgb *= w
+    dst.rgb *= w
+    return porter_duff(src, dst, B * w)
+
+
+def blend_and_store_windowed(ivec2 canvas_coords, vec4 src, vec4 dst, vec3 B):
+    image_store(canvas, canvas_coords, blended_windowed(src, dst, B))
+
+# --- The RGB pair ------------------------------------------------------------
+#
+# Every mode whose formula is arithmetic on RGB channels fetches and stores
+# through these. On an RGB document both are exactly the identity and the kernel
+# runs the code it always ran, bit for bit. On an Oklab document the two inputs
+# come out into the document's RGB view, the formula runs there, and the result
+# goes back.
+#
+# Porter-Duff runs in RGB too, deliberately. A mode that has decided to work in
+# RGB should have its own output mixed with the backdrop in the same place it was
+# computed, not somewhere else.
+
+
+def fetch_pixels_rgb(out ivec2 canvas_coords, out vec4 src, out vec4 dst) -> bool:
+    if not fetch_pixels(canvas_coords, src, dst): return false
+    src.rgb = document_to_rgb(src.rgb)
+    dst.rgb = document_to_rgb(dst.rgb)
+    return true
+
+
+def blended_rgb(vec4 src, vec4 dst, vec3 B) -> vec4:
+    vec4 result = porter_duff(src, dst, B)
+    return vec4(rgb_to_document(result.rgb), result.a)
+
+
+def blend_and_store_rgb(ivec2 canvas_coords, vec4 src, vec4 dst, vec3 B):
+    image_store(canvas, canvas_coords, blended_rgb(src, dst, B))
+
+
+def fetch_pixels_rgb_windowed(out ivec2 canvas_coords, out vec4 src, out vec4 dst) -> bool:
+    if not fetch_pixels_rgb(canvas_coords, src, dst): return false
+    float w = window_scale()
+    src.rgb /= w
+    dst.rgb /= w
+    return true
+
+
+def blended_rgb_windowed(vec4 src, vec4 dst, vec3 B) -> vec4:
+    float w = window_scale()
+    src.rgb *= w
+    dst.rgb *= w
+    return blended_rgb(src, dst, B * w)
+
+
+def blend_and_store_rgb_windowed(ivec2 canvas_coords, vec4 src, vec4 dst, vec3 B):
+    image_store(canvas, canvas_coords, blended_rgb_windowed(src, dst, B))
+
+# The same pair for a mode that names its blending space. Unwindowed, because
+# Porter-Duff is a lerp and a lerp is well defined at any magnitude in any of the
+# three: windowing it would be a lie about what it computes, exactly as it would
+# be for add or multiply.
+
+
+def fetch_pixels_space(int space, out ivec2 canvas_coords, out vec4 src, out vec4 dst) -> bool:
+    if not fetch_pixels(canvas_coords, src, dst): return false
+    src.rgb = into_blend_space(src.rgb, space)
+    dst.rgb = into_blend_space(dst.rgb, space)
+    return true
+
+
+def blended_space(int space, vec4 src, vec4 dst, vec3 B) -> vec4:
+    vec4 result = porter_duff(src, dst, B)
+    return vec4(out_of_blend_space(result.rgb, space), result.a)
+
+
+def blend_and_store_space(int space, ivec2 canvas_coords, vec4 src, vec4 dst, vec3 B):
+    image_store(canvas, canvas_coords, blended_space(space, src, dst, B))

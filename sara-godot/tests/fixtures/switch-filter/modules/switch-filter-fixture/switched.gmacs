@@ -1,0 +1,17 @@
+# Paints the layer over in one of three ways a drop-down picks, or a quarter
+# grey when a checkbox is ticked.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+uniform int mode: hint_enum("Keep", "Black", "White") = 0
+uniform bool lift = false
+
+def pixel(ivec2 at) -> vec4:
+    vec4 c = src(at)
+    if lift:
+        return vec4(0.25, 0.25, 0.25, c.a)
+    if mode == 1:
+        return vec4(0.0, 0.0, 0.0, c.a)
+    if mode == 2:
+        return vec4(1.0, 1.0, 1.0, c.a)
+    return c

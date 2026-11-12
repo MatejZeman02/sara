@@ -1,0 +1,25 @@
+--- a/lib/jxl/research_switch.h
++++ b/lib/jxl/research_switch.h
+@@ -6,7 +6,9 @@
+ // Not part of libjxl. A switch for measuring effort 8 piece by piece: the
+ // environment variable JXL_E7 lists, comma separated, the choices of effort 8
+ // that go back to what effort 7 does. Read at every call, which costs nothing
+-// beside an encode.
++// beside an encode. A build that defines JXL_E7_FIXED as such a list takes
++// that list and never reads the environment, so the encoder's choices are
++// fixed when it is built.
+ 
+ #ifndef LIB_JXL_RESEARCH_SWITCH_H_
+ #define LIB_JXL_RESEARCH_SWITCH_H_
+@@ -17,7 +19,11 @@
+ namespace jxl {
+ 
+ inline bool BackToEffort7(const char* name) {
++#ifdef JXL_E7_FIXED
++  const char* list = JXL_E7_FIXED;
++#else
+   const char* list = std::getenv("JXL_E7");
++#endif
+   if (list == nullptr) return false;
+   size_t n = std::strlen(name);
+   for (const char* p = list; (p = std::strstr(p, name)) != nullptr; p += n) {

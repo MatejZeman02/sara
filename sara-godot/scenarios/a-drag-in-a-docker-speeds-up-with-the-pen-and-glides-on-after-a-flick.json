@@ -1,0 +1,111 @@
+[
+  {
+    "comment": "A fast flick of the pen on the Brush Presets docker's grid carries the list on past the pen and glides to its end, the last preset Wood Grain. The comments that name the virtual pen are where its suite, scripts/test_a_pen_flick_on_the_brush_presets_glides_to_their_last_preset.py, puts the pen's records from virtual_pen.py, turned into the driver's pen steps, one report a frame. A second flick after the glide leaves the grid where the first left it, which says the list stood at its end."
+  },
+  {
+    "wait": 40
+  },
+  {
+    "docker": "park"
+  },
+  {
+    "docker": {
+      "id": "BrushPresetsDocker",
+      "at": [
+        420,
+        200
+      ],
+      "size": [
+        310,
+        370
+      ]
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "presets_docker": {}
+  },
+  {
+    "control": {
+      "list": "BrushPresetsDocker"
+    }
+  },
+  {
+    "state": "1-the-list-at-its-top"
+  },
+  {
+    "shot": "1-the-list-at-its-top"
+  },
+  {
+    "wheel": {
+      "at": [
+        520,
+        470
+      ],
+      "notches": 0,
+      "read": true
+    }
+  },
+  {
+    "comment": "The virtual pen flicks the presets up from the middle of the grid"
+  },
+  {
+    "wheel": {
+      "at": [
+        520,
+        470
+      ],
+      "notches": 0,
+      "read": true
+    }
+  },
+  {
+    "shot": "2-the-release"
+  },
+  {
+    "wait": 150
+  },
+  {
+    "wheel": {
+      "at": [
+        520,
+        470
+      ],
+      "notches": 0,
+      "read": true
+    }
+  },
+  {
+    "presets_docker": {}
+  },
+  {
+    "state": "3-after-the-glide"
+  },
+  {
+    "shot": "3-after-the-glide"
+  },
+  {
+    "comment": "The virtual pen flicks the presets up a second time"
+  },
+  {
+    "wait": 150
+  },
+  {
+    "wheel": {
+      "at": [
+        520,
+        470
+      ],
+      "notches": 0,
+      "read": true
+    }
+  },
+  {
+    "presets_docker": {}
+  },
+  {
+    "shot": "4-a-second-flick-moves-nothing"
+  }
+]

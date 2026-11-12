@@ -1,0 +1,150 @@
+# Kernels: bloom
+# The glow of a value past a threshold. A neighbourhood kernel under the
+# contract SaNeighbourhoodPass writes: the padded source at binding 0, the
+# selection mask at binding 1, the chunk-sized target at binding 2.
+#
+# Every tap is read in linear light, the document's transfer curve undone on
+# the RGB the document stands for. What a channel holds above the threshold,
+# weighted by the texel's alpha, is the light that spreads. The spread is the
+# Gaussian blur's, separable inside one dispatch with the horizontal half in
+# workgroup memory, a bell of three standard deviations to the radius whose
+# support is a square of the radius either way, so a texel past the radius
+# reads none of it. The blurred light is scaled by the strength and added to
+# the texel's own premultiplied light, which never lowers it.
+#
+# A texel with no glow reaching it is stored as it was, bit for bit, because a
+# trip through the curve and back would move it by a rounding. Where the texel
+# is less than opaque the glow also lifts its alpha by the share of the missing
+# alpha the glow fills, so light thrown onto clear paper shows. Nothing clamps
+# a colour (hard rule 5) and only the lift's own fill is held to one.
+#
+# The helpers are edge_detection.gmacs's, repeated because a .gmacs block
+# cannot be shared between files without sharing the params that name it.
+
+kernel bloom
+
+import linear_srgb_color_space
+import transfer_curve
+
+image src: readonly
+image mask: r32f, readonly
+image dst
+
+params:
+    float threshold
+    int radius
+    float strength
+    int halo
+    vec2 origin
+    float doc_to_linear_srgb[9]
+    float linear_srgb_to_doc[9]
+    float transfer_slope
+    float transfer_threshold
+    float transfer_gain
+    float transfer_exponent
+    float coordinates
+
+# One row of the group's default eight by eight, which the formatter keeps
+# undeclared, so the array's 64 is that group and nothing else.
+shared vec4 across[64]
+
+import neighbourhood
+
+
+def to_linear_srgb_matrix() -> mat3:
+    return mat3(
+        doc_to_linear_srgb[0], doc_to_linear_srgb[1], doc_to_linear_srgb[2],
+        doc_to_linear_srgb[3], doc_to_linear_srgb[4], doc_to_linear_srgb[5],
+        doc_to_linear_srgb[6], doc_to_linear_srgb[7], doc_to_linear_srgb[8])
+
+
+def from_linear_srgb_matrix() -> mat3:
+    return mat3(
+        linear_srgb_to_doc[0], linear_srgb_to_doc[1], linear_srgb_to_doc[2],
+        linear_srgb_to_doc[3], linear_srgb_to_doc[4], linear_srgb_to_doc[5],
+        linear_srgb_to_doc[6], linear_srgb_to_doc[7], linear_srgb_to_doc[8])
+
+
+def document_to_linear(vec3 c) -> vec3:
+    return sa_transfer_decode(c, transfer_slope, transfer_threshold, transfer_gain, transfer_exponent)
+
+
+def linear_to_document(vec3 c) -> vec3:
+    return sa_transfer_encode(c, transfer_slope, transfer_threshold, transfer_gain, transfer_exponent)
+
+const int SA_COORDS_OKLAB = 1
+
+
+def document_is_oklab() -> bool: return int(coordinates + 0.5) == SA_COORDS_OKLAB
+
+
+def document_to_rgb(vec3 c) -> vec3:
+    if not document_is_oklab(): return c
+    return linear_to_document(from_linear_srgb_matrix() * oklab_to_linear_srgb(c))
+
+
+def rgb_to_document(vec3 c) -> vec3:
+    if not document_is_oklab(): return c
+    return linear_srgb_to_oklab(to_linear_srgb_matrix() * document_to_linear(c))
+
+# The stored colour as light: the RGB it stands for, the curve undone.
+
+
+def stored_to_light(vec3 c) -> vec3:
+    return document_to_linear(document_to_rgb(c))
+
+# Light back into what the document stores.
+
+
+def light_to_stored(vec3 light) -> vec3:
+    return rgb_to_document(linear_to_document(light))
+
+# The light a texel throws, premultiplied: what it holds above the threshold.
+
+
+def glow_of(vec4 colour) -> vec3:
+    return max(stored_to_light(colour.rgb) - vec3(threshold), vec3(0.0)) * colour.a
+
+
+def weight(int offset, float sigma) -> float:
+    return exp(-float(offset * offset) / (2.0 * sigma * sigma))
+
+
+def bloom():
+    ivec2 at = pixel + ivec2(origin)
+    bool inside = at.x < image_size(dst).x and at.y < image_size(dst).y
+    int reach = max(min(radius, halo), 0)
+    # Three standard deviations to the radius, so the tail left out is under
+    # a hundredth of the weight.
+    float sigma = max(reach / 3.0, 0.001)
+    float line = 0.0
+    for i in range_inclusive(-reach, reach):
+        line += weight(i, sigma)
+    ivec2 last = image_size(src) - 1
+    int top = at.y - int(local_id.y) - reach
+    int blocks = (8 + 2 * reach + 7) / 8
+    vec3 sum = vec3(0.0)
+    for block in range(blocks):
+        int row = top + block * 8 + int(local_id.y)
+        vec3 part = vec3(0.0)
+        for dx in range_inclusive(-reach, reach):
+            ivec2 tap = clamp(ivec2(at.x + dx, row) + ivec2(halo, halo), ivec2(0, 0), last)
+            part += weight(dx, sigma) * glow_of(src[tap])
+        across[local_index] = vec4(part, 0.0)
+        barrier()
+        for ly in range(8):
+            int dy = top + block * 8 + ly - at.y
+            if abs(dy) <= reach:
+                sum += weight(dy, sigma) * across[ly * 8 + int(local_id.x)].rgb
+        barrier()
+    if not inside:
+        return
+    vec4 kept = sa_kept(at)
+    vec3 added = strength * sum / (line * line)
+    if added.r <= 0.0 and added.g <= 0.0 and added.b <= 0.0:
+        sa_finish(at, kept, kept)
+        return
+    vec3 light = stored_to_light(kept.rgb) * kept.a + added
+    float fill = clamp(max(added.r, max(added.g, added.b)), 0.0, 1.0)
+    float alpha = kept.a + (1.0 - kept.a) * fill
+    sa_finish(at, kept, vec4(light_to_stored(light / alpha), alpha))

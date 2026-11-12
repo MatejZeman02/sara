@@ -1,0 +1,1928 @@
+[
+{
+"timeout": 1500
+},
+{
+"wait": 30
+},
+{
+"prefs": {
+"ui_scale": 0.75,
+"ui_font_scale": 0.55
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s075-f055"
+},
+{
+"prefs": {
+"ui_scale": 0.75,
+"ui_font_scale": 0.6
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s075-f060"
+},
+{
+"prefs": {
+"ui_scale": 0.75,
+"ui_font_scale": 0.65
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s075-f065"
+},
+{
+"prefs": {
+"ui_scale": 0.75,
+"ui_font_scale": 0.7
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s075-f070"
+},
+{
+"prefs": {
+"ui_scale": 0.75,
+"ui_font_scale": 0.75
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s075-f075"
+},
+{
+"prefs": {
+"ui_scale": 0.75,
+"ui_font_scale": 0.8
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s075-f080"
+},
+{
+"prefs": {
+"ui_scale": 0.75,
+"ui_font_scale": 0.85
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s075-f085"
+},
+{
+"prefs": {
+"ui_scale": 0.75,
+"ui_font_scale": 0.9
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s075-f090"
+},
+{
+"prefs": {
+"ui_scale": 0.75,
+"ui_font_scale": 0.95
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s075-f095"
+},
+{
+"prefs": {
+"ui_scale": 0.75,
+"ui_font_scale": 1.0
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s075-f100"
+},
+{
+"prefs": {
+"ui_scale": 0.8,
+"ui_font_scale": 0.55
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s080-f055"
+},
+{
+"prefs": {
+"ui_scale": 0.8,
+"ui_font_scale": 0.6
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s080-f060"
+},
+{
+"prefs": {
+"ui_scale": 0.8,
+"ui_font_scale": 0.65
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s080-f065"
+},
+{
+"prefs": {
+"ui_scale": 0.8,
+"ui_font_scale": 0.7
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s080-f070"
+},
+{
+"prefs": {
+"ui_scale": 0.8,
+"ui_font_scale": 0.75
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s080-f075"
+},
+{
+"prefs": {
+"ui_scale": 0.8,
+"ui_font_scale": 0.8
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s080-f080"
+},
+{
+"prefs": {
+"ui_scale": 0.8,
+"ui_font_scale": 0.85
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s080-f085"
+},
+{
+"prefs": {
+"ui_scale": 0.8,
+"ui_font_scale": 0.9
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s080-f090"
+},
+{
+"prefs": {
+"ui_scale": 0.8,
+"ui_font_scale": 0.95
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s080-f095"
+},
+{
+"prefs": {
+"ui_scale": 0.8,
+"ui_font_scale": 1.0
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s080-f100"
+},
+{
+"prefs": {
+"ui_scale": 0.85,
+"ui_font_scale": 0.55
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s085-f055"
+},
+{
+"prefs": {
+"ui_scale": 0.85,
+"ui_font_scale": 0.6
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s085-f060"
+},
+{
+"prefs": {
+"ui_scale": 0.85,
+"ui_font_scale": 0.65
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s085-f065"
+},
+{
+"prefs": {
+"ui_scale": 0.85,
+"ui_font_scale": 0.7
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s085-f070"
+},
+{
+"prefs": {
+"ui_scale": 0.85,
+"ui_font_scale": 0.75
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s085-f075"
+},
+{
+"prefs": {
+"ui_scale": 0.85,
+"ui_font_scale": 0.8
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s085-f080"
+},
+{
+"prefs": {
+"ui_scale": 0.85,
+"ui_font_scale": 0.85
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s085-f085"
+},
+{
+"prefs": {
+"ui_scale": 0.85,
+"ui_font_scale": 0.9
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s085-f090"
+},
+{
+"prefs": {
+"ui_scale": 0.85,
+"ui_font_scale": 0.95
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s085-f095"
+},
+{
+"prefs": {
+"ui_scale": 0.85,
+"ui_font_scale": 1.0
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s085-f100"
+},
+{
+"prefs": {
+"ui_scale": 0.9,
+"ui_font_scale": 0.55
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s090-f055"
+},
+{
+"prefs": {
+"ui_scale": 0.9,
+"ui_font_scale": 0.6
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s090-f060"
+},
+{
+"prefs": {
+"ui_scale": 0.9,
+"ui_font_scale": 0.65
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s090-f065"
+},
+{
+"prefs": {
+"ui_scale": 0.9,
+"ui_font_scale": 0.7
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s090-f070"
+},
+{
+"prefs": {
+"ui_scale": 0.9,
+"ui_font_scale": 0.75
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s090-f075"
+},
+{
+"prefs": {
+"ui_scale": 0.9,
+"ui_font_scale": 0.8
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s090-f080"
+},
+{
+"prefs": {
+"ui_scale": 0.9,
+"ui_font_scale": 0.85
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s090-f085"
+},
+{
+"prefs": {
+"ui_scale": 0.9,
+"ui_font_scale": 0.9
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s090-f090"
+},
+{
+"prefs": {
+"ui_scale": 0.9,
+"ui_font_scale": 0.95
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s090-f095"
+},
+{
+"prefs": {
+"ui_scale": 0.9,
+"ui_font_scale": 1.0
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s090-f100"
+},
+{
+"prefs": {
+"ui_scale": 0.95,
+"ui_font_scale": 0.55
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s095-f055"
+},
+{
+"prefs": {
+"ui_scale": 0.95,
+"ui_font_scale": 0.6
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s095-f060"
+},
+{
+"prefs": {
+"ui_scale": 0.95,
+"ui_font_scale": 0.65
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s095-f065"
+},
+{
+"prefs": {
+"ui_scale": 0.95,
+"ui_font_scale": 0.7
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s095-f070"
+},
+{
+"prefs": {
+"ui_scale": 0.95,
+"ui_font_scale": 0.75
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s095-f075"
+},
+{
+"prefs": {
+"ui_scale": 0.95,
+"ui_font_scale": 0.8
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s095-f080"
+},
+{
+"prefs": {
+"ui_scale": 0.95,
+"ui_font_scale": 0.85
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s095-f085"
+},
+{
+"prefs": {
+"ui_scale": 0.95,
+"ui_font_scale": 0.9
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s095-f090"
+},
+{
+"prefs": {
+"ui_scale": 0.95,
+"ui_font_scale": 0.95
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s095-f095"
+},
+{
+"prefs": {
+"ui_scale": 0.95,
+"ui_font_scale": 1.0
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s095-f100"
+},
+{
+"prefs": {
+"ui_scale": 1.0,
+"ui_font_scale": 0.55
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s100-f055"
+},
+{
+"prefs": {
+"ui_scale": 1.0,
+"ui_font_scale": 0.6
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s100-f060"
+},
+{
+"prefs": {
+"ui_scale": 1.0,
+"ui_font_scale": 0.65
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s100-f065"
+},
+{
+"prefs": {
+"ui_scale": 1.0,
+"ui_font_scale": 0.7
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s100-f070"
+},
+{
+"prefs": {
+"ui_scale": 1.0,
+"ui_font_scale": 0.75
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s100-f075"
+},
+{
+"prefs": {
+"ui_scale": 1.0,
+"ui_font_scale": 0.8
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s100-f080"
+},
+{
+"prefs": {
+"ui_scale": 1.0,
+"ui_font_scale": 0.85
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s100-f085"
+},
+{
+"prefs": {
+"ui_scale": 1.0,
+"ui_font_scale": 0.9
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s100-f090"
+},
+{
+"prefs": {
+"ui_scale": 1.0,
+"ui_font_scale": 0.95
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s100-f095"
+},
+{
+"prefs": {
+"ui_scale": 1.0,
+"ui_font_scale": 1.0
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s100-f100"
+},
+{
+"prefs": {
+"ui_scale": 1.05,
+"ui_font_scale": 0.55
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s105-f055"
+},
+{
+"prefs": {
+"ui_scale": 1.05,
+"ui_font_scale": 0.6
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s105-f060"
+},
+{
+"prefs": {
+"ui_scale": 1.05,
+"ui_font_scale": 0.65
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s105-f065"
+},
+{
+"prefs": {
+"ui_scale": 1.05,
+"ui_font_scale": 0.7
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s105-f070"
+},
+{
+"prefs": {
+"ui_scale": 1.05,
+"ui_font_scale": 0.75
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s105-f075"
+},
+{
+"prefs": {
+"ui_scale": 1.05,
+"ui_font_scale": 0.8
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s105-f080"
+},
+{
+"prefs": {
+"ui_scale": 1.05,
+"ui_font_scale": 0.85
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s105-f085"
+},
+{
+"prefs": {
+"ui_scale": 1.05,
+"ui_font_scale": 0.9
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s105-f090"
+},
+{
+"prefs": {
+"ui_scale": 1.05,
+"ui_font_scale": 0.95
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s105-f095"
+},
+{
+"prefs": {
+"ui_scale": 1.05,
+"ui_font_scale": 1.0
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s105-f100"
+},
+{
+"prefs": {
+"ui_scale": 1.1,
+"ui_font_scale": 0.55
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s110-f055"
+},
+{
+"prefs": {
+"ui_scale": 1.1,
+"ui_font_scale": 0.6
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s110-f060"
+},
+{
+"prefs": {
+"ui_scale": 1.1,
+"ui_font_scale": 0.65
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s110-f065"
+},
+{
+"prefs": {
+"ui_scale": 1.1,
+"ui_font_scale": 0.7
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s110-f070"
+},
+{
+"prefs": {
+"ui_scale": 1.1,
+"ui_font_scale": 0.75
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s110-f075"
+},
+{
+"prefs": {
+"ui_scale": 1.1,
+"ui_font_scale": 0.8
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s110-f080"
+},
+{
+"prefs": {
+"ui_scale": 1.1,
+"ui_font_scale": 0.85
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s110-f085"
+},
+{
+"prefs": {
+"ui_scale": 1.1,
+"ui_font_scale": 0.9
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s110-f090"
+},
+{
+"prefs": {
+"ui_scale": 1.1,
+"ui_font_scale": 0.95
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s110-f095"
+},
+{
+"prefs": {
+"ui_scale": 1.1,
+"ui_font_scale": 1.0
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s110-f100"
+},
+{
+"prefs": {
+"ui_scale": 1.15,
+"ui_font_scale": 0.55
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s115-f055"
+},
+{
+"prefs": {
+"ui_scale": 1.15,
+"ui_font_scale": 0.6
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s115-f060"
+},
+{
+"prefs": {
+"ui_scale": 1.15,
+"ui_font_scale": 0.65
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s115-f065"
+},
+{
+"prefs": {
+"ui_scale": 1.15,
+"ui_font_scale": 0.7
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s115-f070"
+},
+{
+"prefs": {
+"ui_scale": 1.15,
+"ui_font_scale": 0.75
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s115-f075"
+},
+{
+"prefs": {
+"ui_scale": 1.15,
+"ui_font_scale": 0.8
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s115-f080"
+},
+{
+"prefs": {
+"ui_scale": 1.15,
+"ui_font_scale": 0.85
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s115-f085"
+},
+{
+"prefs": {
+"ui_scale": 1.15,
+"ui_font_scale": 0.9
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s115-f090"
+},
+{
+"prefs": {
+"ui_scale": 1.15,
+"ui_font_scale": 0.95
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s115-f095"
+},
+{
+"prefs": {
+"ui_scale": 1.15,
+"ui_font_scale": 1.0
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s115-f100"
+},
+{
+"prefs": {
+"ui_scale": 1.2,
+"ui_font_scale": 0.55
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s120-f055"
+},
+{
+"prefs": {
+"ui_scale": 1.2,
+"ui_font_scale": 0.6
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s120-f060"
+},
+{
+"prefs": {
+"ui_scale": 1.2,
+"ui_font_scale": 0.65
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s120-f065"
+},
+{
+"prefs": {
+"ui_scale": 1.2,
+"ui_font_scale": 0.7
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s120-f070"
+},
+{
+"prefs": {
+"ui_scale": 1.2,
+"ui_font_scale": 0.75
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s120-f075"
+},
+{
+"prefs": {
+"ui_scale": 1.2,
+"ui_font_scale": 0.8
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s120-f080"
+},
+{
+"prefs": {
+"ui_scale": 1.2,
+"ui_font_scale": 0.85
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s120-f085"
+},
+{
+"prefs": {
+"ui_scale": 1.2,
+"ui_font_scale": 0.9
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s120-f090"
+},
+{
+"prefs": {
+"ui_scale": 1.2,
+"ui_font_scale": 0.95
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s120-f095"
+},
+{
+"prefs": {
+"ui_scale": 1.2,
+"ui_font_scale": 1.0
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s120-f100"
+},
+{
+"prefs": {
+"ui_scale": 1.25,
+"ui_font_scale": 0.55
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s125-f055"
+},
+{
+"prefs": {
+"ui_scale": 1.25,
+"ui_font_scale": 0.6
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s125-f060"
+},
+{
+"prefs": {
+"ui_scale": 1.25,
+"ui_font_scale": 0.65
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s125-f065"
+},
+{
+"prefs": {
+"ui_scale": 1.25,
+"ui_font_scale": 0.7
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s125-f070"
+},
+{
+"prefs": {
+"ui_scale": 1.25,
+"ui_font_scale": 0.75
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s125-f075"
+},
+{
+"prefs": {
+"ui_scale": 1.25,
+"ui_font_scale": 0.8
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s125-f080"
+},
+{
+"prefs": {
+"ui_scale": 1.25,
+"ui_font_scale": 0.85
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s125-f085"
+},
+{
+"prefs": {
+"ui_scale": 1.25,
+"ui_font_scale": 0.9
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s125-f090"
+},
+{
+"prefs": {
+"ui_scale": 1.25,
+"ui_font_scale": 0.95
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s125-f095"
+},
+{
+"prefs": {
+"ui_scale": 1.25,
+"ui_font_scale": 1.0
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s125-f100"
+},
+{
+"prefs": {
+"ui_scale": 1.3,
+"ui_font_scale": 0.55
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s130-f055"
+},
+{
+"prefs": {
+"ui_scale": 1.3,
+"ui_font_scale": 0.6
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s130-f060"
+},
+{
+"prefs": {
+"ui_scale": 1.3,
+"ui_font_scale": 0.65
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s130-f065"
+},
+{
+"prefs": {
+"ui_scale": 1.3,
+"ui_font_scale": 0.7
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s130-f070"
+},
+{
+"prefs": {
+"ui_scale": 1.3,
+"ui_font_scale": 0.75
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s130-f075"
+},
+{
+"prefs": {
+"ui_scale": 1.3,
+"ui_font_scale": 0.8
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s130-f080"
+},
+{
+"prefs": {
+"ui_scale": 1.3,
+"ui_font_scale": 0.85
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s130-f085"
+},
+{
+"prefs": {
+"ui_scale": 1.3,
+"ui_font_scale": 0.9
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s130-f090"
+},
+{
+"prefs": {
+"ui_scale": 1.3,
+"ui_font_scale": 0.95
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s130-f095"
+},
+{
+"prefs": {
+"ui_scale": 1.3,
+"ui_font_scale": 1.0
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s130-f100"
+},
+{
+"prefs": {
+"ui_scale": 1.35,
+"ui_font_scale": 0.55
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s135-f055"
+},
+{
+"prefs": {
+"ui_scale": 1.35,
+"ui_font_scale": 0.6
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s135-f060"
+},
+{
+"prefs": {
+"ui_scale": 1.35,
+"ui_font_scale": 0.65
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s135-f065"
+},
+{
+"prefs": {
+"ui_scale": 1.35,
+"ui_font_scale": 0.7
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s135-f070"
+},
+{
+"prefs": {
+"ui_scale": 1.35,
+"ui_font_scale": 0.75
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s135-f075"
+},
+{
+"prefs": {
+"ui_scale": 1.35,
+"ui_font_scale": 0.8
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s135-f080"
+},
+{
+"prefs": {
+"ui_scale": 1.35,
+"ui_font_scale": 0.85
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s135-f085"
+},
+{
+"prefs": {
+"ui_scale": 1.35,
+"ui_font_scale": 0.9
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s135-f090"
+},
+{
+"prefs": {
+"ui_scale": 1.35,
+"ui_font_scale": 0.95
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s135-f095"
+},
+{
+"prefs": {
+"ui_scale": 1.35,
+"ui_font_scale": 1.0
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s135-f100"
+},
+{
+"prefs": {
+"ui_scale": 1.4,
+"ui_font_scale": 0.55
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s140-f055"
+},
+{
+"prefs": {
+"ui_scale": 1.4,
+"ui_font_scale": 0.6
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s140-f060"
+},
+{
+"prefs": {
+"ui_scale": 1.4,
+"ui_font_scale": 0.65
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s140-f065"
+},
+{
+"prefs": {
+"ui_scale": 1.4,
+"ui_font_scale": 0.7
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s140-f070"
+},
+{
+"prefs": {
+"ui_scale": 1.4,
+"ui_font_scale": 0.75
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s140-f075"
+},
+{
+"prefs": {
+"ui_scale": 1.4,
+"ui_font_scale": 0.8
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s140-f080"
+},
+{
+"prefs": {
+"ui_scale": 1.4,
+"ui_font_scale": 0.85
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s140-f085"
+},
+{
+"prefs": {
+"ui_scale": 1.4,
+"ui_font_scale": 0.9
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s140-f090"
+},
+{
+"prefs": {
+"ui_scale": 1.4,
+"ui_font_scale": 0.95
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s140-f095"
+},
+{
+"prefs": {
+"ui_scale": 1.4,
+"ui_font_scale": 1.0
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s140-f100"
+},
+{
+"prefs": {
+"ui_scale": 1.45,
+"ui_font_scale": 0.55
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s145-f055"
+},
+{
+"prefs": {
+"ui_scale": 1.45,
+"ui_font_scale": 0.6
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s145-f060"
+},
+{
+"prefs": {
+"ui_scale": 1.45,
+"ui_font_scale": 0.65
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s145-f065"
+},
+{
+"prefs": {
+"ui_scale": 1.45,
+"ui_font_scale": 0.7
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s145-f070"
+},
+{
+"prefs": {
+"ui_scale": 1.45,
+"ui_font_scale": 0.75
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s145-f075"
+},
+{
+"prefs": {
+"ui_scale": 1.45,
+"ui_font_scale": 0.8
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s145-f080"
+},
+{
+"prefs": {
+"ui_scale": 1.45,
+"ui_font_scale": 0.85
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s145-f085"
+},
+{
+"prefs": {
+"ui_scale": 1.45,
+"ui_font_scale": 0.9
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s145-f090"
+},
+{
+"prefs": {
+"ui_scale": 1.45,
+"ui_font_scale": 0.95
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s145-f095"
+},
+{
+"prefs": {
+"ui_scale": 1.45,
+"ui_font_scale": 1.0
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s145-f100"
+},
+{
+"prefs": {
+"ui_scale": 1.5,
+"ui_font_scale": 0.55
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s150-f055"
+},
+{
+"prefs": {
+"ui_scale": 1.5,
+"ui_font_scale": 0.6
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s150-f060"
+},
+{
+"prefs": {
+"ui_scale": 1.5,
+"ui_font_scale": 0.65
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s150-f065"
+},
+{
+"prefs": {
+"ui_scale": 1.5,
+"ui_font_scale": 0.7
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s150-f070"
+},
+{
+"prefs": {
+"ui_scale": 1.5,
+"ui_font_scale": 0.75
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s150-f075"
+},
+{
+"prefs": {
+"ui_scale": 1.5,
+"ui_font_scale": 0.8
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s150-f080"
+},
+{
+"prefs": {
+"ui_scale": 1.5,
+"ui_font_scale": 0.85
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s150-f085"
+},
+{
+"prefs": {
+"ui_scale": 1.5,
+"ui_font_scale": 0.9
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s150-f090"
+},
+{
+"prefs": {
+"ui_scale": 1.5,
+"ui_font_scale": 0.95
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s150-f095"
+},
+{
+"prefs": {
+"ui_scale": 1.5,
+"ui_font_scale": 1.0
+}
+},
+{
+"wait": 4
+},
+{
+"shot": "text-s150-f100"
+}
+]

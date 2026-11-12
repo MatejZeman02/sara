@@ -1,0 +1,13 @@
+[
+  {"settings": "keep"},
+  {"comment": "The profile the first half left in Czech, opened again, so the welcome window is built at boot before the Czech module registers its catalogue. The News pane is brought to the front and shot: its title, the paragraph above the button, the button, the open section's heading and the release notes all read Czech, with no English sentence left."},
+  {"wait": 45},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 20},
+  {"open": "welcome"},
+  {"wait": 11},
+  {"news": {"tab": true}},
+  {"wait": 11},
+  {"shot": "2-the-news-pane-in-a-run-begun-in-czech"},
+  {"state": "2-the-news-pane-in-a-run-begun-in-czech"}
+]

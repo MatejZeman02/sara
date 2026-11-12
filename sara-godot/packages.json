@@ -1,0 +1,1299 @@
+{
+ "about": "The map of the skeleton, one entry for each package of the code. A feature is a folder with a facade, and public names the files other packages may use. The structure tests and scripts/gen_file_map.py read it, and the line budgets are in structure_ledgers.json.",
+ "pinned": [
+ ],
+ "packages": [
+  {
+   "dir": "core/api",
+   "about": "What a module is handed: the context, the view, the surface, the two base classes a module extends, the field and option specs, the bus and the problems list",
+   "kind": "library",
+   "public": "*"
+  },
+  {
+   "dir": "core/api/color",
+   "about": "What a document's numbers mean: the colour space and the four axes it is made of, Oklab, and the GLSL side, and the colour ramp with its saved gradient",
+   "kind": "library",
+   "public": "*"
+  },
+  {
+   "dir": "core/api/dab",
+   "about": "Where dabs land along a stroke and how far apart: the distance walk and the curve between samples, the spacing cadence, a dab's geometry and the record a dab kernel reads",
+   "kind": "library",
+   "public": "*"
+  },
+  {
+   "dir": "core/api/image_format",
+   "about": "What a picture format registers: its extensions and header test, its reader and layered routes, and its Export rows, sentences and writer",
+   "kind": "library",
+   "public": "*"
+  },
+  {
+   "dir": "core/api/input_source",
+   "about": "Input sources. Where input comes from when Godot does not hand it to a control by itself, a MIDI controller the first: the source a module registers, applied when a setting it names moves, with its dump block and its door step",
+   "kind": "library",
+   "public": "*"
+  },
+  {
+   "dir": "core/api/picture_file",
+   "about": "What a picture format module reads and writes through: a texture's float or encoded image, the PNG bytes, the profile a gamut writes and the space a profile names, the layer fill and the export's metadata",
+   "kind": "library",
+   "public": "*"
+  },
+  {
+   "dir": "core/api/descriptors",
+   "about": "What a module fills in to register something: a tool, a command, a blend mode, a layer type and a view transform, each as data the registries read",
+   "kind": "library",
+   "public": "*"
+  },
+  {
+   "dir": "core/api/drawn",
+   "about": "The drawn layer's recipe, the narrow face a layer whose pixels are drawn on demand gives the skeleton: its bounds, a draw of one region of one chunk, what an edit touched, and its JSON",
+   "kind": "library",
+   "public": "*"
+  },
+  {
+   "dir": "core/api/drive",
+   "about": "Control drive. What a bound control drives, the door a module moves the app's values, presets and filters through and asks what a click binds, without naming a window",
+   "kind": "library",
+   "public": "*"
+  },
+  {
+   "dir": "core/api/dynamics",
+   "about": "What any brush engine is driven by: the sensors, the curve option that binds them to a setting, the dynamics that read every option into one dab's parameters, the stroke state and the colour dynamics",
+   "kind": "library",
+   "public": "*"
+  },
+  {
+   "dir": "core/api/dynamics/speed",
+   "about": "The speed smoother. How fast the hand is moving, from the pen's reports: the real distances over a trimmed rolling mean of the intervals, and a frame's reports spread over the frame, the base of the stroke's sample",
+   "kind": "feature",
+   "public": ["sa_speed_smoother.gd"]
+  },
+  {
+   "dir": "core/api/document",
+   "about": "The document: its layers, chunks, dirty set, symmetry, relief light, Double Resolution switch and the writes that make a history step",
+   "kind": "feature",
+   "public": ["sa_document.gd", "sa_layer.gd", "sa_chunk.gd", "sa_chunk_delta.gd", "sa_mask.gd", "sa_document_background.gd", "sa_symmetry.gd", "sa_relief_light.gd", "sa_double_resolution.gd", "sa_document_source.gd"]
+  },
+  {
+   "dir": "core/api/document/history",
+   "about": "The document's undo history, bounded by bytes rather than by steps: the actions a step registers, the deltas it holds, the trim that drops the oldest and the cursor the undo docker reads",
+   "kind": "feature",
+   "public": ["sa_history.gd"]
+  },
+  {
+   "dir": "core/api/filter",
+   "about": "What a filter is handed: its context, its pixels, apply and cancel, the filter that is one pixel function, and the file its preset is saved as",
+   "kind": "library",
+   "public": "*"
+  },
+  {
+   "dir": "core/api/filter/passes",
+   "about": "A filter's pass recorded rather than run, the point pass and the pass that reads its neighbours, which the compositor previews and Apply walks once over the chunks",
+   "kind": "library",
+   "public": "*"
+  },
+  {
+   "dir": "core/api/graph",
+   "about": "The Graph docker's pass, the scope without the window: the bins of a picture or a layer and the picture drawn from them, which the base module's Levels and Curves draw too",
+   "kind": "feature",
+   "public": [
+    "sa_graph_plot.gd"
+   ]
+  },
+  {
+   "dir": "core/api/reduction",
+   "about": "Reductions. One service runs the Graph docker's pass and the Stats docker's numbers on one schedule, the graph's per-frame pace while it is open and the idle clock otherwise, and nothing while neither docker is, behind the door because the Stats docker is a module's",
+   "kind": "feature",
+   "public": ["sa_reduction_service.gd"]
+  },
+  {
+   "dir": "core/api/gpu",
+   "about": "The RAII texture every layer of the tree holds (hard rule 4 names it)",
+   "kind": "feature",
+   "public": ["sa_texture.gd"]
+  },
+  {
+   "dir": "core/api/paint",
+   "about": "What a painting pass is handed: the chunk walk, the padding a neighbourhood pass reads a chunk with, the paint context, the stroke's starting heights, the one writer of the resample kernel's push constant and what a change makes stale through the filters of the tree",
+   "kind": "library",
+   "public": "*"
+  },
+  {
+   "dir": "core/api/projection",
+   "about": "Projection. What a document's pixels are a picture of: the projection descriptor, its orientation, the kinds that map a pixel to a direction and back, the registry they are listed in, and the conversion that redraws every layer's pixels from one kind to another",
+   "kind": "feature",
+   "public": ["sa_projection.gd"]
+  },
+  {
+   "dir": "core/api/selection",
+   "about": "The selection, its menu operations and the clipboard",
+   "kind": "feature",
+   "public": ["sa_selection.gd", "sa_selection_filters.gd", "sa_color_range.gd", "sa_select_opaque.gd", "sa_clipboard.gd", "sa_selection_held.gd", "sa_mask_clipboard.gd"]
+  },
+  {
+   "dir": "core/api/abr",
+   "about": "Photoshop's brush collection: the reader that lists an `.abr`'s tips, versions 1, 2, 6, 7 and 10, raw and packed, each a picture or a refusal by name",
+   "kind": "feature",
+   "public": ["sa_abr_collection.gd"]
+  },
+  {
+   "dir": "core/api/brush_field",
+   "about": "What an engine paints through: the fields a module registers on the door, each naming its engine and its kernel, which the noise brush reads its grain, bristle and picture from",
+   "kind": "feature",
+   "public": ["sa_brush_field_registry.gd"]
+  },
+  {
+   "dir": "core/api/pattern",
+   "about": "What a texture is made of: the pattern store over the shipped and the painter's folders, one pattern, and the readers for a picture, a GIMP pattern and a pixel function, shared by both brush engines",
+   "kind": "library",
+   "public": "*"
+  },
+  {
+   "dir": "core/api/smudge",
+   "about": "What a smudge carries: the reservoir the pickup moves towards the paint under each dab, the layer snapshot it reads with Sample Merged off, and the stage's page, shared by both brush engines",
+   "kind": "library",
+   "public": "*"
+  },
+  {
+   "dir": "core/api/tip",
+   "about": "What shape a dab is: the tip, its mask and softness table, the image and pipe tips and the readers that load them",
+   "kind": "library",
+   "public": "*"
+  },
+  {
+   "dir": "core/api/tip/cells",
+   "about": "A brush pipe's cells made on the card from the bytes the file holds, by a kernel that gives the tip texture the CPU's own texels to the bit",
+   "kind": "library",
+   "public": "*"
+  },
+  {
+   "dir": "core/api/tip/choices",
+   "about": "A brush engine's Tip Image list. The list a page offers from the tip folders, read by the stamp brush and the noise brush alike",
+   "kind": "library",
+   "public": "*"
+  },
+  {
+   "dir": "core/api/vector",
+   "about": "Closed paths drawn into a layer's chunks at their exact coverage, the renderer vector shapes, text and a module's own shapes share",
+   "kind": "library",
+   "public": "*"
+  },
+  {
+   "dir": "core/app",
+   "about": "What the running app says about itself and asks of the platform: the build, the changelog, the console with its mark, the run log a second Sara leaves alone, the device's floor, the file picker every caller opens and the crash made on purpose",
+   "kind": "library",
+   "public": "*"
+  },
+  {
+   "dir": "core/colors",
+   "about": "The painter's colours and the `.gpl` palette file",
+   "kind": "feature",
+   "public": ["sa_color_store.gd"]
+  },
+  {
+   "dir": "core/composite",
+   "about": "The easel that owns one painting, the stack it folds and the compositor",
+   "kind": "feature",
+   "public": ["sa_easel.gd", "sa_layer_stack.gd", "sa_layer_fold.gd", "sa_compositor.gd", "sa_composite_backlog.gd"]
+  },
+  {
+   "dir": "core/composite/local-view",
+   "about": "Isolate Active Layer: what the canvas leaves out, and the framing",
+   "kind": "feature",
+   "public": ["sa_local_view.gd"]
+  },
+  {
+   "dir": "core/composite/walk",
+   "about": "The compositor's walk, the stack below the active layer, the active tier with the live stroke inside its isolated groups and the stack above, each chunk through its filters, mask and clip, with the scratches and the stroke run only the walk reads",
+   "kind": "feature",
+   "public": ["sa_composite_walk.gd"]
+  },
+  {
+   "dir": "core/composite/ledger",
+   "about": "What the fold baked into its caches at the last rebuild, masks and effects alike, so a change to one of them is known to want the fold again",
+   "kind": "feature",
+   "public": ["sa_fold_ledger.gd"]
+  },
+  {
+   "dir": "core/composite/fold-step",
+   "about": "A fold step's pixels. One step of the fold composited into a cache chunk as the canvas composites it, a clipping base through its group, a generated layer, an adjustment and a layer through its filters and mask",
+   "kind": "feature",
+   "public": ["sa_fold_step.gd"]
+  },
+  {
+   "dir": "core/composite/debt",
+   "about": "What the fold owes the document since an activation or a change of the stack put it off, paid at a stroke's press, at the composite that draws a changed stack, or on the first idle frame",
+   "kind": "feature",
+   "public": ["sa_fold_debt.gd"]
+  },
+  {
+   "dir": "core/composite/relief",
+   "about": "The height of every visible layer summed by opacity into one dense texture for the view, with the normal derived from it, over the composite's dirty rectangles",
+   "kind": "feature",
+   "public": ["sa_relief.gd"]
+  },
+  {
+   "dir": "core/composite/resolution",
+   "about": "A layer at 2.0, averaged or undiminished: a finer chunk brought to the document's resolution, the mean of the texels under each pixel, for the paths that read a chunk texel for texel against a coverage, and the display chunks that show its own texels under a zoomed in view",
+   "kind": "feature",
+   "public": ["sa_document_texels.gd", "sa_detail_view.gd", "sa_layer_shown.gd", "sa_fine_group.gd"]
+  },
+  {
+   "dir": "core/composite/filter-chain",
+   "about": "A node's attached filters run in order over what the node composites to, the positions a halo carries paint into with the dirty regions grown to reach them, and the halo the root and a scope keep for a filter that reads its neighbours",
+   "kind": "feature",
+   "public": ["sa_filter_chain.gd", "sa_filter_halo.gd"]
+  },
+  {
+   "dir": "core/composite/snapshot",
+   "about": "The sample merged snapshot, a stroke's read of the composite under the dab for the smudge, the eyedropper and the export's gamut",
+   "kind": "feature",
+   "public": ["sa_merged_snapshot.gd"]
+  },
+  {
+   "dir": "core/custom-shader",
+   "about": "One compute dispatch from binding slots to push constants, RAII: everything here touches a device. MIT, with its own licence file",
+   "kind": "feature",
+   "public": ["sa_compute.gd"]
+  },
+  {
+   "dir": "core/custom-shader/compiler",
+   "about": "The `.gmacs` compiler, which turns files into pipelines: the index of shaders, the includes, the binding layouts, the SPIR-V cache, the pixel function door and the two switches that break a boot on purpose",
+   "kind": "feature",
+   "public": ["global_shader_compiler.gd", "sa_pixel_function.gd"]
+  },
+  {
+   "dir": "core/custom-shader/dialect",
+   "about": "The text half, strings in and strings out with no device and no state: the Python-shaped dialect rewritten into GLSL, what the compiler reads out of a kernel's text, and the kernel a pixel function is wrapped in",
+   "kind": "feature",
+   "public": ["sa_dialect.gd", "sa_kernel_source.gd", "sa_loop_guard.gd", "sa_pixel_neighbourhood.gd", "sa_pixel_source.gd"]
+  },
+  {
+   "dir": "core/export",
+   "about": "Files out: the picture a painter exports, its gamut step and the 16-bit PNG writer, and the .sad (TIFF and OpenRaster live in the image formats module)",
+   "kind": "feature",
+   "public": ["sa_export.gd", "sa_export_gamut.gd", "sa_export_relief.gd", "sa_export_targets.gd"]
+  },
+  {
+   "dir": "core/idle",
+   "about": "The idle clock: says once, after the Idle After setting's seconds with no stroke, fill or layer change, that the painter has stopped",
+   "kind": "feature",
+   "public": ["sa_idle_clock.gd"]
+  },
+  {
+   "dir": "core/image",
+   "about": "Whole-image operations, one file each: import, resample, crop, colour conversion, adjustments",
+   "kind": "shelf",
+   "public": "*"
+  },
+  {
+   "dir": "core/image/clipboard",
+   "about": "The desktop clipboard's picture and how it is read: the engine's own, an address or a bare path on the plain text, the file lists a file manager's Copy leaves, and the clipboard program's PNG",
+   "kind": "feature",
+   "public": ["sa_desktop_picture.gd"]
+  },
+  {
+   "dir": "core/image/infinite_canvas",
+   "about": "Infinite canvas. The document's switch that grows the page by whole chunks as a stroke nears an edge, one undo step with the stroke, kept in the .sad",
+   "kind": "feature",
+   "public": ["sa_infinite_canvas.gd"]
+  },
+  {
+   "dir": "core/image/png16",
+   "about": "The sixteen bit PNG decode Godot's loader would cut to eight bits, its filters undone a byte place at a time on workers and widened to floats in bands",
+   "kind": "feature",
+   "public": ["sa_png16_decode.gd"]
+  },
+  {
+   "dir": "core/image/precision",
+   "about": "Image > Depth, half or full precision as one step",
+   "kind": "feature",
+   "public": ["sa_precision.gd"]
+  },
+  {
+   "dir": "core/layers",
+   "about": "Layer stack operations. Those on the stack, with its groups forwarded to core/layers/groups, on a layer's height and on a node's attached filters, the bake of a double resolution layer, and Merge Visible",
+   "kind": "feature",
+   "public": ["sa_layer_ops.gd", "sa_layer_duplicate.gd", "sa_filter_ops.gd", "sa_height_ops.gd", "sa_filter_conversion.gd", "sa_tree_render.gd", "sa_merge_visible.gd", "sa_layer_duplicate_to.gd"]
+  },
+  {
+   "dir": "core/layers/adjustment",
+   "about": "The adjustment layer",
+   "kind": "feature",
+   "public": ["sa_backdrop_layer.gd"]
+  },
+  {
+   "dir": "core/layers/adjustment/cache",
+   "about": "What an adjustment layer showed over the canvas, kept per chunk",
+   "kind": "feature",
+   "public": ["sa_adjustment_cache.gd"]
+  },
+  {
+   "dir": "core/layers/effect",
+   "about": "The effect layer. Its chunks cache a named input's composite for its own records to run over",
+   "kind": "feature",
+   "public": ["sa_effect_layer.gd", "sa_effect_guide.gd"]
+  },
+  {
+   "dir": "core/layers/drawn",
+   "about": "The drawn layer. Its chunks are a cache of its recipe, redrawn over what an edit touched, kept in the history as the recipe's JSON and given up to residency unread",
+   "kind": "feature",
+   "public": ["sa_drawn_layer.gd"]
+  },
+  {
+   "dir": "core/layers/generated",
+   "about": "A layer that stores nothing and evaluates a kernel, the paper among them, its parameters as history steps and the tooth it lends the relief",
+   "kind": "feature",
+   "public": ["sa_generated_layer.gd"]
+  },
+  {
+   "dir": "core/layers/frame",
+   "about": "The frame layer. The layer kind a frame another program sends lands in, Blender's camera view and the render passes import, its upload into chunks where the frame's alpha is above zero and its depth field",
+   "kind": "feature",
+   "public": ["sa_frame_layer.gd"]
+  },
+  {
+   "dir": "core/layers/scene",
+   "about": "The scene layer. A layer whose pixels a Godot scene draws, its offscreen viewport, the copy of it into chunks once a frame and its entry in a .sad",
+   "kind": "feature",
+   "public": ["sa_scene_layer.gd"]
+  },
+  {
+   "dir": "core/layers/filter_again",
+   "about": "Filter > Apply Again. The filter a dialog applied last, its settings and its way, kept for the run and run again on the active layer with no dialog, on its command and Krita's chord",
+   "kind": "feature",
+   "public": ["sa_filter_again.gd"]
+  },
+  {
+   "dir": "core/layers/refusals",
+   "about": "The table of what each layer kind refuses to a merge, a flatten and a filter, the sentences included",
+   "kind": "feature",
+   "public": ["sa_layer_refusals.gd"]
+  },
+  {
+   "dir": "core/layers/groups",
+   "about": "Layer groups. The shape of the layer tree, a wrap into a group, an ungroup, a group taken out whole, isolation and a block moved among its siblings, each a history step SaLayerOps forwards to",
+   "kind": "feature",
+   "public": ["sa_layer_groups.gd"]
+  },
+  {
+   "dir": "core/layers/impasto",
+   "about": "Rasterize Impasto. A layer's relief lit into its pixels with the light as it stands and its height cleared, a ground made a paint layer with its tooth lit in, as one history step",
+   "kind": "feature",
+   "public": ["sa_rasterize_impasto.gd"]
+  },
+  {
+   "dir": "core/layers/rasterize",
+   "about": "Rasterize Layer. Any layer but a group or an adjustment layer turned into a plain paint layer that looks as it did, its live transform, mask, enabled filters and relief written into its pixels, or a generated, scene or effect layer drawn into paint over its footprint, as one history step",
+   "kind": "feature",
+   "public": ["sa_rasterize_layer.gd"]
+  },
+  {
+   "dir": "core/layers/names",
+   "about": "Layer names. The one rule a new plain layer is numbered by, one more than the highest Layer N the document has, which the add and the Layers docker's naming pass both ask",
+   "kind": "feature",
+   "public": ["sa_layer_names.gd"]
+  },
+  {
+   "dir": "core/layers/masks",
+   "about": "Mask operations. The seven operations on a mask, each a history step, for the mask of a layer, a group or an attached filter alike",
+   "kind": "feature",
+   "public": ["sa_mask_ops.gd"]
+  },
+  {
+   "dir": "core/layers/simulation",
+   "about": "A simulation on a paint layer. The registry of rules a module registers, the record on the layer with its seed and second copy, the step that reads its halo and swaps, Reset, and the run that writes it as numbered frames",
+   "kind": "feature",
+   "public": ["sa_simulation.gd"]
+  },
+  {
+   "dir": "core/layers/flag_step",
+   "about": "A layer's paint lock, its alpha lock or its clip set on every picked layer as one history step, named as the More menu names it, which the row's buttons, the menu's rows and the Layer menu's chords all write (in core so the chords reach it)",
+   "kind": "feature",
+   "public": ["sa_layer_flag_step.gd"]
+  },
+  {
+   "dir": "core/layers/set_step",
+   "about": "Clear Layer, the mask's operations and Move Up and Move Down over every picked layer as one history step, which the Layers docker's rows and the Layer menu's chords both run",
+   "kind": "feature",
+   "public": ["sa_layer_set_step.gd"]
+  },
+  {
+   "dir": "core/layers/color",
+   "about": "Layer colour. Photoshop's list of No Colour and seven, and the step that gives one to every picked layer at once, which the Layers docker's right click menu writes and its rows tint behind the eye",
+   "kind": "feature",
+   "public": ["sa_layer_color_tag.gd"]
+  },
+  {
+   "dir": "core/layers/picked",
+   "about": "The layers the painter picked in the Layers docker, held on the document, so the Layer menu's chords act on the set the docker's buttons act on",
+   "kind": "feature",
+   "public": ["sa_picked_layers.gd"]
+  },
+  {
+   "dir": "core/layers/transform",
+   "about": "A live transform on a paint layer. The projective map its paint is drawn through from a cache, with the crop outside which it draws nothing, saved with the layer, and painted through while it is affine",
+   "kind": "feature",
+   "public": ["sa_live_transform.gd"]
+  },
+  {
+   "dir": "core/layers/transform/shared-source",
+   "about": "One source shared by smart layers, the chunks each draws through a map of its own, kept while any of them uses it, told of every edit, and stored once in a file",
+   "kind": "feature",
+   "public": ["sa_shared_source.gd"]
+  },
+  {
+   "dir": "core/layers/transform/linked-file",
+   "about": "Linked files. A smart layer whose source is a picture on disk, read through the format registry, reloaded as one step, marked when the file changes, kept when it goes missing, and saved with a relative and an absolute path",
+   "kind": "feature",
+   "public": ["sa_linked_file.gd"]
+  },
+  {
+   "dir": "core/location",
+   "about": "Where the painter lives: the country set in Preferences or a guess from the time zone, with the table of zones and countries, for the welcome picture's sun and an export's metadata",
+   "kind": "feature",
+   "public": ["sa_location.gd"]
+  },
+  {
+   "dir": "core/loader",
+   "about": "Finding, ordering and registering modules, and the skeleton's own module",
+   "kind": "feature",
+   "public": ["module_loader.gd"]
+  },
+  {
+   "dir": "core/loader/image_formats",
+   "about": "The skeleton's picture formats, PNG, JPEG, WebP, EXR, TIFF, Radiance and OpenRaster, registered through the module door in Export's order",
+   "kind": "feature",
+   "public": ["skeleton_image_formats.gd"]
+  },
+  {
+   "dir": "core/pen",
+   "about": "What the pen reports: its pressure curve, the sweep that calibrates it and the pointer log",
+   "kind": "library",
+   "public": "*"
+  },
+  {
+   "dir": "core/perf",
+   "about": "The ledgers and the one window that reads them: boot marks, the stroke ledger, GPU time per kernel and VRAM three ways",
+   "kind": "library",
+   "public": "*"
+  },
+  {
+   "dir": "core/residency",
+   "about": "Eviction. Past the budget, the chunks of the layers nobody is painting on move to RAM and come back before they are read",
+   "kind": "feature",
+   "public": ["sa_residency.gd"]
+  },
+  {
+   "dir": "core/presets",
+   "about": "Brush presets on disk: the store, the thumbnails, the ledger of shipped bundles, what a preset says about itself, and the converters from one engine's presets to another's",
+   "kind": "feature",
+   "public": ["sa_preset_store.gd", "sa_preset_thumbs.gd", "sa_converter_registry.gd", "sa_preset_names.gd"]
+  },
+  {
+   "dir": "core/recorder",
+   "about": "The timelapse recorder, one frame read back a moment after the canvas settles and written through the display conversion, capped by bytes",
+   "kind": "feature",
+   "public": ["sa_recorder.gd"]
+  },
+  {
+   "dir": "core/registry",
+   "about": "Where descriptors land, one registry per kind, and the object that holds them all",
+   "kind": "library",
+   "public": "*"
+  },
+  {
+   "dir": "core/registry/shortcuts",
+   "about": "Every chord Sara answers to kept as overrides on the shipped map: the profiles, the Krita defaults and the conflicts the command registry reads",
+   "kind": "feature",
+   "public": ["sa_shortcut_store.gd"]
+  },
+  {
+   "dir": "core/sad-codec",
+   "about": "Codecs. A `.sad` blob in a codec: colour and height coded on a pool of cores, JPEG XL the first, and read back by the codec's name",
+   "kind": "feature",
+   "public": ["sa_sad_codec.gd"]
+  },
+  {
+   "dir": "core/sad-file",
+   "about": "The document kept on disk: the `.sad` container in both directions and the recovery copy the autosave writes",
+   "kind": "feature",
+   "public": ["sa_sad_file.gd"]
+  },
+  {
+   "dir": "core/sad-snapshot",
+   "about": "What a save does on the card to the copies it reads back: rounds a painter's save's full precision colour to 12 bits, and finds the chunks holding nothing to leave out and the unchanged ones to copy",
+   "kind": "feature",
+   "public": ["sa_sad_snapshot.gd"]
+  },
+  {
+   "dir": "core/settings",
+   "about": "The door a preference is read and written through, the profile on disk, its migrations and what a change does",
+   "kind": "feature",
+   "public": ["sa_settings.gd", "sa_settings_file.gd"]
+  },
+  {
+   "dir": "core/settings/values",
+   "about": "The preferences as data, and the reorderable layout registry behind Preferences",
+   "kind": "feature",
+   "public": ["sa_settings_values.gd", "sa_settings_layout.gd", "sa_settings_performance.gd", "sa_settings_pen_buttons.gd", "sa_settings_cursor_lead.gd"]
+  },
+  {
+   "dir": "core/usage",
+   "about": "The usage tally: what a hand used in one session, every shortcut, button, menu row, docker, tool switch and stroke and how far the pointer travelled, off unless asked",
+   "kind": "feature",
+   "public": ["sa_usage_tally.gd"]
+  },
+  {
+   "dir": "harness",
+   "about": "The runner, the run every driver is handed, the step table, the two sentence steps, the kernel step, the small form of a layer read, the `.npy` format and the docker dump blocks",
+   "kind": "feature",
+   "public": ["sa_capture.gd", "sa_capture_run.gd", "sa_step_table.gd", "sa_layer_preview.gd", "sa_npy.gd"]
+  },
+  {
+   "dir": "harness/captures",
+   "about": "The capture files of six features, which leave one by one as each feature learns to describe itself",
+   "kind": "shelf",
+   "public": "*"
+  },
+  {
+   "dir": "harness/door",
+   "about": "The live door on a Unix socket or loopback TCP, which reads a step as an HTTP request and answers its verdict, the wire it reads through, the known file that says where it listens, the verdict lines a step prints, and where a write_pixels array lands",
+   "kind": "feature",
+   "public": ["sa_agent_door.gd", "sa_pixel_landing.gd", "sa_door_glance.gd", "sa_door_verdicts.gd"]
+  },
+  {
+   "dir": "harness/controls",
+   "about": "The control walker, which reads, lists and moves any control made through SaMake by its name and kind",
+   "kind": "feature",
+   "public": ["sa_control_walker.gd"]
+  },
+  {
+   "dir": "harness/drivers",
+   "about": "What a scenario's hand does, one driver per surface",
+   "kind": "shelf",
+   "public": "*"
+  },
+  {
+   "dir": "harness/drivers/aim",
+   "about": "Where a scenario's pointer is: the window of Sara's own an event goes to, the point in it, and the hover kept there",
+   "kind": "feature",
+   "public": ["sa_pointer_aim.gd"]
+  },
+  {
+   "dir": "harness/drivers/slider",
+   "about": "A scenario's hand on a slider",
+   "kind": "feature",
+   "public": ["sa_slider_edit.gd"]
+  },
+  {
+   "dir": "harness/drivers/menu",
+   "about": "Every menu and popup a scenario opens, and the rows it presses in them",
+   "kind": "feature",
+   "public": ["sa_menu_driver.gd"]
+  },
+  {
+   "dir": "harness/report",
+   "about": "The state dump, the texel and cursor probes, the Oklab measure, the layers line and the door's errors",
+   "kind": "feature",
+   "public": ["sa_state_report.gd", "sa_door_errors.gd"]
+  },
+  {
+   "dir": "harness/scenario",
+   "about": "What a scenario builds rather than presses: the document, the stroke, the path fill, the pixels, the states strip",
+   "kind": "shelf",
+   "public": "*"
+  },
+  {
+   "dir": "harness/scenario/layers",
+   "about": "The harness's layer step, which builds the stack a capture's screenshot needs through the layers docker's own actions",
+   "kind": "feature",
+   "public": ["sa_capture_layers.gd"]
+  },
+  {
+   "dir": "harness/scenario/smoothing",
+   "about": "The stabiliser of the brush in hand, held off for a stroke that asks for no smoothing and given back after it",
+   "kind": "feature",
+   "public": ["sa_stroke_smoothing.gd"]
+  },
+  {
+   "dir": "render",
+   "about": "The canvas node: the view, the input host, the frame pacer and the display fill",
+   "kind": "feature",
+   "public": ["sa_canvas.gd", "sa_canvas_view.gd", "sa_contents_backdrop.gd"]
+  },
+  {
+   "dir": "render/cursor",
+   "about": "The cursor policy: which device moves the pointer and where it last was, how the ring is sized and pinned, and what is drawn in the pointer's place on each display driver",
+   "kind": "feature",
+   "public": ["sa_cursor_policy.gd"]
+  },
+  {
+   "dir": "render/environment",
+   "about": "Environment view. A sphere document seen from inside as the sky, through a camera the pan turns and the zoom widens, a disc document seen face on, and the command its key runs",
+   "kind": "feature",
+   "public": ["sa_environment_view.gd"]
+  },
+  {
+   "dir": "tools",
+   "about": "Tool machine. The state machine every tool runs inside",
+   "kind": "feature",
+   "public": ["tool_machine.gd"]
+  },
+  {
+   "dir": "tools/fingers",
+   "about": "Fingers. On the canvas one taps for the pop-up palette, double taps for a colour and drags the view, two pan, pinch and turn it and tap to undo. A finger never paints",
+   "kind": "feature",
+   "public": ["sa_two_fingers.gd"]
+  },
+  {
+   "dir": "ui/brush_editor",
+   "about": "The brush editor window, its pages, its preset bar and session, and the one door that opens it for the Edit Brush command and a scenario alike",
+   "kind": "feature",
+   "public": ["brush_editor_window.gd", "brush_editor_door.gd"]
+  },
+  {
+   "dir": "ui/brush_editor/preview",
+   "about": "The editor's scratchpad, its previews and the bare window a curve option opens in",
+   "kind": "shelf",
+   "public": "*"
+  },
+  {
+   "dir": "ui/canvas",
+   "about": "What is drawn over the canvas and is not paint: overlays, the banner and the brush ring",
+   "kind": "shelf",
+   "public": "*"
+  },
+  {
+   "dir": "ui/color_space",
+   "about": "The colour space dialog, the browser and the diagrams they draw",
+   "kind": "shelf",
+   "public": "*"
+  },
+  {
+   "dir": "ui/color_space/picker",
+   "about": "The colour space picker File > New and Image > Colour Space share: a preset, the gamut, white, curve and model rows, and the spaces a painter saves",
+   "kind": "feature",
+   "public": ["sa_color_space_picker.gd", "sa_color_space_row.gd"]
+  },
+  {
+   "dir": "ui/color_space/profile_file",
+   "about": "An ICC profile file chosen as a colour space: the file dialog the picker opens and the profile read under its description, or refused with the reason",
+   "kind": "feature",
+   "public": ["sa_profile_file.gd"]
+  },
+  {
+   "dir": "ui/projection",
+   "about": "Projection dialog. Image > Projection..., which assigns a kind and an orientation, moving no pixel, or converts the pixels to them",
+   "kind": "feature",
+   "public": ["sa_projection_dialog.gd"]
+  },
+  {
+   "dir": "ui/dialogs",
+   "about": "The dialog window base, the one message dialog and the small dialogs",
+   "kind": "shelf",
+   "public": "*"
+  },
+  {
+   "dir": "ui/dialogs/builders",
+   "about": "Help > About's Built by: the four builders the painting sessions made and their portraits",
+   "kind": "feature",
+   "public": ["sa_built_by_fold.gd"]
+  },
+  {
+   "dir": "ui/dialogs/document",
+   "about": "Canvas Size, Image Size, the import fit and Export, one file each",
+   "kind": "shelf",
+   "public": "*"
+  },
+  {
+   "dir": "ui/dialogs/document/new_document",
+   "about": "File > New: the dialog, its colour space rows, its templates and its capture door",
+   "kind": "feature",
+   "public": ["new_document_dialog.gd"]
+  },
+  {
+   "dir": "ui/dockers",
+   "about": "Dockers. The framework: the window, drag, resize, maximise, the lock a summon holds a docker out with",
+   "kind": "feature",
+   "public": ["docker_window.gd", "docker_drag_handle.gd", "docker_maximise.gd", "docker_utils.gd", "docker_column_scroll.gd", "docker_borrow.gd", "docker_lock.gd", "docker_narrow_bar.gd"]
+  },
+  {
+   "dir": "ui/dockers/focus",
+   "about": "The keyboard follows the pointer between the dockers and the main window, and a docker that appeared under the pointer stands off until the pointer has stayed in it",
+   "kind": "feature",
+   "public": ["docker_focus.gd"]
+  },
+  {
+   "dir": "ui/dockers/color",
+   "about": "The colour docker, its sliders and its palette rows, around the picker the widgets hold, and the picker wired to the colour store that is the docker's own and each view of its seven elements another docker holds",
+   "kind": "feature",
+   "public": ["color_docker.gd"]
+  },
+  {
+   "dir": "ui/dockers/composed",
+   "about": "Composed dockers. The library of dockers a painter puts together from the elements other dockers registered, kept in a file of its own and opened in every layout, and the window each one is",
+   "kind": "feature",
+   "public": ["sa_composed_dockers.gd"]
+  },
+  {
+   "dir": "ui/dockers/edges",
+   "about": "Edges. A docker's four edges, each a resize handle of Sara's own that moves its edge alone, inside the window",
+   "kind": "feature",
+   "public": ["docker_edges.gd"]
+  },
+  {
+   "dir": "ui/dockers/opacity",
+   "about": "Opacity. How see-through a docker's background and frame are, its menu on a right press of the drag bar, kept in the layout file",
+   "kind": "feature",
+   "public": ["docker_opacity.gd"]
+  },
+  {
+   "dir": "ui/dockers/filters",
+   "about": "The Filters docker, the filter browser as a docker: the list, the search, the detail and Open, the picked filter's parameters and the saved looks, a group of filter layers kept by name and added back",
+   "kind": "feature",
+   "public": ["filters_docker.gd"]
+  },
+  {
+   "dir": "ui/dockers/graph",
+   "about": "Graph docker",
+   "kind": "feature",
+   "public": ["graph_docker.gd"]
+  },
+  {
+   "dir": "ui/dockers/layers",
+   "about": "The layers docker: the window round the list, the actions under it, the rename dialog and the rows its More menu shares with the Layer menu",
+   "kind": "feature",
+   "public": ["layers_docker.gd", "layer_menu_rows.gd", "layer_actions.gd"]
+  },
+  {
+   "dir": "ui/dockers/layers/blend_opacity",
+   "about": "The blend and opacity row. It follows the active layer of the canvas it is handed, the blend modes registered and the document's colour space, and a row of one part is the view of Blend Mode or Opacity another docker holds",
+   "kind": "feature",
+   "public": ["layer_blend_opacity_row.gd"]
+  },
+  {
+   "dir": "ui/dockers/layers/list_keeper",
+   "about": "What fills a layer list from a canvas's document and answers its presses, drops and folds, so a list built anywhere shows and changes the same stack, and the views of Layer List and Actions another docker holds",
+   "kind": "feature",
+   "public": ["layer_list_keeper.gd"]
+  },
+  {
+   "dir": "ui/dockers/layers/kind_browser",
+   "about": "The filter browser an adjustment or an effect layer is added through, listing the filters its kind can hold",
+   "kind": "feature",
+   "public": ["layer_kind_browser.gd"]
+  },
+  {
+   "dir": "ui/dockers/layers/lut",
+   "about": "LUT export. Export Effects as LUT writes the colour effects of a group, an adjustment layer or a filtered layer as a .cube table, measured on a scratch document, and names what a table cannot carry.",
+   "kind": "feature",
+   "public": ["sa_effects_lut.gd"]
+  },
+  {
+   "dir": "ui/dockers/layers/minus",
+   "about": "The minus under the layer list. What a press takes off, a picked mask alone, a picked filter or the picked layers, and what its hover says.",
+   "kind": "feature",
+   "public": ["sa_layer_minus.gd"]
+  },
+  {
+   "dir": "ui/dockers/layers/list",
+   "about": "Layer rows. The list with its selection, drag and eye sweep, and the row",
+   "kind": "feature",
+   "public": ["layer_list.gd", "layer_row_reuse.gd"]
+  },
+  {
+   "dir": "ui/dockers/layers/list/edge_scroll",
+   "about": "The layer list's scroll while a dragged row is held near its top or bottom edge, a frame at a time, so a row can be dropped past the rows in view",
+   "kind": "feature",
+   "public": ["sa_layer_list_edge_scroll.gd"]
+  },
+  {
+   "dir": "ui/dockers/layers/list/rename",
+   "about": "Renaming a layer from its row: the field, what confirms it, what throws it away and what a typed name may be, the gesture between the row and the list (kept apart from the list)",
+   "kind": "feature",
+   "public": ["layer_rename.gd"]
+  },
+  {
+   "dir": "ui/dockers/layers/list/thumbnail",
+   "about": "Row thumbnail. A layer's picture in its row, sampled from the chunks on the GPU into a small texture and never read back",
+   "kind": "feature",
+   "public": ["layer_thumbnail.gd"]
+  },
+  {
+   "dir": "ui/dockers/minimap",
+   "about": "Minimap docker. The whole picture small with the view drawn over it, its flip and proof rows, and each row an element a painter can hide",
+   "kind": "feature",
+   "public": ["minimap_docker.gd"]
+  },
+  {
+   "dir": "ui/dockers/palette",
+   "about": "Pop-up palette. The ten brush slots on a ring round the colour wheel, a docker the summon shows under the pointer, off by default",
+   "kind": "feature",
+   "public": ["palette_docker.gd"]
+  },
+  {
+   "dir": "ui/dockers/panels",
+   "about": "One-file dockers. Info and Undo History, one file each",
+   "kind": "shelf",
+   "public": "*"
+  },
+  {
+   "dir": "ui/dockers/presets",
+   "about": "Preset dockers. The two that host the presets, Brush Presets around the chooser and Recent Presets, with the engine marks on the chooser's cells, the door's pick of a preset by name and New preset..., the dialog that makes one from an engine's defaults",
+   "kind": "feature",
+   "public": ["brush_presets_docker.gd", "history_docker.gd", "preset_pick.gd", "new_preset_dialog.gd", "preset_pick_after.gd"]
+  },
+  {
+   "dir": "ui/dockers/recorder",
+   "about": "Recorder docker",
+   "kind": "feature",
+   "public": ["recorder_docker.gd"]
+  },
+  {
+   "dir": "ui/dockers/reduction/spectrum",
+   "about": "The Fourier spectrogram's reduction. The composite's Oklab lightness, downsampled to a square and transformed on the GPU into its power spectrum and that spectrum's radial average, once the painter has stopped",
+   "kind": "feature",
+   "public": ["sa_power_spectrum.gd"]
+  },
+  {
+   "dir": "ui/dockers/reference",
+   "about": "Reference docker",
+   "kind": "feature",
+   "public": ["reference_docker.gd", "reference_board.gd"]
+  },
+  {
+   "dir": "ui/dockers/reference/tabs",
+   "about": "Reference tabs. A tab per board, the plus that adds pictures, the strip's menu with New Board, Rename and Close, and the row the docker's buttons stand in",
+   "kind": "feature",
+   "public": ["reference_tabs.gd"]
+  },
+  {
+   "dir": "ui/dockers/reference/bar",
+   "about": "The hover bar of a reference picture. The four toggles, flip, grey, crop and on top, in a row over the picture under the pointer, and where the row stands on it",
+   "kind": "feature",
+   "public": ["reference_hover_bar.gd"]
+  },
+  {
+   "dir": "ui/dockers/reference/selection",
+   "about": "The reference board's selection. The pictures selected, the box a left drag on the empty board draws to select them, and what a drag, Fit and Normalize act on",
+   "kind": "feature",
+   "public": ["reference_selection.gd"]
+  },
+  {
+   "dir": "ui/dockers/reference/grid",
+   "about": "Normalize's grid. The one size it brings each picture to and the wrapped rows or columns it lays them in, shaped like the docker",
+   "kind": "feature",
+   "public": ["reference_grid.gd"]
+  },
+  {
+   "dir": "ui/dockers/reference/zoom",
+   "about": "The reference board's zoom. The wheel, the quick zoom chord with a left drag, the zoom in and out chords and a pinch, read from the shortcut profile in force, so a pen with no wheel zooms the board",
+   "kind": "feature",
+   "public": ["reference_zoom_gestures.gd"]
+  },
+  {
+   "dir": "ui/dockers/tool_options",
+   "about": "Tool Options docker. The Tool Options docker: every option the shown tool declares, in a column, and the strip above it with the Advanced check",
+   "kind": "feature",
+   "public": ["tool_options_docker.gd", "tool_options_after.gd"]
+  },
+  {
+   "dir": "ui/dockers/toolbox",
+   "about": "The toolbox",
+   "kind": "feature",
+   "public": ["toolbox_docker.gd"]
+  },
+  {
+   "dir": "ui/files",
+   "about": "How a document comes in and goes out, and the question asked before one is lost",
+   "kind": "feature",
+   "public": ["sa_document_files.gd", "sa_window_forward.gd"]
+  },
+  {
+   "dir": "ui/filters",
+   "about": "The window a registered filter opens in, the filter browser both the Filters docker and the layer kind browser hold, and an attached filter's panel",
+   "kind": "feature",
+   "public": ["sa_filter_dialog_window.gd", "sa_filter_browser.gd", "sa_filter_panel.gd", "sa_filter_edit_window.gd", "sa_effect_guide_painter.gd"]
+  },
+  {
+   "dir": "ui/filters/preview",
+   "about": "The picture a filter's dialog and the filter browser both show, the layer's reduced copy a pass is run over and the chequer the picture is laid over",
+   "kind": "feature",
+   "public": ["sa_filter_preview.gd"]
+  },
+  {
+   "dir": "ui/layout",
+   "about": "Named docker layouts, secondary workspaces and focus mode",
+   "kind": "feature",
+   "public": ["docker_layout_store.gd", "docker_pin.gd", "docker_font_growth.gd"]
+  },
+  {
+   "dir": "ui/layout/fit",
+   "about": "The default's fit and the flip. Where a layout's dockers stand on the window: the fit that places a shipped layout on the host it opens on, the refit that keeps the live layout there as the window and the scale change, and the flip that carries every docker across a switch of embedded subwindows",
+   "kind": "feature",
+   "public": ["docker_layout_refit.gd", "docker_layout_fit.gd", "docker_embed_flip.gd"]
+  },
+  {
+   "dir": "ui/boot",
+   "about": "The first scene",
+   "kind": "feature",
+   "public": ["sa_agent_invite.gd", "sa_boot.gd", "sa_boot_cover.gd"]
+  },
+  {
+   "dir": "ui/boot/single-instance",
+   "about": "One Sara for the painter. A start carrying files while a Sara runs hands them to it over loopback, which opens each in a tab and comes forward, and the second start quits",
+   "kind": "feature",
+   "public": ["sa_single_instance.gd"]
+  },
+  {
+   "dir": "ui/main",
+   "about": "The application window and the order it comes up in",
+   "kind": "feature",
+   "public": ["main.gd", "main_dockers.gd", "sa_docker_ids.gd"]
+  },
+  {
+   "dir": "ui/main/summon",
+   "about": "Summon. A docker summoned under the pointer by its chord, and sent back when the pointer has left it",
+   "kind": "feature",
+   "public": ["docker_summon.gd"]
+  },
+  {
+   "dir": "ui/menus",
+   "about": "One file per menu under the top bar",
+   "kind": "shelf",
+   "public": "*"
+  },
+  {
+   "dir": "ui/document_label",
+   "about": "The document's name, star and autosaved mark",
+   "kind": "feature",
+   "public": ["sa_document_label.gd"]
+  },
+  {
+   "dir": "ui/document_tabs",
+   "about": "A view for each open document and the tab bar above them",
+   "kind": "feature",
+   "public": ["sa_document_tabs.gd"]
+  },
+  {
+   "dir": "ui/drive",
+   "about": "App drive. The app's control drive, what a bound control moves: the values a slider names read and set by that name, a brush preset chosen by name, a filter's command run by key, and what a click on a control binds",
+   "kind": "feature",
+   "public": ["sa_app_drive.gd"]
+  },
+  {
+   "dir": "ui/notes",
+   "about": "Note mode",
+   "kind": "feature",
+   "public": ["sa_note_mode.gd"]
+  },
+  {
+   "dir": "ui/page",
+   "about": "A page declared rather than built, the dialog surface a filter is handed, one call per plain control, and the base class and step reading of a control that holds a number",
+   "kind": "feature",
+   "public": ["sa_page.gd", "sa_dialog.gd", "sa_page_row.gd", "sa_page_binding.gd", "sa_page_drive.gd", "sa_make.gd", "sa_step.gd", "sa_value_control.gd"]
+  },
+  {
+   "dir": "ui/page/path_row",
+   "about": "A page's path row and folder picker",
+   "kind": "feature",
+   "public": ["sa_path_row.gd"]
+  },
+  {
+   "dir": "ui/page/time_row",
+   "about": "A filter's time, a scrubber with a play button and a loop length",
+   "kind": "feature",
+   "public": ["sa_time_row.gd"]
+  },
+  {
+   "dir": "ui/pickers",
+   "about": "The windows core asks for through `SaDialogsInHand`: the chooser Load Tip opens on an `.abr`, a cell per tip with the tip picked written as a `.png`, and the engine's file dialog where the platform has no picker",
+   "kind": "feature",
+   "public": ["sa_pickers.gd"]
+  },
+  {
+   "dir": "ui/presets",
+   "about": "Choosing, tagging, saving and recalling brush presets: the chooser, its tags and the bar's group, which holds the one store",
+   "kind": "feature",
+   "public": ["brush_presets_chooser.gd", "tool_options_presets.gd", "brush_preset_bundles.gd", "sa_preset_replace.gd"]
+  },
+  {
+   "dir": "ui/presets/recent_walk",
+   "about": "Ctrl+R, a walk back through the Recent Presets list while Ctrl is held, as Alt+Tab walks the windows, with a list beside the pointer when the docker is closed",
+   "kind": "feature",
+   "public": ["sa_recent_preset_walk.gd"]
+  },
+  {
+   "dir": "ui/quick_commands",
+   "about": "Blender's key habits. Quick Favourites on Shift+Q, Repeat Last on Shift+R, and a chord assigned from a menu row's right click, for a painter who knows the keys",
+   "kind": "feature",
+   "public": ["sa_quick_commands.gd"]
+  },
+  {
+   "dir": "ui/search",
+   "about": "The search. The one list F3, the top bar's loupe and Help's Search command open at the pointer over every action, the rows of every command, filter, docker, tool, setting, preset, kind of layer and menu row it reads from the registries, ranked by where the query starts, and the pick that runs the marked row",
+   "kind": "feature",
+   "public": ["sa_search_window.gd"]
+  },
+  {
+   "dir": "ui/settings",
+   "about": "The Preferences window: the page list, the sidebar and the search over it, the frame, the row shape and the declared page base, and the autoload that pushes a changed preference into the running application",
+   "kind": "feature",
+   "public": ["sa_settings_window.gd", "sa_settings_frame.gd", "settings_search.gd", "sa_settings_rows.gd", "settings_page.gd", "sa_settings_apply.gd"]
+  },
+  {
+   "dir": "ui/settings/arrange",
+   "about": "Layouts and dockers with each docker's two parts and the top bar's section and list, and Workspace",
+   "kind": "shelf",
+   "public": "*"
+  },
+  {
+   "dir": "ui/settings/input",
+   "about": "Tablet. Its page, the calibration, the sweeping game and the driver the pen is read through",
+   "kind": "shelf",
+   "public": "*"
+  },
+  {
+   "dir": "ui/settings/keyboard",
+   "about": "Keyboard Shortcuts. The page that edits every chord and the table of rows it lists",
+   "kind": "shelf",
+   "public": "*"
+  },
+  {
+   "dir": "ui/settings/look",
+   "about": "Display, Colour Themes and Colour Spaces",
+   "kind": "shelf",
+   "public": "*"
+  },
+  {
+   "dir": "ui/settings/pages",
+   "about": "The short Preferences pages",
+   "kind": "shelf",
+   "public": "*"
+  },
+  {
+   "dir": "ui/shortcuts",
+   "about": "Chords to commands: the router with Escape, its commands, and the application's own commands",
+   "kind": "feature",
+   "public": ["shortcut_router.gd", "shortcut_keys.gd", "sa_app_commands.gd"]
+  },
+  {
+   "dir": "ui/shortcuts/brush_keys",
+   "about": "The brush's own chords: the ten brush slots and the ten opacity digits",
+   "kind": "feature",
+   "public": ["sa_brush_slot_commands.gd", "sa_opacity_digit_commands.gd"]
+  },
+  {
+   "dir": "ui/shortcuts/tool_keys",
+   "about": "The tools' own chords: a chord puts its tool in the hand, and a detour's chord pressed again goes back to the tool before it",
+   "kind": "feature",
+   "public": ["sa_tool_keys.gd"]
+  },
+  {
+   "dir": "ui/shortcuts/key_log",
+   "about": "A log line for every key the shortcut router hears, when asked for: the platform's keycode, physical keycode, label and character",
+   "kind": "feature",
+   "public": ["sa_key_log.gd"]
+  },
+  {
+   "dir": "ui/shortcuts/key_labels",
+   "about": "Whether menus and tooltips name keys, none on a keyboardless Android",
+   "kind": "feature",
+   "public": ["sa_key_labels.gd"]
+  },
+  {
+   "dir": "ui/shortcuts/menu_keys",
+   "about": "Says when an open menu holds a command's key",
+   "kind": "feature",
+   "public": ["sa_menu_held_key.gd"]
+  },
+  {
+   "dir": "ui/simulation",
+   "about": "Simulation controls. A simulation's Play, Pause, Step, Reset, speed and step count in Tool Options, the follower that plays it, and File > Export Frames... with its dialog",
+   "kind": "feature",
+   "public": ["sa_simulation_panel.gd"]
+  },
+  {
+   "dir": "ui/status_line",
+   "about": "The status line along the window's bottom edge: the zoom, the document's size and its colour space",
+   "kind": "feature",
+   "public": ["sa_status_line.gd"]
+  },
+  {
+   "dir": "ui/themes",
+   "about": "Palette and theme. The palette made into a theme, the fonts and the one writer of UI scale, beside the assets they load",
+   "kind": "library",
+   "public": "*"
+  },
+  {
+   "dir": "ui/themes/frames",
+   "about": "Frames and rules. The boxes a container draws behind what it holds and the rules between things, from the palette",
+   "kind": "library",
+   "public": "*"
+  },
+  {
+   "dir": "ui/themes/toggles",
+   "about": "Toggles. The report of which toggles a state dump shows and whether each went through the toggle door",
+   "kind": "library",
+   "public": "*"
+  },
+  {
+   "dir": "ui/tool_options",
+   "about": "The tool options bar, the controls both option surfaces build and bind through, the canvas context menu and the curve row a tip's falloff shares with a filter dialog",
+   "kind": "feature",
+   "public": ["tool_options_bar.gd", "tool_option_controls.gd", "sa_curve_row.gd"]
+  },
+  {
+   "dir": "ui/tool_options/views",
+   "about": "The bar's tool options as views another docker can hold: one per option key, its control for the tool in the hand, following the bar and the Tool Options docker, and the bar's own controls, the preset group, Keep, the symmetry switches, the stabiliser toggle, Edit Brush and the rotation pair, each pressing through its control on the bar",
+   "kind": "feature",
+   "public": ["sa_tool_option_views.gd"]
+  },
+  {
+   "dir": "ui/top_bar",
+   "about": "The top bar: the menus, the two rows that place and measure the tool options, the rotation pair and the window buttons",
+   "kind": "feature",
+   "public": ["top_menu_bar.gd"]
+  },
+  {
+   "dir": "ui/top_bar/arrange",
+   "about": "Moving. The bar arranged on itself, the right click menu on a menu title or a tool control, Hide, Move, Show and Arrange the top bar, and the Ctrl drag that lifts an element and seats it between two others on either row",
+   "kind": "feature",
+   "public": ["top_bar_arrange.gd"]
+  },
+  {
+   "dir": "ui/top_bar/double_resolution",
+   "about": "Double Resolution toggle. The document's switch that makes its new paint layers at twice its density, as a layout element on the bar and in any docker, every copy following the document in front",
+   "kind": "feature",
+   "public": ["top_bar_double_resolution.gd"]
+  },
+  {
+   "dir": "ui/top_bar/environment",
+   "about": "Environment button. The Flat or Environment button, the switch of the Environment view as a layout element on the bar and in any docker, every copy following the one view",
+   "kind": "feature",
+   "public": ["top_bar_environment.gd"]
+  },
+  {
+   "dir": "ui/top_bar/page_edges",
+   "about": "Page Edges button. Whether the flat document's page keeps its size, grows or wraps its sides or every edge, one undo step a change, as a layout element on the bar and in any docker, after Environment View, and the commands View > Page Edges lists",
+   "kind": "feature",
+   "public": ["top_bar_page_edges.gd"]
+  },
+  {
+   "dir": "ui/top_bar/focus_mode",
+   "about": "The Focus Mode button. A layout element on the bar that runs the toggle Tab runs and stays held down while the dockers are hidden, the way back on a tablet with no keyboard",
+   "kind": "feature",
+   "public": ["top_bar_focus_mode.gd"]
+  },
+  {
+   "dir": "ui/top_bar/history",
+   "about": "Undo and Redo buttons. The bar's two history buttons, layout elements that run the Edit menu's commands and dim while there is nothing to take back or put again",
+   "kind": "feature",
+   "public": ["top_bar_history.gd"]
+  },
+  {
+   "dir": "ui/top_bar/page_gesture",
+   "about": "Opening its line. ALT and a double click on the bar, on its empty part or a menu title, open the top bar's line in Preferences, the gesture a docker's drag handle answers",
+   "kind": "feature",
+   "public": ["top_bar_page_gesture.gd"]
+  },
+  {
+   "dir": "ui/top_bar/menu_views",
+   "about": "The menus as views. Each of the bar's eleven menus as an element another docker can hold, a button with the menu's title that opens the bar's own list beside it",
+   "kind": "feature",
+   "public": ["sa_menu_views.gd"]
+  },
+  {
+   "dir": "ui/welcome",
+   "about": "The welcome window and its panes",
+   "kind": "feature",
+   "public": ["sa_welcome_window.gd"]
+  },
+  {
+   "dir": "ui/welcome/lights",
+   "about": "Welcome lights. Which lights of the welcome picture are on show: its season, then its sun or its hour",
+   "kind": "feature",
+   "public": ["picture_lights.gd"]
+  },
+  {
+   "dir": "ui/welcome/quick_settings",
+   "about": "Quick settings. The welcome window's pane of the language, the scale, the theme, the pen's pressure and the docker switch, each the control a Preferences page holds",
+   "kind": "feature",
+   "public": ["quick_settings_pane.gd"]
+  },
+  {
+   "dir": "ui/welcome/sun",
+   "about": "The painter's sun. The sun where the painter lives, now, and the season there, for the welcome picture's lights",
+   "kind": "feature",
+   "public": ["welcome_sun.gd"]
+  },
+  {
+   "dir": "ui/welcome/overlays",
+   "about": "Chance overlays. The stars and flocks of birds the welcome picture lays over itself, rolled at each opening",
+   "kind": "feature",
+   "public": ["picture_overlays.gd"]
+  },
+  {
+   "dir": "ui/welcome/clouds",
+   "about": "Drifting clouds. A welcome light in its sky, its clouds' strip that repeats in X and its land, composed at a new offset at each opening",
+   "kind": "feature",
+   "public": ["picture_parts.gd"]
+  },
+  {
+   "dir": "ui/welcome/recent",
+   "about": "By folder. The recent list grouped under its folders, the folder of the newest document first and the ten newest the limit",
+   "kind": "feature",
+   "public": ["recent_folders.gd"]
+  },
+  {
+   "dir": "ui/widgets",
+   "about": "Shared controls. Controls any window may use, one file each, and the tooltip every control's hover opens",
+   "kind": "library",
+   "public": "*"
+  },
+  {
+   "dir": "ui/widgets/choice",
+   "about": "A choice as a button and a list of rows, as one thumb sliding between named stops, or as the Tip Image grid of the tips' pictures under a filter of their folders, a control any window may use rather than a feature's own",
+   "kind": "library",
+   "public": "*"
+  },
+  {
+   "dir": "ui/widgets/choice/letters",
+   "about": "Letters. The underlined letter of a list's row: the line under it, the letter a row says it carries and what pressing it on the open list does, the letter itself being picked by the menus",
+   "kind": "feature",
+   "public": ["sa_choice_letters.gd"]
+  },
+  {
+   "dir": "ui/widgets/curve_option",
+   "about": "The curve editor any engine's page draws for a curve option: strength, the sensor list, the preset shapes, the graph and how the sensors combine, with the three doors a spec hands the skeleton",
+   "kind": "library",
+   "public": "*"
+  },
+  {
+   "dir": "ui/widgets/floating",
+   "about": "A panel that opens under a control and floats over its window, the dockers included, without becoming a window of the system's",
+   "kind": "library",
+   "public": "*"
+  },
+  {
+   "dir": "ui/widgets/grip",
+   "about": "Grip. Six dots Sara draws before a title, put there by one call",
+   "kind": "library",
+   "public": "*"
+  },
+  {
+   "dir": "ui/widgets/picker",
+   "about": "The hue ring and what is picked inside it, the control the colour docker and the gradient's stops both draw",
+   "kind": "library",
+   "public": "*"
+  },
+  {
+   "dir": "utils",
+   "about": "Conversions, shapes, the monotone curve a curve editor and a sensor share, the resource finder with its path repair, the data root `--settings-dir` moves, whether another process runs, where a rectangle goes clear of others, the press that puts a window away, and the read and write of a config file a crash or a hand edit cannot cost, with no dependency",
+   "kind": "library",
+   "public": "*"
+  }
+ ]
+}

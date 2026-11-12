@@ -1,0 +1,13 @@
+[
+ {"settings": "keep"},
+ {"wait": 60},
+ {"state": "3-the-boots-fit-at-1-25"},
+ {"shot": "3-the-boots-fit-at-1-25"},
+
+ {"stroke": {"from": [700, 500], "to": [1200, 700], "pressure": 0.8, "steps": 12}},
+ {"wait": 10},
+ {"prefs": {"ui_scale": 1.0}},
+ {"wait": 30},
+ {"state": "4-after-a-stroke-the-scale-keeps-the-view"},
+ {"shot": "4-after-a-stroke-the-scale-keeps-the-view"}
+]

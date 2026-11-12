@@ -1,0 +1,21 @@
+[
+  {"comment": "The display profile can be the system's profile for the monitor Sara is on. Preferences > Display with The system's profile chosen: the Monitor profile row names the profile the system gave the monitor and its file, and offers no Choose button. Run with SARA_SYSTEM_PROFILE naming the profile file, which stands in for colord, because the nested compositor's output is no monitor colord knows. Run without it, the harness's none, the same row says the system names no colour profile and the display stays on sRGB."},
+  {"wait": 30},
+  {"document": "srgb", "size": [800, 600]},
+  {"wait": 10},
+  {"prefs": {"display_profile": "system"}},
+  {"wait": 10},
+  {"open": "preferences"},
+  {"wait": 20},
+  {"page": "Display"},
+  {"wait": 15},
+  {"click": {"control": "MaximizeButton"}},
+  {"wait": 10},
+  {"prefs_search": "matrix monitor profile"},
+  {"wait": 30},
+  {"control": {"name": "MonitorProfileName"}},
+  {"shot": "1-the-system-s-profile-is-chosen-and-the-row-names-it"},
+  {"state": "1-the-system-s-profile-is-chosen-and-the-row-names-it"},
+  {"prefs_search": ""},
+  {"wait": 10}
+]

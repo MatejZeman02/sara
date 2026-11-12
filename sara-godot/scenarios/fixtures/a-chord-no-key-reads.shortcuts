@@ -1,0 +1,6 @@
+# Two chords no key in Sara reads beside one that does, for the notice Import
+# from Krita gives. Eject and Calculator are Qt's names for keys Godot has no
+# keycode for. Read by scenarios/import-from-krita-reads-every-key-name-krita-writes.json.
+[Shortcuts]
+move_layer_up=Ctrl+Eject; Ctrl+PgUp
+merge_layer=Calculator

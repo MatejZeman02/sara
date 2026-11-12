@@ -1,0 +1,216 @@
+[
+  {
+    "comment": "The edge of a noise stroke is not one tile repeated. On a white 1200 by 600 document, in black and with randomness at nought, Grain Round, Bristle Flat and Dry Brush each paint one long level stroke from x 100 to 1100, at y 120, 300 and 480, at a press of 0.8, through the door's stroke step on the tool's own route in document space. A look of each stroke follows at twice its size, to judge whether its outline still reads as one tuft over and over. The same scenario run on the tip before the change keeps its looks in the folder before beside after."
+  },
+  {
+    "wait": 60
+  },
+  {
+    "prefs": {
+      "ui_scale": 1.0,
+      "autosave_interval_minutes": 0
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "layout_preset": {
+      "load": "minimalistic"
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "document": "srgb",
+    "size": [
+      1200,
+      600
+    ]
+  },
+  {
+    "wait": 10
+  },
+  {
+    "fit": true
+  },
+  {
+    "wait": 5
+  },
+  {
+    "fill": [
+      1.0,
+      1.0,
+      1.0
+    ]
+  },
+  {
+    "layer": {
+      "add": "Strokes"
+    }
+  },
+  {
+    "colour": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "preset": {
+      "load": "Grain Round"
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "tool": {
+      "id": "noise_brush",
+      "options": {
+        "randomness": 0.0
+      }
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "stroke": {
+      "from": [
+        100,
+        120
+      ],
+      "to": [
+        1100,
+        120
+      ],
+      "pressure": 0.8,
+      "steps": 250,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "wait": 30
+  },
+  {
+    "look": {
+      "path": "1-grain-round-look.png",
+      "rect": [
+        60,
+        60,
+        1080,
+        120
+      ],
+      "scale": 2
+    }
+  },
+  {
+    "preset": {
+      "load": "Bristle Flat"
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "tool": {
+      "id": "noise_brush",
+      "options": {
+        "randomness": 0.0
+      }
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "stroke": {
+      "from": [
+        100,
+        300
+      ],
+      "to": [
+        1100,
+        300
+      ],
+      "pressure": 0.8,
+      "steps": 250,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "wait": 30
+  },
+  {
+    "look": {
+      "path": "2-bristle-flat-look.png",
+      "rect": [
+        60,
+        240,
+        1080,
+        120
+      ],
+      "scale": 2
+    }
+  },
+  {
+    "preset": {
+      "load": "Dry Brush"
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "tool": {
+      "id": "noise_brush",
+      "options": {
+        "randomness": 0.0
+      }
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "stroke": {
+      "from": [
+        100,
+        480
+      ],
+      "to": [
+        1100,
+        480
+      ],
+      "pressure": 0.8,
+      "steps": 250,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "wait": 30
+  },
+  {
+    "look": {
+      "path": "3-dry-brush-look.png",
+      "rect": [
+        60,
+        420,
+        1080,
+        120
+      ],
+      "scale": 2
+    }
+  },
+  {
+    "shot": "4-the-window-after-the-three-strokes"
+  }
+]

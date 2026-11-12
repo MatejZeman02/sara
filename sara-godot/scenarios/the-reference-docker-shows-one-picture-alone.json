@@ -1,0 +1,13 @@
+[{"wait": 30}, {"docker": "park"}, {"docker": {"id": "ReferenceDocker", "at": [860, 120], "size": [420, 420]}}, {"wait": 10},
+ {"reference": {"open": ["res://ui/icon.png", "res://ui/icon-bw.png", "res://ui/icon.png"]}}, {"wait": 10},
+ {"shot": "0-the-board-of-three"}, {"state": "0-the-board-of-three"},
+ {"reference": {"select": 1, "toggle": "solo"}}, {"wait": 10},
+ {"reference": {"sample": [150, 150]}},
+ {"shot": "1-the-middle-picture-alone"}, {"state": "1-the-middle-picture-alone"},
+ {"move": [1070, 330]}, {"wait": 5}, {"press": "left"}, {"release": "left"}, {"wait": 5},
+ {"key": "escape"}, {"wait": 10},
+ {"shot": "2-escape-brings-the-board-back"}, {"state": "2-escape-brings-the-board-back"},
+ {"key": {"key": "s", "ctrl": true, "alt": true}}, {"wait": 10},
+ {"shot": "3-the-chord-solos-the-selected-one"}, {"state": "3-the-chord-solos-the-selected-one"},
+ {"key": {"key": "s", "ctrl": true, "alt": true}}, {"wait": 10},
+ {"shot": "4-the-chord-again-the-board"}, {"state": "4-the-chord-again-the-board"}]

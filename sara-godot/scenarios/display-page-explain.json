@@ -1,0 +1,18 @@
+[
+  {"wait": 30},
+  {"open": "preferences"},
+  {"wait": 20},
+  {"page": "Display"},
+  {"wait": 15},
+  {"shot": "display-page"},
+  {"state": "display-page"},
+  {"view": "hdr_heatmap"},
+  {"wait": 10},
+  {"state": "false-colour-picked"},
+  {"view": "soft_proof"},
+  {"wait": 10},
+  {"state": "soft-proof-picked"},
+  {"view": ""},
+  {"wait": 10},
+  {"state": "back-to-display"}
+]

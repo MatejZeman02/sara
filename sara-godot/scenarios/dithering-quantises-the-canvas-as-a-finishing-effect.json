@@ -1,0 +1,394 @@
+[
+ {
+  "wait": 45
+ },
+ {
+  "prefs": {
+   "ui_scale": 1.0
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "document": "srgb"
+ },
+ {
+  "wait": 25
+ },
+ {
+  "docker": "park"
+ },
+ {
+  "wait": 15
+ },
+ {
+  "layer": {
+   "add": "Ramp",
+   "fill": [
+    0.5,
+    0.5,
+    0.5,
+    1.0
+   ]
+  }
+ },
+ {
+  "layer": {
+   "fill": [
+    0.12,
+    0.12,
+    0.12,
+    1.0
+   ],
+   "chunks": [
+    [
+     0,
+     0
+    ]
+   ]
+  }
+ },
+ {
+  "layer": {
+   "fill": [
+    0.25,
+    0.25,
+    0.25,
+    1.0
+   ],
+   "chunks": [
+    [
+     1,
+     0
+    ]
+   ]
+  }
+ },
+ {
+  "layer": {
+   "fill": [
+    0.4,
+    0.4,
+    0.4,
+    1.0
+   ],
+   "chunks": [
+    [
+     2,
+     0
+    ]
+   ]
+  }
+ },
+ {
+  "layer": {
+   "fill": [
+    0.55,
+    0.55,
+    0.55,
+    1.0
+   ],
+   "chunks": [
+    [
+     0,
+     1
+    ]
+   ]
+  }
+ },
+ {
+  "layer": {
+   "fill": [
+    0.7,
+    0.7,
+    0.7,
+    1.0
+   ],
+   "chunks": [
+    [
+     1,
+     1
+    ]
+   ]
+  }
+ },
+ {
+  "layer": {
+   "fill": [
+    0.88,
+    0.88,
+    0.88,
+    1.0
+   ],
+   "chunks": [
+    [
+     2,
+     1
+    ]
+   ]
+  }
+ },
+ {
+  "layer": {
+   "fill": [
+    0.85,
+    0.35,
+    0.2,
+    1.0
+   ],
+   "chunks": [
+    [
+     3,
+     0
+    ]
+   ]
+  }
+ },
+ {
+  "layer": {
+   "fill": [
+    0.2,
+    0.45,
+    0.8,
+    1.0
+   ],
+   "chunks": [
+    [
+     3,
+     1
+    ]
+   ]
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "texel": [
+   [
+    128,
+    128
+   ],
+   [
+    384,
+    384
+   ]
+  ]
+ },
+ {
+  "shot": "0-the-ramp-before"
+ },
+ {
+  "filter_rows": {
+   "attach": "sara-base-modules.dither",
+   "layer": "Ramp",
+   "params": {
+    "levels": 4,
+    "pattern": "bayer",
+    "strength": 100
+   }
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "filter_rows": ""
+ },
+ {
+  "texel": [
+   [
+    128,
+    128
+   ],
+   [
+    384,
+    384
+   ],
+   [
+    257,
+    100
+   ]
+  ]
+ },
+ {
+  "zoom": 1.0
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "1-bayer-at-100"
+ },
+ {
+  "zoom": 4.0
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "1-bayer-at-400"
+ },
+ {
+  "zoom": 0.5
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "1-bayer-at-50"
+ },
+ {
+  "filter_edit": {
+   "open": {
+    "layer": "Ramp",
+    "index": 0
+   }
+  }
+ },
+ {
+  "wait": 25
+ },
+ {
+  "filter_edit": {
+   "widget": "pattern",
+   "value": 1
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "filter_edit": {
+   "do": "describe"
+  }
+ },
+ {
+  "filter_edit": {
+   "do": "apply"
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "texel": [
+   [
+    128,
+    128
+   ],
+   [
+    384,
+    384
+   ],
+   [
+    257,
+    100
+   ]
+  ]
+ },
+ {
+  "zoom": 1.0
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "2-gradient-at-100"
+ },
+ {
+  "zoom": 4.0
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "2-gradient-at-400"
+ },
+ {
+  "zoom": 0.5
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "2-gradient-at-50"
+ },
+ {
+  "filter_edit": {
+   "open": {
+    "layer": "Ramp",
+    "index": 0
+   }
+  }
+ },
+ {
+  "wait": 25
+ },
+ {
+  "filter_edit": {
+   "widget": "pattern",
+   "value": 2
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "filter_edit": {
+   "do": "describe"
+  }
+ },
+ {
+  "filter_edit": {
+   "do": "apply"
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "texel": [
+   [
+    128,
+    128
+   ],
+   [
+    384,
+    384
+   ],
+   [
+    257,
+    100
+   ]
+  ]
+ },
+ {
+  "zoom": 1.0
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "3-blue-at-100"
+ },
+ {
+  "zoom": 4.0
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "3-blue-at-400"
+ },
+ {
+  "zoom": 0.5
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "3-blue-at-50"
+ }
+]

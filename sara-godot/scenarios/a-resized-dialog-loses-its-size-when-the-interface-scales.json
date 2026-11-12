@@ -1,0 +1,28 @@
+[
+ {"wait": 60},
+ {"layout_preset": {"load": "minimalistic"}},
+ {"wait": 20},
+ {"document": "srgb"},
+ {"wait": 10},
+ {"prefs": {"ui_scale": 1.0}},
+ {"wait": 20},
+ {"brush_editor": {"open": true, "page": "General"}},
+ {"wait": 20},
+ {"brush_editor": {"scratch": {"editor_size": [1400, 700]}}},
+ {"wait": 20},
+ {"brush_editor": {}},
+ {"state": "1-the-editor-resized-to-1400-by-700"},
+ {"shot": "1-the-editor-resized-to-1400-by-700"},
+
+ {"prefs": {"ui_scale": 1.25}},
+ {"wait": 30},
+ {"brush_editor": {}},
+ {"state": "2-the-interface-scale-moved-to-1-25"},
+ {"shot": "2-the-interface-scale-moved-to-1-25"},
+
+ {"prefs": {"ui_scale": 1.0}},
+ {"wait": 30},
+ {"brush_editor": {}},
+ {"state": "3-and-back-to-1-00"},
+ {"shot": "3-and-back-to-1-00"}
+]

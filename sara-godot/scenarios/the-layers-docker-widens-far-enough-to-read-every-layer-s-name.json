@@ -1,0 +1,32 @@
+[
+  {"wait": 30},
+  {"layer": {"add": "Tree reflections"}},
+  {"layer": {"add": "Mist repair"}},
+  {"layer": {"add": "Detail repair"}},
+  {"layer": {"add": "Sun glow over the far ridge"}},
+  {"wait": 10},
+  {"state": "0-default"},
+  {"shot": "0-default"},
+
+  {"docker_resize": {"id": "LayersDocker", "by": [190, 0], "edge": "right"}},
+  {"wait": 10},
+  {"state": "1-docked-right-edge-500"},
+  {"shot": "1-docked-right-edge-500"},
+
+  {"window": [1700, 1000]},
+  {"wait": 30},
+  {"window": [1920, 1048]},
+  {"wait": 30},
+  {"state": "2-docked-after-the-fit"},
+  {"shot": "2-docked-after-the-fit"},
+
+  {"docker": {"id": "LayersDocker", "at": [1600, 485], "size": [310, 524]}},
+  {"wait": 10},
+  {"prefs": {"embed_subwindows": false}},
+  {"wait": 40},
+  {"state": "3-let-out-before"},
+  {"docker_resize": {"id": "LayersDocker", "by": [190, 0], "edge": "right"}},
+  {"wait": 20},
+  {"state": "4-let-out-right-edge-500"},
+  {"shot": "4-let-out-right-edge-500"}
+]

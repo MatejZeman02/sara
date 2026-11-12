@@ -1,0 +1,464 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" uid="uid://b151gxntkwagy" path="res://core/api/dynamics/sa_curve_option.gd" id="1"]
+[ext_resource type="Script" uid="uid://cld65h3400otq" path="res://core/api/dynamics/sa_sensor.gd" id="2"]
+[ext_resource type="Script" uid="uid://blfljcne447kc" path="res://modules/sara-noise-brush-engine/noise_brush_settings.gd" id="3"]
+[ext_resource type="Script" uid="uid://bw8gy7vixj4uo" path="res://core/api/tip/sa_brush_tip.gd" id="4"]
+
+[sub_resource type="Resource" id="Resource_11ljo"]
+script = ExtResource("2")
+id = 6
+active = true
+curve = PackedVector2Array(0, 0.5, 0.3, 1, 1, 1)
+length = 0
+periodic = true
+lock_angle = false
+angle_offset = 0.0
+fan_corners = false
+fan_step = 30.0
+
+[sub_resource type="Resource" id="Resource_kli26"]
+script = ExtResource("1")
+enabled = true
+use_curve = true
+use_same_curve = false
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 2.0
+strength_min = 0.0
+strength_max = 2.0
+sensors = {
+6: SubResource("Resource_11ljo")
+}
+
+[sub_resource type="Resource" id="Resource_r5uc5"]
+resource_name = "hardness"
+script = ExtResource("2")
+id = 19
+active = true
+curve = PackedVector2Array(0, 0.96, 1, 1)
+length = 0
+periodic = true
+lock_angle = false
+angle_offset = 0.0
+fan_corners = false
+fan_step = 30.0
+
+[sub_resource type="Resource" id="Resource_g1lc5"]
+script = ExtResource("1")
+enabled = true
+use_curve = true
+use_same_curve = false
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {
+19: SubResource("Resource_r5uc5")
+}
+
+[sub_resource type="Resource" id="Resource_oc5js"]
+script = ExtResource("2")
+id = 18
+active = true
+curve = PackedVector2Array(0, 0.491, 1, 0.509)
+length = 0
+periodic = true
+lock_angle = false
+angle_offset = 0.0
+fan_corners = false
+fan_step = 30.0
+
+[sub_resource type="Resource" id="Resource_pjcuw"]
+script = ExtResource("1")
+enabled = true
+use_curve = true
+use_same_curve = false
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {
+18: SubResource("Resource_oc5js")
+}
+
+[sub_resource type="Resource" id="Resource_1swgn"]
+resource_name = "opacity"
+script = ExtResource("2")
+id = 19
+active = true
+curve = PackedVector2Array(0, 0.97, 1, 1)
+length = 0
+periodic = true
+lock_angle = false
+angle_offset = 0.0
+fan_corners = false
+fan_step = 30.0
+
+[sub_resource type="Resource" id="Resource_vy2ll"]
+script = ExtResource("1")
+enabled = true
+use_curve = true
+use_same_curve = false
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {
+19: SubResource("Resource_1swgn")
+}
+
+[sub_resource type="Resource" id="Resource_aoyfj"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {}
+
+[sub_resource type="Resource" id="Resource_ll5sh"]
+script = ExtResource("2")
+id = 18
+active = true
+curve = PackedVector2Array(0, 0.482, 1, 0.518)
+length = 0
+periodic = true
+lock_angle = false
+angle_offset = 0.0
+fan_corners = false
+fan_step = 30.0
+
+[sub_resource type="Resource" id="Resource_nv2s2"]
+script = ExtResource("1")
+enabled = true
+use_curve = true
+use_same_curve = false
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {
+18: SubResource("Resource_ll5sh")
+}
+
+[sub_resource type="Resource" id="Resource_rd2ck"]
+script = ExtResource("2")
+id = 0
+active = true
+curve = PackedVector2Array(0, 0.33333334, 0.125, 0.33336416, 0.25, 0.3341924, 0.375, 0.33934864, 0.5, 0.35726455, 0.625, 0.40317792, 0.75, 0.5009059, 0.875, 0.6845276, 1, 1)
+length = 0
+periodic = true
+lock_angle = false
+angle_offset = 0.0
+fan_corners = false
+fan_step = 30.0
+
+[sub_resource type="Resource" id="Resource_l4dw2"]
+resource_name = "size"
+script = ExtResource("2")
+id = 19
+active = true
+curve = PackedVector2Array(0, 0.97, 1, 1)
+length = 0
+periodic = true
+lock_angle = false
+angle_offset = 0.0
+fan_corners = false
+fan_step = 30.0
+
+[sub_resource type="Resource" id="Resource_jrwxc"]
+script = ExtResource("1")
+enabled = true
+use_curve = true
+use_same_curve = false
+common_curve = PackedVector2Array(0, 0.33333334, 0.125, 0.33336416, 0.25, 0.3341924, 0.375, 0.33934864, 0.5, 0.35726455, 0.625, 0.40317792, 0.75, 0.5009059, 0.875, 0.6845276, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {
+0: SubResource("Resource_rd2ck"),
+19: SubResource("Resource_l4dw2")
+}
+
+[sub_resource type="Resource" id="Resource_ukl4f"]
+script = ExtResource("1")
+enabled = true
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 0.5
+strength_min = 0.0
+strength_max = 1.0
+sensors = {}
+
+[sub_resource type="Resource" id="Resource_66lpw"]
+script = ExtResource("1")
+enabled = true
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 0.85
+strength_min = 0.0
+strength_max = 1.0
+sensors = {}
+
+[sub_resource type="Resource" id="Resource_bj3d2"]
+script = ExtResource("1")
+enabled = true
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 0.33
+strength_min = 0.0
+strength_max = 1.0
+sensors = {}
+
+[sub_resource type="Resource" id="Resource_rbqv7"]
+script = ExtResource("2")
+id = 0
+active = true
+curve = PackedVector2Array(0, 1, 1, 0)
+length = 0
+periodic = true
+lock_angle = false
+angle_offset = 0.0
+fan_corners = false
+fan_step = 30.0
+
+[sub_resource type="Resource" id="Resource_er0pj"]
+resource_name = "strength"
+script = ExtResource("2")
+id = 19
+active = true
+curve = PackedVector2Array(0, 0.9, 1, 1)
+length = 0
+periodic = true
+lock_angle = false
+angle_offset = 0.0
+fan_corners = false
+fan_step = 30.0
+
+[sub_resource type="Resource" id="Resource_wd47b"]
+script = ExtResource("1")
+enabled = true
+use_curve = true
+use_same_curve = false
+common_curve = PackedVector2Array(0, 1, 1, 0)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {
+0: SubResource("Resource_rbqv7"),
+19: SubResource("Resource_er0pj")
+}
+
+[sub_resource type="Resource" id="Resource_ukfjp"]
+script = ExtResource("2")
+id = 5
+active = true
+curve = PackedVector2Array(0, 1, 1, 0)
+length = 0
+periodic = true
+lock_angle = false
+angle_offset = 0.0
+fan_corners = false
+fan_step = 30.0
+
+[sub_resource type="Resource" id="Resource_1aak1"]
+script = ExtResource("1")
+enabled = true
+use_curve = true
+use_same_curve = false
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {
+5: SubResource("Resource_ukfjp")
+}
+
+[sub_resource type="Resource" id="Resource_jdclv"]
+script = ExtResource("2")
+id = 5
+active = true
+curve = PackedVector2Array(0, 1, 1, 0)
+length = 0
+periodic = true
+lock_angle = false
+angle_offset = 0.0
+fan_corners = false
+fan_step = 30.0
+
+[sub_resource type="Resource" id="Resource_gnpj1"]
+script = ExtResource("1")
+enabled = true
+use_curve = true
+use_same_curve = false
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {
+5: SubResource("Resource_jdclv")
+}
+
+[sub_resource type="Resource" id="Resource_e41pr"]
+script = ExtResource("2")
+id = 0
+active = true
+curve = PackedVector2Array(0, 0, 1, 1)
+length = 0
+periodic = true
+lock_angle = false
+angle_offset = 0.0
+fan_corners = false
+fan_step = 30.0
+
+[sub_resource type="Resource" id="Resource_a5erm"]
+script = ExtResource("2")
+id = 5
+active = true
+curve = PackedVector2Array(0, 0.5, 1, 1)
+length = 0
+periodic = true
+lock_angle = false
+angle_offset = 0.0
+fan_corners = false
+fan_step = 30.0
+
+[sub_resource type="Resource" id="Resource_435mv"]
+script = ExtResource("2")
+id = 6
+active = true
+curve = PackedVector2Array(0, 1, 0.3, 0.5, 1, 0.5)
+length = 0
+periodic = true
+lock_angle = false
+angle_offset = 0.0
+fan_corners = false
+fan_step = 30.0
+
+[sub_resource type="Resource" id="Resource_yd2u5"]
+resource_name = "thickness"
+script = ExtResource("2")
+id = 19
+active = true
+curve = PackedVector2Array(0, 0.94, 1, 1)
+length = 0
+periodic = true
+lock_angle = false
+angle_offset = 0.0
+fan_corners = false
+fan_step = 30.0
+
+[sub_resource type="Resource" id="Resource_aqnw6"]
+script = ExtResource("1")
+enabled = true
+use_curve = true
+use_same_curve = false
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {
+0: SubResource("Resource_e41pr"),
+5: SubResource("Resource_a5erm"),
+6: SubResource("Resource_435mv"),
+19: SubResource("Resource_yd2u5")
+}
+
+[sub_resource type="Curve" id="Curve_ps8cy"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Resource" id="Resource_l4tbj"]
+script = ExtResource("4")
+kind = 0
+generator = 3
+shape = 0
+diameter = 29.46292452533275
+ratio = 1.0
+horizontal_fade = 1.0
+vertical_fade = 1.0
+softness = 1.0
+spikes = 2
+antialias_edges = true
+density = 1.0
+randomness = 0.0
+softness_curve = SubResource("Curve_ps8cy")
+spacing = 0.1
+auto_spacing = false
+auto_spacing_coeff = 1.0
+angle = 0.0
+mirror_horizontal = false
+mirror_vertical = false
+image_path = "res://tips/scrawled-block.png"
+lightness_strength = 0.0
+
+[resource]
+resource_name = "Wet Into Wet"
+script = ExtResource("3")
+format_version = 4
+radius = 0.04148821427470957
+opacity = 1.0
+hardness = 0.9
+strength = 0.02
+tip = SubResource("Resource_l4tbj")
+randomness = 0.5
+held_seed = 1
+picture_name = "Paper Grain"
+texture_field = "grain"
+field_numbers = {}
+texture_channels = 2
+texture_relief = 2.0
+texture_drift = 0.31
+grain_scale = 6.039648290761679
+grain_contrast = 2.44
+bristle_count = 18
+bristle_spread = 0.4
+bristle_length = 4.0
+picture_scale = 1.0
+picture_rotation = 0.0
+picture_invert = false
+thickness = 0.0
+thickness_lean = 0.01
+paint_load = 1.0
+push_colour_below = true
+blend_mode = &"pigment_mix"
+chroma_variation = 0.12
+color = Color(1, 1, 1, 1)
+size_option = SubResource("Resource_jrwxc")
+opacity_option = SubResource("Resource_vy2ll")
+hardness_option = SubResource("Resource_g1lc5")
+strength_option = SubResource("Resource_wd47b")
+thickness_option = SubResource("Resource_aqnw6")
+stretch_option = SubResource("Resource_1aak1")
+rotation_option = SubResource("Resource_aoyfj")
+thickness_lean_option = SubResource("Resource_gnpj1")
+drift_option = SubResource("Resource_kli26")
+saturation_option = SubResource("Resource_nv2s2")
+hue_option = SubResource("Resource_pjcuw")
+smudge_pickup_option = SubResource("Resource_bj3d2")
+smudge_color_rate_option = SubResource("Resource_ukl4f")
+smudge_length_option = SubResource("Resource_66lpw")
+smudge_radius = 1.0
+smudge_mode = 0
+smudge_sample_merged = true
+metadata/tags = PackedStringArray("bristle", "noise", "smudge")
+metadata/engine = &"noise"

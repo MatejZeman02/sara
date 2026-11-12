@@ -1,0 +1,22 @@
+# The kernel after steps 3 and 4 of the guide. Step 3's worked example is a
+# Sobel, two taps either side of the centre differenced instead of the box sum,
+# and step 4 adds the second param beside `radius`.
+#
+# The `params:` block naming `strength` is the edit step 4 of the guide asks
+# for, beside the widget and the `set_params` line. Without this block every run
+# of the filter is refused. This file is the second of the three edits.
+
+kernel blur
+
+image src: readonly
+image dst
+
+params:
+    int radius
+    float strength
+
+
+def blur():
+    vec4 left = image_load(src, pixel + ivec2(-radius, 0))
+    vec4 right = image_load(src, pixel + ivec2(radius, 0))
+    image_store(dst, pixel, mix(image_load(src, pixel), right - left, strength))

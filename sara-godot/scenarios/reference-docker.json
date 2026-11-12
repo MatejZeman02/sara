@@ -1,0 +1,131 @@
+[
+  {
+    "wait": 30
+  },
+  {
+    "docker": {
+      "id": "ReferenceDocker",
+      "at": [
+        900,
+        200
+      ],
+      "size": [
+        320,
+        360
+      ]
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "reference": {
+      "open": "res://ui/icon.png"
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "1-fitted"
+  },
+  {
+    "state": "1-fitted"
+  },
+  {
+    "reference": {
+      "sample": [
+        208,
+        75
+      ]
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "shot": "2-sampled"
+  },
+  {
+    "state": "2-sampled"
+  },
+  {
+    "zoom": 4.0
+  },
+  {
+    "wait": 10
+  },
+  {
+    "reference": {
+      "zoom": 1.0
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "reference": {
+      "pan": [
+        -260,
+        -260
+      ]
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "3-zoomed"
+  },
+  {
+    "state": "3-zoomed"
+  },
+  {
+    "reference": {
+      "sample": [
+        156,
+        116
+      ]
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "shot": "4-sampled-zoomed"
+  },
+  {
+    "state": "4-sampled-zoomed"
+  },
+  {
+    "reference": {
+      "fit": true
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "state": "5-fitted-again"
+  },
+  {
+    "document": "oklab"
+  },
+  {
+    "wait": 15
+  },
+  {
+    "reference": {
+      "sample": [
+        208,
+        75
+      ]
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "state": "6-oklab-document"
+  }
+]

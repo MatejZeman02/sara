@@ -1,0 +1,12 @@
+[
+  {"wait": 30},
+  {"shot": "picker"},
+  {"state": "picker"},
+  {"key": "x"},
+  {"wait": 5},
+  {"state": "after-x"},
+  {"key": "d"},
+  {"wait": 5},
+  {"state": "after-d"},
+  {"shot": "after-d"}
+]

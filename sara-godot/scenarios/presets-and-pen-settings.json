@@ -1,0 +1,79 @@
+[
+  {"wait": 40},
+  {"answer": 2},
+  {"wait": 6},
+  {"answer": 2},
+  {"wait": 10},
+  {"document": "srgb"},
+  {"wait": 25},
+  {"docker": {"id": "ToolOptionsDocker", "at": [0, 300], "size": [300, 500]}},
+  {"wait": 12},
+  {"tool": {"id": "brush", "options": {"hardness": 1.0, "opacity": 1.0, "radius": 0.03}}},
+  {"wait": 10},
+  {"preset": {}},
+  {"state": "1-the-library-as-it-ships"},
+
+  {"preset": {"save": "Probe Round"}},
+  {"wait": 12},
+  {"state": "2-a-preset-saved-from-the-live-settings"},
+
+  {"tool": {"id": "brush", "options": {"radius": 0.09, "hardness": 0.2}}},
+  {"wait": 8},
+  {"preset": {"load": "Probe Round"}},
+  {"wait": 12},
+  {"state": "3-the-preset-loaded-back-over-the-changes"},
+
+  {"preset": {"open": true, "search": "Probe"}},
+  {"wait": 10},
+  {"state": "4-the-chooser-filtered-to-the-new-preset"},
+  {"shot": "4-the-chooser-filtered-to-the-new-preset"},
+  {"preset": {"finish": true}},
+  {"wait": 8},
+
+  {"preset": {"tag": "paint"}},
+  {"wait": 10},
+  {"state": "5-the-library-filtered-by-a-tag"},
+
+  {"preset": {"tag": ""}},
+  {"wait": 8},
+
+  {"brush_editor": {"open": true}},
+  {"wait": 20},
+  {"state": "6-the-brush-editor-open"},
+  {"brush_editor": {"page": "General"}},
+  {"wait": 10},
+  {"state": "7-the-general-page"},
+  {"shot": "7-the-general-page"},
+
+  {"brush_editor": {"page": "Size"}},
+  {"wait": 10},
+  {"curve_option": {"page": "Size", "use_curve": true}},
+  {"wait": 10},
+  {"state": "8-the-size-curve-switched-on"},
+
+  {"curve_option": {"page": "Size", "select": "pressure", "preset": "linear"}},
+  {"wait": 8},
+  {"state": "9-the-size-curve-on-pressure"},
+
+  {"curve_option": {"page": "Size", "use_curve": false}},
+  {"wait": 8},
+  {"state": "10-the-size-curve-switched-off-again"},
+
+  {"brush_editor": {"page": "Brush Tip"}},
+  {"wait": 10},
+  {"state": "11-the-brush-tip-page"},
+  {"shot": "11-the-brush-tip-page"},
+
+  {"brush_editor": {"save_as": "Probe Editor"}},
+  {"wait": 12},
+  {"brush_editor": {"close": true}},
+  {"wait": 10},
+  {"preset": {}},
+  {"state": "12-the-editor-wrote-a-preset"},
+
+  {"preset": {"delete": "Probe Round"}},
+  {"wait": 12},
+  {"preset": {}},
+  {"state": "13-one-preset-deleted"},
+  {"wait": 20}
+]

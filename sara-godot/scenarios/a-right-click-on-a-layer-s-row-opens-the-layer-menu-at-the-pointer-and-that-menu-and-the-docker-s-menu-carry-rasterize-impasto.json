@@ -1,0 +1,285 @@
+[
+ {
+  "comment": "A right click on a layer's row opens the docker's layer menu at the pointer with its rows, docked and let out, and the menu carries Rasterize Impasto, dimmed on a layer with no relief and lighting the relief into the pixels on one that has it. Run it under mutter, `mutter --headless --wayland --virtual-monitor 1920x1080 -- godot --path sara-godot --display-driver x11 -- --capture=... --capture-out=... --settings-dir=...`, as d15 is: under the nested weston of sara_shot.py a list opened from a let-out docker reports a place the compositor never gave it, so the shot pastes it off the picture (pitfalls/capture2.md). The docked half reads the same under either."
+ },
+ {
+  "window": [
+   1920,
+   1080
+  ]
+ },
+ {
+  "wait": 40
+ },
+ {
+  "prefs": {
+   "ui_scale": 1.0,
+   "show_relief": true,
+   "relief_light_angle": 315.0,
+   "relief_strength": 4.0,
+   "tonemap_highlights": false
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "document": "srgb"
+ },
+ {
+  "wait": 25
+ },
+ {
+  "docker": "park"
+ },
+ {
+  "docker": {
+   "id": "LayersDocker",
+   "at": [
+    1400,
+    120
+   ],
+   "size": [
+    420,
+    500
+   ]
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "fill": [
+   0.86,
+   0.8,
+   0.68
+  ]
+ },
+ {
+  "layer": {
+   "add": "Plain",
+   "fill": [
+    0.25,
+    0.45,
+    0.7,
+    1.0
+   ]
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "layer": {
+   "add": "Relief"
+  }
+ },
+ {
+  "colour": [
+   0.12,
+   0.3,
+   0.62
+  ]
+ },
+ {
+  "tool": {
+   "id": "noise_brush",
+   "options": {
+    "radius": 0.06,
+    "hardness": 0.8,
+    "opacity": 1.0,
+    "strength": 0.3,
+    "thickness": 1.5,
+    "texture_field": "grain",
+    "texture_channels": 2,
+    "texture_relief": 1.0,
+    "grain_scale": 5.0,
+    "grain_contrast": 2.0
+   }
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "stroke": {
+   "from": [
+    300,
+    450
+   ],
+   "to": [
+    1100,
+    450
+   ],
+   "steps": 40,
+   "pressure": 1.0
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "height_span": 0.01
+ },
+ {
+  "comment": "Docked. A right press on Plain, which has no relief: the menu opens below the pointer, its rows built and Rasterize Impasto dimmed."
+ },
+ {
+  "press": {
+   "button": "right",
+   "control": "LayerRow_1"
+  }
+ },
+ {
+  "release": {
+   "button": "right",
+   "control": "LayerRow_1"
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "shot": "01-docked-the-menu-on-plain-at-the-pointer-rasterize-dimmed"
+ },
+ {
+  "state": "01-docked-the-menu-on-plain-at-the-pointer-rasterize-dimmed"
+ },
+ {
+  "key": {
+   "key": "escape"
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "comment": "Docked. A right press on Relief: Rasterize Impasto is lit, and its press clears the height."
+ },
+ {
+  "press": {
+   "button": "right",
+   "control": "LayerRow_0"
+  }
+ },
+ {
+  "release": {
+   "button": "right",
+   "control": "LayerRow_0"
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "shot": "02-docked-the-menu-on-relief-rasterize-lit"
+ },
+ {
+  "state": "02-docked-the-menu-on-relief-rasterize-lit"
+ },
+ {
+  "texel": [
+   [
+    400,
+    425
+   ],
+   [
+    800,
+    425
+   ],
+   [
+    1200,
+    400
+   ]
+  ]
+ },
+ {
+  "click": {
+   "control": "Label",
+   "in": "Row_layer_rasterize_impasto"
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "texel": [
+   [
+    400,
+    425
+   ],
+   [
+    800,
+    425
+   ],
+   [
+    1200,
+    400
+   ]
+  ]
+ },
+ {
+  "height_span": 0.01
+ },
+ {
+  "shot": "03-relief-rasterised"
+ },
+ {
+  "state": "03-relief-rasterised"
+ },
+ {
+  "comment": "Let out. Subwindows off, the same right press on Plain opens the menu at the pointer in a window of its own, and the More button opens the same rows."
+ },
+ {
+  "prefs": {
+   "embed_subwindows": false
+  }
+ },
+ {
+  "wait": 60
+ },
+ {
+  "press": {
+   "button": "right",
+   "control": "LayerRow_1"
+  }
+ },
+ {
+  "release": {
+   "button": "right",
+   "control": "LayerRow_1"
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "shot": "04-let-out-the-menu-on-plain-at-the-pointer"
+ },
+ {
+  "state": "04-let-out-the-menu-on-plain-at-the-pointer"
+ },
+ {
+  "key": {
+   "key": "escape"
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "click": {
+   "control": "MoreBtn",
+   "in": "LayersDocker"
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "shot": "05-let-out-the-more-button-opens-the-same-rows"
+ },
+ {
+  "state": "05-let-out-the-more-button-opens-the-same-rows"
+ }
+]

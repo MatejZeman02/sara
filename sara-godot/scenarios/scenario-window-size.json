@@ -1,0 +1,18 @@
+[
+  {"wait": 40},
+  {"prefs": {"second_row": true}},
+  {"wait": 12},
+  {"state": "01-before-the-resize"},
+  {"window": [2560, 1440]},
+  {"wait": 20},
+  {"shot": "02-second-row-on-2560"},
+  {"state": "02-second-row-on-2560"},
+  {"prefs": {"second_row": false}},
+  {"wait": 14},
+  {"shot": "03-second-row-off-2560"},
+  {"state": "03-second-row-off-2560"},
+  {"window": [1280, 800]},
+  {"wait": 20},
+  {"shot": "04-at-1280"},
+  {"state": "04-at-1280"}
+]

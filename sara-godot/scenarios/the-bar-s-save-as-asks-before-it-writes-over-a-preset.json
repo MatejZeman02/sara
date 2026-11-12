@@ -1,0 +1,17 @@
+[
+  {"wait": 60},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 20},
+  {"document": "srgb"},
+  {"tool": "brush"},
+  {"brush": {"preset": "Pointed Mark"}},
+  {"wait": 10},
+  {"preset_name": {"type": "oil smudge", "submit": true}},
+  {"wait": 10},
+  {"shot": "01-the-question-names-the-preset-it-would-replace"},
+  {"state": "01-state"},
+  {"message": {"close": "button"}},
+  {"wait": 6},
+  {"preset_name": {"read": true}},
+  {"shot": "02-cancel-leaves-the-bar-as-it-was"}
+]

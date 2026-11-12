@@ -1,0 +1,18 @@
+[
+  {"wait": 30},
+  {"comment": "File > Import Picture over a PNG whose cICP names Display P3 shows the row on Display P3 and a line saying the file names it, and over a plain 8-bit PNG shows the convention's line."},
+  {"prefs": {"import_fit": "ask"}},
+  {"open": "import_fit", "picture": "res://tests/data/display_p3_cicp.png"},
+  {"wait": 15},
+  {"shot": "a-png-whose-cicp-names-display-p3"},
+  {"state": "a-png-whose-cicp-names-display-p3"},
+  {"key": "escape"},
+  {"wait": 10},
+
+  {"open": "import_fit"},
+  {"wait": 15},
+  {"shot": "a-plain-png-names-nothing"},
+  {"state": "a-plain-png-names-nothing"},
+  {"key": "escape"},
+  {"wait": 10}
+]

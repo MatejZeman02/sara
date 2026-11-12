@@ -1,0 +1,21 @@
+[
+  {"comment": "The Tools menu's Stabilizer modes read as a choice of one, no box on any row and the chosen mode marked in the accent colour, which stays while the pointer rests on a row that is not chosen. Then a press on another mode moves the mark there with the menu still open, and the pointer moves on to a third row. The rows are `item_1200` up, one a mode."},
+  {"window": [1920, 1080]},
+  {"wait": 45},
+  {"document": "srgb"},
+  {"wait": 25},
+  {"menu": "Tools"},
+  {"wait": 15},
+  {"move": {"control": "Label", "in": "Row_item_1201"}},
+  {"wait": 15},
+  {"state": "01-the-menu-open-the-pointer-on-a-mode-not-chosen"},
+  {"shot": "01-the-menu-open-the-pointer-on-a-mode-not-chosen"},
+  {"click": {"control": "Label", "in": "Row_item_1202"}},
+  {"wait": 15},
+  {"move": {"control": "Label", "in": "Row_item_1200"}},
+  {"wait": 15},
+  {"state": "02-a-pick-moved-the-mark-and-the-menu-stayed-open"},
+  {"shot": "02-a-pick-moved-the-mark-and-the-menu-stayed-open"},
+  {"key": {"key": "escape"}},
+  {"wait": 10}
+]

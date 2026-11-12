@@ -1,0 +1,284 @@
+[
+  {
+    "comment": "The Layers docker floating with more layers than it shows, scrolled part way by the wheel, so its vertical bar shows at the thickness a pen can take, its grabber drawn inside the bar, and the clear room between the bar and the docker's right edge and grip."
+  },
+  {
+    "wait": 25
+  },
+  {
+    "docker": "park"
+  },
+  {
+    "docker": {
+      "id": "LayersDocker",
+      "at": [
+        420,
+        200
+      ],
+      "size": [
+        300,
+        300
+      ]
+    }
+  },
+  {
+    "layer": {
+      "add": "Paint Layer 1",
+      "fill": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "chunks": [
+        [
+          1,
+          0
+        ]
+      ]
+    }
+  },
+  {
+    "layer": {
+      "add": "Paint Layer 2",
+      "fill": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "chunks": [
+        [
+          2,
+          0
+        ]
+      ]
+    }
+  },
+  {
+    "layer": {
+      "add": "Paint Layer 3",
+      "fill": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "chunks": [
+        [
+          0,
+          1
+        ]
+      ]
+    }
+  },
+  {
+    "layer": {
+      "add": "Paint Layer 4",
+      "fill": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "chunks": [
+        [
+          1,
+          1
+        ]
+      ]
+    }
+  },
+  {
+    "layer": {
+      "add": "Paint Layer 5",
+      "fill": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "chunks": [
+        [
+          2,
+          1
+        ]
+      ]
+    }
+  },
+  {
+    "layer": {
+      "add": "Paint Layer 6",
+      "fill": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "chunks": [
+        [
+          0,
+          2
+        ]
+      ]
+    }
+  },
+  {
+    "layer": {
+      "add": "Paint Layer 7",
+      "fill": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "chunks": [
+        [
+          1,
+          2
+        ]
+      ]
+    }
+  },
+  {
+    "layer": {
+      "add": "Paint Layer 8",
+      "fill": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "chunks": [
+        [
+          2,
+          2
+        ]
+      ]
+    }
+  },
+  {
+    "layer": {
+      "add": "Paint Layer 9",
+      "fill": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "chunks": [
+        [
+          0,
+          0
+        ]
+      ]
+    }
+  },
+  {
+    "layer": {
+      "add": "Paint Layer 10",
+      "fill": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "chunks": [
+        [
+          1,
+          0
+        ]
+      ]
+    }
+  },
+  {
+    "layer": {
+      "add": "Paint Layer 11",
+      "fill": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "chunks": [
+        [
+          2,
+          0
+        ]
+      ]
+    }
+  },
+  {
+    "layer": {
+      "add": "Paint Layer 12",
+      "fill": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "chunks": [
+        [
+          0,
+          1
+        ]
+      ]
+    }
+  },
+  {
+    "layer": {
+      "add": "Paint Layer 13",
+      "fill": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "chunks": [
+        [
+          1,
+          1
+        ]
+      ]
+    }
+  },
+  {
+    "layer": {
+      "add": "Paint Layer 14",
+      "fill": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "chunks": [
+        [
+          2,
+          1
+        ]
+      ]
+    }
+  },
+  {
+    "wait": 15
+  },
+  {
+    "wheel": {
+      "at": [
+        520,
+        330
+      ],
+      "notches": -2,
+      "read": true
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "the-layers-docker-scrolled"
+  },
+  {
+    "state": "the-layers-docker-scrolled"
+  }
+]

@@ -1,0 +1,40 @@
+# The Gaussian blur, one neighbourhood kernel under the
+# contract SaNeighbourhoodPass writes: the padded source at binding 0, the
+# selection mask at binding 1, the chunk-sized target at binding 2.
+#
+# Separable inside one dispatch, by `sa_gaussian_blurred_with` of the `gaussian`
+# library, which the High Pass runs too and whose comment gives the cost: 116
+# reads a texel against the square's 441 at radius 10.
+#
+# Colour is straight alpha, so every tap is premultiplied before it is summed
+# and the sum is divided back out at the end. Nothing clamps but the
+# coordinates.
+
+kernel gaussian_blur
+
+image src: readonly
+image mask: r32f, readonly
+image dst
+
+params:
+    float radius
+    int halo
+    vec2 origin
+
+# The premultiplied colour, the straightening and the mask's blend, then the
+# Gaussian's weight and walk, imported after the params because both libraries
+# read `halo` and the images by name.
+import neighbourhood
+import gaussian
+
+
+def gaussian_blur():
+    ivec2 at = pixel + ivec2(origin)
+    # The radius keeps its fraction for the bell, so 1.5 blurs more than 1 and
+    # less than 2, and the walk takes whole taps out to it rounded up, which is
+    # the halo the filter declared. A whole radius takes whole taps and no part.
+    float kept = clamp(radius, 0.0, float(halo))
+    # Every thread walks, since the walk's barriers wait for the whole group, and
+    # the transpiler guards the store of a thread past the edge.
+    vec4 blurred = sa_gaussian_blurred_with(at, int(ceil(kept)), sa_gaussian_sigma_of(kept))
+    sa_finish(at, sa_kept(at), sa_straight(blurred))

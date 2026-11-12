@@ -1,0 +1,60 @@
+[
+  { "wait": 60 },
+  { "prefs": { "ui_scale": 1.0 } },
+  { "wait": 20 },
+  { "layout_preset": { "load": "minimalistic" } },
+  { "wait": 20 },
+  { "document": "srgb" },
+  { "tool": "brush" },
+  { "wait": 10 },
+
+  { "preset": { "open": true, "icon_size": 48 } },
+  { "wait": 12 },
+  { "preset": { "finish": true } },
+  { "preset": {} },
+  { "state": "f80-01-every-preset" },
+  { "shot": "f80-01-every-preset" },
+
+  { "preset": { "tag": "paint" } },
+  { "wait": 8 },
+  { "preset": { "finish": true } },
+  { "state": "f80-02-tagged-paint" },
+  { "shot": "f80-02-tagged-paint" },
+
+  { "preset": { "tag": "Paint" } },
+  { "wait": 8 },
+  { "preset": { "finish": true } },
+  { "state": "f80-03-one-capital-changes-nothing" },
+  { "shot": "f80-03-one-capital-changes-nothing" },
+
+  { "preset": { "tag": "watercolour" } },
+  { "wait": 8 },
+  { "preset": { "finish": true } },
+  { "state": "f80-04-a-tag-nothing-carries" },
+
+  { "preset": { "tag": "ink" } },
+  { "wait": 8 },
+  { "preset": { "finish": true } },
+  { "state": "f80-05-tagged-ink" },
+
+  { "preset": { "tag": "lines" } },
+  { "wait": 8 },
+  { "preset": { "finish": true } },
+  { "state": "f80-06-tagged-lines" },
+
+  { "preset": { "tag": "soft" } },
+  { "wait": 8 },
+  { "preset": { "finish": true } },
+  { "state": "f80-07-tagged-soft" },
+
+  { "preset": { "tag": "fill" } },
+  { "wait": 8 },
+  { "preset": { "finish": true } },
+  { "state": "f80-08-tagged-fill" },
+
+  { "preset": { "tag": "" } },
+  { "wait": 8 },
+  { "preset": { "finish": true } },
+  { "state": "f80-09-cleared-without-complaint" },
+  { "shot": "f80-09-cleared-without-complaint" }
+]

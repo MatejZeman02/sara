@@ -1,0 +1,15 @@
+[
+  {"wait": 40},
+  {"docker": {"id": "BrushPresetsDocker"}},
+  {"wait": 20},
+  {"state": "1-before"},
+  {"shot": "1-before"},
+  {"docker_resize": {"id": "BrushPresetsDocker", "by": [0, 260], "grip": true}},
+  {"wait": 10},
+  {"state": "2-grown-down-by-260"},
+  {"shot": "2-grown-down-by-260"},
+  {"docker_resize": {"id": "BrushPresetsDocker", "by": [0, -160], "grip": true}},
+  {"wait": 10},
+  {"state": "3-shrunk-up-by-160"},
+  {"shot": "3-shrunk-up-by-160"}
+]

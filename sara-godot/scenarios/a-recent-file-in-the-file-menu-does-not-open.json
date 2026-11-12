@@ -1,0 +1,31 @@
+[
+ {"args": ["res://tips/tree.png"]},
+ {"comment": "Two recent files, then a press on the older one's row, which is row 1 of the list. The tree opens at boot and is the first recent file."},
+ {"wait": 60},
+ {"state": "1-the-tree-opened-at-boot"},
+ {"shot": "1-the-tree-opened-at-boot"},
+
+ {"menu_item": {"menu": "File", "id": 200}},
+ {"wait": 15},
+ {"file_picker": {"choose": "res://ui/icon-bw.png"}},
+ {"wait": 15},
+ {"comment": "A picture opened as a document stays modified on purpose, so opening another asks first."},
+ {"answer": 1},
+ {"wait": 30},
+ {"menu": "File"},
+ {"wait": 15},
+ {"state": "2-the-icon-opened-and-two-recent-rows"},
+ {"shot": "2-the-icon-opened-and-two-recent-rows"},
+ {"key": "escape"},
+ {"wait": 12},
+
+ {"menu_item": {"menu": "File", "id": 251}},
+ {"wait": 15},
+ {"comment": "The same discard question Open asks, because the icon is unsaved."},
+ {"state": "3-the-recent-row-asks-before-it-opens"},
+ {"shot": "3-the-recent-row-asks-before-it-opens"},
+ {"answer": 1},
+ {"wait": 30},
+ {"state": "4-the-tree-opened-from-its-recent-row"},
+ {"shot": "4-the-tree-opened-from-its-recent-row"}
+]

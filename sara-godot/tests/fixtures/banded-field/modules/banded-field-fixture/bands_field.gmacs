@@ -1,0 +1,16 @@
+# Library: bands_field
+#
+# A brush field with a kernel of its own, the banded field fixture's: bands
+# that streak across the stroke, one every A pixels of path, A the field's first
+# number. The first half of each band takes paint at any pressure and its
+# second half only under a full press, and the lightness is the other way
+# round. The stroke's own offset moves the bands along, so two strokes never
+# lay them in step.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+
+def brush_field(float along, float across, float half_width, vec3 numbers, vec2 offset) -> vec2:
+    float period = max(numbers.x, 2.0)
+    float needed = fract((along + offset.x) / period) < 0.5 ? 0.0 : 1.0
+    return vec2(needed, 1.0 - needed)

@@ -1,0 +1,78 @@
+# Kernel: noise_height_carry
+#
+# What a noise stroke picks up under one stretch, handed to the next.
+# `noise_dab` lays the loads ahead of the stroke and sums what it found under
+# itself, and this kernel runs once an update before it, between two stretches,
+# so the stroke pushes the old paint ahead along the motion, its height and its
+# colour. The loads and their rules are `dab_list/noise_push.gmacs`'s. The name
+# says height, and the paint rides the same lanes.
+#
+# **A lane at a time.** Each image the document's symmetry paints has lanes of
+# its own, since each crosses its own paint.
+#
+# **The fold.** What the lane carried into the stretch just laid takes in
+# what the stretch before that found, which the stretch took up along its
+# length, and both fall by the path the stretch painted. What this stretch
+# found becomes the lane's found loads: the tallest surface at full strength,
+# its height already eased by how far before the stretch's end it stood, and
+# the paint's colour as the mean of what was crossed, at the strength of how
+# much of the lane's cover it held. The sums are set back to nought.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel noise_height_carry
+
+import noise_push
+
+buffer push_carry: float lanes[]
+buffer push_found: int sums[]
+
+params:
+    float lane_count  # every image's lanes together
+    # The length of path the stretch whose findings are folded painted, which
+    # what a lane carried falls over, and the push's reach, both in document
+    # pixels.
+    float painted
+    float reach
+
+# The paint load the four floats from *at* hold, past the height load before
+# them.
+
+
+def noise_paint_at(int at) -> vec4:
+    int first = at + NOISE_LOAD_PAINT
+    return vec4(push_carry.lanes[first], push_carry.lanes[first + 1], push_carry.lanes[first + 2], push_carry.lanes[first + 3])
+
+
+def noise_height_carry():
+    # One row of invocations, a lane each, so no two read or write one lane.
+    if global_id.y != 0 or int(global_id.x) >= int(lane_count):
+        return
+    int lane = int(global_id.x)
+    int at = lane * NOISE_CARRY_FLOATS
+    int sums = lane * NOISE_FOUND_INTS
+    int found = at + NOISE_CARRY_FOUND
+
+    vec2 height = noise_height_taller(
+    vec2(push_carry.lanes[at + NOISE_LOAD_HEIGHT], push_carry.lanes[at + NOISE_LOAD_HEIGHT + 1]),
+    vec2(push_carry.lanes[found + NOISE_LOAD_HEIGHT], push_carry.lanes[found + NOISE_LOAD_HEIGHT + 1])
+    )
+    push_carry.lanes[at + NOISE_LOAD_HEIGHT] = noise_faded(height.x, painted, reach)
+    push_carry.lanes[at + NOISE_LOAD_HEIGHT + 1] = height.y
+    vec4 paint = noise_paint_over(noise_paint_at(found), noise_paint_at(at))
+    push_carry.lanes[at + NOISE_LOAD_PAINT] = noise_faded(paint.x, painted, reach)
+    for channel in range(3):
+        push_carry.lanes[at + NOISE_LOAD_PAINT + 1 + channel] = paint[channel + 1]
+
+    float peak = int_bits_to_float(push_found.sums[sums + NOISE_FOUND_PEAK])
+    push_carry.lanes[found + NOISE_LOAD_HEIGHT] = peak > 0.0 ? 1.0 : 0.0
+    push_carry.lanes[found + NOISE_LOAD_HEIGHT + 1] = peak
+    float cover = float(push_found.sums[sums + NOISE_FOUND_COVER])
+    float weight = float(push_found.sums[sums + NOISE_FOUND_WEIGHT])
+    float strength = cover > 0.0 ? float(push_found.sums[sums + NOISE_FOUND_STRENGTH]) / cover : 0.0
+    push_carry.lanes[found + NOISE_LOAD_PAINT] = weight > 0.0 ? clamp(strength, 0.0, 1.0) : 0.0
+    for channel in range(3):
+        float summed = float(push_found.sums[sums + NOISE_FOUND_COLOUR + channel])
+        push_carry.lanes[found + NOISE_LOAD_PAINT + 1 + channel] = weight > 0.0 ? summed / weight : 0.0
+    for index in range(NOISE_FOUND_INTS):
+        push_found.sums[sums + index] = 0

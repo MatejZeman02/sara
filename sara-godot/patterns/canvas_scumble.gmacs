@@ -1,0 +1,115 @@
+# Canvas scumble, the fifth shipped pattern.
+#
+# Canvas Weave with paint dragged over it. That one is two crossed sinusoids
+# that never reach nought, because a canvas takes some paint everywhere, and
+# a cut through it is a square grid of lines. This keeps the weave and
+# changes three things, so a dab through it lays broken colour instead.
+#
+# The threads are a plain weave, the warp over the weft in one cell and under
+# it in the next, so each cell's top thread is a short bump rather than a line
+# that runs the tile. Each cell's bump is lifted to a height of its own from a
+# hash of the cell, so the tops are uneven and a cut takes some and leaves
+# others. The threads wander, by a slow noise and a quicker one, so no cut
+# lines them up into a grid.
+#
+# Under the weave is a cloud, three octaves of value noise, which is where
+# the brush pressed and where it skipped. The value is the cloud and the
+# thread's height mixed, multiplied by the tooth, which is nought between the
+# threads. Then `lift` is taken off and the rest stretched so the highest few
+# tops reach one, and the hollows reach nought and stay open under any cut.
+#
+# `tile` is written by the store from the texture's own width. `threads` is
+# how many threads cross one tile, kept even so the over and under of the
+# weave meet across the tile's edge. `clumps` is how many patches of the cloud
+# cross one tile, `wobble` how far a thread wanders on the slow noise as a
+# share of its own width, and `lift` how much of the low end becomes hollow.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+uniform float tile: hint_range(1, 4096) = 256.0
+uniform int threads: hint_range(2, 128) = 64
+uniform int clumps: hint_range(1, 16) = 4
+uniform float wobble: hint_range(0, 1) = 0.5
+uniform float lift: hint_range(0, 0.75) = 0.25
+
+const float SA_SCUMBLE_PI = 3.14159265358979323846
+
+# How high the thread under the top one stands, as a share of the top one,
+# where it shows at the sides of a cell.
+
+const float SA_SCUMBLE_UNDER = 0.5
+
+# The lowest a cell's top thread is lifted to, as a share of the highest.
+
+const float SA_SCUMBLE_LOWEST = 0.1
+
+# The thread's height under which the tooth closes to nought, so the corners
+# between threads are hollow however hard the cloud pressed.
+
+const float SA_SCUMBLE_TOOTH = 0.4
+
+# How much of the value is the thread's height rather than the cloud's.
+
+const float SA_SCUMBLE_THREAD_SHARE = 0.55
+
+# The mix at and over which a texel is one. The mix seldom passes 0.85, where
+# a thread at its full height meets the cloud at its densest.
+
+const float SA_SCUMBLE_TOP = 0.8
+
+# How far a thread wanders on the quick noise, as a share of its own width,
+# over a lattice four times the slow one's. The slow noise bends the weave
+# across a patch and leaves it a grid within one, and this bends it within.
+
+const float SA_SCUMBLE_JITTER = 0.3
+
+# One number per cell, from the cell's wrapped position and a salt, so two
+# asks with two salts answer two unrelated numbers.
+
+
+def sa_scumble_hash(vec2 cell, vec2 salt) -> float:
+    return fract(sin(dot(cell + salt, vec2(127.1, 311.7))) * 43758.5453)
+
+# Smooth value noise over a lattice `cells` corners wide, the corners taken
+# modulo that width so the right edge meets the left and the bottom the top.
+
+
+def sa_scumble_noise(vec2 at, float cells, vec2 salt) -> float:
+    vec2 corner = floor(at)
+    vec2 inside = fract(at)
+    vec2 weight = inside * inside * (3.0 - 2.0 * inside)
+    float c00 = sa_scumble_hash(mod(corner, cells), salt)
+    float c10 = sa_scumble_hash(mod(corner + vec2(1.0, 0.0), cells), salt)
+    float c01 = sa_scumble_hash(mod(corner + vec2(0.0, 1.0), cells), salt)
+    float c11 = sa_scumble_hash(mod(corner + vec2(1.0, 1.0), cells), salt)
+    return mix(mix(c00, c10, weight.x), mix(c01, c11, weight.x), weight.y)
+
+
+def pixel(ivec2 at) -> vec4:
+    vec2 uv = (vec2(at) + 0.5) / tile
+    float count = float(threads)
+    float patches = float(clumps)
+    float fine = patches * 2.0
+    float wander_x = sa_scumble_noise(uv * fine, fine, vec2(17.0, 31.0))
+    float wander_y = sa_scumble_noise(uv * fine, fine, vec2(43.0, 5.0))
+    vec2 wander = vec2(wander_x, wander_y)
+    float quick = fine * 4.0
+    float jitter_x = sa_scumble_noise(uv * quick, quick, vec2(7.0, 13.0))
+    float jitter_y = sa_scumble_noise(uv * quick, quick, vec2(29.0, 3.0))
+    vec2 jitter = vec2(jitter_x, jitter_y)
+    vec2 p = uv * count + (wander - 0.5) * 2.0 * wobble + (jitter - 0.5) * 2.0 * SA_SCUMBLE_JITTER
+    vec2 cell = mod(floor(p), count)
+    vec2 inside = fract(p)
+    float warp = sin(SA_SCUMBLE_PI * inside.x)
+    float weft = sin(SA_SCUMBLE_PI * inside.y)
+    float thread = max(weft * (0.6 + 0.4 * warp), warp * SA_SCUMBLE_UNDER)
+    if mod(cell.x + cell.y, 2.0) < 0.5:
+        thread = max(warp * (0.6 + 0.4 * weft), weft * SA_SCUMBLE_UNDER)
+    float height = mix(SA_SCUMBLE_LOWEST, 1.0, sa_scumble_hash(cell, vec2(0.0, 0.0)))
+    float cloud = sa_scumble_noise(uv * patches, patches, vec2(0.0, 0.0)) * 0.5
+    cloud += sa_scumble_noise(uv * fine, fine, vec2(0.0, 0.0)) * 0.3
+    cloud += sa_scumble_noise(uv * fine * 2.0, fine * 2.0, vec2(0.0, 0.0)) * 0.2
+    float tooth = smoothstep(0.0, SA_SCUMBLE_TOOTH, thread)
+    float raw = mix(cloud, thread * height, SA_SCUMBLE_THREAD_SHARE) * tooth
+    float value = clamp((raw - lift) / max(SA_SCUMBLE_TOP - lift, 0.01), 0.0, 1.0)
+    return vec4(value, value, value, 1.0)

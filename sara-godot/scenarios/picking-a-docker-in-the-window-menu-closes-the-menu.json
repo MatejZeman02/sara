@@ -1,0 +1,23 @@
+[
+  {
+    "comment": "Picking a docker in the Window menu closes the menu. On a fresh profile the Window menu is opened and Undo History, docker_9 as n21 found it, is pressed through the menu's own popup. The state dump after it has to read no open menu and the History docker shown, and the shot shows the docker with no list over the window. A second press hides the docker and leaves the menu closed as well. Nothing is saved."
+  },
+  {"wait": 45},
+  {"window": [1920, 1080]},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 25},
+  {"menu": "Window"},
+  {"wait": 10},
+  {"state": "00-the-window-menu-open"},
+  {"shot": "00-the-window-menu-open"},
+  {"menu_item": {"menu": "Window", "id": 9}},
+  {"wait": 10},
+  {"state": "01-undo-history-picked-and-the-menu-closed"},
+  {"shot": "01-undo-history-picked-and-the-menu-closed"},
+  {"menu": "Window"},
+  {"wait": 10},
+  {"menu_item": {"menu": "Window", "id": 9}},
+  {"wait": 10},
+  {"state": "02-undo-history-put-away-and-the-menu-closed"},
+  {"shot": "02-undo-history-put-away-and-the-menu-closed"}
+]

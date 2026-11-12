@@ -1,0 +1,9 @@
+[
+  {"wait": 30},
+  {"open": "preferences"},
+  {"wait": 20},
+  {"page": "Timelapse"},
+  {"wait": 20},
+  {"shot": "timelapse-page"},
+  {"state": "timelapse-page"}
+]

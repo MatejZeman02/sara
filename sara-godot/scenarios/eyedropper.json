@@ -1,0 +1,13 @@
+[
+  {"prefs": {"second_row": true}},
+  {"wait": 10},
+  {"shot": "second-row-brush-without-sample-controls"},
+  {"key": "I"},
+  {"wait": 5},
+  {"shot": "second-row-eyedropper-with-sample-controls"},
+  {"state": "second-row-eyedropper"},
+  {"prefs": {"second_row": false}},
+  {"wait": 5},
+  {"shot": "first-row-eyedropper-overflows"},
+  {"key": "B"}
+]

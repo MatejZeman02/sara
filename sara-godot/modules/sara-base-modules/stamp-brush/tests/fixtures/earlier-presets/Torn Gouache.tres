@@ -1,0 +1,535 @@
+[gd_resource type="Resource" script_class="SaStampBrushSettings" format=3]
+
+[ext_resource type="Script" uid="uid://b151gxntkwagy" path="res://core/api/dynamics/sa_curve_option.gd" id="1"]
+[ext_resource type="Script" uid="uid://d11nxrb3phkdo" path="res://modules/sara-base-modules/stamp-brush/tools/gamma_float.gd" id="2"]
+[ext_resource type="Script" uid="uid://f17s5fy862wf" path="res://modules/sara-base-modules/stamp-brush/sa_masking_brush.gd" id="3"]
+[ext_resource type="Script" uid="uid://bw8gy7vixj4uo" path="res://core/api/tip/sa_brush_tip.gd" id="4"]
+[ext_resource type="Script" uid="uid://cld65h3400otq" path="res://core/api/dynamics/sa_sensor.gd" id="5"]
+[ext_resource type="Script" uid="uid://du6p5dvw08wxg" path="res://modules/sara-base-modules/stamp-brush/stamp_brush_settings.gd" id="6"]
+
+[sub_resource type="Resource" id="Resource_gfkip"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {}
+
+[sub_resource type="Resource" id="Resource_5bx1t"]
+script = ExtResource("2")
+value = 1.0
+gamma_val = 2.4
+
+[sub_resource type="Resource" id="Resource_bydaq"]
+script = ExtResource("1")
+enabled = true
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {}
+
+[sub_resource type="Resource" id="Resource_grm1r"]
+script = ExtResource("2")
+value = 1.0
+gamma_val = 1.0
+
+[sub_resource type="Resource" id="Resource_35en0"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {}
+
+[sub_resource type="Resource" id="Resource_ehb38"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {}
+
+[sub_resource type="Resource" id="Resource_jqjti"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {}
+
+[sub_resource type="Resource" id="Resource_2neia"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {}
+
+[sub_resource type="Resource" id="Resource_hjre3"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {}
+
+[sub_resource type="Resource" id="Resource_sxawk"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 5.0
+sensors = {}
+
+[sub_resource type="Resource" id="Resource_bimlk"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {}
+
+[sub_resource type="Resource" id="Resource_2x20a"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {}
+
+[sub_resource type="Curve" id="Curve_f3qvy"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Resource" id="Resource_1kq72"]
+script = ExtResource("4")
+kind = 0
+generator = 0
+shape = 0
+diameter = 42.0
+ratio = 1.0
+horizontal_fade = 1.0
+vertical_fade = 1.0
+softness = 1.0
+spikes = 2
+antialias_edges = true
+density = 1.0
+randomness = 0.0
+softness_curve = SubResource("Curve_f3qvy")
+spacing = 0.1
+auto_spacing = false
+auto_spacing_coeff = 1.0
+angle = 0.0
+mirror_horizontal = false
+mirror_vertical = false
+image_path = ""
+lightness_strength = 0.0
+
+[sub_resource type="Resource" id="Resource_c73dc"]
+script = ExtResource("3")
+enabled = false
+tip = SubResource("Resource_1kq72")
+size = 1.0
+spacing = 0.1
+size_option = SubResource("Resource_bimlk")
+strength_option = SubResource("Resource_2x20a")
+flow_option = SubResource("Resource_jqjti")
+rotation_option = SubResource("Resource_hjre3")
+scatter_option = SubResource("Resource_sxawk")
+scatter_axis_x = true
+scatter_axis_y = true
+mirror_option = SubResource("Resource_2neia")
+mirror_axis_x = true
+mirror_axis_y = false
+op = 0
+
+[sub_resource type="Resource" id="Resource_kqmi4"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {}
+
+[sub_resource type="Resource" id="Resource_wiwft"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {}
+
+[sub_resource type="Resource" id="Resource_gghch"]
+script = ExtResource("5")
+id = 0
+active = true
+curve = PackedVector2Array(0, 0, 1, 1)
+length = 0
+periodic = true
+lock_angle = false
+angle_offset = 0.0
+fan_corners = false
+fan_step = 30.0
+
+[sub_resource type="Resource" id="Resource_lhm58"]
+script = ExtResource("1")
+enabled = true
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 0.33802736, 0.15228516, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {
+0: SubResource("Resource_gghch")
+}
+
+[sub_resource type="Resource" id="Resource_vkdnn"]
+script = ExtResource("2")
+value = 0.0
+gamma_val = 0.5
+
+[sub_resource type="Resource" id="Resource_w1jee"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {}
+
+[sub_resource type="Resource" id="Resource_utvqd"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {}
+
+[sub_resource type="Resource" id="Resource_1tl61"]
+script = ExtResource("5")
+id = 12
+active = true
+curve = PackedVector2Array(0, 0, 1, 1)
+length = 0
+periodic = true
+lock_angle = false
+angle_offset = 0.0
+fan_corners = false
+fan_step = 30.0
+
+[sub_resource type="Resource" id="Resource_ootx6"]
+script = ExtResource("1")
+enabled = true
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 0.016972655)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {
+12: SubResource("Resource_1tl61")
+}
+
+[sub_resource type="Resource" id="Resource_salxf"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {}
+
+[sub_resource type="Resource" id="Resource_npa7b"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 5.0
+sensors = {}
+
+[sub_resource type="Resource" id="Resource_411xg"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {}
+
+[sub_resource type="Resource" id="Resource_omkuy"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {}
+
+[sub_resource type="Resource" id="Resource_mqff4"]
+script = ExtResource("2")
+value = 0.0
+gamma_val = 2.0
+
+[sub_resource type="Resource" id="Resource_mm1n4"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 0.19999999999999996
+strength_min = 0.0
+strength_max = 1.0
+sensors = {}
+
+[sub_resource type="Resource" id="Resource_382ts"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 0.9
+strength_min = 0.0
+strength_max = 1.0
+sensors = {}
+
+[sub_resource type="Resource" id="Resource_bcs88"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 0.3
+strength_min = 0.0
+strength_max = 1.0
+sensors = {}
+
+[sub_resource type="Resource" id="Resource_c7uso"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.1
+strength_max = 1.0
+sensors = {}
+
+[sub_resource type="Resource" id="Resource_1jqcy"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {}
+
+[sub_resource type="Resource" id="Resource_1aul0"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {}
+
+[sub_resource type="Curve" id="Curve_5j36t"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Resource" id="Resource_4dmej"]
+script = ExtResource("4")
+kind = 1
+generator = 3
+shape = 0
+diameter = 42.0
+ratio = 1.0
+horizontal_fade = 1.0
+vertical_fade = 1.0
+softness = 1.0
+spikes = 2
+antialias_edges = true
+density = 1.0
+randomness = 0.0
+softness_curve = SubResource("Curve_5j36t")
+spacing = 0.1
+auto_spacing = false
+auto_spacing_coeff = 1.0
+angle = 0.0
+mirror_horizontal = false
+mirror_vertical = false
+image_path = "res://tips/torn-block.png"
+lightness_strength = 0.0
+
+[sub_resource type="Resource" id="Resource_abe4v"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {}
+
+[resource]
+resource_name = "Torn Gouache"
+script = ExtResource("6")
+format_version = 15
+maker_pressure_curve = PackedFloat32Array(0, 1)
+radius = 0.01571224058496934
+hardness = SubResource("Resource_grm1r")
+opacity = 1.0
+flow = SubResource("Resource_5bx1t")
+spacing = 0.02
+stabilizer_mode = 0
+stabilizer_amount = 0.5
+size_by_pressure = false
+size_pressure_gamma = SubResource("Resource_mqff4")
+opacity_by_pressure = true
+opacity_pressure_gamma = SubResource("Resource_vkdnn")
+color = Color(1, 1, 1, 1)
+blend_mode = &"pigment_mix"
+pattern_name = ""
+texture_scale = 1.0
+texture_offset_x = 0
+texture_offset_y = 0
+texture_invert = false
+texture_random_per_stroke = false
+texture_random_offset_x = 0
+texture_random_offset_y = 0
+texture_brightness = 0.0
+texture_contrast = 0.0
+texture_neutral = 0.5
+texture_neutral_from_pattern = true
+texture_mode = 0
+texture_cutoff_left = 0.0
+texture_cutoff_right = 1.0
+texture_cutoff_policy = 0
+tip = SubResource("Resource_4dmej")
+masking = SubResource("Resource_c73dc")
+sharpness = 0.0
+sharpness_softness = 0.0
+pixel_mode_when_small = true
+painting_mode = 0
+airbrush_enabled = false
+airbrush_rate = 50.0
+airbrush_ignore_spacing = false
+size_option = SubResource("Resource_omkuy")
+opacity_option = SubResource("Resource_lhm58")
+flow_option = SubResource("Resource_bydaq")
+rotation_option = SubResource("Resource_ootx6")
+ratio_option = SubResource("Resource_utvqd")
+softness_option = SubResource("Resource_c7uso")
+hardness_option = SubResource("Resource_35en0")
+color_source = 0
+gradient = []
+tip_mode = 0
+hue_option = SubResource("Resource_ehb38")
+saturation_option = SubResource("Resource_salxf")
+value_option = SubResource("Resource_abe4v")
+darken_option = SubResource("Resource_gfkip")
+mix_option = SubResource("Resource_wiwft")
+spacing_option = SubResource("Resource_1jqcy")
+scatter_option = SubResource("Resource_npa7b")
+scatter_axis_x = true
+scatter_axis_y = true
+rate_option = SubResource("Resource_w1jee")
+sharpness_option = SubResource("Resource_411xg")
+texture_option = SubResource("Resource_1aul0")
+mirror_option = SubResource("Resource_kqmi4")
+smudge_pickup_option = SubResource("Resource_bcs88")
+smudge_color_rate_option = SubResource("Resource_mm1n4")
+smudge_length_option = SubResource("Resource_382ts")
+smudge_radius = 1.0
+smudge_mode = 0
+smudge_sample_merged = true
+smudge_move_height = true
+mirror_axis_x = true
+mirror_axis_y = false
+metadata/engine = &"stamp"
+metadata/tags = PackedStringArray("drawn", "texture")
+metadata/about = "A dense ribbon of opaque paint with a ragged torn edge, built up dab on dab, a painter's own brush."
+metadata/bundle = "Sara author"
+metadata/licence = "GPL-3.0-or-later"

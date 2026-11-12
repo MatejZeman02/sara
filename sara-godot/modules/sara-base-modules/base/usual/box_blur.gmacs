@@ -1,0 +1,81 @@
+# The box blur, a flat average of each pixel's neighbours in a square whose
+# reach is the radius, as three steps of one neighbourhood pass.
+#
+# A box is separable: the mean of the square is the mean down a column of the
+# means across its rows. So the first step averages each row across, the
+# second averages those down, and the third blends the answer in by the
+# selection's mask. A texel costs 2 * (2r + 1) reads rather than the square's
+# (2r + 1) squared, 802 against 160,801 at the typed ceiling of 200, and the
+# summing stays a plain loop of taps in order, so the picture is the square's
+# to the rounding of the two stores between the steps.
+#
+# The two averaging steps write premultiplied colour into the padded frame the
+# runner hands them, and each reads only what the step before wrote, at
+# binding 3. Colour is straight alpha on the layer, so a tap is premultiplied
+# before it is summed and the mean straightened back out at the end, or a
+# transparent neighbour, black where nothing was painted, would darken a soft
+# edge. Nothing clamps but the coordinates.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel blur_across
+kernel blur_down
+kernel blur
+
+image src: readonly
+image mask: r32f, readonly
+image dst
+image previous: readonly  # what the step before wrote, the source for a first step
+
+params:
+    int radius  # the reach of the square, in texels
+    int halo  # how far the source is padded, written by the runner
+    vec2 origin  # the dispatched region's corner in the chunk
+
+import neighbourhood
+
+
+def inner_at(ivec2 invocation) -> ivec2:
+    # An averaging step's texel in the padded frame, or -1 where no texel of
+    # the chunk will read it: past the scratch's edge, or in the padding along
+    # the axis the steps after it never cross. The step across fills every row
+    # of the padding, since the step down reads them, but only the chunk's own
+    # columns.
+    ivec2 at = invocation + ivec2(origin) + ivec2(halo, halo)
+    ivec2 size = image_size(dst)
+    if at.x < halo or at.x >= size.x - halo or at.y < 0 or at.y >= size.y:
+        return ivec2(-1, -1)
+    return at
+
+
+def blur_across():
+    # The first step: each row's premultiplied mean across 2 * reach + 1 texels.
+    ivec2 at = inner_at(pixel)
+    if at.x < 0:
+        return
+    int reach = min(radius, halo)
+    vec4 sum = vec4(0.0)
+    for dx in range_inclusive(-reach, reach):
+        sum += sa_premultiplied(src[at + ivec2(dx, 0)])
+    dst[at] = sum / (2 * reach + 1)
+
+
+def blur_down():
+    # The second step: the first's means averaged down, still premultiplied,
+    # for the chunk's own rows only, the last step's one read.
+    ivec2 at = inner_at(pixel)
+    if at.x < 0 or at.y < halo or at.y >= image_size(dst).y - halo:
+        return
+    int reach = min(radius, halo)
+    vec4 sum = vec4(0.0)
+    for dy in range_inclusive(-reach, reach):
+        sum += previous[at + ivec2(0, dy)]
+    dst[at] = sum / (2 * reach + 1)
+
+
+def blur():
+    # The last step: the mean straightened and blended in by the mask.
+    ivec2 at = pixel + ivec2(origin)
+    if at.x >= image_size(dst).x or at.y >= image_size(dst).y:
+        return
+    sa_finish(at, sa_kept(at), sa_straight(previous[at + ivec2(halo, halo)]))

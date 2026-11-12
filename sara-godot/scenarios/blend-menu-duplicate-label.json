@@ -1,0 +1,219 @@
+[
+  {
+    "wait": 35
+  },
+  {
+    "docker": {
+      "id": "ToolBoxDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "LayersDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "ColorDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "InfoDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "RecorderDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "MinimapDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "ToolOptionsDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "GraphDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "HistoryDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "ReferenceDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "document": "oklab"
+  },
+  {
+    "wait": 15
+  },
+  {
+    "blend": "Normal"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "shot": "normal-section-on-oklab"
+  },
+  {
+    "state": "normal-section-on-oklab"
+  },
+  {
+    "blend_row": "normal_oklab"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "state": "oklab-normal-chosen-on-oklab"
+  },
+  {
+    "document": "srgb"
+  },
+  {
+    "wait": 15
+  },
+  {
+    "blend": "Normal"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "shot": "normal-section-on-srgb"
+  },
+  {
+    "state": "normal-section-on-srgb"
+  },
+  {
+    "blend_row": "normal_oklab"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "state": "oklab-normal-chosen-on-srgb"
+  },
+  {
+    "document": "linear_srgb"
+  },
+  {
+    "wait": 15
+  },
+  {
+    "blend": "Normal"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "shot": "normal-section-on-linear_srgb"
+  },
+  {
+    "state": "normal-section-on-linear_srgb"
+  },
+  {
+    "blend_row": "normal_oklab"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "state": "oklab-normal-chosen-on-linear_srgb"
+  }
+]

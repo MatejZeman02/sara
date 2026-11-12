@@ -1,0 +1,103 @@
+[
+ {
+  "wait": 35
+ },
+ {
+  "answer": 2
+ },
+ {
+  "wait": 5
+ },
+ {
+  "docker": "park"
+ },
+ {
+  "docker": {
+   "id": "GraphDocker",
+   "at": [
+    1180,
+    120
+   ],
+   "size": [
+    700,
+    480
+   ]
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "import": "res://ui/icon.png"
+ },
+ {
+  "wait": 15
+ },
+ {
+  "zoom": 0.9
+ },
+ {
+  "wait": 10
+ },
+ {
+  "graph": {
+   "mode": "cloud",
+   "scale": "log",
+   "reset": true
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "answer": 2
+ },
+ {
+  "wait": 8
+ },
+ {
+  "shot": "1-the-cloud-at-f7s-docker-size"
+ },
+ {
+  "state": "1-the-cloud-at-f7s-docker-size"
+ },
+ {
+  "graph": {
+   "turn": [
+    0.9,
+    -0.4
+   ]
+  }
+ },
+ {
+  "wait": 18
+ },
+ {
+  "shot": "2-turned"
+ },
+ {
+  "state": "2-turned"
+ },
+ {
+  "docker": {
+   "id": "GraphDocker",
+   "at": [
+    1380,
+    120
+   ],
+   "size": [
+    300,
+    300
+   ]
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "shot": "3-the-smallest-docker-worth-having"
+ },
+ {
+  "state": "3-the-smallest-docker-worth-having"
+ }
+]

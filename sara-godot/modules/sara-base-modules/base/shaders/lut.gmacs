@@ -1,0 +1,134 @@
+# Kernels: lut
+# Colour lookup table of the Colour list, the 3D LUT a `.cube` file holds. Every
+# output texel reads only its own input texel and rewrites it in place, so this
+# is a point kernel and keeps the contract on SaPointPass: the colour field at
+# binding 0, the selection mask at binding 1 read per pixel and mixed by, the
+# table at binding 2 and the dispatched region's origin in the push constant.
+#
+# The table is one storage buffer of floats. The first six are the file's
+# DOMAIN_MIN and DOMAIN_MAX, red green blue each, and the rest are the size
+# cubed entries of three floats, red running fastest then green then blue, which
+# is the order a `.cube` file writes its rows in. Each channel of the document's
+# RGB view, the encoded values a painter sees and a grade is authored for, is
+# placed in the domain and the eight entries around it are mixed trilinearly.
+# Nothing clamps: a value outside the domain is looked up at the domain's edge
+# and keeps the distance it lay beyond it, so a table that is the identity
+# leaves a value of 1.4 at 1.4. Alpha is kept.
+#
+# The helpers are posterise.gmacs's, repeated because a .gmacs block cannot be
+# shared between files without sharing the push constant that names it.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel lut
+
+import linear_srgb_color_space
+import transfer_curve
+
+image canvas
+# The document-wide selection, as in adjust.gmacs: a 1 by 1 mask reads as 1.0
+# everywhere through the clamped read (core/api/selection/sa_selection.gd).
+image mask: r32f, readonly
+# The domain, then the entries, as the filter writes them.
+buffer table: float entries[]
+
+# 108 bytes: the region's origin, the table's size along one side, a spare, then
+# the colour space tail exactly as SaColorSpacePushConstant writes it.
+params:
+    float origin_x  # the dispatched region's origin in the chunk, in pixels
+    float origin_y  # zero for the destructive pass, which covers the chunk
+    float lut_size  # entries along one side of the cube, two or more
+    float spare
+    float doc_to_linear_srgb[9]
+    float linear_srgb_to_doc[9]
+    float transfer_slope
+    float transfer_threshold
+    float transfer_gain
+    float transfer_exponent
+    float coordinates
+
+
+def to_linear_srgb_matrix() -> mat3:
+    return mat3(
+        doc_to_linear_srgb[0], doc_to_linear_srgb[1], doc_to_linear_srgb[2],
+        doc_to_linear_srgb[3], doc_to_linear_srgb[4], doc_to_linear_srgb[5],
+        doc_to_linear_srgb[6], doc_to_linear_srgb[7], doc_to_linear_srgb[8])
+
+
+def from_linear_srgb_matrix() -> mat3:
+    return mat3(
+        linear_srgb_to_doc[0], linear_srgb_to_doc[1], linear_srgb_to_doc[2],
+        linear_srgb_to_doc[3], linear_srgb_to_doc[4], linear_srgb_to_doc[5],
+        linear_srgb_to_doc[6], linear_srgb_to_doc[7], linear_srgb_to_doc[8])
+
+
+def document_to_linear(vec3 c) -> vec3:
+    return sa_transfer_decode(c, transfer_slope, transfer_threshold, transfer_gain, transfer_exponent)
+
+
+def linear_to_document(vec3 c) -> vec3:
+    return sa_transfer_encode(c, transfer_slope, transfer_threshold, transfer_gain, transfer_exponent)
+
+const int SA_COORDS_OKLAB = 1
+
+
+def document_is_oklab() -> bool: return int(coordinates + 0.5) == SA_COORDS_OKLAB
+
+
+def document_to_rgb(vec3 c) -> vec3:
+    if not document_is_oklab(): return c
+    return linear_to_document(from_linear_srgb_matrix() * oklab_to_linear_srgb(c))
+
+
+def rgb_to_document(vec3 c) -> vec3:
+    if not document_is_oklab(): return c
+    return linear_srgb_to_oklab(to_linear_srgb_matrix() * document_to_linear(c))
+
+
+def coverage_at(ivec2 px) -> float:
+    return mask[min(px, image_size(mask) - 1)].r
+
+const int DOMAIN_FLOATS = 6
+
+
+def domain_min() -> vec3:
+    return vec3(table.entries[0], table.entries[1], table.entries[2])
+
+
+def domain_max() -> vec3:
+    return vec3(table.entries[3], table.entries[4], table.entries[5])
+
+
+def entry_at(int r, int g, int b) -> vec3:
+    int n = int(lut_size + 0.5)
+    int at = DOMAIN_FLOATS + 3 * (r + n * (g + n * b))
+    return vec3(table.entries[at], table.entries[at + 1], table.entries[at + 2])
+
+
+def lookup(vec3 rgb) -> vec3:
+    int n = int(lut_size + 0.5)
+    vec3 low = domain_min()
+    vec3 span = max(domain_max() - low, vec3(1e-6))
+    vec3 inside = clamp(rgb, low, domain_max())
+    vec3 at = clamp((inside - low) / span, vec3(0.0), vec3(1.0)) * (n - 1)
+    vec3 base = min(floor(at), vec3(n - 2))
+    vec3 t = at - base
+    int r = int(base.x)
+    int g = int(base.y)
+    int b = int(base.z)
+    vec3 c00 = mix(entry_at(r, g, b), entry_at(r + 1, g, b), t.x)
+    vec3 c10 = mix(entry_at(r, g + 1, b), entry_at(r + 1, g + 1, b), t.x)
+    vec3 c01 = mix(entry_at(r, g, b + 1), entry_at(r + 1, g, b + 1), t.x)
+    vec3 c11 = mix(entry_at(r, g + 1, b + 1), entry_at(r + 1, g + 1, b + 1), t.x)
+    vec3 mapped = mix(mix(c00, c10, t.y), mix(c01, c11, t.y), t.z)
+    return mapped + (rgb - inside)
+
+
+def lut():
+    ivec2 px = ivec2(global_id.xy) + ivec2(int(origin_x), int(origin_y))
+    ivec2 size_px = image_size(canvas)
+    if px.x >= size_px.x or px.y >= size_px.y:
+        return
+    vec4 c = canvas[px]
+    vec3 graded = rgb_to_document(lookup(document_to_rgb(c.rgb)))
+    canvas[px] = vec4(mix(c.rgb, graded, coverage_at(px)), c.a)

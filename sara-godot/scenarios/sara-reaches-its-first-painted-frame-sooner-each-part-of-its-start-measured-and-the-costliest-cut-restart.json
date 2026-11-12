@@ -1,0 +1,11 @@
+[
+  {"comment": "The second start, on the profile the first left with MIDI switched on. The dump's modules block lists midi under loaded and sara-stats still under off, and Preferences has the MIDI page the module registers."},
+  {"settings": "keep"},
+  {"window": [1920, 1080]},
+  {"wait": 40},
+  {"state": "4-midi-loads-at-the-next-start"},
+  {"open": "preferences"},
+  {"page": "MIDI"},
+  {"wait": 10},
+  {"shot": "5-the-midi-page-is-back"}
+]

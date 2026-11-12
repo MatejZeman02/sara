@@ -1,0 +1,137 @@
+[
+ {
+  "comment": "The photograph of the harness's references, a wood-panelled room with white walls, imported into a 1920 by 1280 sRGB document, its texels carrying the photograph's noise (look 0). The Eyedropper tool's Sample size is set to 9 on its bar, and the brush taken again. Filter > White Point opens, its eyedropper is pressed by a real click on its button, and the pick lands on the white wall right of the men through the widget's sample, the read a click makes, so the button stays pressed in the shot. The swatch and the caption show the mean of the nine by nine square there and the canvas previews the photograph with it made neutral (look 1)."
+ },
+ {
+  "wait": 45
+ },
+ {
+  "prefs": {
+   "ui_scale": 1.0
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "document": "srgb",
+  "size": [
+   1920,
+   1280
+  ]
+ },
+ {
+  "wait": 25
+ },
+ {
+  "import": "res://scenarios/references/a-photograph.jpg"
+ },
+ {
+  "wait": 30
+ },
+ {
+  "fit": true
+ },
+ {
+  "wait": 15
+ },
+ {
+  "layer": {
+   "activate": "a-photograph"
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "texel": [
+   [
+    1796,
+    446
+   ],
+   [
+    1800,
+    450
+   ],
+   [
+    1804,
+    454
+   ]
+  ]
+ },
+ {
+  "shot": "0-the-photograph"
+ },
+ {
+  "tool": {
+   "id": "eyedropper"
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "bar_option": {
+   "key": "sample_size",
+   "value": 9
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "tool": {
+   "id": "brush"
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "filter": {
+   "open": "sara-base-modules.white_point"
+  }
+ },
+ {
+  "wait": 25
+ },
+ {
+  "click": {
+   "control": "WhitePointEyedropper"
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "filter": {
+   "widget": "white_point",
+   "sample": [
+    1800,
+    450
+   ]
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "filter": {
+   "do": "flush"
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "filter": {
+   "widget": "white_point"
+  }
+ },
+ {
+  "state": "1-the-dropper-pressed-and-a-pick-at-sample-size-9"
+ },
+ {
+  "shot": "1-the-dropper-pressed-and-a-pick-at-sample-size-9"
+ }
+]

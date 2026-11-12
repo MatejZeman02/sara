@@ -1,0 +1,135 @@
+# Library: CAM16 as Hellwig and Fairchild revised it, with the brightness a
+# saturated colour shows.
+#
+# Sources, both papers' equations and constants, which are facts and anyone's:
+#   M. Hellwig and M. D. Fairchild, "Brightness, lightness, colorfulness, and
+#   chroma in CIECAM02 and CAM16", Color Research and Application 47 (2022),
+#   doi 10.1002/col.22792. The model: the M16 cone space, the compression, J,
+#   the colourfulness M = 43 N_c e_t |ab| with its Fourier eccentricity, and
+#   the revised chroma C = 35 M / A_w.
+#   M. Hellwig, T. Stolitzka and M. D. Fairchild, "Extending CIECAM02 and CAM16
+#   for the Helmholtz-Kohlrausch effect", Color Research and Application 47
+#   (2022), doi 10.1002/col.22793. J_HK = J + f(h) C^0.587 with
+#   f(h) = -0.160 cos h + 0.132 cos 2h - 0.405 sin h + 0.080 sin 2h + 0.792,
+#   and its closed inverse J = J_HK - f(h) C^0.587.
+# Written from the papers. No code was taken from colour-science, whose
+# `colour.appearance.hellwig2022` the fixture script checks its numbers against
+# (scripts/cam16_hellwig_fixtures.py --compare).
+#
+# The viewing conditions are a display whose white is the document's white,
+# linear sRGB (1, 1, 1), Y 100: D = 1 (the eye is adapted to the display), L_A = 20
+# cd/m2 (a fifth of the white), Y_b = 20 (a mid grey surround), and an average
+# surround, F 1, c 0.69, N_c 1. What those give (F_L, A_w, c z, and the matrices
+# folding linear sRGB to XYZ, M16 and the adaptation into one) is printed by the
+# fixture script and pasted here, so a change of conditions is a run of it.
+#
+# CIECAM02's compression adds 0.1 to each channel and the achromatic response
+# takes 0.305 off, which cancel exactly in A, a and b, so neither is here.
+# Nothing clamps: a colour above white goes through, and a negative channel's
+# response keeps its sign. The inverse compression is defined below a response of
+# 400, which only an infinite stimulus reaches.
+#
+# J and J_HK run 0 to 100 at white, C from 0, and h is in radians, 0 to 2 pi.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+const float SA_CAM16_F_L = 0.4641590666
+const float SA_CAM16_A_W = 31.72966961
+const float SA_CAM16_CZ = 1.329777365
+const float SA_CAM16_N_C = 1.0
+
+# Linear sRGB to the adapted cone responses, scaled so white is 100. Each row
+# sums to 100, so the grey part is carried apart and an exact grey comes out
+# with three equal responses, and so a chroma of exactly nought.
+
+
+def sa_cam16_cone(vec3 rgb) -> vec3:
+    mat3 m = mat3(
+        31.03809561, 15.13160913, 2.579436306,
+        61.74241445, 76.47207082, 13.63145739,
+        7.219499942, 8.39633005, 83.78911631)
+    return vec3(100.0 * rgb.g) + m * (rgb - vec3(rgb.g))
+
+# The inverse of the above, whose rows sum to a hundredth.
+
+
+def sa_cam16_uncone(vec3 cone) -> vec3:
+    mat3 m = mat3(
+        0.05313019254, -0.01052128007, 7.607710469e-05,
+        -0.04284584164, 0.02179918716, -0.002227456018,
+        -0.0002843518981, -0.001277908087, 0.01215137791)
+    return vec3(0.01 * cone.g) + m * (cone - vec3(cone.g))
+
+
+def sa_cam16_spow(float x, float p) -> float:
+    return sign(x) * pow(abs(x), p)
+
+
+def sa_cam16_compress(vec3 cone) -> vec3:
+    vec3 p = pow(SA_CAM16_F_L * abs(cone) / 100.0, vec3(0.42))
+    return sign(cone) * 400.0 * p / (27.13 + p)
+
+
+def sa_cam16_uncompress(vec3 response) -> vec3:
+    vec3 r = abs(response)
+    return sign(response) * 100.0 / SA_CAM16_F_L * pow(27.13 * r / (400.0 - r), vec3(1.0 / 0.42))
+
+
+def sa_cam16_eccentricity(float h) -> float:
+    return (1.0 - 0.0582 * cos(h) - 0.0258 * cos(2.0 * h) - 0.1347 * cos(3.0 * h) + 0.0289 * cos(4.0 * h)
+        - 0.1475 * sin(h) - 0.0308 * sin(2.0 * h) + 0.0385 * sin(3.0 * h) + 0.0096 * sin(4.0 * h))
+
+# f(h) of the extension, how much a chroma of one lifts J at hue h.
+
+
+def sa_cam16_hk_hue_term(float h) -> float:
+    return -0.160 * cos(h) + 0.132 * cos(2.0 * h) - 0.405 * sin(h) + 0.080 * sin(2.0 * h) + 0.792
+
+# J, C and h of a linear sRGB colour.
+
+
+def sa_cam16_from_linear_srgb(vec3 rgb) -> vec3:
+    vec3 ra = sa_cam16_compress(sa_cam16_cone(rgb))
+    # The opponent sums written as differences, so three equal responses give
+    # nought exactly rather than a rounding.
+    float a = (ra.r - ra.g) + (ra.b - ra.g) / 11.0
+    float b = ((ra.r - ra.b) + (ra.g - ra.b)) / 9.0
+    float h = atan(b, a)
+    if h < 0.0: h += 6.28318530718
+    float achromatic = 2.0 * ra.r + ra.g + 0.05 * ra.b
+    float j = 100.0 * sa_cam16_spow(achromatic / SA_CAM16_A_W, SA_CAM16_CZ)
+    float m = 43.0 * SA_CAM16_N_C * sa_cam16_eccentricity(h) * length(vec2(a, b))
+    return vec3(j, 35.0 * m / SA_CAM16_A_W, h)
+
+# The linear sRGB colour of J, C and h.
+
+
+def sa_cam16_to_linear_srgb(vec3 jch) -> vec3:
+    float achromatic = SA_CAM16_A_W * sa_cam16_spow(jch.x / 100.0, 1.0 / SA_CAM16_CZ)
+    float gamma = jch.y * SA_CAM16_A_W / 35.0 / (43.0 * SA_CAM16_N_C * sa_cam16_eccentricity(jch.z))
+    float a = gamma * cos(jch.z)
+    float b = gamma * sin(jch.z)
+    vec3 ra = vec3(460.0 * achromatic) / 1403.0 + vec3(451.0 * a + 288.0 * b, -891.0 * a - 261.0 * b, -220.0 * a - 6300.0 * b) / 1403.0
+    return sa_cam16_uncone(sa_cam16_uncompress(ra))
+
+# J_HK, the lightness the colour shows once its chroma's brightness counts.
+
+
+def sa_cam16_lightness_hk(vec3 jch) -> float:
+    return jch.x + sa_cam16_hk_hue_term(jch.z) * pow(max(jch.y, 0.0), 0.587)
+
+# J, C and h of the colour of chroma *chroma* and hue *h* that shows *j_hk*.
+
+
+def sa_cam16_with_lightness_hk(float j_hk, float chroma, float h) -> vec3:
+    return vec3(j_hk - sa_cam16_hk_hue_term(h) * pow(max(chroma, 0.0), 0.587), chroma, h)
+
+# *rgb* with its chroma scaled by *factor* at the hue and the J_HK it had, so
+# a colour that gains chroma loses lightness and keeps the brightness it
+# shows. At a factor of one it is the colour as it came, not a round trip.
+
+
+def sa_cam16_scale_chroma_keeping_brightness(vec3 rgb, float factor) -> vec3:
+    if factor == 1.0: return rgb
+    vec3 jch = sa_cam16_from_linear_srgb(rgb)
+    return sa_cam16_to_linear_srgb(sa_cam16_with_lightness_hk(sa_cam16_lightness_hk(jch), jch.y * factor, jch.z))

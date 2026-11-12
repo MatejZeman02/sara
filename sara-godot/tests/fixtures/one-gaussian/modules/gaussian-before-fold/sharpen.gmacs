@@ -1,0 +1,155 @@
+# A copy of the base module's `sharpen.gmacs` as it stood before the Gaussian of
+# the three blurs was folded into the `gaussian` library. Every line below this
+# paragraph is the kernel as it was, so
+# `modules/sara-base-modules/base/tests/test_the_shared_gaussian_paints_what_the_three_copies_painted.gd`
+# can run the old arithmetic beside the new and read the two equal texel for
+# texel. It is never edited to follow the kernel it copies.
+#
+# Kernels: sharpen, unsharp_across, unsharp_down, unsharp_mask
+# The sharpens of Filter. Both read a neighbourhood through the
+# padded source SaNeighbourhoodPass gathers and write the chunk-sized target,
+# through the filter's mask, so the attached form and the one-shot are this one
+# file.
+#
+# Every sum is taken on premultiplied colour and divided back out, because
+# Sara stores straight alpha and a neighbourhood sum of straight colours is
+# wrong wherever alpha varies (fill.gmacs gives the long form). Nothing clamps,
+# hard rule 5: an overshoot above one or below zero is what a sharpen is for,
+# and it goes out as it came.
+#
+# The unsharp mask is three steps of one neighbourhood pass:
+# the Gaussian across, the Gaussian down, and the difference. The blur is
+# separable, so a texel pays 2r + 1 taps a direction rather than the (2r + 1)
+# squared of one kernel over the whole square, 82 against 1681 at the soft
+# maximum of 20. The two blur steps write premultiplied colour into the padded
+# frame, and the last reads it at binding 3, `previous`. The weights are the
+# Gaussian blur's arithmetic, repeated here rather than shared, so a later row
+# can fold the two into one library.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel sharpen
+kernel unsharp_across
+kernel unsharp_down
+kernel unsharp_mask
+
+image src: readonly
+image mask: r32f, readonly
+image dst
+image previous: readonly  # what the step before wrote, the source for a first step
+
+params:
+    float amount  # the added share of the difference, 1.0 for 100 per cent
+    float threshold  # 0 to 1, the contrast below which a texel is left alone
+    int radius  # the unsharp mask's blur radius, in texels
+    int halo  # how far the source is padded, written by the runner
+    vec2 origin  # the dispatched region's corner in the chunk
+
+# The mask's blend and the texel as it was, imported after
+# the params because the library reads `halo` and the three images by name.
+import neighbourhood
+
+
+def premultiplied(ivec2 at) -> vec4:
+    vec4 texel = image_load(src, at)
+    return vec4(texel.rgb * texel.a, texel.a)
+
+
+def straight(vec4 sum) -> vec4:
+    # Straight alpha back out of a premultiplied sum. An alpha of zero carries no
+    # colour, and a sharpen can push one below zero beside a hard edge, which is
+    # kept and divided like any other.
+    if abs(sum.a) < 0.000001:
+        return vec4(0.0, 0.0, 0.0, sum.a)
+    return vec4(sum.rgb / sum.a, sum.a)
+
+
+def weighted_luminance(vec4 value) -> float:
+    # Rec. 709 luminance of a premultiplied texel, which is luminance weighted by
+    # alpha: what the threshold compares, so a faint edge counts for less.
+    return dot(value.rgb, vec3(0.2126, 0.7152, 0.0722))
+
+
+def gate(vec4 value, vec4 blurred) -> float:
+    # How much of the lift a texel takes, 1 everywhere at a zero threshold.
+    if threshold <= 0.0:
+        return 1.0
+    float d = abs(weighted_luminance(value) - weighted_luminance(blurred))
+    return smoothstep(0.5 * threshold, threshold, d)
+
+
+def finish(ivec2 at, vec4 result):
+    sa_finish(at, sa_kept(at), straight(result))
+
+
+def sharpen():
+    # The five-tap Laplacian, rows [0, -1, 0], [-1, 5, -1] and [0, -1, 0] with the
+    # amount factored out, written as an addition.
+    ivec2 at = pixel + ivec2(origin)
+    if at.x >= image_size(dst).x or at.y >= image_size(dst).y:
+        return
+    ivec2 centre = at + ivec2(halo, halo)
+    vec4 s = premultiplied(centre)
+    vec4 around = premultiplied(centre + ivec2(0, -1)) + premultiplied(centre + ivec2(0, 1))
+    around += premultiplied(centre + ivec2(-1, 0)) + premultiplied(centre + ivec2(1, 0))
+    vec4 lap = 4.0 * s - around
+    finish(at, s + amount * gate(s, around * 0.25) * lap * 0.25)
+
+
+def weight(int d) -> float:
+    # The Gaussian's weight *d* texels out, sigma a third of the reach.
+    float sigma = max(float(min(radius, halo)) / 3.0, 0.000001)
+    return exp(-float(d * d) / (2.0 * sigma * sigma))
+
+
+def padded_at(ivec2 invocation) -> ivec2:
+    # A blur step's texel in the padded frame, or -1 past the scratch's edge.
+    ivec2 at = invocation + ivec2(origin) + ivec2(halo, halo)
+    if at.x < 0 or at.y < 0 or at.x >= image_size(dst).x or at.y >= image_size(dst).y:
+        return ivec2(-1, -1)
+    return at
+
+
+def unsharp_across():
+    # The first step: the source's premultiplied colour blurred along x, over
+    # the region grown by the halo, into the padded frame. A tap past the
+    # padding is clamped, and it feeds only a texel the next step never reads.
+    ivec2 at = padded_at(pixel)
+    if at.x < 0:
+        return
+    int reach = min(radius, halo)
+    ivec2 last = image_size(src) - 1
+    vec4 sum = vec4(0.0)
+    float total = 0.0
+    for dx in range(-reach, reach + 1):
+        float w = weight(dx)
+        sum += premultiplied(clamp(at + ivec2(dx, 0), ivec2(0, 0), last)) * w
+        total += w
+    image_store(dst, at, sum / total)
+
+
+def unsharp_down():
+    # The second step: the first's answer blurred along y, still premultiplied.
+    ivec2 at = padded_at(pixel)
+    if at.x < 0:
+        return
+    int reach = min(radius, halo)
+    ivec2 last = image_size(previous) - 1
+    vec4 sum = vec4(0.0)
+    float total = 0.0
+    for dy in range(-reach, reach + 1):
+        float w = weight(dy)
+        sum += image_load(previous, clamp(at + ivec2(0, dy), ivec2(0, 0), last)) * w
+        total += w
+    image_store(dst, at, sum / total)
+
+
+def unsharp_mask():
+    # The last step, the difference: out = s + amount * (s - blurred).
+    ivec2 at = pixel + ivec2(origin)
+    if at.x >= image_size(dst).x or at.y >= image_size(dst).y:
+        return
+    ivec2 centre = at + ivec2(halo, halo)
+    vec4 blurred = image_load(previous, centre)
+    vec4 s = premultiplied(centre)
+    finish(at, s + amount * gate(s, blurred) * (s - blurred))

@@ -1,0 +1,12 @@
+[
+  {"wait": 35},
+  {"answer": 2},
+  {"wait": 6},
+  {"shot": "a-awake"},
+  {"wait": 120},
+  {"shot": "b-at-rest"},
+  {"open": "preferences"},
+  {"wait": 20},
+  {"shot": "c-preferences-at-rest"},
+  {"state": "d-final"}
+]

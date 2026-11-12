@@ -1,0 +1,17 @@
+[
+  {"comment": "Size and Opacity are full size on the bar and the last to leave it. The bar at 1920 and at 1280 by 1024, a second panel, and the overflow's list open at 1280. The bar's sliders open at 150 units with their text at the theme's size, the rotation slider reads Rotation ahead of its angle, and a short row gives up Keep blend, the symmetry three, the stabiliser, the rotation pair, Edit Brush and the eraser before anything else, and Size last."},
+  {"window": [1920, 1080]},
+  {"wait": 60},
+  {"document": "srgb"},
+  {"wait": 30},
+  {"state": "01-the-bar-at-1920"},
+  {"shot": "01-the-bar-at-1920"},
+  {"window": [1280, 1024]},
+  {"wait": 30},
+  {"state": "02-the-bar-at-1280"},
+  {"shot": "02-the-bar-at-1280"},
+  {"click": {"control": "OverflowButton"}},
+  {"wait": 15},
+  {"state": "03-the-list-at-1280"},
+  {"shot": "03-the-list-at-1280"}
+]

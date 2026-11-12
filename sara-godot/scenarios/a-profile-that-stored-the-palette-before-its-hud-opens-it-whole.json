@@ -1,0 +1,23 @@
+[
+  {"comment": "The migration: run straight after a profile from before the HUD was written into the capture's settings folder, the shipped default layout forked as 'default (custom)', its live file and its preset alike, with the pop-up palette stored at 360 by 384, the old default, as a profile holds it. Nothing parks or sizes the palette. The switch is turned on under Preferences, Brush Slots, the palette is opened by its row in the Window menu, `docker_12`, and the shot shows it at 360 by 448 with the ring at the 360 by 331 its names are fitted to and the HUD whole beneath it. The state reads the same sizes, and the file written back on exit stores 360 by 448 with `palette_hud` in its meta section. Run once more on the store from before the change, the same steps open the palette at 360 by 384 with the ring 64 shorter, which is the before."},
+  {"settings": "keep"},
+  {"wait": 40},
+
+  {"open": "preferences"},
+  {"wait": 25},
+  {"page": "Brush Slots"},
+  {"wait": 20},
+  {"page_row": {"row": "brush_right_click", "value": 0}},
+  {"wait": 5},
+  {"open": "preferences"},
+  {"wait": 20},
+
+  {"menu": "Window"},
+  {"wait": 10},
+  {"click": {"control": "Label", "in": "Row_docker_12"}},
+  {"wait": 30},
+  {"key": {"key": "escape"}},
+  {"wait": 20},
+  {"state": "1-the-palette-opens-whole-with-the-hud-beneath"},
+  {"shot": "1-the-palette-opens-whole-with-the-hud-beneath"}
+]

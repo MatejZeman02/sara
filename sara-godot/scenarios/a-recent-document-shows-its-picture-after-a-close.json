@@ -1,0 +1,23 @@
+[
+  {
+    "comment": "A document's card on the welcome window gets its picture when the document closes, so one opened and closed in a session that never built the window still has a picture there. The welcome window is not built at the start of a capture, so no grid is alive to take a picture at an open. A stroke is painted and the document is written by the capture's own save step, which leaves no preview in the file and marks the document as that file, the shape of every .sad written before previews were stored. The recent list is set to that file alone, and File > Open then puts a picture in its place, which is the close. The welcome window is built only after that, while the live document is the nameless picture, so the painted file's card can only have its picture from the close. The state beside the shot carries the grid's report, which says the card drew a picture and that it came from the cache."
+  },
+  {"wait": 35},
+  {"stroke": {"from": [500, 400], "to": [900, 520], "pressure": 1.0, "steps": 24}},
+  {"wait": 10},
+  {"save": "user://n3-painted-and-closed.sad"},
+  {"wait": 10},
+  {"prefs": {"recent_file_paths": ["user://n3-painted-and-closed.sad"]}},
+  {"wait": 6},
+  {"shot": "1-the-painted-document-before-it-closes"},
+  {"menu_item": {"menu": "File", "id": 200}},
+  {"wait": 8},
+  {"file_picker": {"choose": "res://tests/data/import_gradient.png"}},
+  {"wait": 12},
+  {"key": "enter"},
+  {"wait": 25},
+  {"open": "welcome"},
+  {"wait": 20},
+  {"shot": "2-the-closed-document-has-its-picture-on-the-welcome-window"},
+  {"state": "2-the-closed-document-has-its-picture-on-the-welcome-window"}
+]

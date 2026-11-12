@@ -1,0 +1,165 @@
+[
+ {
+  "comment": "A ribbon pen's noise keeps its size when the dab grows with pressure. Under a straight pressure curve, so the press sent is the press at the brush, Ribbon Pen in a mid brown with randomness at nought and a radius of 120 pixels, the suite's paints a level stroke at 0.3 above one at 0.9 on a white 1200 by 800 document. A look of the whole and one of the middle of each stroke at full size is kept for review, so the stripes of the light dab and the hard one sit side by side."
+ },
+ {
+  "wait": 60
+ },
+ {
+  "prefs": {
+   "ui_scale": 1.0,
+   "autosave_interval_minutes": 0
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "pressure_curve": 1.0
+ },
+ {
+  "wait": 5
+ },
+ {
+  "layout_preset": {
+   "load": "minimalistic"
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "document": "srgb",
+  "size": [
+   1200,
+   800
+  ]
+ },
+ {
+  "wait": 10
+ },
+ {
+  "fit": true
+ },
+ {
+  "wait": 5
+ },
+ {
+  "fill": [
+   1.0,
+   1.0,
+   1.0
+  ]
+ },
+ {
+  "layer": {
+   "add": "Ribbon Pen"
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "colour": [
+   0.55,
+   0.32,
+   0.18
+  ]
+ },
+ {
+  "preset": {
+   "load": "Ribbon Pen"
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "tool": {
+   "id": "noise_brush",
+   "options": {
+    "randomness": 0.0,
+    "radius": 0.15
+   }
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "stroke": {
+   "from": [
+    100,
+    200
+   ],
+   "to": [
+    1100,
+    200
+   ],
+   "pressure": 0.3,
+   "steps": 80,
+   "space": "document",
+   "route": "tool",
+   "smoothing": false
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "stroke": {
+   "from": [
+    100,
+    540
+   ],
+   "to": [
+    1100,
+    540
+   ],
+   "pressure": 0.9,
+   "steps": 80,
+   "space": "document",
+   "route": "tool",
+   "smoothing": false
+  }
+ },
+ {
+  "wait": 30
+ },
+ {
+  "look": {
+   "path": "1-both.png",
+   "rect": [
+    0,
+    0,
+    1200,
+    800
+   ],
+   "scale": 0.5
+  }
+ },
+ {
+  "look": {
+   "path": "2-light-0.3.png",
+   "rect": [
+    450,
+    40,
+    300,
+    320
+   ],
+   "scale": 1.0
+  }
+ },
+ {
+  "look": {
+   "path": "3-hard-0.9.png",
+   "rect": [
+    450,
+    380,
+    300,
+    320
+   ],
+   "scale": 1.0
+  }
+ }
+]

@@ -1,0 +1,24 @@
+[
+  {"wait": 45},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 20},
+  {"document": "srgb"},
+  {"wait": 25},
+  {"docker": "park"},
+  {"wait": 20},
+  {"layer": {"add": "Paint"}},
+  {"wait": 10},
+  {"filter_rows": {"attach": "sara-base-modules.hue_saturation_lightness", "layer": "Paint"}},
+  {"wait": 20},
+  {"filter_edit": {"open": {"layer": "Paint", "index": 0}}},
+  {"wait": 20},
+  {"filter_edit": "describe"},
+  {"shot": "01-a-name-that-fits-is-drawn-whole"},
+
+  {"filter_edit": {"retitle": "Hue, Saturation and Lightness with a name far longer than any window is wide, on purpose"}},
+  {"wait": 20},
+  {"filter_edit": "describe"},
+  {"shot": "02-a-name-wider-than-the-window-ends-in-the-mark"},
+  {"filter_edit": "cancel"},
+  {"wait": 15}
+]

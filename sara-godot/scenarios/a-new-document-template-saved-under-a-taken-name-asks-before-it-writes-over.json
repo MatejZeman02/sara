@@ -1,0 +1,21 @@
+[
+  {"wait": 40},
+
+  {"open": "new_document"},
+  {"wait": 20},
+  {"new_document_row": {"save_template": "Portrait"}},
+  {"wait": 10},
+  {"shot": "01-portrait-saved-once"},
+
+  {"new_document_row": {"template": "A4 portrait, 300 dpi"}},
+  {"new_document_row": {"save_template": "Portrait"}},
+  {"wait": 15},
+  {"shot": "02-saving-portrait-again-asks-naming-it"},
+  {"state": "02-saving-portrait-again-asks-naming-it"},
+
+  {"message": {"close": "escape"}},
+  {"wait": 10},
+  {"shot": "03-escape-is-cancel-and-the-dialog-stays"},
+  {"new_document_row": {"close": true}},
+  {"wait": 10}
+]

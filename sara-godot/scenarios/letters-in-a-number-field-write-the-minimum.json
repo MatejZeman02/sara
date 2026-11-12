@@ -1,0 +1,31 @@
+[
+ {"comment": "On the running app. A report: 'typing letters into slider that needs numbers gives small value (0.3px - min I think) on Enter key. It should not change value and error message should appear and disappear.' The Size row of the Tool Options bar is the slider the note was written on, so that is the row this drives: a word is typed into its field and submitted, and the dump has to read the size it already had while the corner carries the line. The dump is taken again after the line's clock has run out and after a real number has been typed, so the disappearing and the number still being taken are a photograph of the same run rather than an argument about it."},
+ {"wait": 40},
+ {"prefs": {"ui_scale": 1.0}},
+ {"wait": 15},
+ {"tool": {"id": "brush", "options": {"radius": 0.05}}},
+ {"wait": 10},
+
+ {"comment": "The row before anything is typed. A twentieth of the canvas is 54 px on the default document, which is a number a refusal can be read against: the defect left it at the row's minimum, which is what a painter saw as 0.3 px."},
+ {"slider_edit": {"name": "RadiusSlider", "read": true}},
+ {"state": "1-the-row-before-the-word"},
+ {"shot": "1-the-row-before-the-word"},
+
+ {"comment": "The note's line. The dump's notice key is the corner: showing true, with the text saying what was wrong, and the row's own value still the 54 px it was."},
+ {"slider_edit": {"name": "RadiusSlider", "type": "abc", "submit": true}},
+ {"slider_edit": {"name": "RadiusSlider", "read": true}},
+ {"state": "2-the-word-refused"},
+ {"shot": "2-the-word-refused"},
+
+ {"comment": "The second half of the note, 'and disappear'. The line's clock is two and a half seconds, which no number of frames can be trusted to cover on a card shared with many other processes, so the run reaches the end of the scenario and a long wait before the dump that reads false. The two shots in between are the ones that take the real time."},
+ {"slider_edit": {"name": "RadiusSlider", "type": "50", "submit": true}},
+ {"wait": 15},
+ {"slider_edit": {"name": "RadiusSlider", "read": true}},
+ {"state": "3-a-number-taken"},
+ {"shot": "3-a-number-taken"},
+ {"wait": 900},
+ {"slider_edit": {"name": "RadiusSlider", "read": true}},
+ {"state": "4-the-line-gone"},
+ {"shot": "4-the-line-gone"},
+ {"wait": 20}
+]

@@ -1,0 +1,162 @@
+# The liquify tool's kernel: one dab of the brush written into a chunk of
+# the session's displacement field.
+#
+# **The field says where a texel reads from.** Each texel holds, in `xy`, the
+# offset in the layer's own texels from where it sits to where its paint came
+# from, and `liquify_draw.gmacs` draws the layer again as the original read at
+# the texel plus that offset. A dab never touches paint, so ten small pushes
+# read the original once rather than resampling their own last resample.
+#
+# **The weight** is the brush's falloff (flat over the inner half of the
+# radius, a smoothstep to nought over the outer half) times the strength and
+# the selection's coverage, so a texel outside the selection keeps its offset.
+#
+# Push moves the field against the brush's motion. Reconstruct takes each
+# offset towards none, so a held reconstruct brings the original back (relaxing
+# towards the neighbours' mean would even a push out but put nothing back).
+# Twirl turns by `motion.x` radians, clockwise on screen for a positive angle.
+# Shrink scales by `exp(-motion.x * weight)` and grow is the same dab with its
+# sign turned, so the session sends mode 4 and the kernel reads it as 3 with
+# that sign. Twirl, shrink and grow take the offset of the point the turn or
+# scale brings to the texel, read bilinearly out of `ring`, so two of them
+# compose rather than each adding its own offset to the other's.
+#
+# **Smooth** is curvature flow run on the field, so Reconstruct takes it back.
+# It moves each texel along the stroke's normal by how sharply the stroke
+# bends and never mixes a colour. `ring` holds what `liquify_smooth.gmacs`
+# read, a cell to every `ring_at.z` texels: the bend in `xy`, the stroke's
+# direction in `zw`. Every texel on one normal across a stroke takes the bend
+# at the stroke's middle (the centre of the edges' strength within `ring_at.w`
+# cells), so both edges of a thin stroke move as one and the stroke keeps its
+# width. A bend read where the texel sits would shear a slanting stroke wider.
+#
+# Every mode holds the offset to the reach the session can stitch around a
+# dab, `motion.z`, which bounds the read of the draw.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel liquify
+
+image field: rgba32f
+# The document-wide selection, as in copy_masked.gmacs: a 1 by 1 mask reads as
+# 1.0 everywhere through the clamped read.
+image mask: r32f, readonly
+# The field around the dab for twirl, shrink and grow, the softened tensor for
+# smooth, and a 1 by 1 blank for push and reconstruct or where no field chunk
+# is in reach.
+image ring: rgba32f, readonly
+
+params:
+    # Where the dispatch starts inside the field chunk, and how big it is, in
+    # the chunk's own texels.
+    vec4 dest
+    # The dab's centre in the chunk's own texels, its radius in texels, and
+    # the strength.
+    vec4 dab
+    # Push's motion over this dab in texels, or in `x` twirl's angle in
+    # radians, the scale's amount, or smooth's time with the longest step it
+    # may take in `y`, then the longest offset a texel may hold, and the mode,
+    # 0 for push, 1 for reconstruct, 2 for twirl, 3 for shrink, 4 for grow and
+    # 5 for smooth.
+    vec4 motion
+    # Where the chunk's own (0, 0) sits in `ring`, in the layer's texels, and
+    # for smooth the layer's texels to a cell of the ring and how many cells
+    # either side of a texel its stroke's middle is looked for.
+    vec4 ring_at
+
+
+def sa_falloff(float distance, float radius) -> float:
+    float edge = distance / radius
+    if edge >= 1.0: return 0.0
+    if edge <= 0.5: return 1.0
+    float t = (1.0 - edge) * 2.0
+    return t * t * (3.0 - 2.0 * t)
+
+# The ring's offset at *at*, in the chunk's own texels, bilinear between the
+# four texel centres around it and held to the ring's edge.
+
+
+def sa_ring_at(vec2 at) -> vec2:
+    vec2 texel = at + ring_at.xy - vec2(0.5)
+    ivec2 base = ivec2(floor(texel))
+    vec2 part = texel - vec2(base)
+    ivec2 edge = image_size(ring) - 1
+    vec2 top = mix(ring[clamp(base, ivec2(0), edge)].xy, ring[clamp(base + ivec2(1, 0), ivec2(0), edge)].xy, part.x)
+    vec2 bottom = mix(ring[clamp(base + ivec2(0, 1), ivec2(0), edge)].xy, ring[clamp(base + ivec2(1, 1), ivec2(0), edge)].xy, part.x)
+    return mix(top, bottom, part.y)
+
+# The ring at *at*, in cells with a cell's centre on the whole number,
+# bilinear between the four around it and held to the ring's edge.
+
+
+def sa_cell_at(vec2 at) -> vec4:
+    ivec2 base = ivec2(floor(at))
+    vec2 part = at - vec2(base)
+    ivec2 edge = image_size(ring) - 1
+    vec4 top = mix(ring[clamp(base, ivec2(0), edge)], ring[clamp(base + ivec2(1, 0), ivec2(0), edge)], part.x)
+    vec4 bottom = mix(ring[clamp(base + ivec2(0, 1), ivec2(0), edge)], ring[clamp(base + ivec2(1, 1), ivec2(0), edge)], part.x)
+    return mix(top, bottom, part.y)
+
+# The step smooth moves the paint at the texel *local* of the chunk by, at full
+# weight, in the layer's texels.
+
+
+def sa_bend(ivec2 local) -> vec2:
+    vec2 at = (vec2(local) + vec2(0.5) + ring_at.xy) / ring_at.z - vec2(0.5)
+    vec2 doubled = sa_cell_at(at).zw
+    float square = dot(doubled, doubled)
+    if square <= 1e-24:
+        return vec2(0.0)
+    vec2 unit = doubled / sqrt(square)
+    float c = sqrt(max(0.5 * (1.0 + unit.x), 0.0))
+    float s = sqrt(max(0.5 * (1.0 - unit.x), 0.0))
+    if unit.y < 0.0:
+        s = -s
+    vec2 normal = vec2(c, s)
+    int reach = int(ring_at.w)
+    float total = 0.0
+    float moment = 0.0
+    for i in range_inclusive(-reach, reach):
+        float strength = length(sa_cell_at(at + normal * i).zw)
+        total += strength
+        moment += strength * i
+    vec2 middle = at + normal * (moment / max(total, 1e-30))
+    vec2 step = normal * (dot(sa_cell_at(middle).xy, normal) * motion.x)
+    float far = length(step)
+    if far > motion.y:
+        step *= motion.y / far
+    return step
+
+
+def liquify():
+    ivec2 local = ivec2(global_id.xy) + ivec2(dest.xy)
+    if local.x >= int(dest.x + dest.z) or local.y >= int(dest.y + dest.w):
+        return
+    ivec2 size = image_size(field)
+    if local.x >= size.x or local.y >= size.y:
+        return
+    float weight = sa_falloff(length(vec2(local) + vec2(0.5) - dab.xy), dab.z) * dab.w
+    weight *= mask[min(local * image_size(mask) / size, image_size(mask) - 1)].r
+    if weight <= 0.0:
+        return
+    vec2 own = field[local].xy
+    vec2 moved = own - motion.xy * weight
+    if motion.w > 4.5:
+        moved = own - sa_bend(local) * weight
+    elif motion.w > 2.5:
+        vec2 from_centre = vec2(local) + vec2(0.5) - dab.xy
+        vec2 scaled = from_centre * exp(motion.x * weight)
+        moved = scaled - from_centre + sa_ring_at(dab.xy + scaled)
+    elif motion.w > 1.5:
+        vec2 from_centre = vec2(local) + vec2(0.5) - dab.xy
+        float turn = -motion.x * weight
+        float c = cos(turn)
+        float s = sin(turn)
+        vec2 turned = vec2(c * from_centre.x - s * from_centre.y, s * from_centre.x + c * from_centre.y)
+        moved = turned - from_centre + sa_ring_at(dab.xy + turned)
+    elif motion.w > 0.5:
+        moved = own * (1.0 - min(weight, 1.0))
+    float reach = length(moved)
+    if reach > motion.z:
+        moved *= motion.z / reach
+    field[local] = vec4(moved, 0.0, 0.0)

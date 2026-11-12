@@ -1,0 +1,121 @@
+# The Stats docker's dominant hues: a histogram of Oklab hue round the wheel
+# over the composite, a chunk's share of it to a slot, of which the bins alone
+# are read back.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# **One kernel, one slot a chunk.** The reduction service dispatches once over
+# each painted chunk that changed since its last run, each adding into a slot of
+# its own, `BINS` pairs of uints. The service folds a changed chunk's slot into the total in place
+# of its last, so the result follows the paint without a pass over the whole
+# canvas (hard rules 2 and 3).
+#
+# **Two cells a bin.** The first is the paint whose hue falls in the bin, a
+# texel adding its alpha in steps of one `WHOLE`th. The second is the same
+# weight times where in the bin the hue falls, in `STEPS` steps of its width, so
+# a bin's mean hue reads to a fiftieth of a degree and a flat colour's angle does
+# not snap to the bin's middle. A slot holds at most 65536 texels, each adding at
+# most `WHOLE` times `STEPS` to the second cell, which is 4,261,478,400 and under
+# the 4,294,967,296 a uint holds.
+#
+# **A grey adds no hue.** A texel whose Oklab chroma is under the floor in the
+# push constant counts nothing, so neither the white ground nor the checkerboard
+# nor a grey stroke moves a bin. Above it a texel weighs its coverage alone, so
+# a share is a share of the canvas.
+#
+# **Hue is Oklab hue**, taken through the document's own colour space as in
+# `measure.gmacs`, so a Display P3 document painted in one Oklab colour reads
+# the hue an sRGB one does. Nothing is stored (hard rule 5).
+
+kernel hue_histogram
+
+# linear_srgb_color_space brings oklab_color_space with it.
+import linear_srgb_color_space
+import transfer_curve
+
+image field
+
+# BINS pairs of uints per chunk slot, from hue 0 up: the weight, then the
+# weight times the hue's place in the bin.
+buffer tally: uint cells[]
+
+# Packed by the dominant hues part in the order written here, every field a
+# float for the reason measure.gmacs gives.
+params:
+    # The chunk's share of the canvas, in composite pixels, where the dispatch
+    # starts and where it ends.
+    float begin_x
+    float begin_y
+    float end_x
+    float end_y
+    # Which BINS pairs of the buffer this chunk adds into.
+    float slot
+    # See SaColorSpace.Coordinates. An Oklab document needs no conversion.
+    float coordinates
+    # The Oklab chroma under which a texel is grey and adds no hue.
+    float chroma_floor
+    # The document's transfer curve, for the decode into light.
+    float transfer_slope
+    float transfer_threshold
+    float transfer_gain
+    float transfer_exponent
+    # The document's linear RGB into linear sRGB, white point adapted. A
+    # float[9] and not a mat3 for the reason composite.gmacs records.
+    float to_linear_srgb[9]
+
+# Must match SaColorSpace.Coordinates.
+const int SA_COORDS_OKLAB = 1
+
+# Must match the part's BINS, WHOLE and STEPS.
+const uint BINS = 72u
+const float WHOLE = 255.0
+const float STEPS = 255.0
+
+const float TURN = 6.283185307179586
+
+
+def to_linear_srgb_matrix() -> mat3:
+    return mat3(
+        to_linear_srgb[0], to_linear_srgb[1], to_linear_srgb[2],
+        to_linear_srgb[3], to_linear_srgb[4], to_linear_srgb[5],
+        to_linear_srgb[6], to_linear_srgb[7], to_linear_srgb[8]
+    )
+
+# Oklab a and b of one stored triple, decoded the way measure.gmacs decodes it.
+
+
+def ab_of(vec3 stored) -> vec2:
+    if int(coordinates + 0.5) == SA_COORDS_OKLAB:
+        return stored.yz
+    vec3 linear = sa_transfer_decode(
+        stored, transfer_slope, transfer_threshold, transfer_gain, transfer_exponent
+    )
+    return linear_srgb_to_oklab(to_linear_srgb_matrix() * linear).yz
+
+
+def hue_histogram():
+    ivec2 px = ivec2(global_id.xy) + ivec2(int(begin_x), int(begin_y))
+    ivec2 size = image_size(field)
+    if px.x >= size.x or px.y >= size.y:
+        return
+    if px.x >= int(end_x) or px.y >= int(end_y):
+        return
+    vec4 texel = field[px]
+    uint weight = uint(clamp(texel.a, 0.0, 1.0) * WHOLE + 0.5)
+    if weight == 0u:
+        return
+    vec2 ab = ab_of(texel.rgb)
+    float chroma = length(ab)
+    # A NaN fails every comparison, so it is turned away here with the greys
+    # rather than handed on to an index.
+    if not (chroma >= chroma_floor) or chroma <= 0.0:
+        return
+    # The turn from 0 up to 1, a hue past it by rounding folded back to 0.
+    float turn = atan(ab.y, ab.x) / TURN
+    turn = turn - floor(turn)
+    float place = turn * BINS
+    float bin = min(floor(place), float(BINS - 1u))
+    uint within = uint(clamp(place - bin, 0.0, 1.0) * STEPS + 0.5)
+    uint at = (uint(slot) * BINS + uint(bin)) * 2u
+    atomic_add(tally.cells[at], weight)
+    atomic_add(tally.cells[at + 1u], weight * within)

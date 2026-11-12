@@ -1,0 +1,84 @@
+# The lens correction, one neighbourhood kernel under the SaNeighbourhoodPass
+# contract: the padded source at binding 0, the selection mask at binding 1, the
+# chunk-sized target at binding 2.
+#
+# The radial model of Brown and Conrady with its first term alone. A texel at
+# distance r from the document's centre, r in half diagonals, reads the picture
+# at (1 - k r²) times that distance along the same radius, with `amount` the
+# fraction k. Above nought the read falls inwards and the picture spreads
+# towards its corners, below it the picture draws in. The centre is the
+# document's, never the layer's or the rectangle's, which is why the kernel is
+# given the canvas: a chunk, a stroke's rectangle and a whole bake agree on
+# where a texel reads.
+#
+# The read is bilinear and premultiplied, so a soft edge of paint does not pick
+# up the colour of the transparent black round it. Nothing clamps.
+#
+# Crop to fill scales the corrected picture up by `zoom` about the same centre,
+# so a texel at r stands at r / zoom and a picture drawn in shows no edge read
+# from outside the document. The filter works out the least factor that does it
+# and runs `lens_correction_cropped`. Without the switch, or where nothing reads
+# outside, it runs `lens_correction`, which saved records depend on to the bit.
+#
+# These two kernels run while the furthest any texel reads from its own place,
+# plus one texel for the bilinear read, fits the halo, which is at most a chunk.
+# Past that the filter runs `lens_correction_whole.gmacs`, which reads the whole
+# node.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel lens_correction
+kernel lens_correction_cropped
+
+image src: readonly
+image mask: r32f, readonly
+image dst
+
+params:
+    float amount  # the fraction k, how far a corner's read moves in half diagonals
+    vec2 canvas  # the document's size, in document pixels
+    vec2 origin  # the dispatched region's corner in the chunk
+    int halo  # how far the source is padded, written by the runner
+    vec2 chunk  # the chunk's corner in the chunk's texels, written by the runner
+    float scale  # the chunk's texels per document pixel, written by the runner
+    float zoom  # the crop's factor, read by the cropped kernel alone
+
+# The premultiplied read, the bilinear sample and the mask's blend, imported
+# after the params because the library reads `halo` and the three images by
+# name.
+import neighbourhood
+
+
+def lens_correction():
+    ivec2 at = pixel + ivec2(origin)
+    # The runner hands `chunk` in the chunk's own texels, as it does `origin`,
+    # so the texel's document place is its texel place over the density, on a
+    # layer at twice the document's resolution as on one at a half.
+    float density = scale > 0.0 ? scale : 1.0
+    vec2 document = (chunk + vec2(at) + 0.5) / density
+    vec2 centre = canvas * 0.5
+    vec2 away = document - centre
+    float reach = max(length(centre), 1.0)
+    float r = length(away) / reach
+    vec2 shift = -away * amount * r * r * density
+    vec2 here = vec2(at + ivec2(halo, halo))
+    vec4 moved = sa_straight(sa_sample(here + shift))
+    sa_finish(at, sa_kept(at), moved)
+
+# The same read with Crop to fill: the texel first stands at its place over
+# `zoom` from the centre and reads from there.
+
+
+def lens_correction_cropped():
+    ivec2 at = pixel + ivec2(origin)
+    float density = scale > 0.0 ? scale : 1.0
+    vec2 document = (chunk + vec2(at) + 0.5) / density
+    vec2 centre = canvas * 0.5
+    vec2 away = document - centre
+    float reach = max(length(centre), 1.0)
+    vec2 seen = away / zoom
+    float r = length(seen) / reach
+    vec2 shift = ((seen - away) - seen * amount * r * r) * density
+    vec2 here = vec2(at + ivec2(halo, halo))
+    vec4 moved = sa_straight(sa_sample(here + shift))
+    sa_finish(at, sa_kept(at), moved)

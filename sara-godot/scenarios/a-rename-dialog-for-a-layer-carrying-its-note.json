@@ -1,0 +1,107 @@
+[
+  {
+    "wait": 25
+  },
+  {
+    "layer": {
+      "add": "Sky",
+      "fill": [
+        0.15,
+        0.45,
+        0.9,
+        1.0
+      ],
+      "chunks": [
+        [0, 0]
+      ]
+    }
+  },
+  {
+    "layer": {
+      "comment": "The sky, too blue"
+    }
+  },
+  {
+    "docker": {
+      "id": "LayersDocker",
+      "at": [420, 620],
+      "size": [460, 400]
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "shot": "before"
+  },
+  {
+    "state": "before"
+  },
+  {
+    "press": {
+      "button": "right",
+      "at": [650, 680]
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "menu-open"
+  },
+  {
+    "state": "menu-open"
+  },
+  {
+    "choice": {
+      "pick": 0
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "dialog-open"
+  },
+  {
+    "state": "dialog-open"
+  },
+  {
+    "rename_dialog": {
+      "name": "Cloud",
+      "note": "The same sky, twice as high"
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "state": "typed"
+  },
+  {
+    "rename_dialog": {
+      "key": "ok"
+    }
+  },
+  {
+    "wait": 15
+  },
+  {
+    "shot": "confirmed"
+  },
+  {
+    "state": "confirmed"
+  },
+  {
+    "press": {
+      "button": "right",
+      "at": [650, 850]
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "state": "menu-from-the-gap"
+  }
+]

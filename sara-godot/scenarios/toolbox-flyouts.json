@@ -1,0 +1,179 @@
+[
+  {
+    "wait": 25
+  },
+  {
+    "docker": {
+      "id": "ToolBoxDocker",
+      "at": [
+        700,
+        200
+      ],
+      "size": [
+        60,
+        420
+      ]
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "toolbox": {}
+  },
+  {
+    "shot": "1-five-buttons-column"
+  },
+  {
+    "state": "1-five-buttons-column"
+  },
+  {
+    "toolbox": {
+      "flyout": "paint"
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "2-paint-flyout-open"
+  },
+  {
+    "state": "2-paint-flyout-open"
+  },
+  {
+    "toolbox": {
+      "pick": "gradient"
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "3-gradient-is-the-face"
+  },
+  {
+    "state": "3-gradient-is-the-face"
+  },
+  {
+    "toolbox": {
+      "flyout": "sample"
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "state": "4-sample-has-no-flyout"
+  },
+  {
+    "toolbox": {
+      "flyout": "select"
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "toolbox": {
+      "close": true
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "5-closed-by-an-outside-press"
+  },
+  {
+    "state": "5-closed-by-an-outside-press"
+  },
+  {
+    "tool": "brush"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "toolbox": {}
+  },
+  {
+    "state": "6-a-chord-moves-the-face"
+  },
+  {
+    "docker_resize": {
+      "id": "ToolBoxDocker",
+      "by": [
+        360,
+        -360
+      ]
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "7-row"
+  },
+  {
+    "state": "7-row"
+  },
+  {
+    "docker_resize": {
+      "id": "ToolBoxDocker",
+      "by": [
+        -180,
+        120
+      ]
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "8-row-at-420"
+  },
+  {
+    "state": "8-row-at-420"
+  },
+  {
+    "docker": {
+      "id": "ToolBoxDocker",
+      "at": [
+        700,
+        200
+      ],
+      "size": [
+        180,
+        300
+      ]
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "8b-grid"
+  },
+  {
+    "state": "8b-grid"
+  },
+  {
+    "docker_resize": {
+      "id": "ToolBoxDocker",
+      "by": [
+        -360,
+        360
+      ]
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "9-column-again"
+  },
+  {
+    "state": "9-column-again"
+  }
+]

@@ -1,0 +1,54 @@
+# A mask through the clipboard: its coverage held as a grey picture, and
+# a picture written back into a mask as the grey it shows. Both kernels read
+# one chunk of a picture, one of a mask and one of the selection, each at the
+# texel under the one written, so a layer at twice the document's resolution
+# meets a selection at one and a mask at either. A 1 by 1 mask or selection
+# reads as its one value everywhere through the clamped read.
+#
+# `tint` is what a coverage of one is in the document's own numbers, white in
+# an RGB document and L of one in an Oklab one, for `mask_to_grey`. For
+# `grey_into_mask` it is what the stored numbers are weighed by to give their
+# lightness, `SaColorSpace.lightness`, which is the reading a brush on a mask
+# takes from a colour.
+
+kernel mask_to_grey
+kernel grey_into_mask
+
+image picture
+image mask: r32f
+image selection: r32f, readonly
+
+params:
+    vec4 tint
+
+
+def at_size(ivec2 px, ivec2 of, ivec2 across) -> ivec2:
+    return min(px * of / across, of - 1)
+
+
+def mask_to_grey():
+    # The grey of the mask's coverage over the whole of a picture chunk, opaque.
+    # The selection is applied after, by the masked copy the clipboard makes.
+    ivec2 px = ivec2(global_id.xy)
+    ivec2 across = image_size(picture)
+    if px.x >= across.x or px.y >= across.y:
+        return
+    float coverage = mask[at_size(px, image_size(mask), across)].r
+    picture[px] = vec4(tint.rgb * coverage, 1.0)
+
+
+def grey_into_mask():
+    # The picture's lightness written into the mask, mixed in by the picture's
+    # alpha and by the selection, so a held copy's soft edge and a soft
+    # selection both land by degrees. Kept from 0 to 1, because a mask's
+    # coverage is a share of the owner shown, and a colour past white has no
+    # more than all of it to show.
+    ivec2 px = ivec2(global_id.xy)
+    ivec2 across = image_size(mask)
+    if px.x >= across.x or px.y >= across.y:
+        return
+    vec4 c = picture[at_size(px, image_size(picture), across)]
+    float selected = selection[at_size(px, image_size(selection), across)].r
+    float grey = clamp(dot(tint.rgb, c.rgb), 0.0, 1.0)
+    float old = mask[px].r
+    mask[px] = vec4(mix(old, grey, c.a * selected))

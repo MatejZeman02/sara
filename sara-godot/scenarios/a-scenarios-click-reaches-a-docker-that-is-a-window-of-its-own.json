@@ -1,0 +1,22 @@
+[
+  {"comment": "A scenario's click reaches a docker that is a window of its own. The Layers docker is placed over the canvas and its add button is clicked twice, once embedded and once with embedded subwindows off, when the docker is a window of the operating system. Each click must add one layer and paint nothing: before this change the second click went to the main window at the same point and laid a dab on the canvas under the docker. The run log names the window each click went to, and the state dumps read the layer count, the history and the dabs."},
+  {"window": [1920, 1080]},
+  {"wait": 30},
+  {"document": "srgb"},
+  {"docker": "park"},
+  {"docker": {"id": "LayersDocker", "at": [700, 300], "size": [320, 420]}},
+  {"wait": 15},
+  {"state": "01-embedded-before"},
+  {"click": {"control": "AddBtn", "in": "LayersDocker"}},
+  {"wait": 15},
+  {"state": "02-embedded-the-click-added-a-layer"},
+  {"shot": "02-embedded-the-click-added-a-layer"},
+
+  {"prefs": {"embed_subwindows": false}},
+  {"wait": 40},
+  {"state": "03-let-out-before"},
+  {"click": {"control": "AddBtn", "in": "LayersDocker"}},
+  {"wait": 15},
+  {"state": "04-let-out-the-click-added-a-layer-and-painted-nothing"},
+  {"shot": "04-let-out-the-click-added-a-layer-and-painted-nothing"}
+]

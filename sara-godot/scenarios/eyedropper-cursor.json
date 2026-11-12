@@ -1,0 +1,30 @@
+[
+  {"wait": 30},
+  {"tool": "brush"},
+  {"wait": 15},
+  {"probe": [[960, 540]]},
+  {"state": "1-brush-has-no-picture"},
+  {"shot": "1-brush-has-no-picture"},
+
+  {"tool": "eyedropper"},
+  {"wait": 15},
+  {"probe": [[960, 540]]},
+  {"state": "2-eyedropper-has-one"},
+  {"shot": "2-eyedropper-has-one"},
+
+  {"tool": "brush"},
+  {"wait": 15},
+  {"probe": [[960, 540]]},
+  {"state": "3-the-brush-gives-it-back"},
+
+  {"tool": "eyedropper"},
+  {"wait": 15},
+  {"probe": [[960, 540]]},
+  {"state": "4-and-takes-it-again"},
+
+  {"tool": "lasso"},
+  {"wait": 15},
+  {"state": "5-a-second-cross-tool-is-plain"},
+  {"tool": "brush"},
+  {"wait": 10}
+]

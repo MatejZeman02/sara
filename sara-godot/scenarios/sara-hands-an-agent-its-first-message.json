@@ -1,0 +1,13 @@
+[
+  {"comment": "Sara started without a door, Modules, Local Server ticked, its dialog shot, and the dialog's Copy Prompt for Agent button pressed, with the corner shot after it. The long wait is the time scripts/test_door_connect_an_agent.py takes to follow the paragraph and to untick the row through the door, which closes it and leaves Sara running, and the suite ends Sara itself."},
+  {"wait": 30},
+  {"menu_item": {"menu": "Modules", "id": 805}},
+  {"wait": 20},
+  {"shot": "the-dialog-says-what-was-opened"},
+  {"state": "the-dialog-says-what-was-opened"},
+  {"click": {"control": "CopyPromptButton"}},
+  {"wait": 20},
+  {"shot": "the-corner-says-what-was-copied"},
+  {"state": "the-corner-says-what-was-copied"},
+  {"wait": 3000}
+]

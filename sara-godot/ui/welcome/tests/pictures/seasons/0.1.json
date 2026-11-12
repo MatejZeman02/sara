@@ -1,0 +1,9 @@
+{
+    "title": "A test picture in seasons",
+    "credit": "Made for the suite",
+    "variants": [
+        {"file": "plain.png", "hour": 18},
+        {"file": "winter.png", "hour": 6, "season": "winter"},
+        {"file": "summer.png", "hour": 6, "season": "summer"}
+    ]
+}

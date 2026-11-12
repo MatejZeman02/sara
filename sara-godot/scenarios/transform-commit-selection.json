@@ -1,0 +1,144 @@
+[
+ {
+  "wait": 45
+ },
+ {
+  "docker": "park"
+ },
+ {
+  "colour": "#e8b23c"
+ },
+ {
+  "tool": "brush"
+ },
+ {
+  "wait": 4
+ },
+ {
+  "stroke": {
+   "from": [
+    350,
+    450
+   ],
+   "to": [
+    1200,
+    800
+   ],
+   "pressure": 0.9,
+   "steps": 28
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "tool": "transform"
+ },
+ {
+  "wait": 6
+ },
+ {
+  "select": [
+   400,
+   400,
+   500,
+   400
+  ]
+ },
+ {
+  "wait": 6
+ },
+ {
+  "docker": {
+   "id": "ToolOptionsDocker",
+   "at": [
+    1300,
+    120
+   ],
+   "size": [
+    360,
+    500
+   ]
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "f23-01-box-on-the-selection"
+ },
+ {
+  "state": "f23-01-box-on-the-selection"
+ },
+ {
+  "option": {
+   "key": "transform_move_x",
+   "value": 220
+  }
+ },
+ {
+  "option": {
+   "key": "transform_move_y",
+   "value": -140
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "shot": "f23-02-lifted-and-moved"
+ },
+ {
+  "state": "f23-02-lifted-and-moved"
+ },
+ {
+  "key": "enter"
+ },
+ {
+  "wait": 14
+ },
+ {
+  "shot": "f23-03-committed"
+ },
+ {
+  "state": "f23-03-committed"
+ },
+ {
+  "select": [
+   400,
+   400,
+   500,
+   400
+  ]
+ },
+ {
+  "wait": 8
+ },
+ {
+  "option": {
+   "key": "transform_angle",
+   "value": 25
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "shot": "f23-04-turned-before-the-commit"
+ },
+ {
+  "state": "f23-04-turned-before-the-commit"
+ },
+ {
+  "key": "enter"
+ },
+ {
+  "wait": 14
+ },
+ {
+  "shot": "f23-05-committed-a-turn"
+ },
+ {
+  "state": "f23-05-committed-a-turn"
+ }
+]

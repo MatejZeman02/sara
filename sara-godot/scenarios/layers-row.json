@@ -1,0 +1,11 @@
+[
+  {"wait": 25},
+  {"docker": {"id": "LayersDocker", "at": [420, 180], "size": [260, 420]}},
+  {"wait": 15},
+  {"shot": "default-width"},
+  {"state": "default-width"},
+  {"docker": {"id": "LayersDocker", "at": [420, 180], "size": [1, 1]}},
+  {"wait": 15},
+  {"shot": "smallest-width"},
+  {"state": "smallest-width"}
+]

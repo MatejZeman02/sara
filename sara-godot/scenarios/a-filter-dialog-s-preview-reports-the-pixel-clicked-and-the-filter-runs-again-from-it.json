@@ -1,0 +1,36 @@
+[
+  {"args": ["--modules-dir=res://tests/fixtures/modules"]},
+  {"wait": 45},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 20},
+  {"document": "srgb", "size": [384, 256]},
+  {"wait": 25},
+  {"fill": [0.9, 0.9, 0.9]},
+  {"wait": 10},
+  {"stroke": {"from": [260, -20], "to": [260, 276], "space": "document", "pressure": 1.0, "colour": [0.0, 0.0, 0.0], "steps": 24}},
+  {"wait": 15},
+  {"texel": [[192, 128], [320, 128], [260, 128]]},
+  {"shot": "1-the-painted-layer"},
+
+  {"filter": {"open": "click-fixture.flood_from_click"}},
+  {"wait": 20},
+  {"shot": "2-the-dialog-on-open"},
+  {"state": "2-the-dialog-on-open"},
+
+  {"click": {"control": "PreviewPicture"}},
+  {"wait": 20},
+  {"filter": "describe"},
+  {"shot": "3-the-first-click-floods-the-left"},
+  {"state": "3-the-first-click-floods-the-left"},
+
+  {"filter": {"widget": "picture", "click": [320, 128]}},
+  {"wait": 20},
+  {"filter": "describe"},
+  {"shot": "4-the-second-click-floods-the-right"},
+  {"state": "4-the-second-click-floods-the-right"},
+
+  {"filter": "apply"},
+  {"wait": 20},
+  {"texel": [[192, 128], [320, 128], [260, 128]]},
+  {"shot": "5-applied-from-the-last-click"}
+]

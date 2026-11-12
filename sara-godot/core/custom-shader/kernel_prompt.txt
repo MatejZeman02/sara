@@ -1,0 +1,83 @@
+Write one pixel function for Sara, a painting program that runs it on the
+graphics card over the pixels of a layer. Answer with the file and nothing
+else: no explanation, no code fence, no imports.
+
+This is a whole working file. Yours has the same two parts.
+
+    uniform float level: hint_range(0, 1) = 0.5
+
+    def pixel(ivec2 at) -> vec4:
+        vec4 c = src(at)
+        return vec4(vec3(step(level, luminance(c.rgb))), c.a)
+
+
+src
+    src(at) reads the layer at any canvas pixel and answers vec4(0.0),
+    transparent black, wherever nothing is painted. It is the only way to
+    read the picture. Read a neighbourhood by calling it once per neighbour,
+    src(at + ivec2(x, y)), and src[at] reads the same. luminance(vec3),
+    premultiplied(vec4) and straight(vec4) are written for you as well, and
+    all are already there before your first line. Colour is straight alpha,
+    so average a neighbourhood as the sum of premultiplied(src(...)) and
+    return straight() of the mean, or a transparent neighbour darkens an edge.
+
+dst
+    You never name it. Whatever pixel() returns is stored into the
+    destination image for you, once for every pixel, and the file is called
+    once per pixel with that pixel's coordinates in at. Do not declare an
+    image, do not write one, and do not loop over the canvas.
+
+the uniform syntax
+    uniform <type> <name> = <value>, one per line, above the function.
+    <type> is one of float, int, uint, bool, vec2, vec3 and vec4, and <value>
+    is the number, the true or false, or the constructor the control opens on.
+    The names origin, step and t are taken, because the wrapper declares them:
+    step is a simulation's count of steps and t a filter's time in seconds,
+    each nought where it means nothing, and pixel() may read both. Every
+    uniform is a control the painter can move while they watch the result, so
+    put anything worth adjusting in one.
+    uniform float <name>[9], [25] or [49] is a grid of numbers instead, 3 by 3,
+    5 by 5 or 7 by 7, and float is the only type that may be an array. The
+    kernel reads it flat, row by row, as <name>[row * 3 + column] for nine,
+    and the grid opens on the numbers written as {1.0, 0.0, ...}, or on a one
+    in the middle with zeros round it when no default is written. A grid
+    takes no hint.
+
+the range hint
+    : hint_range(<lowest>, <highest>) after a uniform's name makes it a
+    slider between those two numbers, the way a Godot shader declares one,
+    and a third number is the step it moves by. Without the hint the slider
+    runs 0 to 1, so write it whenever it does not.
+    : hint_enum("<label>", "<label>", ...) after an int's name makes it a
+    drop-down of those labels instead, and the int is the picked entry's
+    index, 0 for the first. Each entry is a constant of its index, named by
+    the uniform's name and the label upper-cased with every run of other
+    characters one underscore, so "White noise" of dither is
+    DITHER_WHITE_NOISE and the body writes if dither == DITHER_WHITE_NOISE:
+    rather than a bare number. Declare nothing of that name yourself. A bool
+    draws a checkbox.
+    : hint_reach(<most>) after an int's other hints makes its value how far
+    src reads from the pixel, the radius of a blur, when Sara runs the
+    function chunk by chunk, and <most> is the furthest it may be typed. One
+    int carries it at most.
+    : source_color after a vec3 or a vec4 makes it a colour picker, the way a
+    Godot shader declares one. The kernel gets the numbers as the picker shows
+    them, sRGB encoded as src() hands a pixel, with none of Godot's conversion
+    to linear light. Tag every colour, because a vec3 or a vec4 without the
+    tag draws no control once any uniform beside it carries a hint, and keeps
+    the value you wrote, as a vec2 does.
+
+the dialect in three lines
+    Blocks are indentation, with no braces and no semicolons, and # opens a
+    comment.
+    A function is def name(type argument) -> type: and a local variable is
+    type name = value.
+    Everything inside an expression is GLSL, so the types, the swizzles, the
+    constructors and every built-in function are the ones you already know,
+    and imageLoad is also spelled image_load.
+
+the hard rules in one
+    The picture never leaves the graphics card, so read only through src,
+    write only by returning, and do the work of the one pixel you were given.
+
+Now write the pixel function for this effect:

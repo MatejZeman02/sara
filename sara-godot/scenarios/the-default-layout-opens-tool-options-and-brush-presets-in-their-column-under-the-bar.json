@@ -1,0 +1,12 @@
+[
+  {"comment": "The default layout opens Tool Options and Brush Presets in their column under the bar. The Brush Presets ships closed, kept under the Tool Options, and the column the shots read is the Tool Options alone. The first pair is the boot itself at a capture's 1920 by 1048, which is where Tool Options' title bar stood across the menu bar with Brush Presets on it. A capture's compositor is never smaller than 1920 by 1080, so the second pair is a window step and Dockers > Layouts > default, which restores the shipped default through the same fit a first run takes. The dump's windows array holds every rectangle."},
+  {"wait": 30},
+  {"state": "1-the-default-at-1920-by-1048"},
+  {"shot": "1-the-default-at-1920-by-1048"},
+  {"window": [1280, 1024]},
+  {"wait": 20},
+  {"layout_preset": {"load": "default"}},
+  {"wait": 70},
+  {"state": "2-the-default-at-1280-by-1024"},
+  {"shot": "2-the-default-at-1280-by-1024"}
+]

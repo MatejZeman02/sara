@@ -1,0 +1,137 @@
+# Kernels: thumb_bounds
+#
+# The box round the paint on a layer, for the layer's picture in the layers
+# docker to frame. `thumbnail.gmacs` draws the picture through that box, and
+# SaLayerThumbnail runs this file first, over every chunk of the layer, into the
+# same four ints on the card. Nothing is read back, so the CPU never learns the
+# box.
+#
+# Eight chunks a dispatch, one on each layer of the dispatch's depth. A chunk a
+# dispatch cost the row 17 microseconds of the CPU's for every chunk, a third of
+# it in binding, a third in the uniform set and the dispatch, and the rest in
+# the push constant. Eight a dispatch keeps the binding and shares the rest, so
+# reading every chunk of a full 4K layer adds 1.2 ms to its redraw rather than
+# 2.5 ms, measured on an NVIDIA GPU.
+
+kernel thumb_bounds
+
+sampler chunk_0
+sampler chunk_1
+sampler chunk_2
+sampler chunk_3
+sampler chunk_4
+sampler chunk_5
+sampler chunk_6
+sampler chunk_7
+
+# The box round the layer's paint inside the canvas, in document pixels, as
+# min x, min y, max x and max y, inclusive. The row seeds it wide before the
+# first dispatch, and `thumb_chunk` in `thumbnail.gmacs` reads it after the last.
+buffer frame: int box[4]
+
+# 80 bytes, packed by SaLayerThumbnail._bounds_params in this order. The two
+#   arrays are where each of the eight chunks sits in the document, its top left
+#   corner in document pixels, and a slot the dispatch does not reach is never
+#   read.
+params:
+    vec2 document_size
+    vec2 chunk_size
+    float origin_x[8]
+    float origin_y[8]
+
+# Past any document pixel, the seed of the box's minimum and, negated, of its
+#   maximum. Must match SaLayerThumbnail.FRAME_WIDE.
+const int FRAME_WIDE = 1073741824
+
+# The alpha a texel needs to count as paint: one step of eight bits. A stroke's
+#   faint tail far below what the picture can show would otherwise widen the
+#   frame round nothing a painter sees.
+const float PAINTED = 0.00392156863
+
+# One workgroup's box, reduced in shared memory before one lane folds it into
+#   `frame`. Sixty-four lanes each on the four global words would queue on them,
+#   and one lane a group leaves a sixty-fourth of that.
+shared int group_box[4]
+
+# The stored size of the chunk in *slot*. A sampler cannot be chosen by an index
+#   the compiler cannot see through, so each slot is its own branch, and every
+#   lane of a workgroup takes the same one.
+
+
+def stored_size(int slot) -> ivec2:
+    if slot == 0:
+        return texture_size(chunk_0, 0)
+    if slot == 1:
+        return texture_size(chunk_1, 0)
+    if slot == 2:
+        return texture_size(chunk_2, 0)
+    if slot == 3:
+        return texture_size(chunk_3, 0)
+    if slot == 4:
+        return texture_size(chunk_4, 0)
+    if slot == 5:
+        return texture_size(chunk_5, 0)
+    if slot == 6:
+        return texture_size(chunk_6, 0)
+    return texture_size(chunk_7, 0)
+
+# The alpha of the texel at *px* of the chunk in *slot*.
+
+
+def stored_alpha(int slot, ivec2 px) -> float:
+    if slot == 0:
+        return texel_fetch(chunk_0, px, 0).a
+    if slot == 1:
+        return texel_fetch(chunk_1, px, 0).a
+    if slot == 2:
+        return texel_fetch(chunk_2, px, 0).a
+    if slot == 3:
+        return texel_fetch(chunk_3, px, 0).a
+    if slot == 4:
+        return texel_fetch(chunk_4, px, 0).a
+    if slot == 5:
+        return texel_fetch(chunk_5, px, 0).a
+    if slot == 6:
+        return texel_fetch(chunk_6, px, 0).a
+    return texel_fetch(chunk_7, px, 0).a
+
+# The box round one chunk's paint, folded into `frame`. One lane a texel of
+#   the chunk as it is stored, whatever its resolution, so the box is as tight
+#   as the paint and not the 256 pixel squares the CPU knows the paint is in.
+#   A texel stored at a scale other than one covers part of a document pixel or
+#   several, and the box takes every pixel it touches, the way the transform's
+#   `painted_bounds` does. Only pixels inside the canvas count, because the
+#   picture never shows past it.
+#
+#   Every lane reaches both barriers, which is why a lane past the chunk or on
+#   a transparent texel adds nothing rather than returning early.
+
+
+def thumb_bounds():
+    if local_index == 0u:
+        group_box[0] = FRAME_WIDE
+        group_box[1] = FRAME_WIDE
+        group_box[2] = -FRAME_WIDE
+        group_box[3] = -FRAME_WIDE
+    barrier()
+    int slot = int(global_id.z)
+    ivec2 px = ivec2(global_id.xy)
+    ivec2 stored = stored_size(slot)
+    if px.x < stored.x and px.y < stored.y and stored_alpha(slot, px) >= PAINTED:
+        vec2 per_pixel = vec2(stored) / chunk_size
+        vec2 origin = vec2(origin_x[slot], origin_y[slot])
+        ivec2 first = ivec2(floor(origin + vec2(px) / per_pixel))
+        ivec2 last = ivec2(ceil(origin + (vec2(px) + vec2(1.0)) / per_pixel)) - ivec2(1)
+        first = max(first, ivec2(0))
+        last = min(last, ivec2(document_size) - ivec2(1))
+        if first.x <= last.x and first.y <= last.y:
+            atomic_min(group_box[0], first.x)
+            atomic_min(group_box[1], first.y)
+            atomic_max(group_box[2], last.x)
+            atomic_max(group_box[3], last.y)
+    barrier()
+    if local_index == 0u and group_box[2] >= group_box[0]:
+        atomic_min(frame.box[0], group_box[0])
+        atomic_min(frame.box[1], group_box[1])
+        atomic_max(frame.box[2], group_box[2])
+        atomic_max(frame.box[3], group_box[3])

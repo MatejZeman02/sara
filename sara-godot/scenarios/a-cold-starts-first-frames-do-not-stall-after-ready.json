@@ -1,0 +1,9 @@
+[
+  {"comment": "A cold start's first frames do not stall after Ready. A shot run clears the settings directory and the presets folder in it, so this boot writes the shipped presets and has none of their pictures cached, which is the cold start the note logged. The first report comes a second after Ready, with the presets scanned in slices and their pictures still being drawn a few events a frame, so `pending` is above nought. The second comes once every picture is drawn. run.log holds no `Sara stall:` line, where the same boot before the fix logged the frames coming slow for 3.1 to 4.2 s on a slow machine."},
+  {"wait": 60},
+  {"preset": {}},
+  {"shot": "1-a-second-after-ready"},
+  {"wait": 900},
+  {"preset": {}},
+  {"shot": "2-every-picture-drawn"}
+]

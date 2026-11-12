@@ -1,0 +1,501 @@
+[
+ {
+  "wait": 30
+ },
+ {
+  "layout_preset": {
+   "delete": "default (custom)"
+  }
+ },
+ {
+  "layout_preset": {
+   "load": "default"
+  }
+ },
+ {
+  "wait": 25
+ },
+ {
+  "state": "default-layout"
+ },
+ {
+  "shot": "default-layout"
+ },
+ {
+  "menu": "Window"
+ },
+ {
+  "wait": 5
+ },
+ {
+  "state": "ticks-at-rest"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 4
+ },
+ {
+  "key": {
+   "key": "b",
+   "shift": true
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "chord-ToolBoxDocker"
+ },
+ {
+  "key": {
+   "key": "t",
+   "shift": true
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "chord-LayersDocker"
+ },
+ {
+  "key": {
+   "key": "v",
+   "shift": true
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "chord-ColorDocker"
+ },
+ {
+  "key": {
+   "key": "f9"
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "chord-InfoDocker"
+ },
+ {
+  "key": {
+   "key": "r",
+   "shift": true
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "chord-RecorderDocker"
+ },
+ {
+  "key": {
+   "key": "m",
+   "shift": true
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "chord-MinimapDocker"
+ },
+ {
+  "key": {
+   "key": "o",
+   "shift": true
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "chord-ToolOptionsDocker"
+ },
+ {
+  "key": {
+   "key": "h",
+   "shift": true
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "chord-GraphDocker"
+ },
+ {
+  "key": {
+   "key": "p",
+   "shift": true
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "chord-HistoryDocker"
+ },
+ {
+  "key": {
+   "key": "f",
+   "shift": true
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "chord-ReferenceDocker"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "after-every-chord"
+ },
+ {
+  "shot": "after-every-chord"
+ },
+ {
+  "menu": "Window"
+ },
+ {
+  "wait": 5
+ },
+ {
+  "state": "ticks-after-every-chord"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 4
+ },
+ {
+  "menu_item": {
+   "menu": "Window",
+   "id": 0
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "row-ToolBoxDocker"
+ },
+ {
+  "menu_item": {
+   "menu": "Window",
+   "id": 1
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "row-LayersDocker"
+ },
+ {
+  "menu_item": {
+   "menu": "Window",
+   "id": 2
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "row-ColorDocker"
+ },
+ {
+  "menu_item": {
+   "menu": "Window",
+   "id": 3
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "row-InfoDocker"
+ },
+ {
+  "menu_item": {
+   "menu": "Window",
+   "id": 4
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "row-RecorderDocker"
+ },
+ {
+  "menu_item": {
+   "menu": "Window",
+   "id": 5
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "row-MinimapDocker"
+ },
+ {
+  "menu_item": {
+   "menu": "Window",
+   "id": 6
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "row-ToolOptionsDocker"
+ },
+ {
+  "menu_item": {
+   "menu": "Window",
+   "id": 7
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "row-GraphDocker"
+ },
+ {
+  "menu_item": {
+   "menu": "Window",
+   "id": 8
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "row-HistoryDocker"
+ },
+ {
+  "menu_item": {
+   "menu": "Window",
+   "id": 9
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "row-ReferenceDocker"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "after-every-row"
+ },
+ {
+  "shot": "after-every-row"
+ },
+ {
+  "menu": "Window"
+ },
+ {
+  "wait": 5
+ },
+ {
+  "state": "ticks-after-every-row"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 4
+ },
+ {
+  "key": "tab"
+ },
+ {
+  "wait": 15
+ },
+ {
+  "state": "focus-mode-on"
+ },
+ {
+  "shot": "focus-mode-on"
+ },
+ {
+  "key": "tab"
+ },
+ {
+  "wait": 15
+ },
+ {
+  "state": "focus-mode-off"
+ },
+ {
+  "state": "before-resize"
+ },
+ {
+  "docker_resize": {
+   "id": "LayersDocker",
+   "by": [
+    60,
+    40
+   ],
+   "grip": false
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "resized-by-alt-right-drag"
+ },
+ {
+  "docker_resize": {
+   "id": "LayersDocker",
+   "by": [
+    -60,
+    -40
+   ],
+   "grip": true
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "resized-back-by-the-grip"
+ },
+ {
+  "drag": {
+   "window": "Minimap",
+   "by": [
+    -120,
+    60
+   ]
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "minimap-dragged"
+ },
+ {
+  "shot": "minimap-dragged"
+ },
+ {
+  "drag": {
+   "window": "Minimap",
+   "by": [
+    120,
+    -60
+   ]
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "minimap-dragged-back"
+ },
+ {
+  "layout_preset": {
+   "load": "default"
+  }
+ },
+ {
+  "wait": 25
+ },
+ {
+  "state": "layout-default"
+ },
+ {
+  "shot": "layout-default"
+ },
+ {
+  "layout_preset": {
+   "load": "minimalistic"
+  }
+ },
+ {
+  "wait": 25
+ },
+ {
+  "state": "layout-minimalistic"
+ },
+ {
+  "shot": "layout-minimalistic"
+ },
+ {
+  "layout_preset": {
+   "load": "useful"
+  }
+ },
+ {
+  "wait": 25
+ },
+ {
+  "state": "layout-useful"
+ },
+ {
+  "shot": "layout-useful"
+ },
+ {
+  "layout_preset": {
+   "load": "full"
+  }
+ },
+ {
+  "wait": 25
+ },
+ {
+  "state": "layout-full"
+ },
+ {
+  "shot": "layout-full"
+ },
+ {
+  "layout_preset": {
+   "edit": true
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "state": "layout-edited-into-a-fork"
+ },
+ {
+  "layout_preset": {
+   "load": "default"
+  }
+ },
+ {
+  "wait": 25
+ },
+ {
+  "state": "back-to-default"
+ },
+ {
+  "layout_preset": {
+   "delete": "default (custom)"
+  }
+ },
+ {
+  "wait": 5
+ }
+]

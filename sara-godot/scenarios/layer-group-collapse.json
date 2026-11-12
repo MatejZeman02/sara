@@ -1,0 +1,148 @@
+[
+  {
+    "wait": 30
+  },
+  {
+    "layer": {
+      "add": "Sky"
+    }
+  },
+  {
+    "layer": {
+      "fill": [
+        0.2,
+        0.4,
+        0.9,
+        1.0
+      ]
+    }
+  },
+  {
+    "layer": {
+      "add": "Hills"
+    }
+  },
+  {
+    "layer": {
+      "fill": [
+        0.2,
+        0.7,
+        0.3,
+        1.0
+      ]
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "pick_rows": [
+      0,
+      1
+    ]
+  },
+  {
+    "layer_action": "group"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "layer_collapse": ""
+  },
+  {
+    "shot": "1-group-open"
+  },
+  {
+    "state": "1-group-open"
+  },
+  {
+    "layer_collapse": 0
+  },
+  {
+    "wait": 12
+  },
+  {
+    "layer_collapse": ""
+  },
+  {
+    "shot": "2-group-collapsed"
+  },
+  {
+    "state": "2-group-collapsed"
+  },
+  {
+    "layer_collapse": 0
+  },
+  {
+    "wait": 12
+  },
+  {
+    "layer_collapse": ""
+  },
+  {
+    "shot": "3-group-open-again"
+  },
+  {
+    "state": "3-group-open-again"
+  },
+  {
+    "shift_rows": [
+      1
+    ]
+  },
+  {
+    "wait": 10
+  },
+  {
+    "layer_collapse": ""
+  },
+  {
+    "state": "4-child-active"
+  },
+  {
+    "layer_collapse": 0
+  },
+  {
+    "wait": 12
+  },
+  {
+    "layer_collapse": ""
+  },
+  {
+    "shot": "5-active-child-folded-away"
+  },
+  {
+    "state": "5-active-child-folded-away"
+  },
+  {
+    "shift_rows": [
+      1,
+      2
+    ]
+  },
+  {
+    "wait": 10
+  },
+  {
+    "layer_collapse": ""
+  },
+  {
+    "state": "6-shift-click-while-folded"
+  },
+  {
+    "layer_collapse": 0
+  },
+  {
+    "wait": 12
+  },
+  {
+    "layer_collapse": ""
+  },
+  {
+    "shot": "7-open-again"
+  },
+  {
+    "state": "7-open-again"
+  }
+]

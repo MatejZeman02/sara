@@ -1,0 +1,287 @@
+[
+ {
+  "comment": "A line drawing in black ink on Layer 1, a box split into three regions by a vertical and a horizontal line, then a Colourise Line Art layer added above it and three scribbles laid on it with the Brush, red, yellow and blue, one in each region, and one in the Transparent key's magenta outside the box. Auto fills the regions after each stroke ends, and the layer is then moved under the ink, which it still reads as the nearest layer to it. The first shot shows the flats under the lines with the Colourise docker beside them, and the second is the view zoomed in on the middle of the vertical line, where the colour runs under the ink to its centre and no pale line shows between a flat and the ink."
+ },
+ {
+  "wait": 45
+ },
+ {
+  "prefs": {
+   "ui_scale": 1.0,
+   "ui_font_scale": 1.0
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "window": [
+   1920,
+   1080
+  ]
+ },
+ {
+  "wait": 20
+ },
+ {
+  "document": "srgb"
+ },
+ {
+  "wait": 25
+ },
+ {
+  "docker": "park"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "brush": {
+   "colour": "#000000",
+   "radius_px": 3
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "stroke": {
+   "from": [
+    560,
+    220
+   ],
+   "to": [
+    1360,
+    220
+   ],
+   "pressure": 1.0
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "stroke": {
+   "from": [
+    1360,
+    220
+   ],
+   "to": [
+    1360,
+    860
+   ],
+   "pressure": 1.0
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "stroke": {
+   "from": [
+    1360,
+    860
+   ],
+   "to": [
+    560,
+    860
+   ],
+   "pressure": 1.0
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "stroke": {
+   "from": [
+    560,
+    860
+   ],
+   "to": [
+    560,
+    220
+   ],
+   "pressure": 1.0
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "stroke": {
+   "from": [
+    960,
+    220
+   ],
+   "to": [
+    960,
+    860
+   ],
+   "pressure": 1.0
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "stroke": {
+   "from": [
+    560,
+    540
+   ],
+   "to": [
+    960,
+    540
+   ],
+   "pressure": 1.0
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "layer": {
+   "add": "Flats",
+   "type": "colorize"
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "brush": {
+   "colour": "#d8322a",
+   "radius_px": 6
+  }
+ },
+ {
+  "wait": 4
+ },
+ {
+  "stroke": {
+   "from": [
+    700,
+    360
+   ],
+   "to": [
+    800,
+    400
+   ],
+   "pressure": 1.0
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "brush": {
+   "colour": "#e8c040",
+   "radius_px": 6
+  }
+ },
+ {
+  "wait": 4
+ },
+ {
+  "stroke": {
+   "from": [
+    700,
+    680
+   ],
+   "to": [
+    820,
+    700
+   ],
+   "pressure": 1.0
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "brush": {
+   "colour": "#2a50d0",
+   "radius_px": 6
+  }
+ },
+ {
+  "wait": 4
+ },
+ {
+  "stroke": {
+   "from": [
+    1100,
+    500
+   ],
+   "to": [
+    1220,
+    560
+   ],
+   "pressure": 1.0
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "brush": {
+   "colour": "#ff00ff",
+   "radius_px": 6
+  }
+ },
+ {
+  "wait": 4
+ },
+ {
+  "stroke": {
+   "from": [
+    400,
+    950
+   ],
+   "to": [
+    460,
+    960
+   ],
+   "pressure": 1.0
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "layer": {
+   "move": -1
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "docker": {
+   "id": "ColorizeDocker",
+   "at": [
+    1440,
+    120
+   ]
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "state": "1-the-flats-under-the-line-art"
+ },
+ {
+  "shot": "1-the-flats-under-the-line-art"
+ },
+ {
+  "zoom": 16
+ },
+ {
+  "wait": 20
+ },
+ {
+  "shot": "2-the-flats-meet-the-ink-at-its-centre-with-no-halo"
+ }
+]

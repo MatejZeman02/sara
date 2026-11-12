@@ -1,0 +1,13 @@
+[
+  {"comment": "The migration: run straight after a profile of version 19 was written into the capture's settings folder with the bar's menus in an order of the painter's own, Help first and Settings after Tools, and Modules hidden. The bar draws every other menu where the profile put it and no Settings button, the Top Menu Bar page of Preferences lists no Settings row, and the file written back on exit is version 20 without the name."},
+  {"settings": "keep"},
+  {"wait": 35},
+  {"shot": "1-the-bar-in-the-profiles-order-without-settings"},
+  {"state": "1-the-bar-in-the-profiles-order-without-settings"},
+  {"open": "preferences"},
+  {"wait": 20},
+  {"page": "Top Menu Bar"},
+  {"wait": 15},
+  {"shot": "2-the-top-menu-bar-page-lists-no-settings-row"},
+  {"state": "2-the-top-menu-bar-page-lists-no-settings-row"}
+]

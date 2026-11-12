@@ -1,0 +1,78 @@
+# Kernel: scene_copy
+#
+# Copies a rectangle of a scene layer's viewport into one of the layer's
+# chunks, GPU to GPU, converting on the way from the viewport's numbers into
+# the document's. SaSceneLayer dispatches it once a frame over the rectangle
+# the scene declares dirty, one dispatch a chunk that rectangle touches.
+#
+# The viewport renders its 2D in linear light at half float, because
+# SaSceneLayer asks for an HDR 2D target, so its numbers are linear sRGB and
+# the conversion is the one convert_color_space.gmacs makes from a Linear sRGB
+# document into this one. A sampler rather than an image, because a viewport's
+# texture is made to be sampled and never to be stored to, read by a texel fetch
+# so a texel comes across unfiltered.
+#
+# Nothing clamps. A scene that draws past white carries past white into the
+# document, which is what a float viewport is for.
+
+kernel scene_copy
+
+import linear_srgb_color_space
+import transfer_curve
+
+const int SA_COORDS_OKLAB = 1
+
+image target
+sampler source
+
+# 112 bytes, packed by SaSceneLayer.push_constant: the rectangle, then the tail
+# SaColorSpace.to_conversion_push_constant packs for Linear sRGB into the
+# document, then the pad the packer rounds up to.
+params:
+    # Where the rectangle starts in the viewport and in the chunk, and its size.
+    vec2 source_origin
+    vec2 target_origin
+    vec2 region_size
+    float to_target[9]
+    float source_slope
+    float source_threshold
+    float source_gain
+    float source_exponent
+    float target_slope
+    float target_threshold
+    float target_gain
+    float target_exponent
+    float source_coordinates
+    float target_coordinates
+    float pad[3]
+
+
+def to_target_matrix() -> mat3:
+    return mat3(
+        to_target[0], to_target[1], to_target[2],
+        to_target[3], to_target[4], to_target[5],
+        to_target[6], to_target[7], to_target[8]
+    )
+
+# Out of linear sRGB and into whatever the document stores.
+
+
+def encode_target(vec3 c) -> vec3:
+    if int(target_coordinates + 0.5) == SA_COORDS_OKLAB:
+        return linear_srgb_to_oklab(c)
+    return sa_transfer_encode(c, target_slope, target_threshold, target_gain, target_exponent)
+
+
+def scene_copy():
+    ivec2 local = ivec2(global_id.xy)
+    if local.x >= int(region_size.x) or local.y >= int(region_size.y):
+        return
+    ivec2 to = local + ivec2(target_origin)
+    if to.x >= image_size(target).x or to.y >= image_size(target).y:
+        return
+    ivec2 from = local + ivec2(source_origin)
+    if from.x >= texture_size(source, 0).x or from.y >= texture_size(source, 0).y:
+        return
+    vec4 texel = texel_fetch(source, from, 0)
+    # Alpha is coverage and comes across untouched.
+    target[to] = vec4(encode_target(to_target_matrix() * texel.rgb), texel.a)

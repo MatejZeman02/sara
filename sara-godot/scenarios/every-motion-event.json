@@ -1,0 +1,13 @@
+[
+  {"wait": 30},
+  {"move": [900, 600]},
+  {"wait": 3},
+  {"press": {"button": "left", "at": [900, 600]}},
+  {"state": "01-before"},
+  {"motion_burst": [[905, 604], [912, 610], [920, 617], [930, 626], [942, 636]]},
+  {"ring_dump": "after-burst"},
+  {"state": "02-after-burst"},
+  {"release": {"button": "left", "at": [942, 636]}},
+  {"wait": 5},
+  {"state": "03-after-release"}
+]

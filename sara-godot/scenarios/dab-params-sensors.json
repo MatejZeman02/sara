@@ -1,0 +1,21 @@
+[
+  {"wait": 30},
+  {"colour": "#d84a2a"},
+  {"state": "1-before-the-stroke"},
+  {"shot": "1-before-the-stroke"},
+
+  {"stroke": {"from": [500, 380], "to": [900, 420], "pressure": 0.9, "steps": 24}},
+  {"wait": 12},
+  {"state": "2-one-stroke"},
+  {"shot": "2-one-stroke"},
+
+  {"stroke": {"from": [500, 520], "to": [900, 560], "pressure": 0.35, "steps": 24}},
+  {"wait": 12},
+  {"state": "3-a-lighter-stroke"},
+  {"shot": "3-a-lighter-stroke"},
+
+  {"undo": 2},
+  {"wait": 12},
+  {"state": "4-both-undone"},
+  {"shot": "4-both-undone"}
+]

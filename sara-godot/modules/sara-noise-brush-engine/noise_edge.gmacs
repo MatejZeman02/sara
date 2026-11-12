@@ -1,0 +1,89 @@
+# Library: noise_edge
+#
+# Where the outline of a noise stroke sits on each side, and how far in its
+# rim thins, at a texel's place along the stroke. `noise_dab` reads it beside
+# the rim lines and imports it after `noise_fields`, whose hash and value noise
+# it reads.
+#
+# **The edge is not one unit repeated.** Hardness alone would give the same
+# tuft from one end of a stroke to the other, so noises read along the stroke
+# move the edge, each at its own scale and drawn apart for each side:
+#
+# - a slow wander pulls the outline in by up to [NOISE_EDGE_DEPTH] of the
+#   half-width,
+# - a second wander widens the band the rim thins over to as much as
+#   [NOISE_EDGE_BREAK], so the edge breaks up there and holds firm between,
+# - and nicks, where a few hairs ran dry, cut the outline in by up to
+#   [NOISE_EDGE_NICK] of the half-width, at two sizes, [NOISE_EDGE_NICK_SIZES]
+#   of a tip width, each where its own noise rises past a threshold.
+#
+# Every scale is in tip widths, so a wider brush has longer runs and wider
+# nicks. The salt is the stroke's own offset, so two strokes side by side never
+# share an edge.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+const float NOISE_EDGE_DEPTH = 0.07
+const float NOISE_EDGE_BREAK = 0.4
+const float NOISE_EDGE_NICK = 0.6
+const vec2 NOISE_EDGE_NICK_SIZES = vec2(0.05, 0.12)
+# Where each size's noise starts and ends cutting a nick.
+const vec2 NOISE_EDGE_FINE_NICK = vec2(0.66, 0.9)
+const vec2 NOISE_EDGE_BROAD_NICK = vec2(0.78, 0.95)
+# The band under the cut at which the edge moves in full, and the presses
+# between which it fades in and out again.
+const float NOISE_EDGE_FULL_BAND = 0.15
+const vec2 NOISE_EDGE_TOUCHED = vec2(0.35, 0.6)
+const vec2 NOISE_EDGE_SPLAYED = vec2(0.85, 1.0)
+# The wanders' periods, in tip widths: the outline's pull over two, the
+# band's over one.
+const vec2 NOISE_EDGE_PULL_PERIODS = vec2(7.0, 2.3)
+const float NOISE_EDGE_BAND_PERIOD = 1.3
+# The Rim Firmness at which the outline takes no nick. The nicks fade out as
+# the row rises to it, so a firm rim is cut in by no step a few degrees wide,
+# where a nick would cut a round blob's rim in by a third of its radius. The
+# pull stays, a slow wander over several tip widths, so the outline still
+# repeats no unit.
+const float NOISE_EDGE_FIRM = 0.5
+
+# One of the edge's noises at *at*, in tip widths, over *period* tip widths,
+# moved off by *lane* to a far part of the lattice of its own, so each side and
+# each noise is a draw of its own. Read in the plane at the path's own place
+# rather than along the stroke's length, because along is less the drift, and
+# a drifting field such as Bristle Flat's stood five times longer under the pen
+# and stretched every nick and run with it. A noise read in the plane along a
+# path is a noise read along the path.
+
+
+def noise_edge_noise(vec2 at, float period, float lane) -> float:
+    return noise_value(at / period + vec2(lane * 7.31, lane * 3.17))
+
+# The edge on the side of *across* of the path's point *centre*, in document
+# pixels, where the tip is *half_width* pixels either side of the path and
+# Hardness leaves a band of *band* under the cut: x is how far in the outline
+# sits as a share of the half-width, y the least band the rim thins over there.
+# A hard brush keeps a hard edge, its grain flat out to the tip's outline, so
+# the whole of it scales in from nothing at a Hardness of one to all of it at a
+# band of [NOISE_EDGE_FULL_BAND]. It moves the edge at a working press of
+# *pressure* alone. Under [NOISE_EDGE_TOUCHED] only the hairs' tips touch, and
+# the field's own holes already break the outline of a light stroke, so the
+# edge there is the field's, and a light stroke's corner keeps the streaks of
+# its leg. Past [NOISE_EDGE_SPLAYED] every hair spreads out to the ferrule's
+# width, so a full press lays the tip's own outline, its gaps filled and every
+# bristle in.
+
+
+def noise_edge(vec2 centre, float across, float half_width, float band, float pressure) -> vec2:
+    float width = max(2.0 * half_width, 1.0)
+    float salt = floor(field.values[NOISE_FIELD_OFFSET_X])
+    float lane = (across < 0.0 ? 13.0 : 41.0) + salt
+    vec2 at = centre / width
+    float slow = 0.6 * noise_edge_noise(at, NOISE_EDGE_PULL_PERIODS.x, lane) + 0.4 * noise_edge_noise(at, NOISE_EDGE_PULL_PERIODS.y, lane + 5.0)
+    float pull = NOISE_EDGE_DEPTH * smoothstep(0.3, 0.75, slow)
+    float breaking = smoothstep(0.45, 0.8, noise_edge_noise(at, NOISE_EDGE_BAND_PERIOD, lane + 9.0))
+    float fine = smoothstep(NOISE_EDGE_FINE_NICK.x, NOISE_EDGE_FINE_NICK.y, noise_edge_noise(at, NOISE_EDGE_NICK_SIZES.x, lane + 23.0))
+    float broad = smoothstep(NOISE_EDGE_BROAD_NICK.x, NOISE_EDGE_BROAD_NICK.y, noise_edge_noise(at, NOISE_EDGE_NICK_SIZES.y, lane + 29.0))
+    float nick = NOISE_EDGE_NICK * max(fine, broad)
+    float softness = smoothstep(0.0, NOISE_EDGE_FULL_BAND, band) * smoothstep(NOISE_EDGE_TOUCHED.x, NOISE_EDGE_TOUCHED.y, pressure) * (1.0 - smoothstep(NOISE_EDGE_SPLAYED.x, NOISE_EDGE_SPLAYED.y, pressure))
+    float loose = 1.0 - clamp(field.values[NOISE_FIELD_RIM_FIRM] / NOISE_EDGE_FIRM, 0.0, 1.0)
+    return softness * vec2(min(pull + loose * nick, 0.9), NOISE_EDGE_BREAK * breaking)

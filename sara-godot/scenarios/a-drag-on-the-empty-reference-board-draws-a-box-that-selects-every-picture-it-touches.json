@@ -1,0 +1,191 @@
+[
+ {
+  "comment": "A drag on the empty reference board draws a box that selects every picture it touches. Four pictures are dropped on the Reference docker and fitted in a row. A left press on the empty board above the first, dragged to below the second, draws the box (shot 1, taken with the button still held), and the release leaves those two outlined and the other two not (shot 2). A Ctrl click adds a third (shot 3)."
+ },
+ {
+  "wait": 40
+ },
+ {
+  "document": "srgb"
+ },
+ {
+  "docker": "park"
+ },
+ {
+  "docker": {
+   "id": "ReferenceDocker",
+   "at": [
+    760,
+    100
+   ],
+   "size": [
+    520,
+    420
+   ]
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "move": [
+   1000,
+   300
+  ]
+ },
+ {
+  "wait": 5
+ },
+ {
+  "drop": "res://ui/dialogs/builders/astrid.png"
+ },
+ {
+  "wait": 15
+ },
+ {
+  "move": [
+   1000,
+   300
+  ]
+ },
+ {
+  "wait": 5
+ },
+ {
+  "drop": "res://ui/dialogs/builders/mads.png"
+ },
+ {
+  "wait": 15
+ },
+ {
+  "move": [
+   1000,
+   300
+  ]
+ },
+ {
+  "wait": 5
+ },
+ {
+  "drop": "res://ui/dialogs/builders/cira.png"
+ },
+ {
+  "wait": 15
+ },
+ {
+  "move": [
+   1000,
+   300
+  ]
+ },
+ {
+  "wait": 5
+ },
+ {
+  "drop": "res://ui/dialogs/builders/bogo.png"
+ },
+ {
+  "wait": 15
+ },
+ {
+  "click": {
+   "control": "FitButton"
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "shot": "0-four-pictures-in-a-row"
+ },
+ {
+  "state": "0-four-pictures-in-a-row"
+ },
+ {
+  "move": [
+   800,
+   214
+  ]
+ },
+ {
+  "wait": 5
+ },
+ {
+  "press": "left"
+ },
+ {
+  "move": [
+   860,
+   300
+  ]
+ },
+ {
+  "wait": 2
+ },
+ {
+  "move": [
+   920,
+   400
+  ]
+ },
+ {
+  "wait": 2
+ },
+ {
+  "move": [
+   960,
+   464
+  ]
+ },
+ {
+  "wait": 10
+ },
+ {
+  "shot": "1-the-box-drawn-over-two-pictures"
+ },
+ {
+  "state": "1-the-box-drawn-over-two-pictures"
+ },
+ {
+  "release": "left"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "shot": "2-both-outlined-after"
+ },
+ {
+  "state": "2-both-outlined-after"
+ },
+ {
+  "move": [
+   1067,
+   341
+  ]
+ },
+ {
+  "wait": 5
+ },
+ {
+  "press": {
+   "button": "left",
+   "ctrl": true
+  }
+ },
+ {
+  "release": {
+   "button": "left",
+   "ctrl": true
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "shot": "3-a-ctrl-click-adds-a-third"
+ },
+ {
+  "state": "3-a-ctrl-click-adds-a-third"
+ }
+]

@@ -1,0 +1,125 @@
+[
+  {
+    "wait": 30
+  },
+  {
+    "docker": {
+      "id": "ColorDocker",
+      "at": [
+        880,
+        60
+      ],
+      "size": [
+        340,
+        860
+      ]
+    }
+  },
+  {
+    "colour": "#0000ff"
+  },
+  {
+    "wait": 15
+  },
+  {
+    "prefs": {
+      "color_picker_shape": "wheel"
+    }
+  },
+  {
+    "wait": 15
+  },
+  {
+    "shot": "1-ring"
+  },
+  {
+    "state": "1-ring"
+  },
+  {
+    "press": {
+      "button": "left",
+      "at": [
+        1002,
+        485
+      ]
+    }
+  },
+  {
+    "release": {
+      "button": "left",
+      "at": [
+        1002,
+        485
+      ]
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "2-ring-yellow"
+  },
+  {
+    "state": "2-ring-yellow"
+  },
+  {
+    "press": {
+      "button": "left",
+      "at": [
+        1035,
+        209
+      ]
+    }
+  },
+  {
+    "release": {
+      "button": "left",
+      "at": [
+        1035,
+        209
+      ]
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "3-ring-blue"
+  },
+  {
+    "state": "3-ring-blue"
+  },
+  {
+    "prefs": {
+      "color_picker_shape": "okhsl"
+    }
+  },
+  {
+    "wait": 15
+  },
+  {
+    "shot": "4-disc-unchanged"
+  },
+  {
+    "state": "4-disc-unchanged"
+  },
+  {
+    "prefs": {
+      "color_picker_shape": "triangle"
+    }
+  },
+  {
+    "wait": 15
+  },
+  {
+    "shot": "5-triangle-unchanged"
+  },
+  {
+    "state": "5-triangle-unchanged"
+  },
+  {
+    "prefs": {
+      "color_picker_shape": "wheel"
+    }
+  }
+]

@@ -1,0 +1,1009 @@
+{
+ "cells": {
+  "boot > startup > cache hits": {
+   "cost": false,
+   "kind": "count",
+   "value": 123
+  },
+  "boot > startup > compiles": {
+   "cost": true,
+   "kind": "count",
+   "value": 0
+  },
+  "boot > startup > engine to ready ms": {
+   "cost": true,
+   "kind": "time",
+   "spread": 50.29250000000002,
+   "value": 2060.2075
+  },
+  "boot > startup > first frame ms": {
+   "cost": true,
+   "kind": "time",
+   "spread": 0.0,
+   "value": 499.129
+  },
+  "boot > startup > kernels ms": {
+   "cost": true,
+   "kind": "time",
+   "spread": 0.0,
+   "value": 467.143
+  },
+  "boot > startup > mark bootstrap_begin ms": {
+   "cost": true,
+   "kind": "time",
+   "spread": 0.0,
+   "value": 4079.58
+  },
+  "boot > startup > mark first_frame_after_ready ms": {
+   "cost": true,
+   "kind": "time",
+   "spread": 0.0,
+   "value": 6588.624
+  },
+  "boot > startup > mark kernels_begin ms": {
+   "cost": true,
+   "kind": "time",
+   "spread": 0.0,
+   "value": 896.447
+  },
+  "boot > startup > mark kernels_end ms": {
+   "cost": true,
+   "kind": "time",
+   "spread": 0.0,
+   "value": 1363.59
+  },
+  "boot > startup > mark layout_restored ms": {
+   "cost": true,
+   "kind": "time",
+   "spread": 0.0,
+   "value": 6089.443
+  },
+  "boot > startup > mark main_init ms": {
+   "cost": true,
+   "kind": "time",
+   "spread": 0.0,
+   "value": 4064.297
+  },
+  "boot > startup > mark modules_registered ms": {
+   "cost": true,
+   "kind": "time",
+   "spread": 0.0,
+   "value": 4937.121
+  },
+  "boot > startup > mark ready ms": {
+   "cost": true,
+   "kind": "time",
+   "spread": 0.0,
+   "value": 6089.495
+  },
+  "boot > startup > mark settings_loaded ms": {
+   "cost": true,
+   "kind": "time",
+   "spread": 0.0,
+   "value": 4079.348
+  },
+  "boot > startup > mark ui_built ms": {
+   "cost": true,
+   "kind": "time",
+   "spread": 0.0,
+   "value": 4383.786
+  },
+  "boot > startup > module box_blur usec": {
+   "cost": true,
+   "kind": "time",
+   "spread": 0.0,
+   "value": 2817.0
+  },
+  "boot > startup > module pga_hard_mix usec": {
+   "cost": true,
+   "kind": "time",
+   "spread": 0.0,
+   "value": 32.0
+  },
+  "boot > startup > module sara-base-modules usec": {
+   "cost": true,
+   "kind": "time",
+   "spread": 0.0,
+   "value": 895.0
+  },
+  "boot > startup > module sara-stamp-brush usec": {
+   "cost": true,
+   "kind": "time",
+   "spread": 0.0,
+   "value": 3772.0
+  },
+  "boot > startup > ready line ms": {
+   "cost": true,
+   "kind": "time",
+   "spread": 93.0,
+   "value": 2204.0
+  },
+  "kernels > large: clear/clear_chunk > GPU usec": {
+   "cost": true,
+   "kind": "time",
+   "spread": 27.498999999999967,
+   "value": 577.483
+  },
+  "kernels > large: clear/clear_chunk > dispatches": {
+   "cost": true,
+   "kind": "count",
+   "value": 180
+  },
+  "kernels > large: clear/clear_chunk > pairs": {
+   "cost": false,
+   "kind": "count",
+   "value": 136
+  },
+  "kernels > large: clear/clear_chunk > share %": {
+   "cost": false,
+   "kind": "ratio",
+   "spread": 0.006431728982299489,
+   "value": 16.67374490417965
+  },
+  "kernels > large: clear/clear_chunk > skipped": {
+   "cost": true,
+   "kind": "count",
+   "value": 0
+  },
+  "kernels > large: clear/clear_chunk > workgroups": {
+   "cost": true,
+   "kind": "count",
+   "value": 21912
+  },
+  "kernels > large: composite/composite > GPU usec": {
+   "cost": true,
+   "kind": "time",
+   "spread": 64.97250000000008,
+   "value": 1364.4285
+  },
+  "kernels > large: composite/composite > dispatches": {
+   "cost": true,
+   "kind": "count",
+   "value": 288
+  },
+  "kernels > large: composite/composite > pairs": {
+   "cost": false,
+   "kind": "count",
+   "value": 234
+  },
+  "kernels > large: composite/composite > share %": {
+   "cost": false,
+   "kind": "ratio",
+   "spread": 0.015201106265319453,
+   "value": 39.395328727049275
+  },
+  "kernels > large: composite/composite > skipped": {
+   "cost": true,
+   "kind": "count",
+   "value": 0
+  },
+  "kernels > large: composite/composite > workgroups": {
+   "cost": true,
+   "kind": "count",
+   "value": 51300
+  },
+  "kernels > large: dab/dab > GPU usec": {
+   "cost": true,
+   "kind": "time",
+   "spread": 64.81899999999996,
+   "value": 1361.203
+  },
+  "kernels > large: dab/dab > dispatches": {
+   "cost": true,
+   "kind": "count",
+   "value": 254
+  },
+  "kernels > large: dab/dab > pairs": {
+   "cost": false,
+   "kind": "count",
+   "value": 170
+  },
+  "kernels > large: dab/dab > share %": {
+   "cost": false,
+   "kind": "ratio",
+   "spread": 0.015167907425745142,
+   "value": 39.30219829979177
+  },
+  "kernels > large: dab/dab > skipped": {
+   "cost": true,
+   "kind": "count",
+   "value": 0
+  },
+  "kernels > large: dab/dab > workgroups": {
+   "cost": true,
+   "kind": "count",
+   "value": 10880
+  },
+  "kernels > large: filler/k2 > GPU usec": {
+   "cost": true,
+   "kind": "time",
+   "spread": 0.0,
+   "value": 3.0
+  },
+  "kernels > large: filler/k2 > dispatches": {
+   "cost": true,
+   "kind": "count",
+   "value": 1
+  },
+  "kernels > large: filler/k2 > pairs": {
+   "cost": false,
+   "kind": "count",
+   "value": 1
+  },
+  "kernels > large: filler/k2 > share %": {
+   "cost": false,
+   "kind": "ratio",
+   "spread": 0.004100590771758943,
+   "value": 0.08681467135512483
+  },
+  "kernels > large: filler/k2 > skipped": {
+   "cost": true,
+   "kind": "count",
+   "value": 0
+  },
+  "kernels > large: filler/k2 > workgroups": {
+   "cost": true,
+   "kind": "count",
+   "value": 4
+  },
+  "kernels > large: filler/k3 > GPU usec": {
+   "cost": true,
+   "kind": "time",
+   "spread": 0.0,
+   "value": 4.0
+  },
+  "kernels > large: filler/k3 > dispatches": {
+   "cost": true,
+   "kind": "count",
+   "value": 1
+  },
+  "kernels > large: filler/k3 > pairs": {
+   "cost": false,
+   "kind": "count",
+   "value": 1
+  },
+  "kernels > large: filler/k3 > share %": {
+   "cost": false,
+   "kind": "ratio",
+   "spread": 0.0054674543623452615,
+   "value": 0.11575289514016643
+  },
+  "kernels > large: filler/k3 > skipped": {
+   "cost": true,
+   "kind": "count",
+   "value": 0
+  },
+  "kernels > large: filler/k3 > workgroups": {
+   "cost": true,
+   "kind": "count",
+   "value": 4
+  },
+  "kernels > large: filler/k4 > GPU usec": {
+   "cost": true,
+   "kind": "time",
+   "spread": 0.0,
+   "value": 5.0
+  },
+  "kernels > large: filler/k4 > dispatches": {
+   "cost": true,
+   "kind": "count",
+   "value": 1
+  },
+  "kernels > large: filler/k4 > pairs": {
+   "cost": false,
+   "kind": "count",
+   "value": 1
+  },
+  "kernels > large: filler/k4 > share %": {
+   "cost": false,
+   "kind": "ratio",
+   "spread": 0.006834317952931587,
+   "value": 0.14469111892520803
+  },
+  "kernels > large: filler/k4 > skipped": {
+   "cost": true,
+   "kind": "count",
+   "value": 0
+  },
+  "kernels > large: filler/k4 > workgroups": {
+   "cost": true,
+   "kind": "count",
+   "value": 4
+  },
+  "kernels > large: filler/k5 > GPU usec": {
+   "cost": true,
+   "kind": "time",
+   "spread": 0.0,
+   "value": 6.0
+  },
+  "kernels > large: filler/k5 > dispatches": {
+   "cost": true,
+   "kind": "count",
+   "value": 1
+  },
+  "kernels > large: filler/k5 > pairs": {
+   "cost": false,
+   "kind": "count",
+   "value": 1
+  },
+  "kernels > large: filler/k5 > share %": {
+   "cost": false,
+   "kind": "ratio",
+   "spread": 0.008201181543517885,
+   "value": 0.17362934271024966
+  },
+  "kernels > large: filler/k5 > skipped": {
+   "cost": true,
+   "kind": "count",
+   "value": 0
+  },
+  "kernels > large: filler/k5 > workgroups": {
+   "cost": true,
+   "kind": "count",
+   "value": 4
+  },
+  "kernels > large: filler/k6 > GPU usec": {
+   "cost": true,
+   "kind": "time",
+   "spread": 0.0,
+   "value": 7.0
+  },
+  "kernels > large: filler/k6 > dispatches": {
+   "cost": true,
+   "kind": "count",
+   "value": 1
+  },
+  "kernels > large: filler/k6 > pairs": {
+   "cost": false,
+   "kind": "count",
+   "value": 1
+  },
+  "kernels > large: filler/k6 > share %": {
+   "cost": false,
+   "kind": "ratio",
+   "spread": 0.009568045134104211,
+   "value": 0.20256756649529123
+  },
+  "kernels > large: filler/k6 > skipped": {
+   "cost": true,
+   "kind": "count",
+   "value": 1
+  },
+  "kernels > large: filler/k6 > workgroups": {
+   "cost": true,
+   "kind": "count",
+   "value": 4
+  },
+  "kernels > large: thumbnail/thumb_chunk > GPU usec": {
+   "cost": true,
+   "kind": "time",
+   "spread": 4.761499999999998,
+   "value": 99.9935
+  },
+  "kernels > large: thumbnail/thumb_chunk > dispatches": {
+   "cost": true,
+   "kind": "count",
+   "value": 172
+  },
+  "kernels > large: thumbnail/thumb_chunk > pairs": {
+   "cost": false,
+   "kind": "count",
+   "value": 6
+  },
+  "kernels > large: thumbnail/thumb_chunk > share %": {
+   "cost": false,
+   "kind": "ratio",
+   "spread": 0.0011118781071828288,
+   "value": 2.887125959062981
+  },
+  "kernels > large: thumbnail/thumb_chunk > skipped": {
+   "cost": true,
+   "kind": "count",
+   "value": 0
+  },
+  "kernels > large: thumbnail/thumb_chunk > workgroups": {
+   "cost": true,
+   "kind": "count",
+   "value": 2064
+  },
+  "kernels > large: thumbnail/thumb_clear > GPU usec": {
+   "cost": true,
+   "kind": "time",
+   "spread": 1.5360000000000014,
+   "value": 32.256
+  },
+  "kernels > large: thumbnail/thumb_clear > dispatches": {
+   "cost": true,
+   "kind": "count",
+   "value": 6
+  },
+  "kernels > large: thumbnail/thumb_clear > pairs": {
+   "cost": false,
+   "kind": "count",
+   "value": 6
+  },
+  "kernels > large: thumbnail/thumb_clear > share %": {
+   "cost": false,
+   "kind": "ratio",
+   "spread": 0.00035955975587170785,
+   "value": 0.9313318439351614
+  },
+  "kernels > large: thumbnail/thumb_clear > skipped": {
+   "cost": true,
+   "kind": "count",
+   "value": 0
+  },
+  "kernels > large: thumbnail/thumb_clear > workgroups": {
+   "cost": true,
+   "kind": "count",
+   "value": 72
+  },
+  "kernels > small: clear/clear_chunk > GPU usec": {
+   "cost": true,
+   "kind": "time",
+   "spread": 9.165999999999997,
+   "value": 192.494
+  },
+  "kernels > small: clear/clear_chunk > dispatches": {
+   "cost": true,
+   "kind": "count",
+   "value": 90
+  },
+  "kernels > small: clear/clear_chunk > pairs": {
+   "cost": false,
+   "kind": "count",
+   "value": 68
+  },
+  "kernels > small: clear/clear_chunk > share %": {
+   "cost": false,
+   "kind": "ratio",
+   "spread": 1.7929454337206607e-05,
+   "value": 16.80993483014779
+  },
+  "kernels > small: clear/clear_chunk > skipped": {
+   "cost": true,
+   "kind": "count",
+   "value": 0
+  },
+  "kernels > small: clear/clear_chunk > workgroups": {
+   "cost": true,
+   "kind": "count",
+   "value": 10956
+  },
+  "kernels > small: composite/composite > GPU usec": {
+   "cost": true,
+   "kind": "time",
+   "spread": 21.6575,
+   "value": 454.80949999999996
+  },
+  "kernels > small: composite/composite > dispatches": {
+   "cost": true,
+   "kind": "count",
+   "value": 144
+  },
+  "kernels > small: composite/composite > pairs": {
+   "cost": false,
+   "kind": "count",
+   "value": 117
+  },
+  "kernels > small: composite/composite > share %": {
+   "cost": false,
+   "kind": "ratio",
+   "spread": 2.80822631388844e-05,
+   "value": 39.71717253224995
+  },
+  "kernels > small: composite/composite > skipped": {
+   "cost": true,
+   "kind": "count",
+   "value": 0
+  },
+  "kernels > small: composite/composite > workgroups": {
+   "cost": true,
+   "kind": "count",
+   "value": 25650
+  },
+  "kernels > small: dab/dab > GPU usec": {
+   "cost": true,
+   "kind": "time",
+   "spread": 21.605999999999995,
+   "value": 453.734
+  },
+  "kernels > small: dab/dab > dispatches": {
+   "cost": true,
+   "kind": "count",
+   "value": 127
+  },
+  "kernels > small: dab/dab > pairs": {
+   "cost": false,
+   "kind": "count",
+   "value": 85
+  },
+  "kernels > small: dab/dab > share %": {
+   "cost": false,
+   "kind": "ratio",
+   "spread": 2.988853857743834e-06,
+   "value": 39.62325348033005
+  },
+  "kernels > small: dab/dab > skipped": {
+   "cost": true,
+   "kind": "count",
+   "value": 0
+  },
+  "kernels > small: dab/dab > workgroups": {
+   "cost": true,
+   "kind": "count",
+   "value": 5440
+  },
+  "kernels > small: thumbnail/thumb_chunk > GPU usec": {
+   "cost": true,
+   "kind": "time",
+   "spread": 1.5869999999999997,
+   "value": 33.331
+  },
+  "kernels > small: thumbnail/thumb_chunk > dispatches": {
+   "cost": true,
+   "kind": "count",
+   "value": 86
+  },
+  "kernels > small: thumbnail/thumb_chunk > pairs": {
+   "cost": false,
+   "kind": "count",
+   "value": 3
+  },
+  "kernels > small: thumbnail/thumb_chunk > share %": {
+   "cost": false,
+   "kind": "ratio",
+   "spread": 1.4002609109109443e-05,
+   "value": 2.910698711219711
+  },
+  "kernels > small: thumbnail/thumb_chunk > skipped": {
+   "cost": true,
+   "kind": "count",
+   "value": 0
+  },
+  "kernels > small: thumbnail/thumb_chunk > workgroups": {
+   "cost": true,
+   "kind": "count",
+   "value": 1032
+  },
+  "kernels > small: thumbnail/thumb_clear > GPU usec": {
+   "cost": true,
+   "kind": "time",
+   "spread": 0.5119999999999996,
+   "value": 10.751999999999999
+  },
+  "kernels > small: thumbnail/thumb_clear > dispatches": {
+   "cost": true,
+   "kind": "count",
+   "value": 3
+  },
+  "kernels > small: thumbnail/thumb_clear > pairs": {
+   "cost": false,
+   "kind": "count",
+   "value": 3
+  },
+  "kernels > small: thumbnail/thumb_clear > share %": {
+   "cost": false,
+   "kind": "ratio",
+   "spread": 8.609464464126582e-07,
+   "value": 0.9389404460525175
+  },
+  "kernels > small: thumbnail/thumb_clear > skipped": {
+   "cost": true,
+   "kind": "count",
+   "value": 0
+  },
+  "kernels > small: thumbnail/thumb_clear > workgroups": {
+   "cost": true,
+   "kind": "count",
+   "value": 36
+  },
+  "vram > boot > chunks": {
+   "cost": false,
+   "kind": "count",
+   "value": 46
+  },
+  "vram > boot > device buffers bytes": {
+   "cost": true,
+   "kind": "count",
+   "value": 7764608
+  },
+  "vram > boot > device textures bytes": {
+   "cost": true,
+   "kind": "count",
+   "value": 57819648
+  },
+  "vram > boot > device total bytes": {
+   "cost": true,
+   "kind": "count",
+   "value": 97833728
+  },
+  "vram > boot > history bytes": {
+   "cost": true,
+   "kind": "count",
+   "value": 0
+  },
+  "vram > boot > sara buffers bytes": {
+   "cost": true,
+   "kind": "count",
+   "value": 2124
+  },
+  "vram > boot > sara textures bytes": {
+   "cost": true,
+   "kind": "count",
+   "value": 41239576
+  },
+  "vram > boot > unaccounted textures bytes": {
+   "cost": true,
+   "kind": "count",
+   "value": 16580072
+  },
+  "vram > large > chunks": {
+   "cost": false,
+   "kind": "count",
+   "value": 46
+  },
+  "vram > large > device buffers bytes": {
+   "cost": true,
+   "kind": "count",
+   "value": 7764608
+  },
+  "vram > large > device textures bytes": {
+   "cost": true,
+   "kind": "count",
+   "value": 57819648
+  },
+  "vram > large > device total bytes": {
+   "cost": true,
+   "kind": "count",
+   "value": 97833728
+  },
+  "vram > large > history bytes": {
+   "cost": true,
+   "high": 4096,
+   "kind": "count",
+   "low": 0
+  },
+  "vram > large > sara buffers bytes": {
+   "cost": true,
+   "kind": "count",
+   "value": 2124
+  },
+  "vram > large > sara textures bytes": {
+   "cost": true,
+   "kind": "count",
+   "value": 41239576
+  },
+  "vram > large > unaccounted textures bytes": {
+   "cost": true,
+   "kind": "count",
+   "value": 16580072
+  },
+  "vram > small > chunks": {
+   "cost": false,
+   "kind": "count",
+   "value": 46
+  },
+  "vram > small > device buffers bytes": {
+   "cost": true,
+   "kind": "count",
+   "value": 7764608
+  },
+  "vram > small > device textures bytes": {
+   "cost": true,
+   "kind": "count",
+   "value": 57819648
+  },
+  "vram > small > device total bytes": {
+   "cost": true,
+   "kind": "count",
+   "value": 97833728
+  },
+  "vram > small > history bytes": {
+   "cost": true,
+   "kind": "count",
+   "value": 0
+  },
+  "vram > small > sara buffers bytes": {
+   "cost": true,
+   "kind": "count",
+   "value": 2124
+  },
+  "vram > small > sara textures bytes": {
+   "cost": true,
+   "kind": "count",
+   "value": 41239576
+  },
+  "vram > small > unaccounted textures bytes": {
+   "cost": true,
+   "kind": "count",
+   "value": 16580072
+  },
+  "windows > large > commit GPU usec": {
+   "cost": true,
+   "kind": "time",
+   "spread": 4.608000000000004,
+   "value": 96.768
+  },
+  "windows > large > composite CPU usec": {
+   "cost": true,
+   "kind": "time",
+   "spread": 1359.0,
+   "value": 28548.0
+  },
+  "windows > large > composite GPU usec": {
+   "cost": true,
+   "kind": "time",
+   "spread": 45.07650000000001,
+   "value": 946.6125
+  },
+  "windows > large > copies": {
+   "cost": true,
+   "kind": "count",
+   "value": 0
+  },
+  "windows > large > dabs": {
+   "cost": false,
+   "kind": "count",
+   "value": 170
+  },
+  "windows > large > dabs per frame max": {
+   "cost": false,
+   "kind": "count",
+   "value": 4
+  },
+  "windows > large > dirty texels": {
+   "cost": false,
+   "kind": "count",
+   "value": 2188800
+  },
+  "windows > large > dispatches": {
+   "cost": true,
+   "kind": "count",
+   "value": 907
+  },
+  "windows > large > dispatches / dab": {
+   "cost": false,
+   "kind": "ratio",
+   "spread": 0.0,
+   "value": 5.3352941176470585
+  },
+  "windows > large > frame gap max usec": {
+   "cost": true,
+   "kind": "time",
+   "untimed": true
+  },
+  "windows > large > frames drawn": {
+   "cost": false,
+   "kind": "count",
+   "value": 34
+  },
+  "windows > large > input to dispatch max usec": {
+   "cost": true,
+   "kind": "time",
+   "spread": 4875.0,
+   "value": 102379.0
+  },
+  "windows > large > input to dispatch mean usec": {
+   "cost": true,
+   "kind": "time",
+   "spread": 127.5,
+   "value": 2672.5
+  },
+  "windows > large > input to post draw max usec": {
+   "cost": true,
+   "kind": "time",
+   "spread": 5877.0,
+   "value": 123418.0
+  },
+  "windows > large > input to post draw mean usec": {
+   "cost": true,
+   "kind": "time",
+   "spread": 2372.5,
+   "value": 49829.5
+  },
+  "windows > large > lists": {
+   "cost": true,
+   "kind": "count",
+   "value": 552
+  },
+  "windows > large > lists / dispatches": {
+   "cost": false,
+   "kind": "ratio",
+   "spread": 0.0,
+   "value": 0.6085997794928335
+  },
+  "windows > large > motions per frame max": {
+   "cost": false,
+   "kind": "count",
+   "value": 1
+  },
+  "windows > large > process usec max": {
+   "cost": true,
+   "kind": "time",
+   "spread": 24932.0,
+   "value": 523569.0
+  },
+  "windows > large > skipped pairs": {
+   "cost": true,
+   "kind": "count",
+   "value": 0
+  },
+  "windows > large > targets / dab": {
+   "cost": false,
+   "kind": "ratio",
+   "spread": 0.0,
+   "value": 1.7647058823529411
+  },
+  "windows > large > uniform sets": {
+   "cost": true,
+   "high": 254,
+   "kind": "count",
+   "low": 252
+  },
+  "windows > large > uniform sets / dispatches": {
+   "cost": false,
+   "kind": "ratio",
+   "spread": 0.0011025358324145418,
+   "value": 0.278941565600882
+  },
+  "windows > large > window usec": {
+   "cost": true,
+   "kind": "time",
+   "spread": 0.0,
+   "value": 654000.0
+  },
+  "windows > large > workgroups": {
+   "cost": true,
+   "kind": "count",
+   "value": 86228
+  },
+  "windows > small > commit GPU usec": {
+   "cost": true,
+   "kind": "time",
+   "spread": 3.0720000000000027,
+   "value": 64.512
+  },
+  "windows > small > composite CPU usec": {
+   "cost": true,
+   "kind": "time",
+   "spread": 906.0,
+   "value": 19032.0
+  },
+  "windows > small > composite GPU usec": {
+   "cost": true,
+   "kind": "time",
+   "spread": 30.050999999999988,
+   "value": 631.075
+  },
+  "windows > small > copies": {
+   "cost": true,
+   "kind": "count",
+   "value": 0
+  },
+  "windows > small > dabs": {
+   "cost": false,
+   "kind": "count",
+   "value": 85
+  },
+  "windows > small > dabs per frame max": {
+   "cost": false,
+   "kind": "count",
+   "value": 4
+  },
+  "windows > small > dirty texels": {
+   "cost": false,
+   "kind": "count",
+   "value": 547200
+  },
+  "windows > small > dispatches": {
+   "cost": true,
+   "kind": "count",
+   "value": 450
+  },
+  "windows > small > dispatches / dab": {
+   "cost": false,
+   "kind": "ratio",
+   "spread": 0.0,
+   "value": 5.294117647058823
+  },
+  "windows > small > frame gap max usec": {
+   "cost": true,
+   "kind": "time",
+   "untimed": true
+  },
+  "windows > small > frames drawn": {
+   "cost": false,
+   "high": 35,
+   "kind": "count",
+   "low": 34
+  },
+  "windows > small > input to dispatch max usec": {
+   "cost": true,
+   "kind": "time",
+   "spread": 3250.0,
+   "value": 68253.0
+  },
+  "windows > small > input to dispatch mean usec": {
+   "cost": true,
+   "kind": "time",
+   "spread": 84.5,
+   "value": 1781.5
+  },
+  "windows > small > input to post draw max usec": {
+   "cost": true,
+   "kind": "time",
+   "spread": 3918.0,
+   "value": 82279.0
+  },
+  "windows > small > input to post draw mean usec": {
+   "cost": true,
+   "kind": "time",
+   "spread": 1581.5,
+   "value": 33219.5
+  },
+  "windows > small > lists": {
+   "cost": true,
+   "kind": "count",
+   "value": 276
+  },
+  "windows > small > lists / dispatches": {
+   "cost": false,
+   "kind": "ratio",
+   "spread": 0.0,
+   "value": 0.6133333333333333
+  },
+  "windows > small > motions per frame max": {
+   "cost": false,
+   "kind": "count",
+   "value": 1
+  },
+  "windows > small > process usec max": {
+   "cost": true,
+   "kind": "time",
+   "spread": 16621.0,
+   "value": 349046.0
+  },
+  "windows > small > skipped pairs": {
+   "cost": true,
+   "kind": "count",
+   "value": 0
+  },
+  "windows > small > targets / dab": {
+   "cost": false,
+   "kind": "ratio",
+   "spread": 0.0,
+   "value": 1.4941176470588236
+  },
+  "windows > small > uniform sets": {
+   "cost": true,
+   "kind": "count",
+   "value": 126
+  },
+  "windows > small > uniform sets / dispatches": {
+   "cost": false,
+   "kind": "ratio",
+   "spread": 0.0,
+   "value": 0.28
+  },
+  "windows > small > window usec": {
+   "cost": true,
+   "kind": "time",
+   "spread": 0.0,
+   "value": 654000.0
+  },
+  "windows > small > workgroups": {
+   "cost": true,
+   "kind": "count",
+   "value": 43114
+  }
+ },
+ "format": 1,
+ "header": {
+  "api": "vulkan 1.4.351",
+  "build": "030601b",
+  "date": "2026-09-23",
+  "device": "NVIDIA GeForce RTX 3070 Laptop GPU",
+  "runs": 2
+ }
+}

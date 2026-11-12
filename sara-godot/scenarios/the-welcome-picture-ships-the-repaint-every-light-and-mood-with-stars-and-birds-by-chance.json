@@ -1,0 +1,8 @@
+[
+    {"comment": "The Welcome picture ships a repaint, six lights by the sun with the day moods taking turns and the stars and flocks laid over by chance. Run with SARA_WELCOME_ZONE=Europe/Prague, SARA_WELCOME_MONTH=6 and an hour and a roll: at 4.9 with SARA_WELCOME_ROLL=1 the dawn, the sun on the horizon. At 13 the day, with a roll of 0.2 the clear day and a flock over it, 0.6 the hazy and 0.9 the overcast, neither with anything drawn. At 20.85 with 1 the dusk, the sun two degrees up as it sets. At 23 with 0 the night, with the stars at the lowest of their range and the three flocks."},
+    {"wait": 11},
+    {"open": "welcome"},
+    {"wait": 20},
+    {"shot": "0-the-band"},
+    {"state": "0-the-band"}
+]

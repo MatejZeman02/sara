@@ -1,0 +1,21 @@
+[
+  {"comment": "The first noise stroke of a fresh door session and the same stroke laid second, each a Grain Round stroke at a radius of 40 px pressed from 0 to 1 along 400 px, sent by the door's own input route onto a layer of their own. The first once opened at full width, because the noise brush took a pointer it had not seen report a pressure for a mouse. The suite of the same name reads the layer back and measures each stroke's width at its start and its end, and a run under sara_shot.py exports it into a scratch folder."},
+  {"window": [1920, 1080]},
+  {"wait": 45},
+  {"key": "Tab"},
+  {"wait": 15},
+  {"document": "srgb", "size": [800, 500], "background": {"kind": "colour", "color": "#e8dcc4"}},
+  {"wait": 15},
+  {"zoom": 1.0},
+  {"wait": 10},
+  {"layer": {"add": "Strokes"}},
+  {"wait": 5},
+  {"brush": {"preset": "Grain Round", "colour": "#303030", "radius_px": 40}},
+  {"wait": 10},
+  {"stroke": {"space": "document", "points": [{"at": [200.0, 150.0], "pressure": 0.0}, {"at": [225.0, 150.0], "pressure": 0.0625}, {"at": [250.0, 150.0], "pressure": 0.125}, {"at": [275.0, 150.0], "pressure": 0.1875}, {"at": [300.0, 150.0], "pressure": 0.25}, {"at": [325.0, 150.0], "pressure": 0.3125}, {"at": [350.0, 150.0], "pressure": 0.375}, {"at": [375.0, 150.0], "pressure": 0.4375}, {"at": [400.0, 150.0], "pressure": 0.5}, {"at": [425.0, 150.0], "pressure": 0.5625}, {"at": [450.0, 150.0], "pressure": 0.625}, {"at": [475.0, 150.0], "pressure": 0.6875}, {"at": [500.0, 150.0], "pressure": 0.75}, {"at": [525.0, 150.0], "pressure": 0.8125}, {"at": [550.0, 150.0], "pressure": 0.875}, {"at": [575.0, 150.0], "pressure": 0.9375}, {"at": [600.0, 150.0], "pressure": 1.0}]}},
+  {"wait": 15},
+  {"stroke": {"space": "document", "points": [{"at": [200.0, 350.0], "pressure": 0.0}, {"at": [225.0, 350.0], "pressure": 0.0625}, {"at": [250.0, 350.0], "pressure": 0.125}, {"at": [275.0, 350.0], "pressure": 0.1875}, {"at": [300.0, 350.0], "pressure": 0.25}, {"at": [325.0, 350.0], "pressure": 0.3125}, {"at": [350.0, 350.0], "pressure": 0.375}, {"at": [375.0, 350.0], "pressure": 0.4375}, {"at": [400.0, 350.0], "pressure": 0.5}, {"at": [425.0, 350.0], "pressure": 0.5625}, {"at": [450.0, 350.0], "pressure": 0.625}, {"at": [475.0, 350.0], "pressure": 0.6875}, {"at": [500.0, 350.0], "pressure": 0.75}, {"at": [525.0, 350.0], "pressure": 0.8125}, {"at": [550.0, 350.0], "pressure": 0.875}, {"at": [575.0, 350.0], "pressure": 0.9375}, {"at": [600.0, 350.0], "pressure": 1.0}]}},
+  {"wait": 15},
+  {"read_pixels": {"layer": "Strokes", "rect": "canvas", "file": "strokes.npy"}},
+  {"shot": "0-two-strokes"}
+]

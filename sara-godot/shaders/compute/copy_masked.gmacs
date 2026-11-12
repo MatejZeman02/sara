@@ -1,0 +1,30 @@
+# Kernel: copy_masked
+# Copies a rectangle of one chunk into another, with the alpha scaled by the
+# selection mask, so what leaves through the clipboard is exactly what was
+# selected and nothing outside it. The rectangle is the copy's bounds within
+# this chunk, and the kernel stops at its end whatever the workgroup alignment.
+
+kernel copy_masked
+
+image source: readonly
+# The document-wide selection, as in paint.gmacs: a 1 by 1 mask reads as 1.0
+# everywhere through the clamped read (core/api/selection/sa_selection.gd).
+image mask: r32f, readonly
+image destination: writeonly
+params:
+    float offset_x
+    float offset_y
+    float width
+    float height
+
+
+def copy_masked():
+    ivec2 px = ivec2(global_id.xy) + ivec2(int(offset_x), int(offset_y))
+    ivec2 size = image_size(source)
+    if px.x >= size.x or px.y >= size.y:
+        return
+    if px.x >= int(offset_x + width) or px.y >= int(offset_y + height):
+        return
+    vec4 c = source[px]
+    float coverage = mask[min(px * image_size(mask) / image_size(source), image_size(mask) - 1)].r
+    destination[px] = vec4(c.rgb, c.a * coverage)

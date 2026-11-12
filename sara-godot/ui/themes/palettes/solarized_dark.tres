@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="SaPalette" load_steps=2 format=3]
+
+[ext_resource type="Script" uid="uid://dufcweud0h0ju" path="res://ui/themes/sa_palette.gd" id="1_palette"]
+
+[resource]
+script = ExtResource("1_palette")
+display_name = "Solarized Dark"
+bg_primary = Color(0, 0.168627, 0.211765, 1)
+bg_secondary = Color(0.027451, 0.211765, 0.258824, 1)
+bg_slider = Color(0, 0.12549, 0.156863, 1)
+bg_input = Color(0, 0.113725, 0.14902, 1)
+bg_panel = Color(0.0431373, 0.227451, 0.27451, 1)
+bg_sidebar = Color(0.0156863, 0.188235, 0.231373, 1)
+bg_track = Color(0, 0.113725, 0.14902, 1)
+border_primary = Color(0.345098, 0.431373, 0.458824, 1)
+border_secondary = Color(0.262745, 0.360784, 0.388235, 1)
+border_selected = Color(0.576471, 0.631373, 0.631373, 1)
+border_drag = Color(0.709804, 0.537255, 0, 1)
+accent_primary = Color(0.796078, 0.294118, 0.0862745, 1)
+accent_fill = Color(0.709804, 0.537255, 0, 1)
+accent_gauge = Color(0.164706, 0.631373, 0.596078, 1)
+accent_ceiling = Color(0.709804, 0.537255, 0, 1)
+accent_stroke = Color(0.423529, 0.443137, 0.768627, 1)
+text_primary = Color(0.933333, 0.909804, 0.835294, 1)
+text_muted = Color(0.576471, 0.631373, 0.631373, 1)

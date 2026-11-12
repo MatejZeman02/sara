@@ -1,0 +1,42 @@
+[
+  {
+    "comment": "A client locks the cursor, the status line says Mouse locked, a stroke of the door's hand still paints while the lock is held, and after unlock_cursor the word is gone and the verdict counts what the lock dropped."
+  },
+  {
+    "wait": 40
+  },
+  {
+    "shot": "before"
+  },
+  {
+    "lock_cursor": "the probe scenario"
+  },
+  {
+    "wait": 5
+  },
+  {
+    "shot": "locked"
+  },
+  {
+    "stroke": {
+      "from": [420, 300],
+      "to": [700, 320],
+      "pressure": 0.9
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "shot": "locked-and-painted"
+  },
+  {
+    "unlock_cursor": true
+  },
+  {
+    "wait": 5
+  },
+  {
+    "shot": "unlocked"
+  }
+]

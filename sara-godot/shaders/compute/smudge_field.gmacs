@@ -1,0 +1,129 @@
+# Kernel: smudge_field
+#
+# The picture under a smearing tip, carried cell by cell, so a dab lays what stood
+# under each of its texels rather than the one mean colour `smudge_pickup.gmacs`
+# reduces the whole tip to. At a large radius that mean is a grey, so this kernel
+# keeps the picture the mean was taken of, on a lattice of at most sixty-four
+# cells a side.
+#
+# The lattice is fixed to the tip, which is what drags. Cell *k* is the same
+# place under the tip on every dab, so the colour a cell holds is what stood a step
+# back along the stroke, and each dab mixes every cell towards the paint under it
+# now at the pickup rate. `smudge_blur.gmacs` anchors its lattice on the document
+# instead, because a blur must not drag.
+#
+# Alpha carries the load. A cell holds its colour times how much paint it holds,
+# and that load in alpha: kept full where the dab is over paint, decayed by the
+# smear length where it is not, and capping what the dab lays there. The
+# premultiplied pair is also what lets `dab_texel.gmacs` read the lattice
+# bilinearly without a cell over bare canvas pulling its neighbours towards black.
+#
+# The carry's layout is the blur's, so no dab kernel changes: the lattice goes in
+# the carry's rows from 1 down and the frame in texels 2 and 3 of row 0, where
+# `smudge_blur.gmacs` writes them and `sa_smudge_blurred` reads them.
+#
+# It reads the snapshot rather than the layer, for the reason the pickup gives.
+# One dispatch a dab, over a lattice that is small whatever the radius.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel smudge_field
+
+# The stroke's copy of what the pickup reads, at the composite's own format.
+image snapshot: readonly
+# The carry. Row 0 holds the pickup's texels and, at 2 and 3, where the dab
+# finds itself on the lattice. The rows from 1 are the lattice, premultiplied
+# by the load, which this kernel writes and `dab_texel.gmacs` reads.
+image reservoir: rgba32f
+# The lattice's own memory, the cells as this kernel last left them. The
+# carry's rows are what the dab reads, which for a brush in another blend mode
+# is the meeting with the brush's colour that `smudge_mix.gmacs` writes over
+# them, so the next dab reads its cells back from here rather than from there.
+image held: rgba32f
+# Where a mix in the brush's own blend mode is staged, at the carry's own
+# coordinates: the colour each cell starts from in `mix_under`, and in
+# `mix_over` the paint under it with the share that enters the cell in alpha,
+# the composite's two images. Written only while `mixing` is one, and the
+# stand-in is bound otherwise.
+image mix_under: rgba32f
+image mix_over: rgba32f
+params:
+    vec2 corner  # the lattice's first cell, in the snapshot's texels
+    float cell  # a cell's side, in the snapshot's texels
+    float samples  # how many texels a cell's average reads along each axis
+    vec2 count  # the cells of the lattice, along x and y
+    vec2 centre  # the dab's centre on the lattice, in cells
+    float inverse  # cells to one document pixel
+    float pickup  # how much of the paint under a cell enters it
+    float keep  # the smear length: how much of its load a cell keeps
+    float first  # 1 on the stroke's first dab, which starts the cells from the paint under them
+    float mixing  # 1 when the brush's mode mixes the cells, which stages the mix for its composite
+
+# Where the carry's row 0 says where the dab sits on the lattice, after the
+# pickup's two texels and before its load at 4. The same two texels
+# `smudge_blur.gmacs` writes, because the dab reads one layout.
+const int SA_FIELD_FRAME = 2
+const int SA_FIELD_COUNT = 3
+
+# The paint under cell *at*, its colour times its alpha and the alpha beside
+# it. The texels read are spread evenly over the cell, all of them while a cell
+# is at most `samples` across.
+
+
+def sa_field_average(ivec2 at) -> vec4:
+    ivec2 size = image_size(snapshot)
+    int side = int(samples)
+    vec4 total = vec4(0.0)
+    for sy in range(side):
+        for sx in range(side):
+            vec2 offset = floor((vec2(sx, sy) + 0.5) * cell / samples)
+            ivec2 texel = clamp(ivec2(floor(corner + vec2(at) * cell + offset)), ivec2(0), size - 1)
+            vec4 paint = snapshot[texel]
+            total += vec4(paint.rgb * paint.a, paint.a)
+    return total / (side * side)
+
+
+def smudge_field():
+    ivec2 at = ivec2(global_id.xy)
+    ivec2 inner = ivec2(count)
+    if at.x >= inner.x or at.y >= inner.y:
+        return
+
+    vec4 average = sa_field_average(at)
+    # Coverage of paint under the cell, nought to one, so bare canvas moves the
+    # cell by nothing rather than towards black, and the colour is the paint's
+    # own however thin it is.
+    float present = clamp(average.a, 0.0, 1.0)
+    vec3 under = average.a > 0.0 ? average.rgb / average.a : vec3(0.0)
+
+    vec4 kept = held[at]
+    vec3 colour = kept.a > 0.0 ? kept.rgb / kept.a : under
+    float load = kept.a
+    float taken = 0.0
+    if first > 0.5:
+        # The paint under the cell, set rather than mixed: the first dab of a
+        # smear has nothing to drag yet, and the load starts full, the brush
+        # dipped in its own colour, which is the rule the carry's own load
+        # starts by. A cell that found no paint holds black at a full load, and
+        # the dab weighs the whole lattice by the carry's strength, which this
+        # dab leaves at the paint it found, so a first dab over bare canvas
+        # lays the brush's colour as it did before any of this.
+        colour = under
+        load = 1.0
+    else:
+        taken = clamp(pickup, 0.0, 1.0) * present
+        if mixing > 0.5:
+            mix_under[ivec2(at.x, at.y + 1)] = vec4(colour, 1.0)
+        colour = mix(colour, under, taken)
+        # Decayed by the smear length first and restored by the paint present
+        # after, the load's rule in `smudge_pickup.gmacs` read cell by cell.
+        load = mix(load * clamp(keep, 0.0, 1.0), 1.0, present)
+    if mixing > 0.5:
+        if first > 0.5:
+            mix_under[ivec2(at.x, at.y + 1)] = vec4(colour, 1.0)
+        mix_over[ivec2(at.x, at.y + 1)] = vec4(under, taken)
+    held[at] = vec4(colour * load, load)
+    reservoir[ivec2(at.x, at.y + 1)] = vec4(colour * load, load)
+    if at.x == 0 and at.y == 0:
+        reservoir[ivec2(SA_FIELD_FRAME, 0)] = vec4(centre, inverse, 1.0)
+        reservoir[ivec2(SA_FIELD_COUNT, 0)] = vec4(count, 0.0, 0.0)

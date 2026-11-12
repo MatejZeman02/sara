@@ -1,0 +1,13 @@
+# The Python client, one file name of sara-godot/scripts on each line. build.sh
+# puts these beside the binary on both platforms, install.sh installs them,
+# and draft-release.sh packs them into the separate client download, so the
+# three read this one list and cannot drift apart. A module sara.py imports,
+# at its first call or lazily, belongs here, and a suite reads each import.
+sara.py
+sara_notebook.py
+sara_array.py
+sara_live.py
+sara_params.py
+sara_documents.py
+sara_measure.py
+sara_start.py

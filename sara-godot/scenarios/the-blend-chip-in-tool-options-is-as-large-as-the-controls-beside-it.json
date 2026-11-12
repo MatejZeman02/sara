@@ -1,0 +1,11 @@
+[
+  {"comment": "The blend chip on the Tool Options bar is drawn at the size of the bar's other drop-downs, and the bar still fits a 1920 pixel wide window at UI scale 1. The bar is shot and dumped in the Default layout with the brush in hand."},
+  {"wait": 45},
+  {"window": [1920, 1080]},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 25},
+  {"layout_preset": {"load": "default"}},
+  {"wait": 25},
+  {"shot": "01-the-bar-at-1920-by-1080"},
+  {"state": "01-the-bar-at-1920-by-1080"}
+]

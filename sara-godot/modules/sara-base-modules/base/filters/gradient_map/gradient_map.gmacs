@@ -1,0 +1,130 @@
+# Kernels: gradient_map
+# The gradient map of the Filter menu. A point kernel under the SaPointPass
+# contract: the colour field at binding 0, the selection mask at binding 1, a
+# buffer at binding 2, the dispatched region's origin in the push constant.
+#
+# A texel's lightness, Oklab L read in the document's own space, picks a colour
+# from a ramp: black takes the first colour, white the last. The ramp arrives as
+# a table of `samples` evenly spaced Oklab colours with alpha, written by
+# gradient_map_filter.gd from the painter's SaColorRamp with the first sample on
+# the first stop and the last on the last, so no table texel sits half a sample
+# in. The kernel reads it linearly between two neighbours.
+#
+# The ramp's alpha is how much of the map applies at that lightness, so a stop
+# at alpha zero leaves the picture as it was. It never touches the texel's own
+# alpha: a map recolours a layer and does not erase it. The amount scales the
+# whole map, mixed over the original in the document's own values, so an amount
+# of nothing is the picture exactly.
+#
+# Nothing clamps (hard rule 5) but the lightness that picks the colour: above
+# white or below black reads the last or first colour. A colour past the
+# spectral locus is desaturated by sa_positive_oklab before its L is read, which
+# keeps a negative channel from reaching the cube root, and a texel whose L is
+# not a number reads the first colour.
+#
+# The helpers are adjust.gmacs's, repeated because a .gmacs block cannot be
+# shared between files without sharing the push constant that names it.
+
+kernel gradient_map
+
+import linear_srgb_color_space
+import positive_channels
+import transfer_curve
+
+image canvas
+# The document-wide selection, as in adjust.gmacs: a 1 by 1 mask reads as 1.0
+# everywhere through the clamped read (core/api/selection/sa_selection.gd).
+image mask: r32f, readonly
+# The ramp, four floats a sample: Oklab L, a and b, then alpha. `samples` of
+#   them, from the ramp's start to its end.
+buffer ramp_table: float entries[]
+
+# 112 bytes: the amount, the region's origin, how many samples the table holds,
+# then the colour space tail exactly as SaColorSpacePushConstant writes it.
+params:
+    float amount  # how much of the map applies, 0 to 1
+    float origin_x  # the dispatched region's origin in the chunk, in pixels
+    float origin_y  # zero for the destructive pass, which covers the chunk
+    float samples  # how many colours the table holds, as a float
+    float doc_to_linear_srgb[9]
+    float linear_srgb_to_doc[9]
+    float transfer_slope
+    float transfer_threshold
+    float transfer_gain
+    float transfer_exponent
+    float coordinates
+
+
+def to_linear_srgb_matrix() -> mat3:
+    return mat3(
+        doc_to_linear_srgb[0], doc_to_linear_srgb[1], doc_to_linear_srgb[2],
+        doc_to_linear_srgb[3], doc_to_linear_srgb[4], doc_to_linear_srgb[5],
+        doc_to_linear_srgb[6], doc_to_linear_srgb[7], doc_to_linear_srgb[8])
+
+
+def from_linear_srgb_matrix() -> mat3:
+    return mat3(
+        linear_srgb_to_doc[0], linear_srgb_to_doc[1], linear_srgb_to_doc[2],
+        linear_srgb_to_doc[3], linear_srgb_to_doc[4], linear_srgb_to_doc[5],
+        linear_srgb_to_doc[6], linear_srgb_to_doc[7], linear_srgb_to_doc[8])
+
+
+def document_to_linear(vec3 c) -> vec3:
+    return sa_transfer_decode(c, transfer_slope, transfer_threshold, transfer_gain, transfer_exponent)
+
+
+def linear_to_document(vec3 c) -> vec3:
+    return sa_transfer_encode(c, transfer_slope, transfer_threshold, transfer_gain, transfer_exponent)
+
+const int SA_COORDS_OKLAB = 1
+
+
+def document_is_oklab() -> bool: return int(coordinates + 0.5) == SA_COORDS_OKLAB
+
+
+def document_to_oklab(vec3 c) -> vec3:
+    if document_is_oklab(): return c
+    return linear_srgb_to_oklab(to_linear_srgb_matrix() * document_to_linear(c))
+
+
+def oklab_to_document(vec3 c) -> vec3:
+    if document_is_oklab(): return c
+    return linear_to_document(from_linear_srgb_matrix() * oklab_to_linear_srgb(c))
+
+
+def coverage_at(ivec2 px) -> float:
+    return mask[min(px, image_size(mask) - 1)].r
+
+# The table's sample *i*: Oklab L, a and b in the first three, alpha in the
+#   fourth.
+
+
+def ramp_at(int i) -> vec4:
+    int base = i * 4
+    return vec4(
+        ramp_table.entries[base], ramp_table.entries[base + 1],
+        ramp_table.entries[base + 2], ramp_table.entries[base + 3])
+
+# The ramp read at lightness *t*, 0 to 1, between the two samples either side.
+
+
+def ramp_colour(float t) -> vec4:
+    int count = max(int(samples + 0.5), 1)
+    float at = t * (count - 1)
+    int below = clamp(int(floor(at)), 0, count - 1)
+    int above = min(below + 1, count - 1)
+    return mix(ramp_at(below), ramp_at(above), at - below)
+
+
+def gradient_map():
+    ivec2 px = ivec2(global_id.xy) + ivec2(int(origin_x), int(origin_y))
+    ivec2 size = image_size(canvas)
+    if px.x >= size.x or px.y >= size.y:
+        return
+    vec4 c = canvas[px]
+    float lightness = sa_positive_oklab(document_to_oklab(c.rgb)).x
+    float t = lightness >= 0.0 ? min(lightness, 1.0) : 0.0
+    vec4 picked = ramp_colour(t)
+    vec3 mapped = oklab_to_document(picked.rgb)
+    float share = clamp(amount, 0.0, 1.0) * clamp(picked.a, 0.0, 1.0) * coverage_at(px)
+    canvas[px] = vec4(mix(c.rgb, mapped, share), c.a)

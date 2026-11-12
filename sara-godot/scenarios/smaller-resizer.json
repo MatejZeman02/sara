@@ -1,0 +1,13 @@
+[
+  {"wait": 30},
+  {"docker": {"id": "LayersDocker", "at": [620, 180], "size": [200, 212]}},
+  {"wait": 20},
+  {"state": "01-at-minimum-size"},
+  {"shot": "01-at-minimum-size"},
+
+  {"press": {"button": "left", "at": [803, 360]}},
+  {"release": {"button": "left", "at": [803, 360]}},
+  {"wait": 15},
+  {"state": "02-more-button-pressed"},
+  {"shot": "02-more-button-pressed"}
+]

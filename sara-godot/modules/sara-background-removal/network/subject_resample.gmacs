@@ -1,0 +1,56 @@
+# Kernel: subject_resample
+#
+# U²-NetP's `_upsample_like`, `F.upsample(src, size, mode='bilinear')` with the
+# corners unaligned, PyTorch's default: an output texel's centre maps to
+# (x + 0.5) times the input's size over the output's, less 0.5, held at 0 from
+# below, and the two texels either side of it are mixed by the fraction, the
+# second clamped to the last row or column. The scale is the input's size over
+# the output's, as PyTorch takes it when a size is given. The output may start
+# at a channel of a larger tensor, which is how the side outputs land in the
+# six channels the fusing 1×1 reads. Tensors are laid out as
+# `subject_convolve` says.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel subject_resample
+
+buffer source: float values[]
+buffer target: float values[]
+
+params:
+    int source_at
+    int target_at
+    int channels
+    int source_height
+    int source_width
+    int target_height
+    int target_width
+
+
+def along(int index, int source_size, int target_size) -> vec2:
+    """The first texel an output texel reads along one axis, and the fraction
+    of the next one it mixes in, in PyTorch's own arithmetic, float32 through."""
+    float scale = float(source_size) / float(target_size)
+    float real = max(scale * (index + 0.5) - 0.5, 0.0)
+    int low = int(real)
+    return vec2(low, real - low)
+
+
+@workgroup_size(64, 1)
+def subject_resample():
+    int at = int(global_id.x)
+    int channel = int(global_id.y)
+    if at >= target_height * target_width or channel >= channels:
+        return
+    int y = at / target_width
+    int x = at - y * target_width
+    vec2 row = along(y, source_height, target_height)
+    vec2 column = along(x, source_width, target_width)
+    int y0 = int(row.x)
+    int x0 = int(column.x)
+    int y1 = y0 < source_height - 1 ? y0 + 1 : y0
+    int x1 = x0 < source_width - 1 ? x0 + 1 : x0
+    int base = source_at + channel * source_height * source_width
+    float top = (1.0 - column.y) * source.values[base + y0 * source_width + x0] + column.y * source.values[base + y0 * source_width + x1]
+    float bottom = (1.0 - column.y) * source.values[base + y1 * source_width + x0] + column.y * source.values[base + y1 * source_width + x1]
+    target.values[target_at + channel * target_height * target_width + at] = (1.0 - row.y) * top + row.y * bottom

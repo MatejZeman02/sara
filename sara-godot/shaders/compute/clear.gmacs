@@ -1,0 +1,24 @@
+# Clears part of one output chunk without touching the rest of the canvas.
+
+kernel clear_chunk
+image target
+
+params:
+    vec2 offset
+    # The part of the chunk to clear, in chunk-local pixels. This has to be the
+    # *same* rectangle every composite pass of the frame uses. Clearing less than
+    # they write blends the difference over last frame's result, and clearing more
+    # blanks pixels nothing is going to redraw.
+    vec2 region_origin
+    vec2 region_size
+    vec2 pad
+
+
+def clear_chunk():
+    ivec2 local = ivec2(global_id.xy)
+    if local.x >= int(region_size.x) or local.y >= int(region_size.y):
+        return
+    ivec2 pixel = local + ivec2(region_origin) + ivec2(offset)
+    if pixel.x >= image_size(target).x or pixel.y >= image_size(target).y:
+        return
+    target[pixel] = vec4(0.0)

@@ -1,0 +1,26 @@
+[
+  {"wait": 40},
+  {"stroke": {"from": [500, 400], "to": [800, 600], "pressure": 0.8, "steps": 24}},
+  {"wait": 5},
+  {"move": [600, 600]},
+  {"wait": 5},
+  {"state": "0-after-a-stroke"},
+
+  {"move": {"control": "ForegroundSwatch"}},
+  {"wait": 90},
+  {"tooltip": {"report": true}},
+  {"state": "1-the-docker-entered-without-a-click"},
+  {"shot": "1-the-docker-entered-without-a-click"},
+
+  {"move": [600, 600]},
+  {"wait": 10},
+  {"tooltip": {"report": true}},
+  {"state": "2-the-canvas-takes-the-focus-back"},
+  {"shot": "2-the-canvas-takes-the-focus-back"},
+
+  {"move": {"control": "ResetButton"}},
+  {"wait": 90},
+  {"tooltip": {"report": true}},
+  {"state": "3-and-the-docker-entered-again"},
+  {"shot": "3-and-the-docker-entered-again"}
+]

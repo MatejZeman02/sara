@@ -1,0 +1,755 @@
+[
+ {
+  "wait": 40
+ },
+ {
+  "prefs": {
+   "ui_scale": 1.0,
+   "show_relief": true,
+   "relief_light_angle": 315.0,
+   "relief_strength": 4.0,
+   "tonemap_highlights": false
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "layout_preset": {
+   "load": "minimalistic"
+  }
+ },
+ {
+  "wait": 25
+ },
+ {
+  "document": "srgb",
+  "size": [
+   1280,
+   1280
+  ]
+ },
+ {
+  "wait": 12
+ },
+ {
+  "fill": [
+   0.86,
+   0.8,
+   0.68
+  ]
+ },
+ {
+  "wait": 10
+ },
+ {
+  "layer": {
+   "add": "Bump",
+   "fill": [
+    0.72,
+    0.5,
+    0.3,
+    1.0
+   ],
+   "chunks": [
+    [
+     2,
+     1
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     3
+    ]
+   ]
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "layer_action": "raise_paint:2.0"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "layer": {
+   "add": "Level"
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "colour": [
+   0.3,
+   0.5,
+   0.72
+  ]
+ },
+ {
+  "tool": {
+   "id": "noise_brush",
+   "options": {
+    "radius": 0.04,
+    "hardness": 0.8,
+    "opacity": 1.0,
+    "strength": 0.0,
+    "thickness": 1.0,
+    "texture_field": "grain",
+    "texture_channels": 2,
+    "texture_relief": 0.0
+   }
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "stroke": {
+   "space": "document",
+   "from": [
+    300,
+    640
+   ],
+   "to": [
+    980,
+    640
+   ],
+   "pressure": 1.0,
+   "steps": 40
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "height_span": -0.1
+ },
+ {
+  "texel": [
+   [
+    640,
+    640
+   ],
+   [
+    400,
+    640
+   ],
+   [
+    640,
+    384
+   ]
+  ]
+ },
+ {
+  "layer": {
+   "activate": "Bump"
+  }
+ },
+ {
+  "texel": [
+   [
+    640,
+    640
+   ],
+   [
+    400,
+    640
+   ],
+   [
+    640,
+    384
+   ]
+  ]
+ },
+ {
+  "layer": {
+   "activate": "Level"
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "shot": "0-a-stroke-below-the-bump-lowers-the-surface"
+ },
+ {
+  "state": "0-a-stroke-below-the-bump-lowers-the-surface"
+ },
+ {
+  "layer": {
+   "of": "Level",
+   "visible": false
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "shot": "1-hiding-the-stroke-gives-the-bump-back"
+ },
+ {
+  "state": "1-hiding-the-stroke-gives-the-bump-back"
+ },
+ {
+  "layer": {
+   "of": "Level",
+   "visible": true
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "stroke": {
+   "space": "document",
+   "points": [
+    {
+     "at": [
+      120,
+      1000
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      145.0,
+      1000.0
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      170.0,
+      1000.0
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      195.0,
+      1000.0
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      220.0,
+      1000.0
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      245.0,
+      1000.0
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      270.0,
+      1000.0
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      295.0,
+      1000.0
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      320.0,
+      1000.0
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      345.0,
+      1000.0
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      370.0,
+      1000.0
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      395.0,
+      1000.0
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      420.0,
+      1000.0
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      420.0,
+      1012.5
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      420.0,
+      1025.0
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      420.0,
+      1037.5
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      420.0,
+      1050.0
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      420.0,
+      1062.5
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      420.0,
+      1075.0
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      420.0,
+      1087.5
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      420.0,
+      1100.0
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      420.0,
+      1112.5
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      420.0,
+      1125.0
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      420.0,
+      1137.5
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      420.0,
+      1150.0
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      405.8,
+      1150.0
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      391.7,
+      1150.0
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      377.5,
+      1150.0
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      363.3,
+      1150.0
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      349.2,
+      1150.0
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      335.0,
+      1150.0
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      320.8,
+      1150.0
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      306.7,
+      1150.0
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      292.5,
+      1150.0
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      278.3,
+      1150.0
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      264.2,
+      1150.0
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      250.0,
+      1150.0
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      250.0,
+      1125.8
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      250.0,
+      1101.7
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      250.0,
+      1077.5
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      250.0,
+      1053.3
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      250.0,
+      1029.2
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      250.0,
+      1005.0
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      250.0,
+      980.8
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      250.0,
+      956.7
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      250.0,
+      932.5
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      250.0,
+      908.3
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      250.0,
+      884.2
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      250.0,
+      860.0
+     ],
+     "pressure": 1.0
+    }
+   ]
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "height_span": 0.4
+ },
+ {
+  "texel": [
+   [
+    250,
+    1000
+   ],
+   [
+    350,
+    1000
+   ],
+   [
+    250,
+    920
+   ]
+  ]
+ },
+ {
+  "shot": "2-a-stroke-crossing-itself-stands-no-higher-at-the-crossing"
+ },
+ {
+  "state": "2-a-stroke-crossing-itself-stands-no-higher-at-the-crossing"
+ },
+ {
+  "document": "srgb",
+  "size": [
+   1280,
+   1280
+  ]
+ },
+ {
+  "wait": 12
+ },
+ {
+  "layer": {
+   "add": "Paper",
+   "type": "paper"
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "layer": {
+   "activate": "Layer 1"
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "colour": [
+   0.12,
+   0.3,
+   0.62
+  ]
+ },
+ {
+  "tool": {
+   "id": "noise_brush",
+   "options": {
+    "radius": 0.06,
+    "hardness": 0.8,
+    "opacity": 1.0,
+    "strength": 0.0,
+    "thickness": 2.0,
+    "texture_field": "grain",
+    "texture_channels": 2,
+    "texture_relief": 0.0
+   }
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "stroke": {
+   "space": "document",
+   "from": [
+    200,
+    640
+   ],
+   "to": [
+    1080,
+    640
+   ],
+   "pressure": 1.0,
+   "steps": 40
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "height_span": 0.95
+ },
+ {
+  "texel": [
+   [
+    640,
+    640
+   ],
+   [
+    400,
+    640
+   ],
+   [
+    640,
+    300
+   ]
+  ]
+ },
+ {
+  "shot": "3-a-thick-stroke-over-the-papers-tooth"
+ },
+ {
+  "state": "3-a-thick-stroke-over-the-papers-tooth"
+ },
+ {
+  "zoom": 4.0
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "4-closer-at-the-strokes-edge"
+ },
+ {
+  "document": "srgb",
+  "size": [
+   1280,
+   1280
+  ]
+ },
+ {
+  "wait": 12
+ },
+ {
+  "layer": {
+   "add": "Paper",
+   "type": "paper"
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "layer": {
+   "activate": "Layer 1"
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "layer": {
+   "add": "Laid from bare",
+   "fill": [
+    0.12,
+    0.3,
+    0.62,
+    1.0
+   ],
+   "chunks": [
+    [
+     2,
+     2
+    ]
+   ]
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "layer_action": "raise_paint:1.0"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "zoom": 4.0
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "5-paint-whose-height-was-laid-from-bare-shows-the-tooth"
+ },
+ {
+  "state": "5-paint-whose-height-was-laid-from-bare-shows-the-tooth"
+ }
+]

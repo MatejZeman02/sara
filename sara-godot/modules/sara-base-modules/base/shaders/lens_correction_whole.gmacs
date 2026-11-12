@@ -1,0 +1,65 @@
+# Kernel: lens_correction_whole
+# The lens correction past one chunk, under the contract SaNeighbourhoodPass
+# writes for a pass that reads the whole node: binding 0 is the node's chunks
+# gathered into one texture and read in document pixels through `chunk` and
+# `source`, the mask is at 1 and the target at 2.
+#
+# The model is `lens_correction.gmacs`'s, the first term of Brown and Conrady:
+# a texel at r half diagonals from the document's centre first stands at r over
+# `zoom`, which is one with Crop to fill off, and reads the picture at
+# (1 - k r²) times that distance along the same radius, `amount` being k. The
+# filter runs this file when the furthest read leaves the chunk a halo can pad,
+# so the amount the painter asks for is the amount laid on a canvas of any size,
+# and the halo kernels below that, whose pixels a saved record keeps.
+#
+# A read past the document's edge takes the nearest texel inside it, as the
+# halo's padding does, so the two kernels agree where both could run. A place
+# inside the document no chunk holds reads as transparent. The read is bilinear
+# and premultiplied, the library's `sa_sample`. Nothing clamps a colour.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel lens_correction_whole
+
+image src: readonly
+image mask: r32f, readonly
+image dst
+
+params:
+    float amount  # the fraction k, how far a corner's read moves in half diagonals
+    vec2 canvas  # the document's size, in document pixels
+    float zoom  # the crop's factor, one with the switch off
+    vec2 origin  # the dispatched region's corner in the chunk
+    int halo  # nought on a pass that reads the whole node, written by the runner
+    vec2 chunk  # the chunk's corner in document pixels, written by the runner
+    vec2 source  # the document pixel the gathered texture starts at, written by the runner
+
+# The read, the sample and the finish every neighbourhood kernel shares,
+# imported after the params because the library reads `halo` and the three
+# images by name.
+import neighbourhood
+
+# Where the gathered node holds the document point *at*.
+
+
+def node_point(vec2 at) -> vec2:
+    return at - source + vec2(halo, halo)
+
+
+def lens_correction_whole():
+    ivec2 at = pixel + ivec2(origin)
+    if at.x >= image_size(dst).x or at.y >= image_size(dst).y:
+        return
+    vec2 here = chunk + vec2(at)
+    vec2 centre = canvas * 0.5
+    vec2 away = here + vec2(0.5, 0.5) - centre
+    float reach = max(length(centre), 1.0)
+    vec2 seen = away / zoom
+    float r = length(seen) / reach
+    # The texel the read falls on, counted from the first, kept to the
+    # document's texels as the halo's padding keeps it.
+    vec2 read = centre + seen * (1.0 - amount * r * r) - vec2(0.5, 0.5)
+    read = clamp(read, vec2(0.0, 0.0), max(canvas - vec2(1.0, 1.0), vec2(0.0, 0.0)))
+    vec4 moved = sa_sample(node_point(read))
+    vec4 kept = sa_read(ivec2(node_point(here)))
+    sa_finish_premultiplied(at, kept, moved)

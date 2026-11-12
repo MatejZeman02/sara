@@ -1,0 +1,132 @@
+[
+ {
+  "wait": 35
+ },
+ {
+  "docker": "park"
+ },
+ {
+  "wait": 12
+ },
+ {
+  "docker": {
+   "id": "ToolBoxDocker",
+   "at": [
+    1500,
+    120
+   ],
+   "size": [
+    380,
+    130
+   ]
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "state": "1-follows-the-shape"
+ },
+ {
+  "shot": "1-follows-the-shape"
+ },
+ {
+  "open": "preferences"
+ },
+ {
+  "wait": 18
+ },
+ {
+  "page": "Toolbox"
+ },
+ {
+  "wait": 12
+ },
+ {
+  "layout_rows": {}
+ },
+ {
+  "shot": "2-the-page"
+ },
+ {
+  "layout_gesture": {
+   "option": "orientation",
+   "value": "horizontal"
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "layout_rows": {}
+ },
+ {
+  "layout_gesture": {
+   "option": "max_lines",
+   "value": 2
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "layout_rows": {}
+ },
+ {
+  "shot": "3-page-set-to-two-rows"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "shot": "4-two-rows"
+ },
+ {
+  "state": "4-two-rows"
+ },
+ {
+  "layout_gesture": {
+   "option": "orientation",
+   "value": "vertical"
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "layout_rows": {}
+ },
+ {
+  "shot": "5-two-columns"
+ },
+ {
+  "state": "5-two-columns"
+ },
+ {
+  "layout_gesture": {
+   "option": "max_lines",
+   "value": 1
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "layout_gesture": {
+   "option": "orientation",
+   "value": "shape"
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "layout_rows": {}
+ },
+ {
+  "shot": "6-back-to-the-shape"
+ },
+ {
+  "state": "6-back-to-the-shape"
+ }
+]

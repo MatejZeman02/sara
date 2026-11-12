@@ -1,0 +1,156 @@
+[
+ {
+  "comment": "On a fresh profile the Brush Presets panel's tag list holds the ten stored tags, then the bundles and the engines each under a heading of its own. The auto tag noise shown only lists the noise engine's presets, and Sara Basic with eraser lists Basic's erasers alone. A noise preset is in hand for the noise step and Eraser for the last, so the panel adds no preset its filter hides and each list is the filter's alone."
+ },
+ {
+  "wait": 40
+ },
+ {
+  "prefs": {
+   "ui_scale": 1.0
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "docker": {
+   "id": "BrushPresetsDocker",
+   "at": [
+    860,
+    40
+   ],
+   "size": [
+    420,
+    940
+   ]
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "tool": "brush"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "preset": {
+   "finish": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "presets_docker": {}
+ },
+ {
+  "state": "1-a-fresh-profile"
+ },
+ {
+  "choice": {
+   "open": "ChooserTag"
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "2-the-tag-list-with-its-auto-tags"
+ },
+ {
+  "state": "2-the-tag-list-with-its-auto-tags"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "preset": {
+   "load": "Grain Round"
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "preset": {
+   "tag": "noise",
+   "finish": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "presets_docker": {}
+ },
+ {
+  "state": "3-the-auto-tag-noise-shown-only"
+ },
+ {
+  "shot": "3-the-auto-tag-noise-shown-only"
+ },
+ {
+  "preset": {
+   "tag": "Sara Basic"
+  }
+ },
+ {
+  "preset": {
+   "load": "Eraser"
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "wait": 10
+ },
+ {
+  "choice": {
+   "open": "ChooserTag"
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "choice": {
+   "pick": 2
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "4-sara-basic-and-eraser-in-the-open-list"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "preset": {
+   "finish": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "presets_docker": {}
+ },
+ {
+  "state": "5-sara-basic-with-eraser"
+ },
+ {
+  "shot": "5-sara-basic-with-eraser"
+ }
+]

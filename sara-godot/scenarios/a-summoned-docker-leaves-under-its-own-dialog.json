@@ -1,0 +1,33 @@
+[
+  {"comment": "A summoned docker stays while a window it opened is open, and leaves on the ordinary dwell once that window has closed. The Reference docker is summoned by Alt+Shift+F under the pointer, its Open button is pressed so its picker is up, and the pointer is then walked away for longer than the dwell: the docker must still be borrowed. The picker is then answered with file_picker, which is the signal Godot's platform callback emits when the platform's own window returns, and the same walk must send the docker back. Alt+Shift+F is the Reference docker's chord in Sara's own map."},
+  {"wait": 40},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 20},
+  {"docker": "park"},
+  {"wait": 10},
+  {"move": [960, 540]},
+  {"state": "01-parked"},
+
+  {"docker_pointer": [700, 450]},
+  {"key": {"key": "f", "shift": true, "alt": true}},
+  {"wait": 15},
+  {"state": "02-reference-summoned-at-700-450"},
+  {"shot": "02-reference-summoned-at-700-450"},
+
+  {"click": {"control": "OpenButton"}},
+  {"wait": 25},
+  {"state": "03-its-picker-is-up"},
+  {"shot": "03-its-picker-is-up"},
+
+  {"docker_pointer": [120, 1000]},
+  {"wait": 240},
+  {"state": "04-the-pointer-away-past-the-dwell-the-docker-stayed"},
+  {"shot": "04-the-pointer-away-past-the-dwell-the-docker-stayed"},
+
+  {"file_picker": {"choose": "res://icon.svg"}},
+  {"wait": 240},
+  {"state": "05-the-picker-answered-the-docker-went-back"},
+  {"shot": "05-the-picker-answered-the-docker-went-back"},
+
+  {"docker_pointer": null}
+]

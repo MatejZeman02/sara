@@ -1,0 +1,18 @@
+# Black or white at the level you pick, with alpha left where it was.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# Filter > Threshold, the first of the usual set, and a pixel function the base
+# module registers through the call a module's own pixel function takes, under
+# the key its written class had. The arithmetic is the scripting guide's
+# example filter over the document's RGB view, and the black or white is
+# written back through rgb_to_document, because a raw vec3(1.0) in an Oklab
+# document is L 1, a 1, b 1, which a painter sees as orange.
+
+uniform float level: hint_range(0, 1) = 0.5
+
+
+def pixel(ivec2 at) -> vec4:
+    vec4 c = src(at)
+    float v = step(level, luminance(document_to_rgb(c.rgb)))
+    return vec4(rgb_to_document(vec3(v)), c.a)

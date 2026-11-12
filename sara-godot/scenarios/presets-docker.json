@@ -1,0 +1,35 @@
+[
+  {"wait": 40},
+  {"docker": {"id": "BrushPresetsDocker", "at": [1500, 120], "size": [300, 420]}},
+  {"wait": 20},
+  {"state": "1-the-docker-open"},
+  {"shot": "1-the-docker-open"},
+
+  {"option": {"key": "radius", "value": 0.06}},
+  {"wait": 5},
+  {"preset": {"save": "Probe Wide"}},
+  {"wait": 10},
+  {"option": {"key": "radius", "value": 0.01}},
+  {"wait": 5},
+  {"preset": {"save": "Probe Fine"}},
+  {"wait": 15},
+  {"wait": 10},
+  {"presets_docker": {}},
+  {"state": "2-two-presets-saved"},
+  {"shot": "2-two-presets-saved"},
+
+  {"presets_docker": {"apply": "Probe Wide"}},
+  {"wait": 15},
+  {"state": "3-applied-from-the-docker"},
+  {"shot": "3-applied-from-the-docker"},
+
+  {"preset": {"load": "Probe Fine"}},
+  {"wait": 15},
+  {"state": "4-applied-from-the-bar"},
+  {"shot": "4-applied-from-the-bar"},
+
+  {"preset": {"delete": "Probe Wide"}},
+  {"preset": {"delete": "Probe Fine"}},
+  {"wait": 10},
+  {"state": "5-cleaned-up"}
+]

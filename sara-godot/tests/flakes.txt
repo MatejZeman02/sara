@@ -1,0 +1,14 @@
+# Tests that have failed once and passed on the next run with nothing changed.
+# run_tests.sh reruns a run once when every failure is on this list, and says
+# FLAKED. One name per line. Add a comment saying where it was seen.
+test_the_eyedropper_reads_an_f16_document_at_its_own_depth
+test_a_file_without_the_key_reads_as_one
+# Seen on a loaded GPU, passing on a filtered rerun and on a second full run
+test_menus
+test_stabilizer_toggle
+test_tool_options_docker
+# Seen in a full gate on a loaded GPU: the preview took 1.53 times
+# Denoise's time where a quarter either way is allowed. It is a ratio of two GPU
+# timings, so a neighbour's dispatch between them moves it. Passed alone twice
+# straight after, and in the full run before it.
+test_hot_pixels_cost_what_denoise_at_radius_one_costs

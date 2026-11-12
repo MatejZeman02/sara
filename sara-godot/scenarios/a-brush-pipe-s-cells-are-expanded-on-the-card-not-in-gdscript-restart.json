@@ -1,0 +1,15 @@
+[
+  {"settings": "keep"},
+  {"comment": "A press at once. The knife the setup run saved is chosen in a fresh process and pressed in the same frame, so the press finishes the whole load of its 360-cell pipe inside itself. The stroke's line in run.log says how long its longest frame was and how much of it was the load."},
+  {"wait": 60},
+  {"fit": true},
+  {"wait": 10},
+  {"tool": "brush"},
+  {"pick_preset": "Paint"},
+  {"wait": 20},
+  {"pick_preset": "Probe Knife"},
+  {"stroke": {"from": [450, 280], "to": [1150, 280], "pressure": 0.8, "steps": 30}},
+  {"wait": 10},
+  {"shot": "1-the-knife-pressed-at-once"},
+  {"state": "1-the-knife-pressed-at-once"}
+]

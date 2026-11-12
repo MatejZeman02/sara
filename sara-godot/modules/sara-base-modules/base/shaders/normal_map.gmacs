@@ -1,0 +1,117 @@
+# Kernels: normal_map
+# The normal map of a height, item 13's "height to normal map"
+# of the usual set. The height is the luminance of the source texel's RGB view,
+# so a grey height map painted with any brush is the input and a colour one is
+# read by its luminance rather than refused.
+#
+# The slopes are central differences over one texel each way, and the output is
+# the OpenGL convention: +X right, +Y up, +Z out of the surface. v runs down the
+# canvas, which is the frame's own, so a surface rising towards the top of the
+# canvas tilts its normal down in the world and comes out with green below 0.5.
+#
+# The helpers below are adjust.gmacs's, repeated rather than shared, for the
+# reason that file gives: a block cannot be shared between two files without
+# sharing the push constant that names it. Both halves of the colour space tail
+# are declared: the height is read through the document's RGB view, and the
+# encoded normal goes back through rgb_to_document, so the vector is stored as
+# the colour it shows. A raw (0.5, 0.5, 1.0) in an Oklab document is L 0.5,
+# a 0.5, b 1.0, which shows as orange.
+
+kernel normal_map
+
+import linear_srgb_color_space
+import transfer_curve
+
+image src: readonly
+image mask: r32f, readonly
+image dst
+
+params:
+    # How far a slope tilts the normal. One is the slope itself and the default
+    # of four is a relief a painter sees on the first drag.
+    float strength
+    # The green channel's convention: 0 is OpenGL, +Y up, and 1 flips it to
+    # DirectX's, which is what half the engines a painter exports to want.
+    float flip
+    # The padding the runner gathered around this chunk, and where the
+    # dispatched region starts in it. Both written per dispatch with
+    # SaNeighbourhoodPass.
+    int halo
+    vec2 origin
+    # The document's own coordinates into linear sRGB and back out, and the
+    # transfer curve between linear and them.
+    float doc_to_linear_srgb[9]
+    float linear_srgb_to_doc[9]
+    float transfer_slope
+    float transfer_threshold
+    float transfer_gain
+    float transfer_exponent
+    float coordinates
+
+# The mask's blend and the texel as it was, imported after
+# the params because the library reads `halo` and the three images by name.
+import neighbourhood
+
+const int SA_COORDS_OKLAB = 1
+
+
+def to_linear_srgb_matrix() -> mat3:
+    return mat3(
+        doc_to_linear_srgb[0], doc_to_linear_srgb[1], doc_to_linear_srgb[2],
+        doc_to_linear_srgb[3], doc_to_linear_srgb[4], doc_to_linear_srgb[5],
+        doc_to_linear_srgb[6], doc_to_linear_srgb[7], doc_to_linear_srgb[8])
+
+
+def from_linear_srgb_matrix() -> mat3:
+    return mat3(
+        linear_srgb_to_doc[0], linear_srgb_to_doc[1], linear_srgb_to_doc[2],
+        linear_srgb_to_doc[3], linear_srgb_to_doc[4], linear_srgb_to_doc[5],
+        linear_srgb_to_doc[6], linear_srgb_to_doc[7], linear_srgb_to_doc[8])
+
+
+def document_to_linear(vec3 c) -> vec3:
+    return sa_transfer_decode(c, transfer_slope, transfer_threshold, transfer_gain, transfer_exponent)
+
+
+def linear_to_document(vec3 c) -> vec3:
+    return sa_transfer_encode(c, transfer_slope, transfer_threshold, transfer_gain, transfer_exponent)
+
+
+def document_is_oklab() -> bool: return int(coordinates + 0.5) == SA_COORDS_OKLAB
+
+
+def document_to_rgb(vec3 c) -> vec3:
+    if not document_is_oklab(): return c
+    return linear_to_document(from_linear_srgb_matrix() * oklab_to_linear_srgb(c))
+
+
+def rgb_to_document(vec3 c) -> vec3:
+    if not document_is_oklab(): return c
+    return linear_srgb_to_oklab(to_linear_srgb_matrix() * document_to_linear(c))
+
+
+def height_at(ivec2 at) -> float:
+    return dot(document_to_rgb(src[at].rgb), vec3(0.2126, 0.7152, 0.0722))
+
+
+def normal_map():
+    ivec2 at = pixel + ivec2(origin)
+    ivec2 c = at + ivec2(halo, halo)
+    float dx = (height_at(c + ivec2(1, 0)) - height_at(c - ivec2(1, 0))) * 0.5
+    float dv = (height_at(c + ivec2(0, 1)) - height_at(c - ivec2(0, 1))) * 0.5
+    float up = dv * strength
+    if flip > 0.5:
+        up = -up
+    vec4 source = src[c]
+    # A unit normal's every component is within one of zero, so the encoded
+    # colour lands between 1/255 and one by itself and nothing here clamps it
+    # (hard rule 5). It is a colour of the RGB view, so it is stored as the
+    # document's own coordinates of that colour. The encoding is the eight bit
+    # convention an engine decodes, where zero is 128 of 255 and one is 255.
+    # Half and half would put a flat texel at 127.5, exactly between two
+    # counts, and the Oklab round trip lands the green just under it, so an
+    # export read 128, 127, 255 and the flat surface leaned by a count. 128 of
+    # 255 is half a count from every rounding edge on every document, and minus
+    # one is 1/255 rather than zero.
+    vec3 encoded = normalize(vec3(-dx * strength, up, 1.0)) * (127.0 / 255.0) + 128.0 / 255.0
+    sa_finish(at, source, vec4(rgb_to_document(encoded), source.a))

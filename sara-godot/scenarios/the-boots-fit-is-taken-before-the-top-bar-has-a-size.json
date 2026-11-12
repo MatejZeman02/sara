@@ -1,0 +1,13 @@
+[
+ {"wait": 60},
+ {"state": "0-the-boots-fit-at-1-0"},
+ {"shot": "0-the-boots-fit-at-1-0"},
+
+ {"wait": 60},
+ {"state": "1-a-second-later-still-the-fit"},
+
+ {"prefs": {"ui_scale": 1.25}},
+ {"wait": 30},
+ {"state": "2-the-scale-moved-before-anything-touched-the-view"},
+ {"shot": "2-the-scale-moved-before-anything-touched-the-view"}
+]

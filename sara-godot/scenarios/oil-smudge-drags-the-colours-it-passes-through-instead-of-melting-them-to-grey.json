@@ -1,0 +1,3825 @@
+[
+  {
+    "comment": "Oil Smudge drags the colours it passes through. A 1200 by 1000 document on a grey ground carries 140 dots of 18 pixels in four hues on a 40 pixel grid, x 250 to 770 and y 120 to 480, and a flat band of one colour over the chunks of rows 2 and 3. Oil Smudge as it ships, at a radius of 100 pixels, is dragged left to right four times: through the dots at y 170 with Paint and Smudge switched off, which is the earlier reading, through them again at y 400 at the 50 percent the preset loads with, over the flat colour at y 640, and over it again at y 880 with the brush set to the flat colour itself. The dot row at y 280 lies between the two bands and no dab touches it, so the texel line along it reads the dots as laid. Before the fix every point of both dotted bands read one grey."
+  },
+  {
+    "wait": 40
+  },
+  {
+    "prefs": {
+      "ui_scale": 1.0,
+      "autosave_interval_minutes": 0
+    }
+  },
+  {
+    "wait": 15
+  },
+  {
+    "layout_preset": {
+      "load": "minimalistic"
+    }
+  },
+  {
+    "wait": 25
+  },
+  {
+    "document": "srgb",
+    "size": [
+      1200,
+      1000
+    ],
+    "background": {
+      "kind": "colour",
+      "color": "#8a8f86"
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "fit": true
+  },
+  {
+    "wait": 5
+  },
+  {
+    "layer": {
+      "fill": [
+        0.69,
+        0.31,
+        0.19,
+        1.0
+      ],
+      "chunks": [
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          4,
+          2
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          3
+        ],
+        [
+          4,
+          3
+        ]
+      ]
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "brush": {
+      "preset": "Fill",
+      "colour": "#e07a1f",
+      "radius_px": 9
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        250,
+        120
+      ],
+      "to": [
+        251,
+        120
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        410,
+        120
+      ],
+      "to": [
+        411,
+        120
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        570,
+        120
+      ],
+      "to": [
+        571,
+        120
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        730,
+        120
+      ],
+      "to": [
+        731,
+        120
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        370,
+        160
+      ],
+      "to": [
+        371,
+        160
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        530,
+        160
+      ],
+      "to": [
+        531,
+        160
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        690,
+        160
+      ],
+      "to": [
+        691,
+        160
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        330,
+        200
+      ],
+      "to": [
+        331,
+        200
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        490,
+        200
+      ],
+      "to": [
+        491,
+        200
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        650,
+        200
+      ],
+      "to": [
+        651,
+        200
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        290,
+        240
+      ],
+      "to": [
+        291,
+        240
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        450,
+        240
+      ],
+      "to": [
+        451,
+        240
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        610,
+        240
+      ],
+      "to": [
+        611,
+        240
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        770,
+        240
+      ],
+      "to": [
+        771,
+        240
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        250,
+        280
+      ],
+      "to": [
+        251,
+        280
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        410,
+        280
+      ],
+      "to": [
+        411,
+        280
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        570,
+        280
+      ],
+      "to": [
+        571,
+        280
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        730,
+        280
+      ],
+      "to": [
+        731,
+        280
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        370,
+        320
+      ],
+      "to": [
+        371,
+        320
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        530,
+        320
+      ],
+      "to": [
+        531,
+        320
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        690,
+        320
+      ],
+      "to": [
+        691,
+        320
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        330,
+        360
+      ],
+      "to": [
+        331,
+        360
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        490,
+        360
+      ],
+      "to": [
+        491,
+        360
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        650,
+        360
+      ],
+      "to": [
+        651,
+        360
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        290,
+        400
+      ],
+      "to": [
+        291,
+        400
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        450,
+        400
+      ],
+      "to": [
+        451,
+        400
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        610,
+        400
+      ],
+      "to": [
+        611,
+        400
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        770,
+        400
+      ],
+      "to": [
+        771,
+        400
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        250,
+        440
+      ],
+      "to": [
+        251,
+        440
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        410,
+        440
+      ],
+      "to": [
+        411,
+        440
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        570,
+        440
+      ],
+      "to": [
+        571,
+        440
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        730,
+        440
+      ],
+      "to": [
+        731,
+        440
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        370,
+        480
+      ],
+      "to": [
+        371,
+        480
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        530,
+        480
+      ],
+      "to": [
+        531,
+        480
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        690,
+        480
+      ],
+      "to": [
+        691,
+        480
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "brush": {
+      "preset": "Fill",
+      "colour": "#3fa24a",
+      "radius_px": 9
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        290,
+        120
+      ],
+      "to": [
+        291,
+        120
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        450,
+        120
+      ],
+      "to": [
+        451,
+        120
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        610,
+        120
+      ],
+      "to": [
+        611,
+        120
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        770,
+        120
+      ],
+      "to": [
+        771,
+        120
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        250,
+        160
+      ],
+      "to": [
+        251,
+        160
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        410,
+        160
+      ],
+      "to": [
+        411,
+        160
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        570,
+        160
+      ],
+      "to": [
+        571,
+        160
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        730,
+        160
+      ],
+      "to": [
+        731,
+        160
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        370,
+        200
+      ],
+      "to": [
+        371,
+        200
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        530,
+        200
+      ],
+      "to": [
+        531,
+        200
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        690,
+        200
+      ],
+      "to": [
+        691,
+        200
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        330,
+        240
+      ],
+      "to": [
+        331,
+        240
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        490,
+        240
+      ],
+      "to": [
+        491,
+        240
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        650,
+        240
+      ],
+      "to": [
+        651,
+        240
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        290,
+        280
+      ],
+      "to": [
+        291,
+        280
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        450,
+        280
+      ],
+      "to": [
+        451,
+        280
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        610,
+        280
+      ],
+      "to": [
+        611,
+        280
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        770,
+        280
+      ],
+      "to": [
+        771,
+        280
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        250,
+        320
+      ],
+      "to": [
+        251,
+        320
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        410,
+        320
+      ],
+      "to": [
+        411,
+        320
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        570,
+        320
+      ],
+      "to": [
+        571,
+        320
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        730,
+        320
+      ],
+      "to": [
+        731,
+        320
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        370,
+        360
+      ],
+      "to": [
+        371,
+        360
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        530,
+        360
+      ],
+      "to": [
+        531,
+        360
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        690,
+        360
+      ],
+      "to": [
+        691,
+        360
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        330,
+        400
+      ],
+      "to": [
+        331,
+        400
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        490,
+        400
+      ],
+      "to": [
+        491,
+        400
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        650,
+        400
+      ],
+      "to": [
+        651,
+        400
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        290,
+        440
+      ],
+      "to": [
+        291,
+        440
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        450,
+        440
+      ],
+      "to": [
+        451,
+        440
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        610,
+        440
+      ],
+      "to": [
+        611,
+        440
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        770,
+        440
+      ],
+      "to": [
+        771,
+        440
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        250,
+        480
+      ],
+      "to": [
+        251,
+        480
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        410,
+        480
+      ],
+      "to": [
+        411,
+        480
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        570,
+        480
+      ],
+      "to": [
+        571,
+        480
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        730,
+        480
+      ],
+      "to": [
+        731,
+        480
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "brush": {
+      "preset": "Fill",
+      "colour": "#e05fa0",
+      "radius_px": 9
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        330,
+        120
+      ],
+      "to": [
+        331,
+        120
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        490,
+        120
+      ],
+      "to": [
+        491,
+        120
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        650,
+        120
+      ],
+      "to": [
+        651,
+        120
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        290,
+        160
+      ],
+      "to": [
+        291,
+        160
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        450,
+        160
+      ],
+      "to": [
+        451,
+        160
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        610,
+        160
+      ],
+      "to": [
+        611,
+        160
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        770,
+        160
+      ],
+      "to": [
+        771,
+        160
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        250,
+        200
+      ],
+      "to": [
+        251,
+        200
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        410,
+        200
+      ],
+      "to": [
+        411,
+        200
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        570,
+        200
+      ],
+      "to": [
+        571,
+        200
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        730,
+        200
+      ],
+      "to": [
+        731,
+        200
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        370,
+        240
+      ],
+      "to": [
+        371,
+        240
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        530,
+        240
+      ],
+      "to": [
+        531,
+        240
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        690,
+        240
+      ],
+      "to": [
+        691,
+        240
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        330,
+        280
+      ],
+      "to": [
+        331,
+        280
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        490,
+        280
+      ],
+      "to": [
+        491,
+        280
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        650,
+        280
+      ],
+      "to": [
+        651,
+        280
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        290,
+        320
+      ],
+      "to": [
+        291,
+        320
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        450,
+        320
+      ],
+      "to": [
+        451,
+        320
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        610,
+        320
+      ],
+      "to": [
+        611,
+        320
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        770,
+        320
+      ],
+      "to": [
+        771,
+        320
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        250,
+        360
+      ],
+      "to": [
+        251,
+        360
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        410,
+        360
+      ],
+      "to": [
+        411,
+        360
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        570,
+        360
+      ],
+      "to": [
+        571,
+        360
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        730,
+        360
+      ],
+      "to": [
+        731,
+        360
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        370,
+        400
+      ],
+      "to": [
+        371,
+        400
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        530,
+        400
+      ],
+      "to": [
+        531,
+        400
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        690,
+        400
+      ],
+      "to": [
+        691,
+        400
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        330,
+        440
+      ],
+      "to": [
+        331,
+        440
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        490,
+        440
+      ],
+      "to": [
+        491,
+        440
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        650,
+        440
+      ],
+      "to": [
+        651,
+        440
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        290,
+        480
+      ],
+      "to": [
+        291,
+        480
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        450,
+        480
+      ],
+      "to": [
+        451,
+        480
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        610,
+        480
+      ],
+      "to": [
+        611,
+        480
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        770,
+        480
+      ],
+      "to": [
+        771,
+        480
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "brush": {
+      "preset": "Fill",
+      "colour": "#2fa8a8",
+      "radius_px": 9
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        370,
+        120
+      ],
+      "to": [
+        371,
+        120
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        530,
+        120
+      ],
+      "to": [
+        531,
+        120
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        690,
+        120
+      ],
+      "to": [
+        691,
+        120
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        330,
+        160
+      ],
+      "to": [
+        331,
+        160
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        490,
+        160
+      ],
+      "to": [
+        491,
+        160
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        650,
+        160
+      ],
+      "to": [
+        651,
+        160
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        290,
+        200
+      ],
+      "to": [
+        291,
+        200
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        450,
+        200
+      ],
+      "to": [
+        451,
+        200
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        610,
+        200
+      ],
+      "to": [
+        611,
+        200
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        770,
+        200
+      ],
+      "to": [
+        771,
+        200
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        250,
+        240
+      ],
+      "to": [
+        251,
+        240
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        410,
+        240
+      ],
+      "to": [
+        411,
+        240
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        570,
+        240
+      ],
+      "to": [
+        571,
+        240
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        730,
+        240
+      ],
+      "to": [
+        731,
+        240
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        370,
+        280
+      ],
+      "to": [
+        371,
+        280
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        530,
+        280
+      ],
+      "to": [
+        531,
+        280
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        690,
+        280
+      ],
+      "to": [
+        691,
+        280
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        330,
+        320
+      ],
+      "to": [
+        331,
+        320
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        490,
+        320
+      ],
+      "to": [
+        491,
+        320
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        650,
+        320
+      ],
+      "to": [
+        651,
+        320
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        290,
+        360
+      ],
+      "to": [
+        291,
+        360
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        450,
+        360
+      ],
+      "to": [
+        451,
+        360
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        610,
+        360
+      ],
+      "to": [
+        611,
+        360
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        770,
+        360
+      ],
+      "to": [
+        771,
+        360
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        250,
+        400
+      ],
+      "to": [
+        251,
+        400
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        410,
+        400
+      ],
+      "to": [
+        411,
+        400
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        570,
+        400
+      ],
+      "to": [
+        571,
+        400
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        730,
+        400
+      ],
+      "to": [
+        731,
+        400
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        370,
+        440
+      ],
+      "to": [
+        371,
+        440
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        530,
+        440
+      ],
+      "to": [
+        531,
+        440
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        690,
+        440
+      ],
+      "to": [
+        691,
+        440
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        330,
+        480
+      ],
+      "to": [
+        331,
+        480
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        490,
+        480
+      ],
+      "to": [
+        491,
+        480
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        650,
+        480
+      ],
+      "to": [
+        651,
+        480
+      ],
+      "pressure": 1.0,
+      "steps": 1,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "look": {
+      "path": "1-the-field-of-dots-look.png",
+      "rect": [
+        230,
+        100,
+        620,
+        420
+      ],
+      "scale": 1
+    }
+  },
+  {
+    "texel": [
+      [
+        290,
+        280
+      ],
+      [
+        330,
+        280
+      ],
+      [
+        370,
+        280
+      ],
+      [
+        410,
+        280
+      ],
+      [
+        450,
+        280
+      ],
+      [
+        490,
+        280
+      ],
+      [
+        530,
+        280
+      ],
+      [
+        570,
+        280
+      ],
+      [
+        610,
+        280
+      ],
+      [
+        650,
+        280
+      ],
+      [
+        690,
+        280
+      ],
+      [
+        730,
+        280
+      ]
+    ]
+  },
+  {
+    "state": "1-the-field-of-dots"
+  },
+  {
+    "brush": {
+      "preset": "Oil Smudge",
+      "colour": "#f2efe6",
+      "radius_px": 100
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "state": "2-oil-smudge-in-hand"
+  },
+  {
+    "shot": "2-oil-smudge-in-hand"
+  },
+  {
+    "brush": {
+      "smudge_color_rate_option:enabled": false
+    }
+  },
+  {
+    "stroke": {
+      "points": [
+        {
+          "at": [
+            250.0,
+            170.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            270.0,
+            170.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            290.0,
+            170.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            310.0,
+            170.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            330.0,
+            170.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            350.0,
+            170.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            370.0,
+            170.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            390.0,
+            170.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            410.0,
+            170.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            430.0,
+            170.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            450.0,
+            170.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            470.0,
+            170.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            490.0,
+            170.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            510.0,
+            170.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            530.0,
+            170.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            550.0,
+            170.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            570.0,
+            170.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            590.0,
+            170.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            610.0,
+            170.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            630.0,
+            170.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            650.0,
+            170.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            670.0,
+            170.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            690.0,
+            170.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            710.0,
+            170.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            730.0,
+            170.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            750.0,
+            170.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            770.0,
+            170.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            790.0,
+            170.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            810.0,
+            170.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            830.0,
+            170.0
+          ],
+          "pressure": 1.0
+        }
+      ],
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "look": {
+      "path": "3-the-band-at-no-colour-rate-look.png",
+      "rect": [
+        230,
+        100,
+        620,
+        420
+      ],
+      "scale": 1
+    }
+  },
+  {
+    "texel": [
+      [
+        290,
+        200
+      ],
+      [
+        330,
+        200
+      ],
+      [
+        370,
+        200
+      ],
+      [
+        410,
+        200
+      ],
+      [
+        450,
+        200
+      ],
+      [
+        490,
+        200
+      ],
+      [
+        530,
+        200
+      ],
+      [
+        570,
+        200
+      ],
+      [
+        610,
+        200
+      ],
+      [
+        650,
+        200
+      ],
+      [
+        690,
+        200
+      ],
+      [
+        730,
+        200
+      ]
+    ]
+  },
+  {
+    "state": "4-the-band-at-no-colour-rate"
+  },
+  {
+    "brush": {
+      "smudge_color_rate_option:enabled": true
+    }
+  },
+  {
+    "stroke": {
+      "points": [
+        {
+          "at": [
+            250.0,
+            400.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            270.0,
+            400.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            290.0,
+            400.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            310.0,
+            400.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            330.0,
+            400.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            350.0,
+            400.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            370.0,
+            400.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            390.0,
+            400.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            410.0,
+            400.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            430.0,
+            400.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            450.0,
+            400.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            470.0,
+            400.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            490.0,
+            400.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            510.0,
+            400.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            530.0,
+            400.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            550.0,
+            400.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            570.0,
+            400.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            590.0,
+            400.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            610.0,
+            400.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            630.0,
+            400.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            650.0,
+            400.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            670.0,
+            400.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            690.0,
+            400.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            710.0,
+            400.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            730.0,
+            400.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            750.0,
+            400.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            770.0,
+            400.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            790.0,
+            400.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            810.0,
+            400.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            830.0,
+            400.0
+          ],
+          "pressure": 1.0
+        }
+      ],
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "look": {
+      "path": "5-the-band-through-the-dots-look.png",
+      "rect": [
+        230,
+        100,
+        620,
+        420
+      ],
+      "scale": 1
+    }
+  },
+  {
+    "texel": [
+      [
+        290,
+        400
+      ],
+      [
+        330,
+        400
+      ],
+      [
+        370,
+        400
+      ],
+      [
+        410,
+        400
+      ],
+      [
+        450,
+        400
+      ],
+      [
+        490,
+        400
+      ],
+      [
+        530,
+        400
+      ],
+      [
+        570,
+        400
+      ],
+      [
+        610,
+        400
+      ],
+      [
+        650,
+        400
+      ],
+      [
+        690,
+        400
+      ],
+      [
+        730,
+        400
+      ]
+    ]
+  },
+  {
+    "texel": [
+      [
+        290,
+        280
+      ],
+      [
+        330,
+        280
+      ],
+      [
+        370,
+        280
+      ],
+      [
+        410,
+        280
+      ],
+      [
+        450,
+        280
+      ],
+      [
+        490,
+        280
+      ],
+      [
+        530,
+        280
+      ],
+      [
+        570,
+        280
+      ],
+      [
+        610,
+        280
+      ],
+      [
+        650,
+        280
+      ],
+      [
+        690,
+        280
+      ],
+      [
+        730,
+        280
+      ]
+    ]
+  },
+  {
+    "state": "5-the-band-through-the-dots"
+  },
+  {
+    "stroke": {
+      "points": [
+        {
+          "at": [
+            250.0,
+            640.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            270.0,
+            640.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            290.0,
+            640.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            310.0,
+            640.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            330.0,
+            640.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            350.0,
+            640.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            370.0,
+            640.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            390.0,
+            640.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            410.0,
+            640.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            430.0,
+            640.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            450.0,
+            640.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            470.0,
+            640.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            490.0,
+            640.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            510.0,
+            640.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            530.0,
+            640.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            550.0,
+            640.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            570.0,
+            640.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            590.0,
+            640.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            610.0,
+            640.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            630.0,
+            640.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            650.0,
+            640.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            670.0,
+            640.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            690.0,
+            640.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            710.0,
+            640.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            730.0,
+            640.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            750.0,
+            640.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            770.0,
+            640.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            790.0,
+            640.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            810.0,
+            640.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            830.0,
+            640.0
+          ],
+          "pressure": 1.0
+        }
+      ],
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "look": {
+      "path": "6-the-band-over-one-flat-colour-look.png",
+      "rect": [
+        230,
+        520,
+        620,
+        200
+      ],
+      "scale": 1
+    }
+  },
+  {
+    "texel": [
+      [
+        280,
+        640
+      ],
+      [
+        330,
+        640
+      ],
+      [
+        380,
+        640
+      ],
+      [
+        430,
+        640
+      ],
+      [
+        480,
+        640
+      ],
+      [
+        530,
+        640
+      ],
+      [
+        580,
+        640
+      ],
+      [
+        630,
+        640
+      ],
+      [
+        680,
+        640
+      ],
+      [
+        730,
+        640
+      ],
+      [
+        780,
+        640
+      ],
+      [
+        830,
+        640
+      ]
+    ]
+  },
+  {
+    "state": "6-the-band-over-one-flat-colour"
+  },
+  {
+    "brush": {
+      "preset": "Oil Smudge",
+      "colour": "#b05030",
+      "radius_px": 100
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "stroke": {
+      "points": [
+        {
+          "at": [
+            250.0,
+            880.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            270.0,
+            880.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            290.0,
+            880.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            310.0,
+            880.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            330.0,
+            880.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            350.0,
+            880.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            370.0,
+            880.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            390.0,
+            880.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            410.0,
+            880.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            430.0,
+            880.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            450.0,
+            880.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            470.0,
+            880.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            490.0,
+            880.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            510.0,
+            880.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            530.0,
+            880.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            550.0,
+            880.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            570.0,
+            880.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            590.0,
+            880.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            610.0,
+            880.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            630.0,
+            880.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            650.0,
+            880.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            670.0,
+            880.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            690.0,
+            880.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            710.0,
+            880.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            730.0,
+            880.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            750.0,
+            880.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            770.0,
+            880.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            790.0,
+            880.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            810.0,
+            880.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            830.0,
+            880.0
+          ],
+          "pressure": 1.0
+        }
+      ],
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "look": {
+      "path": "7-the-band-at-the-flat-colour-look.png",
+      "rect": [
+        230,
+        760,
+        620,
+        200
+      ],
+      "scale": 1
+    }
+  },
+  {
+    "texel": [
+      [
+        280,
+        880
+      ],
+      [
+        330,
+        880
+      ],
+      [
+        380,
+        880
+      ],
+      [
+        430,
+        880
+      ],
+      [
+        480,
+        880
+      ],
+      [
+        530,
+        880
+      ],
+      [
+        580,
+        880
+      ],
+      [
+        630,
+        880
+      ],
+      [
+        680,
+        880
+      ],
+      [
+        730,
+        880
+      ],
+      [
+        780,
+        880
+      ],
+      [
+        830,
+        880
+      ]
+    ]
+  },
+  {
+    "state": "7-the-band-at-the-flat-colour"
+  },
+  {
+    "shot": "8-the-window-after-the-drags"
+  }
+]

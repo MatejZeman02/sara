@@ -1,0 +1,31 @@
+# Masks one chunk by the alpha of the layer below it, for a layer clipped to
+# that layer. The composite kernels stay two-image: five suites bind them
+# directly, and a third image there would be one every dispatch has to bind.
+# So a clipped chunk takes one pass through here into a scratch chunk, and the
+# ordinary composite reads the scratch. The source and the mask are each read
+# at the texel under the target's own, as mask.gmacs reads them, so a display
+# chunk's walk clips at the finer of the two.
+
+kernel clip_chunk
+image target
+image source
+image mask
+
+params:
+    # The part of the chunk to mask, in chunk-local pixels: the same rectangle
+    # the composite that follows will read.
+    vec2 region_origin
+    vec2 region_size
+
+
+def clip_chunk():
+    ivec2 local = ivec2(global_id.xy)
+    if local.x >= int(region_size.x) or local.y >= int(region_size.y):
+        return
+    ivec2 pixel = local + ivec2(region_origin)
+    if pixel.x >= image_size(target).x or pixel.y >= image_size(target).y:
+        return
+    ivec2 across = image_size(target)
+    vec4 src = source[pixel * image_size(source) / across]
+    src.a *= mask[pixel * image_size(mask) / across].a
+    target[pixel] = src

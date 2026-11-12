@@ -1,0 +1,37 @@
+[
+  {"wait": 45},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 20},
+  {"document": "srgb"},
+  {"wait": 25},
+  {"canvas": [1400, 900]},
+  {"wait": 5},
+  {"fill": [0.0, 0.0, 0.0]},
+  {"wait": 10},
+  {"colour": [1.0, 1.0, 1.0]},
+  {"wait": 5},
+  {"stroke": {"from": [500, 250], "to": [500, 850], "pressure": 1.0}},
+  {"stroke": {"from": [900, 250], "to": [900, 850], "pressure": 1.0}},
+  {"wait": 15},
+  {"select": {"polygon": [[550, 350], [1050, 400], [1000, 800], [500, 750]], "feather": 25}},
+  {"wait": 10},
+  {"shot": "1-the-lasso-over-two-white-lines"},
+  {"state": "1-the-lasso-over-two-white-lines"},
+
+  {"filter": {"open": "sara-base-modules.box_blur"}},
+  {"wait": 20},
+  {"filter": {"widget": "radius", "value": 30}},
+  {"wait": 20},
+  {"shot": "2-the-preview-stops-at-the-lasso"},
+  {"state": "2-the-preview-stops-at-the-lasso"},
+
+  {"filter": "apply"},
+  {"wait": 20},
+  {"texel": [[500, 550], [300, 550], [700, 550]]},
+  {"shot": "3-applied-inside-the-lasso-only"},
+  {"state": "3-applied-inside-the-lasso-only"},
+
+  {"select": "none"},
+  {"wait": 10},
+  {"shot": "4-selection-cleared"}
+]

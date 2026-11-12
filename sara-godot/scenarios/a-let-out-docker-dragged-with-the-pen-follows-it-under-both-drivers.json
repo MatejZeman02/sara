@@ -1,0 +1,20 @@
+[
+  {"args": ["--trail-drag"]},
+  {"comment": "Layers let out and dragged by its title bar with a pen as Windows Ink hands one to Godot, a plain motion at the press after every pen motion, then as WinTab does, with the pen's motions alone. A let-out docker is a window of its own and no shot of the main window holds it, so the claim is the pen_drag line, the trail and Layers' place in each state dump"},
+  {"window": [1920, 1080]},
+  {"wait": 30},
+  {"document": "srgb"},
+  {"tool": "brush"},
+  {"docker": "park"},
+  {"docker": {"id": "LayersDocker", "at": [700, 300], "size": [320, 420]}},
+  {"wait": 15},
+  {"prefs": {"embed_subwindows": false}},
+  {"wait": 40},
+  {"state": "1-layers-let-out-before-the-drag"},
+  {"pen_drag": {"window": "LayersDocker", "by": [360, 140], "steps": 24, "plain": true}},
+  {"wait": 10},
+  {"state": "2-layers-where-the-pen-let-go-under-ink"},
+  {"pen_drag": {"window": "LayersDocker", "by": [-200, 60], "steps": 12, "plain": false}},
+  {"wait": 10},
+  {"state": "3-layers-where-the-pen-let-go-under-wintab"}
+]

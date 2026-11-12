@@ -1,0 +1,29 @@
+# What a simulation rule's kernel reads beside the neighbourhood library, a
+# library and not a kernel.
+#
+# A rule's randomness is a hash of the cell and the step, never an atomic whose
+# order differs between two runs, so a step is the same picture on every run and
+# on every machine, which is what lets a scenario take a shot of step forty and
+# the gate compare it. The hash is `sa_lattice_hash` of `lattice_hash.gmacs`,
+# the one the noise library's volume reads, integer arithmetic and exact
+# everywhere, where a sine would be one value on one driver and another on the
+# next.
+#
+# **Text, after the params.** An import is pasted in where it stands, so a
+# kernel imports this below its `params:` block, which declares `int step`, the
+# number of the step being taken, and `vec2 chunk`, where the chunk starts in
+# the layer's texels. `SaSimulationRecord` fills the first and the runner the
+# second.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+import lattice_hash
+
+# A number in 0 to 1 for the cell at the dispatch texel *at* and this step,
+# the same for that cell and step whatever chunk or window it is stepped in.
+# The cell's place in the layer and the step are the three axes of the
+# lattice, and the number is below one and never one itself.
+
+
+def sa_step_random(ivec2 at) -> float:
+    return sa_lattice_hash(ivec3(ivec2(chunk) + at, step))

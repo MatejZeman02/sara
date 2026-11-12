@@ -1,0 +1,201 @@
+[
+  {
+    "wait": 35
+  },
+  {
+    "docker": {
+      "id": "ColorDocker",
+      "at": [
+        60,
+        120
+      ],
+      "size": [
+        520,
+        700
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "GraphDocker",
+      "at": [
+        640,
+        120
+      ],
+      "size": [
+        520,
+        520
+      ]
+    }
+  },
+  {
+    "wait": 25
+  },
+  {
+    "colour": "#0000ff"
+  },
+  {
+    "wait": 15
+  },
+  {
+    "state": "1-f2-triangle-0"
+  },
+  {
+    "colour": "#00ff00"
+  },
+  {
+    "wait": 15
+  },
+  {
+    "state": "1-f2-triangle-1"
+  },
+  {
+    "colour": "#ff8000"
+  },
+  {
+    "wait": 15
+  },
+  {
+    "state": "1-f2-triangle-2"
+  },
+  {
+    "shot": "1-f2-triangle-orange"
+  },
+  {
+    "click": {
+      "control": "HexInput"
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "state": "2-f44-hex-focused"
+  },
+  {
+    "click": {
+      "control": "ForegroundSwatch"
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "state": "3-f44-swatch-clicked"
+  },
+  {
+    "click": {
+      "control": "HexInput"
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "state": "4-f18-before-bad-hex"
+  },
+  {
+    "shot": "4-f18-before-bad-hex"
+  },
+  {
+    "graph": "cloud"
+  },
+  {
+    "wait": 20
+  },
+  {
+    "state": "5-f8-graph-cloud"
+  },
+  {
+    "graph": "waveform"
+  },
+  {
+    "wait": 20
+  },
+  {
+    "state": "6-f8-graph-waveform"
+  },
+  {
+    "shot": "6-f8-graph-waveform"
+  },
+  {
+    "docker_resize": {
+      "id": "ColorDocker",
+      "by": [
+        -160,
+        0
+      ],
+      "grip": true
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "state": "7-f29-picker-narrow"
+  },
+  {
+    "shot": "7-f29-picker-narrow"
+  },
+  {
+    "docker_resize": {
+      "id": "ColorDocker",
+      "by": [
+        320,
+        0
+      ],
+      "grip": true
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "state": "8-f29-picker-wide"
+  },
+  {
+    "shot": "8-f29-picker-wide"
+  },
+  {
+    "open": "preferences"
+  },
+  {
+    "wait": 25
+  },
+  {
+    "page": "Display"
+  },
+  {
+    "wait": 20
+  },
+  {
+    "state": "9-f19-display-page"
+  },
+  {
+    "shot": "9-f19-display-page"
+  },
+  {
+    "page": "Colour Spaces"
+  },
+  {
+    "wait": 20
+  },
+  {
+    "state": "10-f19-colour-spaces-page"
+  },
+  {
+    "shot": "10-f19-colour-spaces-page"
+  },
+  {
+    "page": "Theme"
+  },
+  {
+    "wait": 20
+  },
+  {
+    "state": "11-f9-theme-page"
+  },
+  {
+    "shot": "11-f9-theme-page"
+  }
+]

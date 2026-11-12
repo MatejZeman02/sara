@@ -1,0 +1,108 @@
+[
+  {
+    "comment": "A press just after Tab where a docker stood paints nothing. Tab hides every docker and outlines where each stood for about a second. A click inside an outline at once is swallowed, which the history count and the brush's dab count say, and the outline flashes. A click at once outside every place paints. After the fade a click in the same place paints as the canvas always did. The clicks are the harness's own, which reach the window as the engine hands a click over. Nothing is saved."
+  },
+  {
+    "wait": 45
+  },
+  {
+    "window": [
+      1920,
+      1080
+    ]
+  },
+  {
+    "prefs": {
+      "ui_scale": 1.0
+    }
+  },
+  {
+    "wait": 25
+  },
+  {
+    "layer": {
+      "add": "Sky"
+    }
+  },
+  {
+    "colour": "#d02030"
+  },
+  {
+    "wait": 20
+  },
+  {
+    "state": "00-before-tab"
+  },
+  {
+    "shot": "00-before-tab"
+  },
+  {
+    "comment": "01, Tab and a click at once where the Tool Options docker stood, which is (70, 470) to (370, 800)."
+  },
+  {
+    "key": "tab"
+  },
+  {
+    "wait": 2
+  },
+  {
+    "shot": "01-tab-outlines"
+  },
+  {
+    "click": {
+      "at": [
+        220,
+        640
+      ]
+    }
+  },
+  {
+    "state": "01-click-in-the-place-at-once"
+  },
+  {
+    "shot": "01-click-in-the-place-at-once"
+  },
+  {
+    "comment": "02, a click at once outside every place, on the canvas between the dockers."
+  },
+  {
+    "click": {
+      "at": [
+        960,
+        300
+      ]
+    }
+  },
+  {
+    "wait": 4
+  },
+  {
+    "state": "02-click-outside-at-once"
+  },
+  {
+    "comment": "03, the fade is over, and the same place as 01 paints."
+  },
+  {
+    "wait": 150
+  },
+  {
+    "state": "03-the-fade-is-over"
+  },
+  {
+    "click": {
+      "at": [
+        220,
+        640
+      ]
+    }
+  },
+  {
+    "wait": 4
+  },
+  {
+    "state": "03-click-in-the-place-after-the-fade"
+  },
+  {
+    "shot": "03-click-in-the-place-after-the-fade"
+  }
+]

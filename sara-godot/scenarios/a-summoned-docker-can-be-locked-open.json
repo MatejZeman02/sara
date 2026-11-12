@@ -1,0 +1,32 @@
+[
+  {"comment": "The lock on a summoned docker. A locked docker ignores the leave timer, so a docker can be summoned and locked: Ctrl+Alt+Shift+T summons the Layers docker with the lock already on, and the pointer is walked away for longer than the dwell with the docker still out. The lock button on the docker's own bar is then clicked, which is the other way a painter reaches the lock, and the same walk sends the docker back. Alt+Shift+T is the Layers docker's summon in Sara's own map, and the chord with Ctrl held is its locked twin."},
+  {"wait": 40},
+  {"docker": "park"},
+  {"wait": 10},
+  {"move": [960, 540]},
+  {"state": "01-parked"},
+
+  {"docker_pointer": [700, 450]},
+  {"key": {"key": "t", "shift": true, "alt": true, "ctrl": true}},
+  {"wait": 15},
+  {"state": "02-layers-summoned-locked-under-the-pointer"},
+  {"shot": "02-layers-summoned-locked-under-the-pointer"},
+
+  {"docker_pointer": [120, 1000]},
+  {"wait": 240},
+  {"state": "03-the-pointer-away-past-the-dwell-and-the-lock-held-it"},
+  {"shot": "03-the-pointer-away-past-the-dwell-and-the-lock-held-it"},
+
+  {"docker_pointer": [700, 450]},
+  {"wait": 10},
+  {"click": {"control": "LockButton"}},
+  {"wait": 15},
+  {"state": "04-the-button-let-it-go"},
+  {"shot": "04-the-button-let-it-go"},
+
+  {"docker_pointer": [120, 1000]},
+  {"wait": 240},
+  {"state": "05-the-pointer-away-and-the-docker-went-back"},
+  {"shot": "05-the-pointer-away-and-the-docker-went-back"},
+  {"docker_pointer": null}
+]

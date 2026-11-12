@@ -1,0 +1,14 @@
+[
+  {"wait": 40},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 20},
+  {"tool": "brush"},
+  {"wait": 6},
+  {"preset": {"open": true, "icon_size": 48}},
+  {"preset": {}},
+  {"wait": 12},
+  {"preset": {"finish": true}},
+  {"wait": 15},
+  {"shot": "1-the-eight-in-the-chooser"},
+  {"state": "1-the-eight-in-the-chooser"}
+]

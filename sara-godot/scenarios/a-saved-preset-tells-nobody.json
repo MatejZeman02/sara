@@ -1,0 +1,113 @@
+[
+  {
+    "wait": 40
+  },
+  {
+    "docker": {
+      "id": "BrushPresetsDocker",
+      "at": [
+        1500,
+        120
+      ],
+      "size": [
+        300,
+        420
+      ]
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "presets_docker": {}
+  },
+  {
+    "state": "1-the-docker-open-and-empty"
+  },
+  {
+    "shot": "1-the-docker-open-and-empty"
+  },
+  {
+    "option": {
+      "key": "radius",
+      "value": 0.06
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "preset": {
+      "save": "Probe Wide"
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "presets_docker": {}
+  },
+  {
+    "state": "2-saved-with-nothing-refreshing-the-docker"
+  },
+  {
+    "shot": "2-saved-with-nothing-refreshing-the-docker"
+  },
+  {
+    "option": {
+      "key": "radius",
+      "value": 0.01
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "preset": {
+      "save": "Probe Fine"
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "presets_docker": {}
+  },
+  {
+    "state": "3-a-second-save-lands-the-same-way"
+  },
+  {
+    "shot": "3-a-second-save-lands-the-same-way"
+  },
+  {
+    "preset": {
+      "delete": "Probe Wide"
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "presets_docker": {}
+  },
+  {
+    "state": "4-a-delete-takes-the-cell-away"
+  },
+  {
+    "shot": "4-a-delete-takes-the-cell-away"
+  },
+  {
+    "preset": {
+      "delete": "Probe Fine"
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "presets_docker": {}
+  },
+  {
+    "state": "5-cleaned-up"
+  }
+]

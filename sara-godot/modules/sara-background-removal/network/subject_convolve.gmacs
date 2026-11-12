@@ -1,0 +1,113 @@
+# Kernel: subject_convolve
+#
+# One convolution of U²-NetP with its batch norm already folded in, its bias,
+# and the ReLU after it when the network has one, over one tensor or over two
+# read as their concatenation, and the residual add of an RSU block's last
+# convolution when one is named.
+#
+# A tensor is floats in a storage buffer, channel after channel and row after
+# row, the layout PyTorch keeps, starting at a float offset. The input is
+# `source`'s channels followed by `second`'s, so `torch.cat((a, b), 1)` is never
+# written out: a convolution over a concatenation reads the second buffer at
+# its channel offset instead. Both keep the output's size, since every
+# convolution of the network pads by its dilation and steps by one.
+#
+# An invocation is one texel and eight output channels, so a value read is
+# used eight times, and every invocation of a workgroup reads the same weights.
+# The weights are those of `folded_weights.gd`: output channel, input channel,
+# row and column, then the bias.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel subject_convolve
+
+buffer source: float values[]
+buffer second: float values[]
+buffer residual: float values[]
+buffer target: float values[]
+buffer weights: float values[]
+
+params:
+    # Where the first input starts and how many channels it has.
+    int source_at
+    int source_channels
+    # Where the second starts and how many it has, 0 when there is none.
+    int second_at
+    int second_channels
+    # The size of every channel of the input and of the output.
+    int height
+    int width
+    # Where the output starts and how many channels it has.
+    int target_at
+    int target_channels
+    # 3 for a 3×3 convolution and 1 for a 1×1, and its dilation.
+    int taps
+    int dilation
+    # Where this convolution's weights and bias start in the weights.
+    int weights_at
+    int bias_at
+    # 1 when a ReLU follows the convolution.
+    int relu
+    # Where the tensor added after the ReLU starts, -1 for none.
+    int residual_at
+
+# The output channels one invocation works.
+const int CHANNELS = 8
+
+
+def tap(int at, int lane, int last, int stride) -> float:
+    """The weight of output channel *lane* past the first, at *at* for the
+    first. A lane past the last channel reads the last one's, so no read leaves
+    the convolution's own weights, and its sum is never written."""
+    return weights.values[at + min(lane, last) * stride]
+
+
+def one_hot(int lane) -> vec4:
+    """A vector with 1 at *lane* and 0 elsewhere, so a sum is picked from a
+    vector without indexing it by a variable."""
+    return vec4(equal(ivec4(lane), ivec4(0, 1, 2, 3)))
+
+
+@workgroup_size(64, 1)
+def subject_convolve():
+    int plane = height * width
+    int at = int(global_id.x)
+    int first = int(global_id.y) * CHANNELS
+    if at >= plane or first >= target_channels:
+        return
+    int y = at / width
+    int x = at - y * width
+    int inputs = source_channels + second_channels
+    int area = taps * taps
+    int stride = inputs * area
+    int last = target_channels - 1 - first
+    int reach = (taps / 2) * dilation
+    vec4 low = vec4(0.0)
+    vec4 high = vec4(0.0)
+    for i in range(0, inputs):
+        bool from_second = i >= source_channels
+        int base = from_second ? second_at + (i - source_channels) * plane : source_at + i * plane
+        int row_weights = weights_at + (first * inputs + i) * area
+        for ty in range(0, taps):
+            int sy = y + ty * dilation - reach
+            if sy < 0 or sy >= height:
+                continue
+            for tx in range(0, taps):
+                int sx = x + tx * dilation - reach
+                if sx < 0 or sx >= width:
+                    continue
+                int read = base + sy * width + sx
+                float value = from_second ? second.values[read] : source.values[read]
+                int w = row_weights + ty * taps + tx
+                low += value * vec4(tap(w, 0, last, stride), tap(w, 1, last, stride), tap(w, 2, last, stride), tap(w, 3, last, stride))
+                high += value * vec4(tap(w, 4, last, stride), tap(w, 5, last, stride), tap(w, 6, last, stride), tap(w, 7, last, stride))
+    for lane in range(0, CHANNELS):
+        if lane > last:
+            return
+        float sum = dot(lane < 4 ? low : high, one_hot(lane % 4)) + weights.values[bias_at + first + lane]
+        if relu != 0:
+            sum = max(sum, 0.0)
+        int out_at = (first + lane) * plane + at
+        if residual_at >= 0:
+            sum += residual.values[residual_at + out_at]
+        target.values[target_at + out_at] = sum

@@ -1,0 +1,141 @@
+[
+ {
+  "comment": "A fresh block deleted from the Layers docker while it is typed ends with no step, keys typed after do nothing, and undo brings the layer back where it was deleted from."
+ },
+ {
+  "wait": 60
+ },
+ {
+  "prefs": {
+   "ui_scale": 1.0,
+   "autosave_interval_minutes": 0
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "document": "srgb",
+  "size": [
+   800,
+   400
+  ]
+ },
+ {
+  "wait": 10
+ },
+ {
+  "fit": true
+ },
+ {
+  "fill": [
+   0.9,
+   0.9,
+   0.85
+  ]
+ },
+ {
+  "layer": {
+   "add": "Paint"
+  }
+ },
+ {
+  "colour": "#202020"
+ },
+ {
+  "tool": {
+   "id": "text",
+   "options": {
+    "text_font": 0,
+    "text_size": 64
+   }
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "stroke": {
+   "from": [
+    60,
+    300
+   ],
+   "to": [
+    60.25,
+    300
+   ],
+   "space": "document",
+   "pressure": 1.0,
+   "smoothing": false
+  }
+ },
+ {
+  "wait": 3
+ },
+ {
+  "key": {
+   "key": "A",
+   "char": "a"
+  }
+ },
+ {
+  "key": {
+   "key": "B",
+   "char": "b"
+  }
+ },
+ {
+  "wait": 3
+ },
+ {
+  "layers": ""
+ },
+ {
+  "layer_action": "delete"
+ },
+ {
+  "wait": 5
+ },
+ {
+  "key": {
+   "key": "C",
+   "char": "c"
+  }
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 5
+ },
+ {
+  "layers": ""
+ },
+ {
+  "state": "d1-deleted-while-typing",
+  "dump": true
+ },
+ {
+  "look": {
+   "path": "d1.png"
+  }
+ },
+ {
+  "undo": 1
+ },
+ {
+  "wait": 5
+ },
+ {
+  "layers": ""
+ },
+ {
+  "state": "d2-undo",
+  "dump": true
+ },
+ {
+  "look": {
+   "path": "d2.png"
+  }
+ }
+]

@@ -1,0 +1,84 @@
+# Kernel: resample
+# Draws the lifted picture into one destination chunk under an affine map.
+#
+# The map is handed over already inverted, as a 3 by 3 whose two upper rows are
+# `rows` and `shift` and whose bottom row is `persp`, so the CPU composes scale,
+# rotation, shear, offset and the perspective once per dispatch run rather than
+# once per texel. An affine map has a bottom row of (0, 0, 1), so the divide is by
+# one. Perspective is the only thing that puts anything else there.
+#
+# The source is one texture holding the whole lifted piece rather than the chunks
+# it came out of. A bilinear read needs the four texels around a position, and at
+# a chunk border two live in the neighbour, which is not bound. Stitching first
+# gives a resample with no seam every 256 pixels, at the cost of one texture the
+# size of the lifted box for the life of the gesture.
+#
+# Alpha is premultiplied for the interpolation and divided back out. The read is in
+# linear light and averages every texel under a destination texel where the map
+# shrinks the picture, `transform_read.gmacs` says how. The footprint is taken
+# here, from where the map sends the next texel along each axis, so a perspective
+# that shrinks the far side averages more there.
+#
+# Nearest is one read rather than four. It is what pixel art wants, and the only
+# filter that cannot invent a colour the picture did not hold.
+
+kernel resample
+
+image source: readonly
+image destination: writeonly
+
+params:
+    # Where the dispatch starts inside the destination chunk, and how big it is.
+    vec4 dest
+    # The document position of the destination chunk's own (0, 0), and the size
+    # of the source texture.
+    vec4 world
+    # The inverse map's two rows.
+    vec4 rows
+    # Its translation, then which filter to read with, 0 for bilinear and 1
+    # for nearest, and one float of padding to close the block.
+    vec4 shift
+    # The inverse map's third row, which is what makes it a homography
+    # rather than an affine: `xy` are the two coefficients on the document
+    # position and `z` is the constant. An affine map sends (0, 0, 1) here and
+    # the divide below is by one, so nothing that was affine moves by a texel.
+    vec4 persp
+    # The document's transfer curve, the four numbers `transfer_curve.gmacs`
+    # takes, and the identity for a field that is not colour.
+    vec4 curve
+
+# The read of the lifted picture, shared with `warp.gmacs`, which puts a
+# second map in front of it. Included after the params because it
+# reads the `source` image, and an include is text.
+import transform_read
+
+# Where the map sends the document position `world_pos`, in the source's
+# texels, centre to centre. A position past the horizon is sent nowhere near,
+# which only ever widens the footprint of a texel already at the horizon.
+
+
+def sa_mapped(vec2 world_pos) -> vec2:
+    vec2 mapped = vec2(dot(rows.xy, world_pos), dot(rows.zw, world_pos)) + shift.xy
+    return mapped / max(dot(persp.xy, world_pos) + persp.z, 1.0e-6) - vec2(0.5)
+
+
+def resample():
+    ivec2 local = ivec2(global_id.xy) + ivec2(dest.xy)
+    if local.x >= int(dest.x + dest.z) or local.y >= int(dest.y + dest.w):
+        return
+
+    # The texel's centre, because a map applied at the corner shifts the whole
+    # picture half a texel up and left at every scale but one.
+    vec2 world_pos = vec2(local) + world.xy + vec2(0.5)
+    vec2 mapped = vec2(dot(rows.xy, world_pos), dot(rows.zw, world_pos)) + shift.xy
+    # The homogeneous divide. A texel whose w is nought or negative is
+    # behind the horizon the four corners describe, and there is no colour it
+    # could take, so it is left transparent rather than folded back into the
+    # picture as a mirrored ghost.
+    float w = dot(persp.xy, world_pos) + persp.z
+    if w <= 0.0:
+        destination[local] = vec4(0.0)
+        return
+    vec2 at = mapped / w - vec2(0.5)
+    vec2 footprint = sa_footprint(sa_mapped(world_pos + vec2(1.0, 0.0)) - at, sa_mapped(world_pos + vec2(0.0, 1.0)) - at)
+    destination[local] = sa_read_source(at, ivec2(world.zw), shift.z > 0.5, footprint, curve)

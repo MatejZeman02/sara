@@ -1,0 +1,80 @@
+diff --git a/lib/jxl/enc_ans.cc b/lib/jxl/enc_ans.cc
+index 5d7ef52..671fc5e 100644
+--- a/lib/jxl/enc_ans.cc
++++ b/lib/jxl/enc_ans.cc
+@@ -867,8 +867,51 @@ Status EntropyEncodingData::ChooseUintConfigs(
+       AlignedMemory tmp,
+       AlignedMemory::Create(memory_manager, (max_histo_volume + max_vec_size) *
+                                                 sizeof(uint32_t)));
++  // Under every config above, a value below 2^12 is its own key. A larger
++  // value is split by its highest set bit, at most the two bits under that and
++  // at most its five lowest bits, so those make its key. Values with one key
++  // give the same token and extra bits under every config. Each histogram is
++  // therefore counted once by key, and each config tokenises one value a key
++  // and adds the key's count, where it used to tokenise every value.
++  constexpr uint32_t kExactBelow = 1 << 12;
++  constexpr size_t kNumKeys = kExactBelow + (32 - 12) * (4 << 5);
++  for (const HybridUintConfig& cfg : configs) {
++    JXL_ENSURE(cfg.split_exponent <= 12 && cfg.msb_in_token <= 2 &&
++               cfg.lsb_in_token <= 5);
++  }
++  std::vector<uint32_t> key_count(kNumKeys);
++  std::vector<uint32_t> keys(kNumKeys);
++  std::vector<uint32_t> key_value(kNumKeys + max_vec_size);
++  std::vector<uint32_t> key_weight(kNumKeys);
++
+   for (size_t h = 0; h < num_histo; h++) {
+     float best_cost = std::numeric_limits<float>::max();
++    size_t len = histo_volume[h];
++    const uint32_t* data = transposed.data() + histo_offset[h];
++    size_t num_keys = 0;
++    for (size_t i = 0; i < len; ++i) {
++      uint32_t v = data[i];
++      uint32_t n = FloorLog2Nonzero(v | kExactBelow);
++      size_t large = kExactBelow + ((n - 12) << 7) +
++                     (((v >> (n - 2)) & 3) << 5) + (v & 31);
++      size_t key = v < kExactBelow ? v : large;
++      if (key_count[key]++ == 0) keys[num_keys++] = key;
++    }
++    // Values counted by the highest set bit they have, for the extra bits.
++    uint32_t log_count[32] = {};
++    for (size_t k = 0; k < num_keys; ++k) {
++      size_t key = keys[k];
++      uint32_t v = static_cast<uint32_t>(key);
++      if (key >= kExactBelow) {
++        size_t rest = key - kExactBelow;
++        uint32_t n = 12 + (rest >> 7);
++        v = (1u << n) | (((rest >> 5) & 3) << (n - 2)) | (rest & 31);
++      }
++      key_value[k] = v;
++      key_weight[k] = key_count[key];
++      key_count[key] = 0;
++      if (v != 0) log_count[FloorLog2Nonzero(v)] += key_weight[k];
++    }
+     for (HybridUintConfig cfg : configs) {
+       uint32_t max_v = max_value_per_histo[h];
+       size_t capacity;
+@@ -884,12 +927,17 @@ Status EntropyEncodingData::ChooseUintConfigs(
+ 
+       Histogram histo;
+       histo.EnsureCapacity(capacity);
+-      size_t len = histo_volume[h];
+-      uint32_t* data = transposed.data() + histo_offset[h];
+-      size_t extra_bits = EstimateTokenCost(data, len, cfg, tmp);
+-      uint32_t* tmp_tokens = tmp.address<uint32_t>();
+-      for (size_t i = 0; i < len; ++i) {
+-        histo.FastAdd(tmp_tokens[i]);
++      EstimateTokenCost(key_value.data(), num_keys, cfg, tmp);
++      // A value at or above the split has n - msb - lsb extra bits, where n is
++      // its highest set bit. Summed here, as EstimateTokenCost sums them.
++      uint32_t extra_bits = 0;
++      for (uint32_t n = cfg.split_exponent; n < 32; ++n) {
++        extra_bits +=
++            log_count[n] * (n - cfg.msb_in_token - cfg.lsb_in_token);
++      }
++      const uint32_t* key_token = tmp.address<uint32_t>();
++      for (size_t k = 0; k < num_keys; ++k) {
++        histo.counts[key_token[k]] += key_weight[k];
+       }
+       histo.Condition();
+       JXL_ASSIGN_OR_RETURN(float cost, histo.ANSPopulationCost());

@@ -1,0 +1,16 @@
+# One line of work, so a test can dispatch a module's own kernel and read what
+# it wrote. Nothing here is an example worth copying: it is the shortest kernel
+# that proves the door.
+
+kernel one_line
+
+image dst
+
+params:
+    vec4 value
+
+
+def one_line():
+    if pixel.x >= image_size(dst).x or pixel.y >= image_size(dst).y:
+        return
+    image_store(dst, pixel, value)

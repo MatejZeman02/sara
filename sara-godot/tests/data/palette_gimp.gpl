@@ -1,0 +1,14 @@
+GIMP Palette
+Name: Sara Fixture
+Columns: 4
+#
+# A palette in the shape the .gpl files shipped with GIMP and Krita have,
+# written by hand for the suite: both separators, a name with a space and a
+# per cent sign, and one colour with no name at all.
+#
+
+255 255 255	White
+  0   0   0	Black
+242 242 242    Grey 95%
+128  64  32    Warm Shadow
+ 20  12  28

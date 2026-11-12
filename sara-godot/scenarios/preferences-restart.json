@@ -1,0 +1,298 @@
+[
+ {
+  "wait": 30
+ },
+ {
+  "state": "after-restart"
+ },
+ {
+  "shot": "after-restart"
+ },
+ {
+  "hide": ""
+ },
+ {
+  "open": "preferences"
+ },
+ {
+  "wait": 20
+ },
+ {
+  "page": "Workspace"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "workspace": {
+   "slider": "font_size"
+  }
+ },
+ {
+  "state": "after-restart-workspace"
+ },
+ {
+  "shot": "after-restart-workspace"
+ },
+ {
+  "page": "Display"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "after-restart-display"
+ },
+ {
+  "shot": "after-restart-display"
+ },
+ {
+  "page": "Tablet"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "shot": "after-restart-tablet"
+ },
+ {
+  "page": "Keyboard Shortcuts"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "shortcut": {
+   "search": "zoom",
+   "show": "view_zoom_in"
+  }
+ },
+ {
+  "state": "after-restart-shortcuts"
+ },
+ {
+  "shot": "after-restart-shortcuts"
+ },
+ {
+  "page": "Colour Themes"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "theme_rows": {}
+ },
+ {
+  "state": "after-restart-theme"
+ },
+ {
+  "shot": "after-restart-theme"
+ },
+ {
+  "page": "Colour Picker"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "layout_rows": {}
+ },
+ {
+  "state": "after-restart-picker-page"
+ },
+ {
+  "theme_rows": {
+   "delete": true
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "page": "Keyboard Shortcuts"
+ },
+ {
+  "wait": 8
+ },
+ {
+  "wait": 8
+ },
+ {
+  "page": "Workspace"
+ },
+ {
+  "wait": 8
+ },
+ {
+  "workspace": {
+   "slider": "font_size",
+   "value": 1.0
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "prefs": {
+   "advanced_options": false,
+   "display_exposure_enabled": false,
+   "display_exposure_stops": 0.0,
+   "tablet_max_pressure": 1.0,
+   "recorder_settle_seconds": 2.0,
+   "window_button_position": "auto",
+   "docker_hide_button": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "page": "Colour Picker"
+ },
+ {
+  "wait": 8
+ },
+ {
+  "layout_gesture": {
+   "switch": "Hex Input"
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "page": "Layers"
+ },
+ {
+  "wait": 8
+ },
+ {
+  "layout_gesture": {
+   "switch": "Opacity"
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "page": "Toolbox"
+ },
+ {
+  "wait": 8
+ },
+ {
+  "layout_gesture": {
+   "switch": "Zoom Tool"
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "page": "Info"
+ },
+ {
+  "wait": 8
+ },
+ {
+  "layout_gesture": {
+   "switch": "GPU"
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "page": "Recorder"
+ },
+ {
+  "wait": 8
+ },
+ {
+  "layout_gesture": {
+   "switch": "Resizer"
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "page": "Minimap"
+ },
+ {
+  "wait": 8
+ },
+ {
+  "layout_gesture": {
+   "switch": "Resizer"
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "page": "Tool Options"
+ },
+ {
+  "wait": 8
+ },
+ {
+  "layout_gesture": {
+   "switch": "Resizer"
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "page": "Graph"
+ },
+ {
+  "wait": 8
+ },
+ {
+  "layout_gesture": {
+   "switch": "Resizer"
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "page": "History"
+ },
+ {
+  "wait": 8
+ },
+ {
+  "layout_gesture": {
+   "switch": "Resizer"
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "page": "Reference"
+ },
+ {
+  "wait": 8
+ },
+ {
+  "layout_gesture": {
+   "switch": "Resizer"
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "state": "put-back"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 10
+ }
+]

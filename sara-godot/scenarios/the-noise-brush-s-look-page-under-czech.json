@@ -1,0 +1,20 @@
+[
+  {"comment": "Every message Sara shows has a Czech draft. Under Czech, picked through Preferences, the Noise Brush is taken from the Smeary Flat preset and its brush editor walked to the Look page, whose rows Texture Tone, Rim Firmness, Build Up and the strands' three read in English before the draft. The shot is to read every label of the page in Czech."},
+  {"wait": 60},
+  {"prefs": {"ui_scale": 1.0, "advanced_options": true, "ui_language": "cs"}},
+  {"wait": 30},
+  {"layout_preset": {"load": "minimalistic"}},
+  {"wait": 20},
+  {"document": "srgb", "size": [1200, 900]},
+  {"wait": 10},
+  {"preset": {"load": "Smeary Flat"}},
+  {"wait": 5},
+  {"tool": {"id": "noise_brush"}},
+  {"wait": 10},
+  {"brush_editor": {"open": true, "page": "Look"}},
+  {"wait": 20},
+  {"cut_labels": {"texts": true, "main": true}},
+  {"cut_labels": {"texts": true, "windows": true}},
+  {"state": "1-look-page"},
+  {"shot": "1-look-page"}
+]

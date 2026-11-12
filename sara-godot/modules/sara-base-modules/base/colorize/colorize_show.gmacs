@@ -1,0 +1,59 @@
+# Kernel: colorize_show
+# What a Colourise layer shows, worked out into its `albedo` by the layer's
+# resolve hook for each chunk whose scribbles or flats moved.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# The flats, with every scribble the flats have not taken in yet drawn over
+# them, so a stroke shows as it is laid and is gone into its region once an
+# update has filled it. A scribble is taken in where the flat under it is its
+# own colour, or empty under the Transparent key. With the switch that shows
+# the scribbles alone, the scribbles and nothing else.
+
+kernel colorize_show
+
+image albedo
+image keys: readonly
+image flats: rgba16f, readonly
+
+params:
+    # The Transparent key's colour, and how near a colour has to be to another
+    # to count as the same.
+    vec4 transparent
+    float tolerance
+    # One to show the scribbles alone.
+    float alone
+    float spare_a
+    float spare_b
+
+
+def near(vec3 a, vec3 b) -> bool:
+    vec3 off = abs(a - b)
+    return max(off.r, max(off.g, off.b)) <= tolerance
+
+# Whether the flat already holds what the scribble asks for.
+
+
+def taken_in(vec4 k, vec4 f) -> bool:
+    if near(k.rgb, transparent.rgb):
+        return f.a <= 0.0
+    return f.a > 0.0 and near(k.rgb, f.rgb)
+
+
+def colorize_show():
+    ivec2 at = ivec2(global_id.xy)
+    ivec2 size = image_size(albedo)
+    if at.x >= size.x or at.y >= size.y:
+        return
+    vec4 k = keys[at]
+    if alone > 0.5:
+        albedo[at] = k
+        return
+    vec4 f = flats[min(at * image_size(flats) / size, image_size(flats) - 1)]
+    if k.a <= 0.0 or taken_in(k, f):
+        albedo[at] = f
+        return
+    # The scribble over the flat, straight alpha in and out.
+    float a = k.a + f.a * (1.0 - k.a)
+    vec3 rgb = a > 0.0 ? (k.rgb * k.a + f.rgb * f.a * (1.0 - k.a)) / a : vec3(0.0)
+    albedo[at] = vec4(rgb, a)

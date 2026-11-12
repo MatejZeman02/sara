@@ -1,0 +1,142 @@
+[
+ {
+  "comment": "The Filter menu's search finds the filters inside its sections. The menu opens with its field holding the keyboard, gauss is typed as characters, the way a painter types into the Tools menu, and the Gaussian Blur row shows in the menu itself under Blur. Enter runs it as its row in the Blur list does, and the filter dialog opens."
+ },
+ {
+  "wait": 45
+ },
+ {
+  "prefs": {
+   "ui_scale": 1.0
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "document": "srgb"
+ },
+ {
+  "wait": 25
+ },
+ {
+  "fill": [
+   0.1,
+   0.1,
+   0.12
+  ]
+ },
+ {
+  "wait": 10
+ },
+ {
+  "colour": [
+   1.0,
+   0.85,
+   0.2
+  ]
+ },
+ {
+  "wait": 5
+ },
+ {
+  "stroke": {
+   "from": [
+    700,
+    300
+   ],
+   "to": [
+    1200,
+    800
+   ],
+   "pressure": 1.0
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "menu": "Filter"
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "0-the-filter-menu-before-a-search"
+ },
+ {
+  "key": {
+   "key": "g",
+   "shape": "label"
+  }
+ },
+ {
+  "wait": 3
+ },
+ {
+  "key": {
+   "key": "a",
+   "shape": "label"
+  }
+ },
+ {
+  "wait": 3
+ },
+ {
+  "key": {
+   "key": "u",
+   "shape": "label"
+  }
+ },
+ {
+  "wait": 3
+ },
+ {
+  "key": {
+   "key": "s",
+   "shape": "label"
+  }
+ },
+ {
+  "wait": 3
+ },
+ {
+  "key": {
+   "key": "s",
+   "shape": "label"
+  }
+ },
+ {
+  "wait": 3
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "1-gauss-shows-the-gaussian-blur-row"
+ },
+ {
+  "state": "1-gauss-shows-the-gaussian-blur-row"
+ },
+ {
+  "key": "enter"
+ },
+ {
+  "wait": 20
+ },
+ {
+  "filter": "describe"
+ },
+ {
+  "shot": "2-enter-runs-the-gaussian-blur"
+ },
+ {
+  "state": "2-enter-runs-the-gaussian-blur"
+ },
+ {
+  "filter": "cancel"
+ },
+ {
+  "wait": 10
+ }
+]

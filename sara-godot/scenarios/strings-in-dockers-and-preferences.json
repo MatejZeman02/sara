@@ -1,0 +1,9 @@
+[
+  {"wait": 30},
+  {"shot": "dockers"},
+  {"state": "dockers"},
+  {"open": "preferences"},
+  {"wait": 20},
+  {"shot": "preferences"},
+  {"state": "preferences"}
+]

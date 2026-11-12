@@ -1,0 +1,44 @@
+[
+  {
+    "wait": 45
+  },
+  {
+    "docker": "park"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "tool": "brush"
+  },
+  {
+    "wait": 8
+  },
+  {
+    "brush_editor": {
+      "open": true,
+      "page": "General"
+    }
+  },
+  {
+    "wait": 16
+  },
+  {
+    "shot": "1-the-brush-editors-blend-row"
+  },
+  {
+    "state": "1-the-brush-editors-blend-row"
+  },
+  {
+    "blend": ""
+  },
+  {
+    "wait": 12
+  },
+  {
+    "shot": "2-the-bar-blend-list-for-comparison"
+  },
+  {
+    "state": "2-the-bar-blend-list-for-comparison"
+  }
+]

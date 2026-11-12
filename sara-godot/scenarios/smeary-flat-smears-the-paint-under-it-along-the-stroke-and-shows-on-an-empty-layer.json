@@ -1,0 +1,412 @@
+[
+  {
+    "comment": "Smeary Flat smears the paint under it along the stroke, and shows on an empty layer. On a white 1200 by 900 document a yellow band from x 200 to 500 and a red one from 500 to 800 are filled to y 520 on a layer of their own, and Smeary Flat in blue at its own radius with randomness at nought paints from x 250 to 1050 across both at a press of 0.5 at the brush, at y 120 as the preset stands, at y 260 with its pickup and smear length off, and at y 400 with Paint at 0 percent. Each is measured over the red for 60 pixels past the crossing and over the white past the red. On an empty layer of its own over the white the preset's stroke and the one with the smudge off run at y 640 and 780 and are measured over their body. A look of the whole is kept for review, and one of each crossing."
+  },
+  {
+    "wait": 60
+  },
+  {
+    "prefs": {
+      "ui_scale": 1.0,
+      "autosave_interval_minutes": 0
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "layout_preset": {
+      "load": "minimalistic"
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "document": "srgb",
+    "size": [
+      1200,
+      900
+    ]
+  },
+  {
+    "wait": 10
+  },
+  {
+    "fit": true
+  },
+  {
+    "wait": 5
+  },
+  {
+    "fill": [
+      1.0,
+      1.0,
+      1.0
+    ]
+  },
+  {
+    "layer": {
+      "add": "Bands"
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "select": [
+      200,
+      0,
+      300,
+      520
+    ]
+  },
+  {
+    "fill": [
+      1.0,
+      0.85,
+      0.05
+    ]
+  },
+  {
+    "select": [
+      500,
+      0,
+      300,
+      520
+    ]
+  },
+  {
+    "fill": [
+      0.85,
+      0.08,
+      0.05
+    ]
+  },
+  {
+    "select": "none"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "colour": [
+      0.05,
+      0.05,
+      0.85
+    ]
+  },
+  {
+    "preset": {
+      "load": "Smeary Flat"
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "tool": {
+      "id": "noise_brush",
+      "options": {
+        "randomness": 0.0
+      }
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "stroke": {
+      "from": [
+        250,
+        120
+      ],
+      "to": [
+        1050,
+        120
+      ],
+      "pressure": 0.09853,
+      "steps": 200,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "brush": {
+      "tool": "noise_brush",
+      "smudge_pickup_option:enabled": false,
+      "smudge_length_option:enabled": false
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "stroke": {
+      "from": [
+        250,
+        260
+      ],
+      "to": [
+        1050,
+        260
+      ],
+      "pressure": 0.09853,
+      "steps": 200,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "preset": {
+      "load": "Smeary Flat"
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "tool": {
+      "id": "noise_brush",
+      "options": {
+        "randomness": 0.0
+      }
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "brush": {
+      "tool": "noise_brush",
+      "smudge_color_rate_option:strength": 0.0
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "stroke": {
+      "from": [
+        250,
+        400
+      ],
+      "to": [
+        1050,
+        400
+      ],
+      "pressure": 0.09853,
+      "steps": 200,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "measure": {
+      "rect": [
+        505,
+        112,
+        60,
+        16
+      ]
+    }
+  },
+  {
+    "measure": {
+      "rect": [
+        850,
+        112,
+        150,
+        16
+      ]
+    }
+  },
+  {
+    "measure": {
+      "rect": [
+        505,
+        252,
+        60,
+        16
+      ]
+    }
+  },
+  {
+    "measure": {
+      "rect": [
+        850,
+        252,
+        150,
+        16
+      ]
+    }
+  },
+  {
+    "measure": {
+      "rect": [
+        505,
+        392,
+        60,
+        16
+      ]
+    }
+  },
+  {
+    "measure": {
+      "rect": [
+        850,
+        392,
+        150,
+        16
+      ]
+    }
+  },
+  {
+    "layer": {
+      "add": "Empty"
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "preset": {
+      "load": "Smeary Flat"
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "tool": {
+      "id": "noise_brush",
+      "options": {
+        "randomness": 0.0
+      }
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "stroke": {
+      "from": [
+        250,
+        640
+      ],
+      "to": [
+        1050,
+        640
+      ],
+      "pressure": 0.09853,
+      "steps": 200,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "brush": {
+      "tool": "noise_brush",
+      "smudge_pickup_option:enabled": false,
+      "smudge_length_option:enabled": false
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "stroke": {
+      "from": [
+        250,
+        780
+      ],
+      "to": [
+        1050,
+        780
+      ],
+      "pressure": 0.09853,
+      "steps": 200,
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "wait": 30
+  },
+  {
+    "measure": {
+      "rect": [
+        350,
+        632,
+        600,
+        16
+      ]
+    }
+  },
+  {
+    "measure": {
+      "rect": [
+        350,
+        772,
+        600,
+        16
+      ]
+    }
+  },
+  {
+    "look": {
+      "path": "1-the-whole.png",
+      "rect": [
+        0,
+        0,
+        1200,
+        900
+      ],
+      "scale": 1
+    }
+  },
+  {
+    "look": {
+      "path": "2-the-crossings.png",
+      "rect": [
+        400,
+        40,
+        500,
+        420
+      ],
+      "scale": 2
+    }
+  },
+  {
+    "look": {
+      "path": "3-on-an-empty-layer.png",
+      "rect": [
+        200,
+        560,
+        900,
+        300
+      ],
+      "scale": 1
+    }
+  },
+  {
+    "shot": "4-the-window-after-the-strokes"
+  }
+]

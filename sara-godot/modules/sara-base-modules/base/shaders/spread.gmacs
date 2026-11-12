@@ -1,0 +1,38 @@
+# Spread, a simulation rule of the base module's: each step a cell takes a
+# weighted average of itself and its four neighbours, so paint spreads where it
+# lies.
+#
+# A simulation's step under the contract `SaSimulation` keeps, which is a
+# neighbourhood pass's: the previous state padded by one texel at binding 0,
+# the mask at binding 1, the next state at binding 2. The cell keeps
+# `1 - 4 * flow` of what it holds and takes `flow` of each neighbour, so the
+# weights sum to one and paint is moved and never made or lost.
+#
+# The average is taken premultiplied, so a coloured texel spreading into
+# transparent ones fades rather than darkening towards the black they hold, and
+# only the result is straightened. Nothing clamps the colour (hard rule 5).
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel spread
+
+image src: readonly
+image mask: r32f, readonly
+image dst
+
+params:
+    float flow  # what a cell gives each of its four neighbours a step, 0 to 0.25
+    vec2 origin  # the dispatched region's corner in the chunk
+    int halo  # how far the source is padded, written by the runner
+
+import neighbourhood
+
+
+def spread():
+    ivec2 at = pixel + ivec2(origin)
+    ivec2 centre = at + ivec2(halo, halo)
+    float share = clamp(flow, 0.0, 0.25)
+    vec4 around = sa_read(centre + ivec2(1, 0)) + sa_read(centre - ivec2(1, 0))
+    around += sa_read(centre + ivec2(0, 1)) + sa_read(centre - ivec2(0, 1))
+    vec4 mixed = sa_read(centre) * (1.0 - 4.0 * share) + around * share
+    sa_finish(at, sa_kept(at), sa_straight(mixed))

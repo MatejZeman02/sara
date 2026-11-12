@@ -1,0 +1,11 @@
+# The spec's own threshold, the four lines under "The pixel function, the
+# shortest door", copied rather than rewritten so it is measured against the
+# text the spec quotes.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+uniform float level: hint_range(0, 1) = 0.5
+
+def pixel(ivec2 at) -> vec4:
+    vec4 c = src(at)
+    return vec4(vec3(step(level, luminance(c.rgb))), c.a)

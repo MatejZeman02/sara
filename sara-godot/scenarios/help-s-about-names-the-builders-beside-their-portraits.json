@@ -1,0 +1,23 @@
+[
+  {"comment": "Help, About Sara names the builders beside their portraits. On a fresh profile at 1280 by 1024 and an interface scale of 1, About opens with Built by folded under Modules and licences, the fold is pressed open and the four builders show, each a portrait beside its name and a line saying what the portrait is. The body scrolls, since four portraits are taller than the room the window has, so ten notches of the wheel over it bring the last name and the line under the four into sight. The line reads whole with no link, since the journal is no longer in the app, and the last dump shows no JournalLink under BuiltBy."},
+  {"wait": 45},
+  {"window": [1280, 1024]},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 25},
+  {"open": "about"},
+  {"wait": 30},
+  {"state": "1-about-opens-with-built-by-folded"},
+  {"shot": "1-about-opens-with-built-by-folded"},
+  {"click": {"control": "BuiltBy", "in": "AboutDialog"}},
+  {"wait": 30},
+  {"move": [1275, 1018]},
+  {"wait": 6},
+  {"state": "2-built-by-open"},
+  {"shot": "2-built-by-open"},
+  {"wheel": {"at": [640, 700], "notches": -10}},
+  {"wait": 10},
+  {"move": [1275, 1018]},
+  {"wait": 6},
+  {"state": "3-the-four-and-the-line-under-them"},
+  {"shot": "3-the-four-and-the-line-under-them"}
+]

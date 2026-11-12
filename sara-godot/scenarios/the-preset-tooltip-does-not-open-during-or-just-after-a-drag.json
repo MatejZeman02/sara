@@ -1,0 +1,476 @@
+[
+  {
+    "comment": "A mouse flick on the Brush Presets docker's grid sets the list gliding while the pointer hovers on over the grid, a pixel either side each few frames as a pen held over a tablet reports. No tooltip opens over the gliding list nor just after it stands, and a fresh hover a moment later opens the cell's tooltip as before."
+  },
+  {
+    "wait": 40
+  },
+  {
+    "docker": "park"
+  },
+  {
+    "docker": {
+      "id": "BrushPresetsDocker",
+      "at": [
+        420,
+        200
+      ],
+      "size": [
+        310,
+        370
+      ]
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "presets_docker": {}
+  },
+  {
+    "state": "1-before-the-flick"
+  },
+  {
+    "shot": "1-before-the-flick"
+  },
+  {
+    "move": [
+      575,
+      470
+    ]
+  },
+  {
+    "press": {
+      "button": "left",
+      "at": [
+        575,
+        470
+      ]
+    }
+  },
+  {
+    "wait": 1
+  },
+  {
+    "move": {
+      "at": [
+        575,
+        432.5
+      ]
+    }
+  },
+  {
+    "wait": 1
+  },
+  {
+    "move": {
+      "at": [
+        575,
+        395.0
+      ]
+    }
+  },
+  {
+    "wait": 1
+  },
+  {
+    "move": {
+      "at": [
+        575,
+        357.5
+      ]
+    }
+  },
+  {
+    "wait": 1
+  },
+  {
+    "move": {
+      "at": [
+        575,
+        320.0
+      ]
+    }
+  },
+  {
+    "release": {
+      "button": "left",
+      "at": [
+        575,
+        320.0
+      ]
+    }
+  },
+  {
+    "shot": "2-the-release"
+  },
+  {
+    "move": [
+      574,
+      400
+    ]
+  },
+  {
+    "wait": 3
+  },
+  {
+    "move": [
+      576,
+      400
+    ]
+  },
+  {
+    "wait": 3
+  },
+  {
+    "move": [
+      574,
+      400
+    ]
+  },
+  {
+    "wait": 3
+  },
+  {
+    "move": [
+      576,
+      400
+    ]
+  },
+  {
+    "wait": 3
+  },
+  {
+    "move": [
+      574,
+      400
+    ]
+  },
+  {
+    "wait": 3
+  },
+  {
+    "move": [
+      576,
+      400
+    ]
+  },
+  {
+    "wait": 3
+  },
+  {
+    "move": [
+      574,
+      400
+    ]
+  },
+  {
+    "wait": 3
+  },
+  {
+    "move": [
+      576,
+      400
+    ]
+  },
+  {
+    "wait": 3
+  },
+  {
+    "move": [
+      574,
+      400
+    ]
+  },
+  {
+    "wait": 3
+  },
+  {
+    "move": [
+      576,
+      400
+    ]
+  },
+  {
+    "wait": 3
+  },
+  {
+    "move": [
+      574,
+      400
+    ]
+  },
+  {
+    "wait": 3
+  },
+  {
+    "shot": "3-gliding-under-a-hovering-pointer"
+  },
+  {
+    "move": [
+      576,
+      400
+    ]
+  },
+  {
+    "wait": 3
+  },
+  {
+    "move": [
+      574,
+      400
+    ]
+  },
+  {
+    "wait": 3
+  },
+  {
+    "move": [
+      576,
+      400
+    ]
+  },
+  {
+    "wait": 3
+  },
+  {
+    "move": [
+      574,
+      400
+    ]
+  },
+  {
+    "wait": 3
+  },
+  {
+    "move": [
+      576,
+      400
+    ]
+  },
+  {
+    "wait": 3
+  },
+  {
+    "move": [
+      574,
+      400
+    ]
+  },
+  {
+    "wait": 3
+  },
+  {
+    "move": [
+      576,
+      400
+    ]
+  },
+  {
+    "wait": 3
+  },
+  {
+    "move": [
+      574,
+      400
+    ]
+  },
+  {
+    "wait": 3
+  },
+  {
+    "move": [
+      576,
+      400
+    ]
+  },
+  {
+    "wait": 3
+  },
+  {
+    "move": [
+      574,
+      400
+    ]
+  },
+  {
+    "wait": 3
+  },
+  {
+    "move": [
+      576,
+      400
+    ]
+  },
+  {
+    "wait": 3
+  },
+  {
+    "move": [
+      574,
+      400
+    ]
+  },
+  {
+    "wait": 3
+  },
+  {
+    "move": [
+      576,
+      400
+    ]
+  },
+  {
+    "wait": 3
+  },
+  {
+    "move": [
+      574,
+      400
+    ]
+  },
+  {
+    "wait": 3
+  },
+  {
+    "move": [
+      576,
+      400
+    ]
+  },
+  {
+    "wait": 3
+  },
+  {
+    "move": [
+      574,
+      400
+    ]
+  },
+  {
+    "wait": 3
+  },
+  {
+    "move": [
+      576,
+      400
+    ]
+  },
+  {
+    "wait": 3
+  },
+  {
+    "move": [
+      574,
+      400
+    ]
+  },
+  {
+    "wait": 3
+  },
+  {
+    "move": [
+      576,
+      400
+    ]
+  },
+  {
+    "wait": 3
+  },
+  {
+    "presets_docker": {}
+  },
+  {
+    "shot": "4-the-list-stands-and-no-tooltip"
+  },
+  {
+    "move": [
+      574,
+      400
+    ]
+  },
+  {
+    "wait": 3
+  },
+  {
+    "move": [
+      576,
+      400
+    ]
+  },
+  {
+    "wait": 3
+  },
+  {
+    "move": [
+      574,
+      400
+    ]
+  },
+  {
+    "wait": 3
+  },
+  {
+    "move": [
+      576,
+      400
+    ]
+  },
+  {
+    "wait": 3
+  },
+  {
+    "move": [
+      574,
+      400
+    ]
+  },
+  {
+    "wait": 3
+  },
+  {
+    "move": [
+      576,
+      400
+    ]
+  },
+  {
+    "wait": 3
+  },
+  {
+    "move": [
+      574,
+      400
+    ]
+  },
+  {
+    "wait": 3
+  },
+  {
+    "move": [
+      576,
+      400
+    ]
+  },
+  {
+    "wait": 3
+  },
+  {
+    "shot": "5-still-no-tooltip-a-moment-on"
+  },
+  {
+    "move": [
+      600,
+      400
+    ]
+  },
+  {
+    "wait": 60
+  },
+  {
+    "state": "6-a-fresh-hover"
+  },
+  {
+    "shot": "6-a-fresh-hover-opens-the-tooltip"
+  }
+]

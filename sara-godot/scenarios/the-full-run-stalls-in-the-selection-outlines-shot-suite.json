@@ -1,0 +1,8 @@
+[
+  {"measure": {"perf": "begin"}},
+  {"stroke": {"from": [500, 400], "to": [1100, 700], "pressure": 0.8, "steps": 24}},
+  {"wait": 5},
+  {"measure": {"perf": "end"}},
+  {"shot": "after-the-perf-window"},
+  {"state": "after"}
+]

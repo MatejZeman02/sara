@@ -1,0 +1,19 @@
+# Writes the rectangle's own position into the picture, so a test can read back
+# where the dispatch thought it was rather than trust that it knew.
+#
+# Nothing here is an example worth copying. It declares `origin` and does
+# arithmetic on nothing else, because the only claim it makes is about the two
+# floats the named dispatch folds in.
+
+kernel at_origin
+
+image dst
+
+params:
+    vec2 origin
+
+
+def at_origin():
+    if pixel.x >= image_size(dst).x or pixel.y >= image_size(dst).y:
+        return
+    image_store(dst, pixel, vec4(origin.x, origin.y, 0.0, 1.0))

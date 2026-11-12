@@ -1,0 +1,7 @@
+[
+  {"wait": 30},
+  {"colour": "#1c1c1c"},
+  {"stroke": {"from": [500, 300], "to": [1300, 700], "pressure": 1.0, "steps": 12}},
+  {"wait": 10},
+  {"shot": "w1-curl-stroke"}
+]

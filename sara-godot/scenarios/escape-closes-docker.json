@@ -1,0 +1,245 @@
+[
+  {
+    "window": [
+      1920,
+      1080
+    ]
+  },
+  {
+    "wait": 45
+  },
+  {
+    "docker": {
+      "id": "ToolBoxDocker",
+      "at": [
+        1700,
+        60
+      ],
+      "size": [
+        60,
+        420
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "LayersDocker",
+      "at": [
+        1700,
+        500
+      ],
+      "size": [
+        200,
+        260
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "ColorDocker",
+      "at": [
+        1700,
+        780
+      ],
+      "size": [
+        200,
+        240
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "ToolOptionsDocker",
+      "at": [
+        1500,
+        60
+      ],
+      "size": [
+        180,
+        300
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "MinimapDocker",
+      "at": [
+        1500,
+        380
+      ],
+      "size": [
+        180,
+        180
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "GraphDocker",
+      "at": [
+        1500,
+        580
+      ],
+      "size": [
+        180,
+        180
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "HistoryDocker",
+      "at": [
+        1500,
+        780
+      ],
+      "size": [
+        180,
+        180
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "ReferenceDocker",
+      "at": [
+        1300,
+        780
+      ],
+      "size": [
+        180,
+        180
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "RecorderDocker",
+      "at": [
+        1300,
+        580
+      ],
+      "size": [
+        180,
+        180
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "BrushPresetsDocker",
+      "at": [
+        1300,
+        380
+      ],
+      "size": [
+        180,
+        180
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "InfoDocker",
+      "at": [
+        600,
+        300
+      ],
+      "size": [
+        440,
+        420
+      ]
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "tool": "pan"
+  },
+  {
+    "click": {
+      "at": [
+        820,
+        320
+      ]
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "shot": "01-info-has-the-keyboard"
+  },
+  {
+    "state": "01-info-has-the-keyboard"
+  },
+  {
+    "key": "escape"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "02-escape-closed-it"
+  },
+  {
+    "state": "02-escape-closed-it"
+  },
+  {
+    "key": "x"
+  },
+  {
+    "wait": 6
+  },
+  {
+    "state": "02b-the-next-key-reaches-the-app"
+  },
+  {
+    "key": "f9"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "click": {
+      "at": [
+        400,
+        800
+      ]
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "shot": "03-open-again-canvas-has-the-keyboard"
+  },
+  {
+    "state": "03-open-again-canvas-has-the-keyboard"
+  },
+  {
+    "key": "escape"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "04-the-docker-in-front-closed"
+  },
+  {
+    "state": "04-the-docker-in-front-closed"
+  },
+  {
+    "menu": "Window"
+  },
+  {
+    "wait": 8
+  },
+  {
+    "shot": "05-the-menu-tick-followed"
+  },
+  {
+    "state": "05-the-menu-tick-followed"
+  }
+]

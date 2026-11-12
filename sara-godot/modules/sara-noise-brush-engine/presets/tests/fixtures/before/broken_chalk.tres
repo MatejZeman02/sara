@@ -1,0 +1,234 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://core/api/dynamics/sa_curve_option.gd" id="1_v7o4r"]
+[ext_resource type="Script" path="res://core/api/dynamics/sa_sensor.gd" id="2_s7013"]
+[ext_resource type="Script" path="res://modules/sara-noise-brush-engine/noise_brush_settings.gd" id="3_5tixi"]
+[ext_resource type="Script" path="res://core/api/tip/sa_brush_tip.gd" id="4_3upvb"]
+
+[sub_resource type="Resource" id="Resource_bm26d"]
+script = ExtResource("2_s7013")
+id = 6
+active = true
+curve = PackedVector2Array(0, 0.5, 0.3, 1, 1, 1)
+length = 0
+
+[sub_resource type="Resource" id="Resource_qukag"]
+script = ExtResource("1_v7o4r")
+use_same_curve = false
+common_curve = PackedVector2Array(0, 0, 1, 1)
+strength = 2.0
+strength_max = 2.0
+sensors = {
+6: SubResource("Resource_bm26d")
+}
+
+[sub_resource type="Resource" id="Resource_f6g7c"]
+resource_name = "hardness"
+script = ExtResource("2_s7013")
+id = 19
+active = true
+curve = PackedVector2Array(0, 0.89, 1, 1)
+length = 0
+
+[sub_resource type="Resource" id="Resource_nyst2"]
+script = ExtResource("1_v7o4r")
+use_same_curve = false
+common_curve = PackedVector2Array(0, 0, 1, 1)
+sensors = {
+19: SubResource("Resource_f6g7c")
+}
+
+[sub_resource type="Resource" id="Resource_n0uu6"]
+script = ExtResource("1_v7o4r")
+common_curve = PackedVector2Array(0, 0, 1, 1)
+
+[sub_resource type="Resource" id="Resource_vqx3e"]
+resource_name = "opacity"
+script = ExtResource("2_s7013")
+id = 19
+active = true
+curve = PackedVector2Array(0, 0.88, 1, 1)
+length = 0
+
+[sub_resource type="Resource" id="Resource_eint0"]
+script = ExtResource("1_v7o4r")
+use_same_curve = false
+common_curve = PackedVector2Array(0, 0, 1, 1)
+sensors = {
+19: SubResource("Resource_vqx3e")
+}
+
+[sub_resource type="Resource" id="Resource_8nuv1"]
+script = ExtResource("1_v7o4r")
+enabled = false
+common_curve = PackedVector2Array(0, 0, 1, 1)
+
+[sub_resource type="Resource" id="Resource_66orj"]
+script = ExtResource("1_v7o4r")
+common_curve = PackedVector2Array(0, 0, 1, 1)
+
+[sub_resource type="Resource" id="Resource_uqxny"]
+resource_name = "size"
+script = ExtResource("2_s7013")
+id = 19
+active = true
+curve = PackedVector2Array(0, 0.95, 1, 1)
+length = 0
+
+[sub_resource type="Resource" id="Resource_7uwah"]
+script = ExtResource("1_v7o4r")
+use_same_curve = false
+common_curve = PackedVector2Array(0, 0, 1, 1)
+sensors = {
+19: SubResource("Resource_uqxny")
+}
+
+[sub_resource type="Resource" id="Resource_d182c"]
+script = ExtResource("1_v7o4r")
+enabled = false
+common_curve = PackedVector2Array(0, 0, 1, 1)
+strength = 0.19999999999999996
+
+[sub_resource type="Resource" id="Resource_8g3jj"]
+script = ExtResource("1_v7o4r")
+enabled = false
+common_curve = PackedVector2Array(0, 0, 1, 1)
+strength = 0.9
+
+[sub_resource type="Resource" id="Resource_mbrhh"]
+script = ExtResource("1_v7o4r")
+enabled = false
+common_curve = PackedVector2Array(0, 0, 1, 1)
+strength = 0.3
+
+[sub_resource type="Resource" id="Resource_4w52s"]
+resource_name = "strength"
+script = ExtResource("2_s7013")
+id = 19
+active = true
+curve = PackedVector2Array(0, 0.96, 1, 1)
+length = 0
+
+[sub_resource type="Resource" id="Resource_3olv0"]
+script = ExtResource("2_s7013")
+active = true
+curve = PackedVector2Array(0, 1, 1, 0)
+length = 0
+
+[sub_resource type="Resource" id="Resource_jui80"]
+script = ExtResource("1_v7o4r")
+use_same_curve = false
+common_curve = PackedVector2Array(0, 1, 1, 0)
+sensors = {
+0: SubResource("Resource_3olv0"),
+19: SubResource("Resource_4w52s")
+}
+
+[sub_resource type="Resource" id="Resource_3kl3d"]
+script = ExtResource("2_s7013")
+id = 5
+active = true
+curve = PackedVector2Array(0, 1, 1, 0)
+length = 0
+
+[sub_resource type="Resource" id="Resource_ypnpd"]
+script = ExtResource("1_v7o4r")
+use_same_curve = false
+common_curve = PackedVector2Array(0, 0, 1, 1)
+sensors = {
+5: SubResource("Resource_3kl3d")
+}
+
+[sub_resource type="Resource" id="Resource_6vxje"]
+script = ExtResource("2_s7013")
+id = 5
+active = true
+curve = PackedVector2Array(0, 1, 1, 0)
+length = 0
+
+[sub_resource type="Resource" id="Resource_qoa0y"]
+script = ExtResource("1_v7o4r")
+use_same_curve = false
+common_curve = PackedVector2Array(0, 0, 1, 1)
+sensors = {
+5: SubResource("Resource_6vxje")
+}
+
+[sub_resource type="Resource" id="Resource_e806c"]
+script = ExtResource("2_s7013")
+active = true
+curve = PackedVector2Array(0, 0, 1, 1)
+length = 0
+
+[sub_resource type="Resource" id="Resource_cbytf"]
+script = ExtResource("2_s7013")
+id = 5
+active = true
+curve = PackedVector2Array(0, 0.5, 1, 1)
+length = 0
+
+[sub_resource type="Resource" id="Resource_1547h"]
+script = ExtResource("2_s7013")
+id = 6
+active = true
+curve = PackedVector2Array(0, 1, 0.3, 0.5, 1, 0.5)
+length = 0
+
+[sub_resource type="Resource" id="Resource_yx5q6"]
+resource_name = "thickness"
+script = ExtResource("2_s7013")
+id = 19
+active = true
+curve = PackedVector2Array(0, 0.95, 1, 1)
+length = 0
+
+[sub_resource type="Resource" id="Resource_livbf"]
+script = ExtResource("1_v7o4r")
+use_same_curve = false
+common_curve = PackedVector2Array(0, 0, 1, 1)
+sensors = {
+0: SubResource("Resource_e806c"),
+5: SubResource("Resource_cbytf"),
+6: SubResource("Resource_1547h"),
+19: SubResource("Resource_yx5q6")
+}
+
+[sub_resource type="Curve" id="Curve_xalna"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Resource" id="Resource_s0e8b"]
+script = ExtResource("4_3upvb")
+generator = 3
+diameter = 17.7199056904311
+softness_curve = SubResource("Curve_xalna")
+image_path = "res://tips/scumble.png"
+
+[resource]
+script = ExtResource("3_5tixi")
+format_version = 4
+radius = 0.0357339915406129
+hardness = 0.9
+strength = 0.23
+tip = SubResource("Resource_s0e8b")
+randomness = 1.0
+texture_channels = 2
+texture_relief = 1.93
+grain_scale = 2.0
+grain_contrast = 2.5
+thickness = 0.19
+blend_mode = &"pigment_mix"
+size_option = SubResource("Resource_7uwah")
+opacity_option = SubResource("Resource_eint0")
+hardness_option = SubResource("Resource_nyst2")
+strength_option = SubResource("Resource_jui80")
+thickness_option = SubResource("Resource_livbf")
+stretch_option = SubResource("Resource_ypnpd")
+rotation_option = SubResource("Resource_8nuv1")
+thickness_lean_option = SubResource("Resource_qoa0y")
+drift_option = SubResource("Resource_qukag")
+saturation_option = SubResource("Resource_66orj")
+hue_option = SubResource("Resource_n0uu6")
+smudge_pickup_option = SubResource("Resource_mbrhh")
+smudge_color_rate_option = SubResource("Resource_d182c")
+smudge_length_option = SubResource("Resource_8g3jj")

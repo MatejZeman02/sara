@@ -1,0 +1,8 @@
+[
+  {"preset": {}},
+  {"preset": {"save": "Capture Test"}},
+  {"wait": 5},
+  {"shot": "preset-saved"},
+  {"preset": {"load": "Capture Test"}},
+  {"preset": {"delete": "Capture Test"}}
+]

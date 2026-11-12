@@ -1,0 +1,13 @@
+[{"comment": "A click on the reference board's empty space unselects the picture, and so does Escape. Shot 1 holds the selected picture's handles, shot 2 the board after a click off every picture with none, shot 3 the picture selected again and shot 4 the board after Escape with none."},
+ {"wait": 40}, {"document": "srgb"}, {"docker": "park"}, {"docker": {"id": "ReferenceDocker", "at": [860, 120], "size": [420, 420]}}, {"wait": 15},
+ {"move": [1000, 300]}, {"wait": 5}, {"drop": "res://ui/icon.png"}, {"wait": 15},
+ {"move": [1000, 300]}, {"wait": 5}, {"press": "left"}, {"release": "left"}, {"wait": 10},
+ {"move": [880, 520]}, {"wait": 10},
+ {"shot": "1-the-picture-selected"}, {"state": "1-the-picture-selected"},
+ {"press": "left"}, {"release": "left"}, {"wait": 10},
+ {"shot": "2-a-click-on-the-empty-board-unselects"}, {"state": "2-a-click-on-the-empty-board-unselects"},
+ {"move": [1000, 300]}, {"wait": 5}, {"press": "left"}, {"release": "left"}, {"wait": 10},
+ {"move": [880, 520]}, {"wait": 10},
+ {"shot": "3-selected-again"}, {"state": "3-selected-again"},
+ {"key": "escape"}, {"wait": 10},
+ {"shot": "4-escape-unselects"}, {"state": "4-escape-unselects"}]

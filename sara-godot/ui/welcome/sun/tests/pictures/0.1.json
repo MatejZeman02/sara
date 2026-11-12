@@ -1,0 +1,10 @@
+{
+    "title": "A test picture under the sun",
+    "credit": "Made for the suite",
+    "variants": [
+        {"file": "day.png", "sun": 30, "side": "rising"},
+        {"file": "dusk.png", "sun": -4, "side": "setting"},
+        {"file": "night.png", "sun": -18, "side": "setting"},
+        {"file": "night.png", "sun": -18, "side": "rising"}
+    ]
+}

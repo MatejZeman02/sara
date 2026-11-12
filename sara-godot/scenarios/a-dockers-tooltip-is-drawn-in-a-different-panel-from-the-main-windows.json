@@ -1,0 +1,20 @@
+[
+  {"wait": 40},
+  {"tooltip": {"look": "ColorPair"}},
+  {"tooltip": {"look": "ForegroundSwatch"}},
+
+  {"move": {"control": "ColorPair"}},
+  {"wait": 90},
+  {"tooltip": {"report": true}},
+  {"shot": "1-the-top-bar-colour-pair"},
+
+  {"click": {"control": "ForegroundSwatch"}},
+  {"wait": 10},
+  {"move": [600, 600]},
+  {"wait": 5},
+  {"move": {"control": "ForegroundSwatch"}},
+  {"wait": 90},
+  {"tooltip": {"report": true}},
+  {"state": "2-the-docker-foreground-swatch"},
+  {"shot": "2-the-docker-foreground-swatch"}
+]

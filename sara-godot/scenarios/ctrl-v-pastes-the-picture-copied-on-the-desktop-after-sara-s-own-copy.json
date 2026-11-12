@@ -1,0 +1,20 @@
+[
+  {"comment": "Run with --desktop-clipboard and a PNG, so the desktop holds a picture before Sara's Copy, and Sara's copy is then the later of the two. Ctrl+V lays Pasted Layer, Sara's copy. On the nested weston the mark Sara's Copy puts on the desktop clipboard is refused, because a key the harness presses gives Sara no fresh input serial and weston keeps the selection with the newer one, so this run reads the refused mark keeping Paste's old order, and Paste Special still finds the PNG and asks how it fits. A painter's real key press carries a fresh serial and the mark takes the PNG's place. The later desktop copy is the door session's, paste_after_a_later_desktop_copy.py in the change's probes, because a scenario cannot start wl-copy between two steps."},
+  {"wait": 30},
+  {"tool": "brush"},
+  {"wait": 5},
+  {"press": {"button": "left", "at": [500, 500]}},
+  {"move": [600, 500]}, {"move": [700, 500]},
+  {"release": {"button": "left", "at": [700, 500]}},
+  {"wait": 10},
+  {"state": "01-before-the-copy"},
+  {"key": {"key": "c", "ctrl": true}},
+  {"wait": 10},
+  {"state": "02-copied-in-sara"},
+  {"key": {"key": "v", "ctrl": true}},
+  {"wait": 20},
+  {"state": "03-after-ctrl-v"},
+  {"key": {"key": "v", "ctrl": true, "shift": true}},
+  {"wait": 20},
+  {"state": "04-after-paste-special"}
+]

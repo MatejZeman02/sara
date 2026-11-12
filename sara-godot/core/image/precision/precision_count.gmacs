@@ -1,0 +1,37 @@
+# Kernel: precision_count
+#
+# How many texels of one colour field hold a finite channel past the largest
+# half float, 65504, which Image > Depth says before it narrows a document to
+# half. SaPrecision dispatches it over every chunk a layer
+# has allocated and reads back the one uint once, a few bytes and not the
+# canvas, outside any stroke (hard rule 1).
+#
+# An infinity and a NaN are not counted, since a half holds both, and neither
+# is a value too small for a half, which becomes zero and is a loss of
+# precision rather than of range.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel precision_count
+
+# The field as it stands.
+image field: readonly
+# One uint, the texels of every chunk counted so far.
+buffer tally: uint beyond[]
+
+# The largest finite half float.
+const float SA_HALF_MAX = 65504.0
+
+
+def beyond_half(float x) -> bool:
+    return not isnan(x) and not isinf(x) and abs(x) > SA_HALF_MAX
+
+
+def precision_count():
+    ivec2 px = ivec2(global_id.xy)
+    ivec2 size = image_size(field)
+    if px.x >= size.x or px.y >= size.y:
+        return
+    vec4 c = field[px]
+    if beyond_half(c.r) or beyond_half(c.g) or beyond_half(c.b) or beyond_half(c.a):
+        atomic_add(tally.beyond[0], 1u)

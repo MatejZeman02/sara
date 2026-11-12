@@ -1,0 +1,262 @@
+[
+  {
+    "comment": "A fresh profile, a group holding one layer, and the Recorder shown. In each of the four shipped interface faces the Layers docker's kind button beside + shows a down chevron, the group's row a chevron that turns right when the group is folded, the Colour Picker's swap and reset buttons two arrows, the top bar's rotation reset the same reset arrow, the toolbox's flyout corners a drawn triangle and the Recorder's fold a chevron. Run once with FONTCONFIG_FILE naming a configuration with no fonts, so no system face can lend a glyph, which is the painter's machine the sweep found the boxes on. The last two shots are the brush editor's Presets header and the Top Menu Bar page's grip."
+  },
+  {
+    "wait": 45
+  },
+  {
+    "prefs": {
+      "ui_scale": 1.0
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "layer": {
+      "add": "Inside"
+    }
+  },
+  {
+    "pick_rows": [
+      0
+    ]
+  },
+  {
+    "layer_action": "group"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "docker": {
+      "id": "RecorderDocker",
+      "at": [
+        620,
+        120
+      ]
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "layer_collapse": ""
+  },
+  {
+    "shot": "1-inter-the-group-open"
+  },
+  {
+    "state": "1-inter-the-group-open"
+  },
+  {
+    "layer_collapse": 0
+  },
+  {
+    "click": {
+      "control": "FoldButton"
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "layer_collapse": ""
+  },
+  {
+    "shot": "2-inter-the-group-folded"
+  },
+  {
+    "state": "2-inter-the-group-folded"
+  },
+  {
+    "layer_collapse": 0
+  },
+  {
+    "click": {
+      "control": "FoldButton"
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "prefs": {
+      "ui_font": "ibm-plex-sans"
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "layer_collapse": ""
+  },
+  {
+    "shot": "3-ibm-plex-sans-the-group-open"
+  },
+  {
+    "state": "3-ibm-plex-sans-the-group-open"
+  },
+  {
+    "layer_collapse": 0
+  },
+  {
+    "click": {
+      "control": "FoldButton"
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "layer_collapse": ""
+  },
+  {
+    "shot": "4-ibm-plex-sans-the-group-folded"
+  },
+  {
+    "state": "4-ibm-plex-sans-the-group-folded"
+  },
+  {
+    "layer_collapse": 0
+  },
+  {
+    "click": {
+      "control": "FoldButton"
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "prefs": {
+      "ui_font": "source-sans-3"
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "layer_collapse": ""
+  },
+  {
+    "shot": "5-source-sans-3-the-group-open"
+  },
+  {
+    "state": "5-source-sans-3-the-group-open"
+  },
+  {
+    "layer_collapse": 0
+  },
+  {
+    "click": {
+      "control": "FoldButton"
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "layer_collapse": ""
+  },
+  {
+    "shot": "6-source-sans-3-the-group-folded"
+  },
+  {
+    "state": "6-source-sans-3-the-group-folded"
+  },
+  {
+    "layer_collapse": 0
+  },
+  {
+    "click": {
+      "control": "FoldButton"
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "prefs": {
+      "ui_font": "atkinson-hyperlegible"
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "layer_collapse": ""
+  },
+  {
+    "shot": "7-atkinson-hyperlegible-the-group-open"
+  },
+  {
+    "state": "7-atkinson-hyperlegible-the-group-open"
+  },
+  {
+    "layer_collapse": 0
+  },
+  {
+    "click": {
+      "control": "FoldButton"
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "layer_collapse": ""
+  },
+  {
+    "shot": "8-atkinson-hyperlegible-the-group-folded"
+  },
+  {
+    "state": "8-atkinson-hyperlegible-the-group-folded"
+  },
+  {
+    "layer_collapse": 0
+  },
+  {
+    "click": {
+      "control": "FoldButton"
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "prefs": {
+      "ui_font": "inter"
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "brush_editor": {
+      "open": true
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "shot": "9-the-brush-editors-presets-header"
+  },
+  {
+    "open": "preferences"
+  },
+  {
+    "wait": 20
+  },
+  {
+    "page": "Top Menu Bar"
+  },
+  {
+    "wait": 15
+  },
+  {
+    "shot": "10-the-top-menu-bar-pages-grip"
+  }
+]

@@ -1,0 +1,175 @@
+[
+  {
+    "wait": 35
+  },
+  {
+    "prefs": {
+      "advanced_options": true
+    }
+  },
+  {
+    "docker": {
+      "id": "BrushPresetsDocker",
+      "at": [
+        2,
+        340
+      ],
+      "size": [
+        280,
+        360
+      ]
+    }
+  },
+  {"docker": {"id": "ToolOptionsDocker", "at": [70, 445], "size": [310, 563]}},
+  {
+    "colour": "#101010"
+  },
+  {
+    "tool": {
+      "id": "brush",
+      "options": {
+        "radius": 0.012,
+        "hardness": 0.35,
+        "spacing": 0.15,
+        "sharpness": 0.0
+      }
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "stroke": {
+      "from": [
+        300,
+        200
+      ],
+      "to": [
+        320,
+        200
+      ],
+      "pressure": 1.0,
+      "steps": 4
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "tool": {
+      "id": "brush",
+      "options": {
+        "radius": 0.012,
+        "hardness": 0.35,
+        "spacing": 0.15,
+        "sharpness": 0.0,
+        "sharpness_softness": 0.0
+      }
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "stroke": {
+      "from": [
+        920,
+        500
+      ],
+      "to": [
+        1000,
+        500
+      ],
+      "pressure": 1.0,
+      "steps": 12
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "tool": {
+      "id": "brush",
+      "options": {
+        "radius": 0.012,
+        "hardness": 0.35,
+        "spacing": 0.15,
+        "sharpness": 0.5,
+        "sharpness_softness": 0.0
+      }
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "stroke": {
+      "from": [
+        920,
+        530
+      ],
+      "to": [
+        1000,
+        530
+      ],
+      "pressure": 1.0,
+      "steps": 12
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "tool": {
+      "id": "brush",
+      "options": {
+        "radius": 0.012,
+        "hardness": 0.35,
+        "spacing": 0.15,
+        "sharpness": 1.0,
+        "sharpness_softness": 0.0
+      }
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "stroke": {
+      "from": [
+        920,
+        560
+      ],
+      "to": [
+        1000,
+        560
+      ],
+      "pressure": 1.0,
+      "steps": 12
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "wait": 25
+  },
+  {
+    "shot": "1-three-sharpnesses"
+  },
+  {
+    "state": "1-three-sharpnesses"
+  },
+  {
+    "zoom": 8.0
+  },
+  {
+    "wait": 30
+  },
+  {
+    "shot": "2-at-800-percent"
+  },
+  {
+    "state": "2-at-800-percent"
+  }
+]

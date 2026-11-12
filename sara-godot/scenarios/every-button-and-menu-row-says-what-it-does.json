@@ -1,0 +1,675 @@
+[
+ {
+  "wait": 40
+ },
+ {
+  "layer": {
+   "add": "Background",
+   "fill": [
+    0.86,
+    0.82,
+    0.74,
+    1.0
+   ],
+   "chunks": [
+    [
+     0,
+     0
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     3,
+     1
+    ]
+   ]
+  }
+ },
+ {
+  "layer": {
+   "add": "Sketch",
+   "fill": [
+    0.15,
+    0.45,
+    0.9,
+    1.0
+   ],
+   "chunks": [
+    [
+     1,
+     1
+    ],
+    [
+     2,
+     1
+    ]
+   ]
+  }
+ },
+ {
+  "layer": {
+   "add": "Line Art",
+   "fill": [
+    0.9,
+    0.3,
+    0.2,
+    1.0
+   ],
+   "chunks": [
+    [
+     1,
+     2
+    ],
+    [
+     2,
+     2
+    ]
+   ]
+  }
+ },
+ {
+  "layer": {
+   "add": "Colour",
+   "fill": [
+    0.9,
+    0.7,
+    0.2,
+    1.0
+   ],
+   "chunks": [
+    [
+     2,
+     1
+    ],
+    [
+     2,
+     2
+    ]
+   ]
+  }
+ },
+ {
+  "colour": "#3f8fd2"
+ },
+ {
+  "reference": {
+   "open": [
+    "res://ui/icon.png"
+   ]
+  }
+ },
+ {
+  "preset": {
+   "load": "Sketch"
+  }
+ },
+ {
+  "preset": {
+   "load": "Paint"
+  }
+ },
+ {
+  "preset": {
+   "load": "Pencil"
+  }
+ },
+ {
+  "wait": 40
+ },
+ {
+  "shot": "00-default-arrangement"
+ },
+ {
+  "state": "00-default-arrangement"
+ },
+ {
+  "toolbox": {
+   "press": "sample"
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "01-tool-options-on-eyedropper"
+ },
+ {
+  "state": "01-tool-options-on-eyedropper"
+ },
+ {
+  "toolbox": {
+   "press": "paint"
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "toolbox": {
+   "flyout": "paint"
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "shot": "02-toolbox-flyout-open"
+ },
+ {
+  "state": "02-toolbox-flyout-open"
+ },
+ {
+  "toolbox": {
+   "close": true
+  }
+ },
+ {
+  "menu": "File"
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "03-menu-file"
+ },
+ {
+  "state": "03-menu-file"
+ },
+ {
+  "menu": "Edit"
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "04-menu-edit"
+ },
+ {
+  "state": "04-menu-edit"
+ },
+ {
+  "menu": "View"
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "05-menu-view"
+ },
+ {
+  "state": "05-menu-view"
+ },
+ {
+  "menu": "Window"
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "06-menu-window"
+ },
+ {
+  "state": "06-menu-window"
+ },
+ {
+  "menu": "Image"
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "07-menu-image"
+ },
+ {
+  "state": "07-menu-image"
+ },
+ {
+  "menu": "Layer"
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "08-menu-layer"
+ },
+ {
+  "state": "08-menu-layer"
+ },
+ {
+  "menu": "Select"
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "09-menu-select"
+ },
+ {
+  "state": "09-menu-select"
+ },
+ {
+  "menu": "Tools"
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "10-menu-tools"
+ },
+ {
+  "state": "10-menu-tools"
+ },
+ {
+  "menu": "Filter"
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "12-menu-filter"
+ },
+ {
+  "state": "12-menu-filter"
+ },
+ {
+  "menu": "Modules"
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "13-menu-modules"
+ },
+ {
+  "state": "13-menu-modules"
+ },
+ {
+  "menu": "Help"
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "14-menu-help"
+ },
+ {
+  "state": "14-menu-help"
+ },
+ {
+  "docker": "park"
+ },
+ {
+  "docker": {
+   "id": "ToolBoxDocker",
+   "at": [
+    0,
+    78
+   ],
+   "size": [
+    60,
+    520
+   ]
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "15-docker-ToolBoxDocker"
+ },
+ {
+  "state": "15-docker-ToolBoxDocker"
+ },
+ {
+  "docker": "park"
+ },
+ {
+  "docker": {
+   "id": "LayersDocker",
+   "at": [
+    1600,
+    570
+   ],
+   "size": [
+    310,
+    400
+   ]
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "16-docker-LayersDocker"
+ },
+ {
+  "state": "16-docker-LayersDocker"
+ },
+ {
+  "docker": "park"
+ },
+ {
+  "docker": {
+   "id": "ColorDocker",
+   "at": [
+    1631,
+    80
+   ],
+   "size": [
+    279,
+    480
+   ]
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "17-docker-ColorDocker"
+ },
+ {
+  "state": "17-docker-ColorDocker"
+ },
+ {
+  "docker": "park"
+ },
+ {
+  "docker": {
+   "id": "InfoDocker",
+   "at": [
+    380,
+    90
+   ],
+   "size": [
+    500,
+    520
+   ]
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "18-docker-InfoDocker"
+ },
+ {
+  "state": "18-docker-InfoDocker"
+ },
+ {
+  "docker": "park"
+ },
+ {
+  "docker": {
+   "id": "RecorderDocker",
+   "at": [
+    890,
+    90
+   ],
+   "size": [
+    300,
+    270
+   ]
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "19-docker-RecorderDocker"
+ },
+ {
+  "state": "19-docker-RecorderDocker"
+ },
+ {
+  "docker": "park"
+ },
+ {
+  "docker": {
+   "id": "MinimapDocker",
+   "at": [
+    380,
+    620
+   ],
+   "size": [
+    300,
+    230
+   ]
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "20-docker-MinimapDocker"
+ },
+ {
+  "state": "20-docker-MinimapDocker"
+ },
+ {
+  "docker": "park"
+ },
+ {
+  "docker": {
+   "id": "ToolOptionsDocker",
+   "at": [
+    70,
+    470
+   ],
+   "size": [
+    300,
+    330
+   ]
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "21-docker-ToolOptionsDocker"
+ },
+ {
+  "state": "21-docker-ToolOptionsDocker"
+ },
+ {
+  "docker": "park"
+ },
+ {
+  "docker": {
+   "id": "GraphDocker",
+   "at": [
+    890,
+    370
+   ],
+   "size": [
+    380,
+    300
+   ]
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "22-docker-GraphDocker"
+ },
+ {
+  "state": "22-docker-GraphDocker"
+ },
+ {
+  "docker": "park"
+ },
+ {
+  "docker": {
+   "id": "HistoryDocker",
+   "at": [
+    890,
+    680
+   ],
+   "size": [
+    300,
+    300
+   ]
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "23-docker-HistoryDocker"
+ },
+ {
+  "state": "23-docker-HistoryDocker"
+ },
+ {
+  "docker": "park"
+ },
+ {
+  "docker": {
+   "id": "UndoDocker",
+   "at": [
+    2,
+    1000
+   ],
+   "size": [
+    240,
+    340
+   ]
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "24-docker-UndoDocker"
+ },
+ {
+  "state": "24-docker-UndoDocker"
+ },
+ {
+  "docker": "park"
+ },
+ {
+  "docker": {
+   "id": "ReferenceDocker",
+   "at": [
+    70,
+    810
+   ],
+   "size": [
+    300,
+    255
+   ]
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "25-docker-ReferenceDocker"
+ },
+ {
+  "state": "25-docker-ReferenceDocker"
+ },
+ {
+  "docker": "park"
+ },
+ {
+  "docker": {
+   "id": "BrushPresetsDocker",
+   "at": [
+    70,
+    90
+   ],
+   "size": [
+    310,
+    370
+   ]
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "26-docker-BrushPresetsDocker"
+ },
+ {
+  "state": "26-docker-BrushPresetsDocker"
+ },
+ {
+  "docker": "park"
+ },
+ {
+  "docker": {
+   "id": "PaletteDocker",
+   "at": [
+    780,
+    340
+   ],
+   "size": [
+    360,
+    384
+   ]
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "27-docker-PaletteDocker"
+ },
+ {
+  "state": "27-docker-PaletteDocker"
+ },
+ {
+  "docker": "park"
+ },
+ {
+  "docker": {
+   "id": "ToolOptionsDocker",
+   "at": [
+    70,
+    470
+   ],
+   "size": [
+    300,
+    460
+   ]
+  }
+ },
+ {
+  "toolbox": {
+   "press": "paint"
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "28-tool-options-docker-brush"
+ },
+ {
+  "state": "28-tool-options-docker-brush"
+ }
+]

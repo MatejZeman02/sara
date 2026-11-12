@@ -1,0 +1,154 @@
+{
+ "perf": {
+  "device": {
+   "api": "vulkan 1.4.351",
+   "local": false,
+   "name": "NVIDIA GeForce RTX 3090"
+  },
+  "startup": {
+   "bootstrap_to_ready_ms": 2797.228,
+   "cache_hits": 343,
+   "compiles": 0,
+   "engine_to_main_init_ms": 7526.116,
+   "first_frame_ms": 31.479,
+   "kernels_ms": 321.096,
+   "long_boot_frames": [
+    {
+     "from_ms": 7560.229,
+     "ms": 129.85
+    },
+    {
+     "from_ms": 7690.079,
+     "ms": 184.881
+    }
+   ],
+   "longest_boot_frame_from_ms": 9184.723,
+   "longest_boot_frame_ms": 465.954,
+   "main_init_to_ready_ms": 2797.667,
+   "marks": {
+    "app_commands_registered": 9205.008,
+    "bar_built": 8035.866,
+    "blend_favourites_canonical": 10297.308,
+    "boot_finished": 10324.058,
+    "boot_scene_ready": 6149.976,
+    "bootstrap_begin": 7526.555,
+    "builtins_registered": 9191.276,
+    "canvas_built": 7617.215,
+    "colors_init": 6104.319,
+    "colors_ready_begin": 6149.945,
+    "colors_ready_end": 6149.964,
+    "compiler_init_begin": 6079.847,
+    "compiler_init_end": 6103.966,
+    "dockers_built": 7984.814,
+    "dockers_menu_built": 10316.933,
+    "event_bus_init": 6104.034,
+    "first_frame": 6178.803,
+    "first_frame_after_ready": 10355.262,
+    "idle_init": 6104.36,
+    "interface_built": 8054.117,
+    "kernels_begin": 6178.848,
+    "kernels_end": 6499.944,
+    "kernels_stage_done": 6505.672,
+    "layout_restored": 10323.774,
+    "main_init": 7526.116,
+    "main_scene_loaded": 7525.829,
+    "main_script_loaded": 7525.816,
+    "module_loader_init": 6104.095,
+    "module_scripts_loaded": 9184.744,
+    "modules_bootstrapped": 10297.269,
+    "modules_registered": 9627.361,
+    "presets_scanned": 11353.303,
+    "ready": 10323.783,
+    "reductions_init": 6104.406,
+    "router_commands_begin": 10281.305,
+    "run_log_init": 827.914,
+    "settings_apply_init": 6104.273,
+    "settings_apply_ready_begin": 6149.146,
+    "settings_apply_ready_end": 6149.942,
+    "settings_init_begin": 6104.194,
+    "settings_init_end": 6104.23,
+    "settings_loaded": 6148.97,
+    "settings_ready_begin": 6147.949,
+    "spirv_cache_pruned": 6505.669,
+    "tool_options_bar_bound": 9748.844,
+    "tool_options_docker_bound": 10109.989,
+    "tools_bound": 9698.369,
+    "ui_built": 8093.718
+   },
+   "modules": {
+    "background_removal": 0.695,
+    "drifting-sky": 0.026,
+    "exposure": 7.916,
+    "jpeg_xl": 0.004,
+    "kaleidoscope": 9.772,
+    "language-cs": 0.016,
+    "language-en-us": 0.02,
+    "linux_pen": 0.083,
+    "mixing_blend": 0.315,
+    "sara-base-modules": 229.729,
+    "sara-filter-brush": 0.273,
+    "sara-image-formats": 0.048,
+    "sara-noise-brush": 2.094,
+    "sara-stamp-brush": 45.794,
+    "sphere": 2.082,
+    "tutorials": 1.501
+   },
+   "shares": {
+    "modules": {
+     "background_removal": 0.695,
+     "drifting-sky": 0.026,
+     "exposure": 7.916,
+     "jpeg_xl": 0.004,
+     "kaleidoscope": 9.772,
+     "language-cs": 0.016,
+     "language-en-us": 0.02,
+     "linux_pen": 0.083,
+     "mixing_blend": 0.315,
+     "sara-base-modules": 229.729,
+     "sara-filter-brush": 0.273,
+     "sara-image-formats": 0.048,
+     "sara-noise-brush": 2.094,
+     "sara-stamp-brush": 45.794,
+     "sphere": 2.082,
+     "tutorials": 1.501
+    },
+    "work": {
+     "translations": 114.133,
+     "engine": 827.914,
+     "interface": 567.602,
+     "kernels": 321.096,
+     "script graph": 5251.933,
+     "skeleton": 5.033,
+     "themes and fonts": 1.204,
+     "tools and commands": 696.422,
+     "waiting for module scripts": 1091.026,
+     "welcome picture": 0.006
+    }
+   },
+   "spirv_cache_pruned_count": 0
+  },
+  "vram": {
+   "chunk_edge": 256,
+   "chunks": {
+    "layers": {
+     "Background": 40,
+     "Layer 1": 0
+    },
+    "selection": 0,
+    "stroke": 0,
+    "total": 40
+   },
+   "device": "NVIDIA GeForce RTX 3090",
+   "device_buffers": 11503972,
+   "device_textures": 64296960,
+   "device_total": 90487600,
+   "history_bytes": 0,
+   "sara_buffers": 576944,
+   "sara_textures": 39248170,
+   "unaccounted_textures": 25048790
+  },
+  "window": {
+   "open": false
+  }
+ }
+}

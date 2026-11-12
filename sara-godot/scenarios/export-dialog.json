@@ -1,0 +1,7 @@
+[
+  {"wait": 20},
+  {"open": "export"},
+  {"wait": 10},
+  {"shot": "png"},
+  {"state": "png"}
+]

@@ -1,0 +1,206 @@
+[
+  {
+    "wait": 25
+  },
+  {
+    "canvas": [
+      2400,
+      1600
+    ]
+  },
+  {
+    "wait": 8
+  },
+  {
+    "fill": [
+      0.42,
+      0.42,
+      0.42
+    ]
+  },
+  {
+    "wait": 8
+  },
+  {
+    "fit": true
+  },
+  {
+    "wait": 8
+  },
+  {
+    "zoom": 0.25
+  },
+  {
+    "wait": 10
+  },
+  {
+    "select": {
+      "ellipse": [
+        301,
+        201,
+        1920,
+        1280
+      ]
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "shot": "ellipse-25"
+  },
+  {
+    "state": "ellipse-25"
+  },
+  {
+    "select": {
+      "rect": [
+        461,
+        361,
+        1600,
+        960
+      ]
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "shot": "rectangle-25"
+  },
+  {
+    "state": "rectangle-25"
+  },
+  {
+    "zoom": 1.0
+  },
+  {
+    "wait": 10
+  },
+  {
+    "select": {
+      "ellipse": [
+        931,
+        621,
+        480,
+        320
+      ]
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "shot": "ellipse-100"
+  },
+  {
+    "state": "ellipse-100"
+  },
+  {
+    "select": {
+      "rect": [
+        971,
+        661,
+        400,
+        240
+      ]
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "shot": "rectangle-100"
+  },
+  {
+    "state": "rectangle-100"
+  },
+  {
+    "zoom": 4.0
+  },
+  {
+    "wait": 10
+  },
+  {
+    "select": {
+      "ellipse": [
+        1088,
+        726,
+        120,
+        80
+      ]
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "shot": "ellipse-400"
+  },
+  {
+    "state": "ellipse-400"
+  },
+  {
+    "select": {
+      "rect": [
+        1098,
+        736,
+        100,
+        60
+      ]
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "shot": "rectangle-400"
+  },
+  {
+    "state": "rectangle-400"
+  },
+  {
+    "zoom": 16.0
+  },
+  {
+    "wait": 10
+  },
+  {
+    "select": {
+      "ellipse": [
+        1128,
+        752,
+        30,
+        20
+      ]
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "shot": "ellipse-1600"
+  },
+  {
+    "state": "ellipse-1600"
+  },
+  {
+    "select": {
+      "rect": [
+        1131,
+        755,
+        25,
+        15
+      ]
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "shot": "rectangle-1600"
+  },
+  {
+    "state": "rectangle-1600"
+  }
+]

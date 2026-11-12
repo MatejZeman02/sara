@@ -1,0 +1,711 @@
+[
+ {
+  "comment": "Point text in one font. On a 900 by 420 document painted with a pale wash and two broad strokes, the Text tool letters three titles, one in each shipped font: Source Serif 4 at 64 px, Comic Neue at 56 px and Caveat at 72 px, each started by a press at its baseline, typed a key at a time through the keyboard's path and committed with Ctrl+Enter. Letters that are tool shortcuts (b, e, m, s, t and others) are among them and type. The shot at 100 per cent shows the three lines sharp over the paint, and the state dump names three text layers. Last, the door's text step with a caret opens the Comic Neue title with the caret after KA-BOOM!, five keys type ' POW!' there, Escape commits, and the second dump reads the edited words."
+ },
+ {
+  "wait": 60
+ },
+ {
+  "prefs": {
+   "ui_scale": 1.0,
+   "autosave_interval_minutes": 0
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "layout_preset": {
+   "load": "minimalistic"
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "document": "srgb",
+  "size": [
+   900,
+   420
+  ]
+ },
+ {
+  "wait": 10
+ },
+ {
+  "fit": true
+ },
+ {
+  "wait": 5
+ },
+ {
+  "fill": [
+   0.86,
+   0.83,
+   0.74
+  ]
+ },
+ {
+  "tool": "brush"
+ },
+ {
+  "colour": "#6f8fa8"
+ },
+ {
+  "stroke": {
+   "from": [
+    40.0,
+    330.0
+   ],
+   "to": [
+    860.0,
+    300.0
+   ],
+   "space": "document",
+   "pressure": 1.0
+  }
+ },
+ {
+  "colour": "#c79a6b"
+ },
+ {
+  "stroke": {
+   "from": [
+    60.0,
+    90.0
+   ],
+   "to": [
+    820.0,
+    130.0
+   ],
+   "space": "document",
+   "pressure": 1.0
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "colour": "#1d2733"
+ },
+ {
+  "tool": {
+   "id": "text",
+   "options": {
+    "text_font": 0,
+    "text_size": 64
+   }
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "stroke": {
+   "from": [
+    60.0,
+    110.0
+   ],
+   "to": [
+    60.25,
+    110.0
+   ],
+   "space": "document",
+   "pressure": 1.0,
+   "smoothing": false
+  }
+ },
+ {
+  "wait": 3
+ },
+ {
+  "key": {
+   "key": "S",
+   "char": "S",
+   "shift": true
+  }
+ },
+ {
+  "key": {
+   "key": "E",
+   "char": "e"
+  }
+ },
+ {
+  "key": {
+   "key": "A",
+   "char": "a"
+  }
+ },
+ {
+  "key": {
+   "key": "Space",
+   "char": " "
+  }
+ },
+ {
+  "key": {
+   "key": "F",
+   "char": "F",
+   "shift": true
+  }
+ },
+ {
+  "key": {
+   "key": "O",
+   "char": "o"
+  }
+ },
+ {
+  "key": {
+   "key": "G",
+   "char": "g"
+  }
+ },
+ {
+  "key": {
+   "key": "Space",
+   "char": " "
+  }
+ },
+ {
+  "key": {
+   "key": "O",
+   "char": "o"
+  }
+ },
+ {
+  "key": {
+   "key": "V",
+   "char": "v"
+  }
+ },
+ {
+  "key": {
+   "key": "E",
+   "char": "e"
+  }
+ },
+ {
+  "key": {
+   "key": "R",
+   "char": "r"
+  }
+ },
+ {
+  "key": {
+   "key": "Space",
+   "char": " "
+  }
+ },
+ {
+  "key": {
+   "key": "T",
+   "char": "t"
+  }
+ },
+ {
+  "key": {
+   "key": "H",
+   "char": "h"
+  }
+ },
+ {
+  "key": {
+   "key": "E",
+   "char": "e"
+  }
+ },
+ {
+  "key": {
+   "key": "Space",
+   "char": " "
+  }
+ },
+ {
+  "key": {
+   "key": "H",
+   "char": "H",
+   "shift": true
+  }
+ },
+ {
+  "key": {
+   "key": "A",
+   "char": "a"
+  }
+ },
+ {
+  "key": {
+   "key": "R",
+   "char": "r"
+  }
+ },
+ {
+  "key": {
+   "key": "B",
+   "char": "b"
+  }
+ },
+ {
+  "key": {
+   "key": "O",
+   "char": "o"
+  }
+ },
+ {
+  "key": {
+   "key": "U",
+   "char": "u"
+  }
+ },
+ {
+  "key": {
+   "key": "R",
+   "char": "r"
+  }
+ },
+ {
+  "key": {
+   "key": "Enter",
+   "ctrl": true
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "colour": "#8a1f2c"
+ },
+ {
+  "tool": {
+   "id": "text",
+   "options": {
+    "text_font": 1,
+    "text_size": 56
+   }
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "stroke": {
+   "from": [
+    60.0,
+    230.0
+   ],
+   "to": [
+    60.25,
+    230.0
+   ],
+   "space": "document",
+   "pressure": 1.0,
+   "smoothing": false
+  }
+ },
+ {
+  "wait": 3
+ },
+ {
+  "key": {
+   "key": "K",
+   "char": "K",
+   "shift": true
+  }
+ },
+ {
+  "key": {
+   "key": "A",
+   "char": "A",
+   "shift": true
+  }
+ },
+ {
+  "key": {
+   "key": "Minus",
+   "char": "-"
+  }
+ },
+ {
+  "key": {
+   "key": "B",
+   "char": "B",
+   "shift": true
+  }
+ },
+ {
+  "key": {
+   "key": "O",
+   "char": "O",
+   "shift": true
+  }
+ },
+ {
+  "key": {
+   "key": "O",
+   "char": "O",
+   "shift": true
+  }
+ },
+ {
+  "key": {
+   "key": "M",
+   "char": "M",
+   "shift": true
+  }
+ },
+ {
+  "key": {
+   "key": "1",
+   "char": "!",
+   "shift": true
+  }
+ },
+ {
+  "key": {
+   "key": "Space",
+   "char": " "
+  }
+ },
+ {
+  "key": {
+   "key": "S",
+   "char": "s"
+  }
+ },
+ {
+  "key": {
+   "key": "A",
+   "char": "a"
+  }
+ },
+ {
+  "key": {
+   "key": "I",
+   "char": "i"
+  }
+ },
+ {
+  "key": {
+   "key": "D",
+   "char": "d"
+  }
+ },
+ {
+  "key": {
+   "key": "Space",
+   "char": " "
+  }
+ },
+ {
+  "key": {
+   "key": "T",
+   "char": "t"
+  }
+ },
+ {
+  "key": {
+   "key": "H",
+   "char": "h"
+  }
+ },
+ {
+  "key": {
+   "key": "E",
+   "char": "e"
+  }
+ },
+ {
+  "key": {
+   "key": "Space",
+   "char": " "
+  }
+ },
+ {
+  "key": {
+   "key": "B",
+   "char": "b"
+  }
+ },
+ {
+  "key": {
+   "key": "O",
+   "char": "o"
+  }
+ },
+ {
+  "key": {
+   "key": "A",
+   "char": "a"
+  }
+ },
+ {
+  "key": {
+   "key": "T",
+   "char": "t"
+  }
+ },
+ {
+  "key": {
+   "key": "Enter",
+   "ctrl": true
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "colour": "#20402a"
+ },
+ {
+  "tool": {
+   "id": "text",
+   "options": {
+    "text_font": 2,
+    "text_size": 72
+   }
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "stroke": {
+   "from": [
+    60.0,
+    360.0
+   ],
+   "to": [
+    60.25,
+    360.0
+   ],
+   "space": "document",
+   "pressure": 1.0,
+   "smoothing": false
+  }
+ },
+ {
+  "wait": 3
+ },
+ {
+  "key": {
+   "key": "N",
+   "char": "n"
+  }
+ },
+ {
+  "key": {
+   "key": "O",
+   "char": "o"
+  }
+ },
+ {
+  "key": {
+   "key": "T",
+   "char": "t"
+  }
+ },
+ {
+  "key": {
+   "key": "E",
+   "char": "e"
+  }
+ },
+ {
+  "key": {
+   "key": "S",
+   "char": "s"
+  }
+ },
+ {
+  "key": {
+   "key": "Space",
+   "char": " "
+  }
+ },
+ {
+  "key": {
+   "key": "F",
+   "char": "f"
+  }
+ },
+ {
+  "key": {
+   "key": "R",
+   "char": "r"
+  }
+ },
+ {
+  "key": {
+   "key": "O",
+   "char": "o"
+  }
+ },
+ {
+  "key": {
+   "key": "M",
+   "char": "m"
+  }
+ },
+ {
+  "key": {
+   "key": "Space",
+   "char": " "
+  }
+ },
+ {
+  "key": {
+   "key": "A",
+   "char": "a"
+  }
+ },
+ {
+  "key": {
+   "key": "Space",
+   "char": " "
+  }
+ },
+ {
+  "key": {
+   "key": "M",
+   "char": "m"
+  }
+ },
+ {
+  "key": {
+   "key": "I",
+   "char": "i"
+  }
+ },
+ {
+  "key": {
+   "key": "S",
+   "char": "s"
+  }
+ },
+ {
+  "key": {
+   "key": "T",
+   "char": "t"
+  }
+ },
+ {
+  "key": {
+   "key": "Y",
+   "char": "y"
+  }
+ },
+ {
+  "key": {
+   "key": "Space",
+   "char": " "
+  }
+ },
+ {
+  "key": {
+   "key": "B",
+   "char": "b"
+  }
+ },
+ {
+  "key": {
+   "key": "E",
+   "char": "e"
+  }
+ },
+ {
+  "key": {
+   "key": "A",
+   "char": "a"
+  }
+ },
+ {
+  "key": {
+   "key": "C",
+   "char": "c"
+  }
+ },
+ {
+  "key": {
+   "key": "H",
+   "char": "h"
+  }
+ },
+ {
+  "key": {
+   "key": "Enter",
+   "ctrl": true
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "zoom": 1.0
+ },
+ {
+  "wait": 20
+ },
+ {
+  "shot": "three-titles-at-100"
+ },
+ {
+  "state": "three-titles"
+ },
+ {
+  "text": {
+   "layer": "KA-BOOM! said the boat",
+   "caret": 8
+  }
+ },
+ {
+  "wait": 3
+ },
+ {
+  "key": {
+   "key": "Space",
+   "char": " "
+  }
+ },
+ {
+  "key": {
+   "key": "P",
+   "char": "P",
+   "shift": true
+  }
+ },
+ {
+  "key": {
+   "key": "O",
+   "char": "O",
+   "shift": true
+  }
+ },
+ {
+  "key": {
+   "key": "W",
+   "char": "W",
+   "shift": true
+  }
+ },
+ {
+  "key": {
+   "key": "1",
+   "char": "!",
+   "shift": true
+  }
+ },
+ {
+  "key": "Escape"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "shot": "edited-at-the-caret"
+ },
+ {
+  "state": "edited-at-the-caret"
+ }
+]

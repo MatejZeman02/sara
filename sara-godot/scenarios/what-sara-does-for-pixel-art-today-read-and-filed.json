@@ -1,0 +1,264 @@
+[
+  {
+    "comment": "Reading what Sara does for pixel art on a 64x64 document."
+  },
+  {
+    "prefs": {
+      "ui_scale": 1.0
+    }
+  },
+  {
+    "document": "srgb",
+    "size": [64, 64]
+  },
+  {
+    "fit": true
+  },
+  {
+    "fill": [1.0, 1.0, 1.0, 1.0]
+  },
+  {
+    "comment": "Item 1: 1-pixel brush with hardness 1.0 and minimum spacing along diagonal and curve"
+  },
+  {
+    "colour": [0.0, 0.0, 0.0, 1.0]
+  },
+  {
+    "tool": {
+      "id": "brush",
+      "options": {
+        "radius": 0.0078125,
+        "hardness": 1.0,
+        "spacing": 0.05
+      }
+    }
+  },
+  {
+    "stroke": {
+      "space": "document",
+      "from": [5, 5],
+      "to": [20, 20],
+      "pressure": 1.0
+    }
+  },
+  {
+    "stroke": {
+      "space": "document",
+      "from": [30, 8],
+      "to": [32, 34],
+      "points": [
+        [30, 8],
+        [42, 16],
+        [40, 26],
+        [32, 34]
+      ],
+      "pressure": 1.0
+    }
+  },
+  {
+    "look": {
+      "path": "01-one-pixel-brush.png",
+      "rect": [0, 0, 64, 64],
+      "scale": 8
+    }
+  },
+  {
+    "shot": "01-one-pixel-brush"
+  },
+  {
+    "texel": [
+      [5, 5],
+      [6, 6],
+      [10, 10],
+      [11, 11],
+      [15, 15]
+    ]
+  },
+  {
+    "comment": "Item 2: view at 800% and 1600%"
+  },
+  {
+    "zoom": 8.0
+  },
+  {
+    "shot": "02-view-800-percent"
+  },
+  {
+    "zoom": 16.0
+  },
+  {
+    "shot": "02-view-1600-percent"
+  },
+  {
+    "comment": "Item 3: zoom steps from 100% via shortcuts"
+  },
+  {
+    "zoom": 1.0
+  },
+  {
+    "state": "zoom-step-0"
+  },
+  {
+    "key": {
+      "ctrl": true,
+      "key": "Equal"
+    }
+  },
+  {
+    "state": "zoom-step-1"
+  },
+  {
+    "key": {
+      "ctrl": true,
+      "key": "Equal"
+    }
+  },
+  {
+    "state": "zoom-step-2"
+  },
+  {
+    "key": {
+      "ctrl": true,
+      "key": "Equal"
+    }
+  },
+  {
+    "state": "zoom-step-3"
+  },
+  {
+    "shot": "03-zoom-steps"
+  },
+  {
+    "comment": "Item 4: pixel grid at high zoom (grid_size: 1, show_grid: true)"
+  },
+  {
+    "prefs": {
+      "grid_size": 1,
+      "show_grid": true
+    }
+  },
+  {
+    "zoom": 16.0
+  },
+  {
+    "shot": "04-pixel-grid"
+  },
+  {
+    "look": {
+      "grid": 1,
+      "path": "04-pixel-grid-look.png",
+      "rect": [0, 0, 64, 64],
+      "scale": 16
+    }
+  },
+  {
+    "prefs": {
+      "show_grid": false
+    }
+  },
+  {
+    "comment": "Item 5: fill without soft edge (fill_antialias: false)"
+  },
+  {
+    "select": [5, 40, 16, 16]
+  },
+  {
+    "fill": [0.2, 0.4, 0.8, 1.0]
+  },
+  {
+    "select": "none"
+  },
+  {
+    "colour": [0.8, 0.2, 0.2, 1.0]
+  },
+  {
+    "tool": {
+      "id": "bucket_fill",
+      "options": {
+        "fill_antialias": false,
+        "fill_contiguous": true,
+        "fill_sample_merged": false,
+        "fill_tolerance": 0.05
+      }
+    }
+  },
+  {
+    "stroke": {
+      "from": [10, 45],
+      "pressure": 0.8,
+      "route": "tool",
+      "space": "document",
+      "to": [10, 45]
+    }
+  },
+  {
+    "look": {
+      "path": "05-fill-hard-edge.png",
+      "rect": [0, 0, 64, 64],
+      "scale": 8
+    }
+  },
+  {
+    "shot": "05-fill-hard-edge"
+  },
+  {
+    "texel": [
+      [9, 45],
+      [10, 45],
+      [20, 45],
+      [21, 45]
+    ]
+  },
+  {
+    "comment": "Item 6: eyedropper on one texel"
+  },
+  {
+    "select": [50, 50, 6, 6]
+  },
+  {
+    "colour": [0.0, 0.8, 0.2, 1.0]
+  },
+  {
+    "fill": [0.0, 0.8, 0.2, 1.0]
+  },
+  {
+    "select": "none"
+  },
+  {
+    "tool": "eyedropper"
+  },
+  {
+    "stroke": {
+      "from": [52, 52],
+      "pressure": 0.8,
+      "route": "tool",
+      "space": "document",
+      "to": [52, 52]
+    }
+  },
+  {
+    "state": "eyedropper-sample"
+  },
+  {
+    "shot": "06-eyedropper-single-texel"
+  },
+  {
+    "comment": "Item 7: export at 1x keeping every texel"
+  },
+  {
+    "export": "user://07-export-1x.png"
+  },
+  {
+    "look": {
+      "path": "07-export-look.png",
+      "rect": [0, 0, 64, 64],
+      "scale": 8
+    }
+  },
+  {
+    "shot": "07-export-1x"
+  },
+  {
+    "state": "done"
+  }
+]

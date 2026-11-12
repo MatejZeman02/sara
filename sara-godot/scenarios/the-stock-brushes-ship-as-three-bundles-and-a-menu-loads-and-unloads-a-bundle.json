@@ -1,0 +1,103 @@
+[
+ {
+  "comment": "On a fresh profile the Brush Presets panel's bundle menu lists Sara Advanced Paint, Sara Basic and Sara Filters, each ticked. A press on Sara Filters' row unticks it, and the grid then holds no filter or liquify preset. The restart twin runs under sara_shot.py --keep-settings and finds it still unticked."
+ },
+ {
+  "wait": 40
+ },
+ {
+  "prefs": {
+   "ui_scale": 1.0
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "docker": {
+   "id": "BrushPresetsDocker",
+   "at": [
+    860,
+    40
+   ],
+   "size": [
+    420,
+    940
+   ]
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "tool": "brush"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "preset": {
+   "finish": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "presets_docker": {}
+ },
+ {
+  "state": "1-a-fresh-profile-holds-three-bundles"
+ },
+ {
+  "choice": {
+   "open": "ChooserBundles"
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "2-the-bundle-menu-with-its-ticks"
+ },
+ {
+  "state": "2-the-bundle-menu-with-its-ticks"
+ },
+ {
+  "choice": {
+   "pick": 2
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "3-sara-filters-unticked-in-the-open-menu"
+ },
+ {
+  "state": "3-sara-filters-unticked-in-the-open-menu"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "preset": {
+   "finish": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "presets_docker": {}
+ },
+ {
+  "state": "4-the-grid-without-sara-filters"
+ },
+ {
+  "shot": "4-the-grid-without-sara-filters"
+ }
+]

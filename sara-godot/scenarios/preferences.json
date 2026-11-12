@@ -1,0 +1,724 @@
+[
+ {
+  "wait": 30
+ },
+ {
+  "open": "preferences"
+ },
+ {
+  "wait": 20
+ },
+ {
+  "page": "Colour Themes"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "prefs": {
+   "theme_name": "custom:t4-shell-walk"
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "theme_rows": {
+   "delete": true
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "prefs": {
+   "theme_name": "default"
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "page": "General"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "page-general"
+ },
+ {
+  "shot": "page-general"
+ },
+ {
+  "page": "Workspace"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "page-workspace"
+ },
+ {
+  "shot": "page-workspace"
+ },
+ {
+  "page": "Display"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "page-display"
+ },
+ {
+  "shot": "page-display"
+ },
+ {
+  "page": "Tablet"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "page-tablet"
+ },
+ {
+  "shot": "page-tablet"
+ },
+ {
+  "page": "Timelapse"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "page-timelapse"
+ },
+ {
+  "shot": "page-timelapse"
+ },
+ {
+  "page": "Keyboard Shortcuts"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "page-keyboard-shortcuts"
+ },
+ {
+  "shot": "page-keyboard-shortcuts"
+ },
+ {
+  "page": "Colour Spaces"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "page-colour-spaces"
+ },
+ {
+  "shot": "page-colour-spaces"
+ },
+ {
+  "page": "Colour Themes"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "page-colour-themes"
+ },
+ {
+  "shot": "page-colour-themes"
+ },
+ {
+  "page": "Top Menu Bar"
+ },
+ {
+  "layout_gesture": {"elements": "Top Bar"}
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "page-top-menu-bar"
+ },
+ {
+  "shot": "page-top-menu-bar"
+ },
+ {
+  "page": "Colour Picker"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "page-colour-picker-docker"
+ },
+ {
+  "shot": "page-colour-picker-docker"
+ },
+ {
+  "page": "Layers"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "page-layers-docker"
+ },
+ {
+  "shot": "page-layers-docker"
+ },
+ {
+  "page": "Toolbox"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "page-toolbox-docker"
+ },
+ {
+  "shot": "page-toolbox-docker"
+ },
+ {
+  "page": "Info"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "page-info-docker"
+ },
+ {
+  "shot": "page-info-docker"
+ },
+ {
+  "page": "Recorder"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "page-recorder"
+ },
+ {
+  "shot": "page-recorder"
+ },
+ {
+  "page": "Minimap"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "page-minimap"
+ },
+ {
+  "shot": "page-minimap"
+ },
+ {
+  "page": "Tool Options"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "page-tool-options"
+ },
+ {
+  "shot": "page-tool-options"
+ },
+ {
+  "page": "Graph"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "page-graph"
+ },
+ {
+  "shot": "page-graph"
+ },
+ {
+  "page": "History"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "page-history"
+ },
+ {
+  "shot": "page-history"
+ },
+ {
+  "page": "Reference"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "page-reference"
+ },
+ {
+  "shot": "page-reference"
+ },
+ {
+  "state": "every-page-walked"
+ },
+ {
+  "prefs_search": "exposure"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "search-exposure"
+ },
+ {
+  "shot": "search-exposure"
+ },
+ {
+  "prefs_search": "pressure"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "search-pressure"
+ },
+ {
+  "prefs_search": "quokka"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "search-quokka"
+ },
+ {
+  "shot": "search-quokka"
+ },
+ {
+  "prefs_search": ""
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "search-cleared"
+ },
+ {
+  "page": "General"
+ },
+ {
+  "wait": 8
+ },
+ {
+  "prefs": {
+   "advanced_options": true
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "general-advanced-options-on"
+ },
+ {
+  "shot": "general-advanced-options-on"
+ },
+ {
+  "page": "Workspace"
+ },
+ {
+  "wait": 8
+ },
+ {
+  "workspace": {
+   "slider": "font_size",
+   "value": 1.3
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "workspace": {
+   "slider": "font_size"
+  }
+ },
+ {
+  "state": "workspace-font-scale"
+ },
+ {
+  "shot": "workspace-font-scale"
+ },
+ {
+  "page": "Display"
+ },
+ {
+  "wait": 8
+ },
+ {
+  "prefs": {
+   "display_exposure_enabled": true,
+   "display_exposure_stops": 1.5
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "display-exposure"
+ },
+ {
+  "shot": "display-exposure"
+ },
+ {
+  "page": "Tablet"
+ },
+ {
+  "wait": 8
+ },
+ {
+  "prefs": {
+   "tablet_max_pressure": 0.75
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "tablet-max-pressure"
+ },
+ {
+  "shot": "tablet-max-pressure"
+ },
+ {
+  "page": "Timelapse"
+ },
+ {
+  "wait": 8
+ },
+ {
+  "prefs": {
+   "recorder_settle_seconds": 4.0
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "timelapse-settle"
+ },
+ {
+  "shot": "timelapse-settle"
+ },
+ {
+  "page": "Keyboard Shortcuts"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "shortcut": {
+   "search": "zoom",
+   "action": "view_zoom_in",
+   "chord": "Ctrl+Alt+I"
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "shortcuts-rebound"
+ },
+ {
+  "shot": "shortcuts-rebound"
+ },
+ {
+  "page": "Colour Themes"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "theme_rows": {
+   "save_as": "Probe Shell Walk"
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "theme_rows": {}
+ },
+ {
+  "state": "theme-saved"
+ },
+ {
+  "shot": "theme-saved"
+ },
+ {
+  "page": "Top Menu Bar"
+ },
+ {
+  "layout_gesture": {"elements": "Top Bar"}
+ },
+ {
+  "wait": 8
+ },
+ {
+  "prefs": {
+   "window_button_position": "left"
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "layout_rows": {}
+ },
+ {
+  "state": "top-bar-buttons-left"
+ },
+ {
+  "shot": "top-bar-buttons-left"
+ },
+ {
+  "page": "Colour Picker"
+ },
+ {
+  "wait": 8
+ },
+ {
+  "layout_gesture": {
+   "switch": "Hex Input"
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "layout_rows": {}
+ },
+ {
+  "state": "docker-page-colour-picker-docker"
+ },
+ {
+  "page": "Layers"
+ },
+ {
+  "wait": 8
+ },
+ {
+  "layout_gesture": {
+   "switch": "Opacity"
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "layout_rows": {}
+ },
+ {
+  "state": "docker-page-layers-docker"
+ },
+ {
+  "page": "Toolbox"
+ },
+ {
+  "wait": 8
+ },
+ {
+  "layout_gesture": {
+   "switch": "Zoom Tool"
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "layout_rows": {}
+ },
+ {
+  "state": "docker-page-toolbox-docker"
+ },
+ {
+  "page": "Info"
+ },
+ {
+  "wait": 8
+ },
+ {
+  "layout_gesture": {
+   "switch": "GPU"
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "layout_rows": {}
+ },
+ {
+  "state": "docker-page-info-docker"
+ },
+ {
+  "page": "Recorder"
+ },
+ {
+  "wait": 8
+ },
+ {
+  "layout_gesture": {
+   "switch": "Resizer"
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "layout_rows": {}
+ },
+ {
+  "state": "docker-page-recorder"
+ },
+ {
+  "page": "Minimap"
+ },
+ {
+  "wait": 8
+ },
+ {
+  "layout_gesture": {
+   "switch": "Resizer"
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "layout_rows": {}
+ },
+ {
+  "state": "docker-page-minimap"
+ },
+ {
+  "page": "Tool Options"
+ },
+ {
+  "wait": 8
+ },
+ {
+  "layout_gesture": {
+   "switch": "Resizer"
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "layout_rows": {}
+ },
+ {
+  "state": "docker-page-tool-options"
+ },
+ {
+  "page": "Graph"
+ },
+ {
+  "wait": 8
+ },
+ {
+  "layout_gesture": {
+   "switch": "Resizer"
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "layout_rows": {}
+ },
+ {
+  "state": "docker-page-graph"
+ },
+ {
+  "page": "History"
+ },
+ {
+  "wait": 8
+ },
+ {
+  "layout_gesture": {
+   "switch": "Resizer"
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "layout_rows": {}
+ },
+ {
+  "state": "docker-page-history"
+ },
+ {
+  "page": "Reference"
+ },
+ {
+  "wait": 8
+ },
+ {
+  "layout_gesture": {
+   "switch": "Resizer"
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "layout_rows": {}
+ },
+ {
+  "state": "docker-page-reference"
+ },
+ {
+  "shot": "the-last-docker-page-switched"
+ },
+ {
+  "prefs": {
+   "docker_hide_button": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "hide": ""
+ },
+ {
+  "state": "hide-buttons-on"
+ },
+ {
+  "shot": "hide-buttons-on"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "preferences-closed"
+ }
+]

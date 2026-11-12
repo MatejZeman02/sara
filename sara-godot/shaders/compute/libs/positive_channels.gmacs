@@ -1,0 +1,56 @@
+# Library: the safety net for an operation defined only for positive channels.
+#
+# Sara's canvas carries negatives on purpose, and most of what
+# runs over it is well defined there: a lerp, a sum, a min or a max, a matrix.
+# A few operations are not. A product of two negatives is a positive, a power
+# of a negative base is undefined and its mirror through zero bends the wrong
+# way, and soft light reads a negative as zero. Each of those cleans its own
+# input through one of the two functions here, and the result is used inside
+# the operation alone, so the stored pixels keep their values: an operation
+# cleans its own input.
+#
+# The formula is darktable's, from its sigmoid module: a colour with a
+# negative channel is desaturated toward its own average by exactly enough to
+# bring its lowest channel to zero, and the average is kept. A colour whose
+# average is itself at or below zero has no positive part to keep and comes
+# out black. A colour with no negative channel is returned untouched, so a
+# kernel that calls this on in-range paint computes what it always computed.
+#
+# The lowest channel lands on zero in exact arithmetic and a hair either side
+# of it in floats, so the answer is held at zero from below. A hair below would
+# make Equalize on Lightness write NaN: the Oklab net below takes the cube root
+# of this answer, and the root of a negative is NaN.
+
+
+def sa_positive_channels(vec3 c) -> vec3:
+    float lowest = min(c.r, min(c.g, c.b))
+    if lowest >= 0.0: return c
+    float average = max((c.r + c.g + c.b) / 3.0, 0.0)
+    float keep = average / (average - lowest)
+    return max(vec3(average) + keep * (c - vec3(average)), vec3(0.0))
+
+# The same net for an Oklab coordinate. Oklab is well defined for every colour
+# whose LMS response is positive, which is every colour a painter can see and
+# every one outside the sRGB gamut that an ACEScg document stores, so those
+# come back exactly as they went in. Only a colour past the spectral locus,
+# with a negative LMS channel, has a cube root that the conversion mirrors
+# through zero and an a and b that mean nothing, and that one is desaturated
+# in linear LMS by the function above and converted back.
+#
+# The two matrices are Oklab's own, as oklab_color_space.gmacs spells them,
+# column-major.
+
+
+def sa_positive_oklab(vec3 lab) -> vec3:
+    mat3 oklab_to_lms = mat3(
+        1.0, 1.0, 1.0,
+        0.3963377774, -0.1055613458, -0.0894841775,
+        0.2158037573, -0.0638541728, -1.2914855480)
+    vec3 root = oklab_to_lms * lab
+    if min(root.x, min(root.y, root.z)) >= 0.0: return lab
+    vec3 lms = sa_positive_channels(root * root * root)
+    mat3 lms_to_oklab = mat3(
+        0.2104542553, 1.9779984951, 0.0259040371,
+        0.7936177850, -2.4285922050, 0.7827717662,
+        -0.0040720468, 0.4505937099, -0.8086757660)
+    return lms_to_oklab * pow(lms, vec3(1.0 / 3.0))

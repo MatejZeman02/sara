@@ -1,0 +1,131 @@
+# Kernels: wavelet_level, wavelet_last
+# Filter > Wavelet Denoise. The a trous transform, the stationary wavelet with
+# the B3 spline [1, 4, 6, 4, 1] / 16, as one step of a neighbourhood pass per
+# level. Level i smooths c_i into c_(i+1) with the taps 2^i apart, and its
+# detail is c_i - c_(i+1).
+#
+# The reconstruction sum(shrunk d_i) + c_levels is written the other way round:
+# the input is the sum of every detail and the coarsest image, so the output is
+# the input less what the threshold takes from each detail. A step needs c_i and
+# c_(i+1) at its own texel and a running total of what was taken. The total
+# lives in the padded source at binding 0, rewritten at the step's own texel
+# only, and the runner gathers the source afresh for every chunk, so no thread
+# reads a texel another has written. The first level reads through `previous`,
+# which is the source itself on a first step, so it writes nothing there.
+#
+# A level is one 5 by 5 dispatch and not a pass across and a pass down, because
+# the detail needs c_i and the pass down alone never sees it: 100 taps a texel
+# at the default four levels, against 1681 for one 41 by 41 window.
+#
+# The shrink is the non-negative garrote, d - t * t / d past the threshold,
+# rather than the soft threshold. Both are continuous, but the soft one takes t
+# from every detail and dulls a hard edge by the sum of the thresholds, where
+# the garrote leaves an edge within a hundredth.
+#
+# Sums are premultiplied and the source keeps straight colour, so a texel no
+# level touched keeps its stored colour even at zero alpha. Nothing clamps,
+# hard rule 5.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel wavelet_level
+kernel wavelet_last
+
+image src  # the padded source, and the running result at a step's own texel
+image mask: r32f, readonly
+image dst
+image previous: readonly  # c_i, the source itself on the first step
+
+params:
+    int level  # this step's level, 0 the finest
+    float threshold  # the finest level's, halved at every level after it
+    int halo  # how far the source is padded, written by the runner
+    vec2 origin  # the dispatched region's corner in the chunk
+
+
+def premultiplied(vec4 texel) -> vec4:
+    return vec4(texel.rgb * texel.a, texel.a)
+
+
+def straight(vec4 sum) -> vec4:
+    if abs(sum.a) < 0.000001:
+        return vec4(0.0, 0.0, 0.0, sum.a)
+    return vec4(sum.rgb / sum.a, sum.a)
+
+
+def coarse(ivec2 at) -> vec4:
+    # c_level at a texel of the padded frame, clamped to it: a tap past the
+    # padding feeds only a texel past what the last step reads.
+    vec4 texel = previous[clamp(at, ivec2(0, 0), image_size(previous) - 1)]
+    if level == 0:
+        return premultiplied(texel)
+    return texel
+
+
+def spline(int d) -> float:
+    if d == 0:
+        return 0.375
+    if d == 1 or d == -1:
+        return 0.25
+    return 0.0625
+
+
+def smoothed(ivec2 at) -> vec4:
+    # c_(level + 1) at a texel, the spline's taps 2^level apart.
+    int spacing = 1 << level
+    vec4 sum = vec4(0.0)
+    for dy in range(-2, 3):
+        float wy = spline(dy)
+        for dx in range(-2, 3):
+            sum += spline(dx) * wy * coarse(at + ivec2(dx, dy) * spacing)
+    return sum
+
+
+def garrote(float d, float t) -> float:
+    # What the shrink takes from one channel of a detail.
+    if abs(d) <= t:
+        return d
+    return t * t / d
+
+
+def taken(vec4 d, float t) -> vec4:
+    return vec4(garrote(d.r, t), garrote(d.g, t), garrote(d.b, t), garrote(d.a, t))
+
+
+def correction(ivec2 at, vec4 next) -> vec4:
+    # What this step takes at *at*, through the mask. The second level also
+    # takes the first level's share, which the first could not write.
+    vec4 c = coarse(at)
+    vec4 share = taken(c - next, threshold * pow(0.5, float(level)))
+    if level == 1:
+        share += taken(premultiplied(src[at]) - c, threshold)
+    ivec2 local = clamp(at - ivec2(halo, halo), ivec2(0, 0), image_size(mask) - 1)
+    return share * mask[local].r
+
+
+def wavelet_level():
+    # A step before the last: c_(level + 1) into the scratch over the region
+    # grown by the halo, and the running result into the source.
+    ivec2 at = pixel + ivec2(origin) + ivec2(halo, halo)
+    if at.x < 0 or at.y < 0 or at.x >= image_size(dst).x or at.y >= image_size(dst).y:
+        return
+    vec4 next = smoothed(at)
+    if level > 0:
+        vec4 taken_here = correction(at, next)
+        if taken_here != vec4(0.0):
+            src[at] = straight(premultiplied(src[at]) - taken_here)
+    dst[at] = next
+
+
+def wavelet_last():
+    # The last level, into the chunk-sized target at the chunk-local pixel.
+    ivec2 local = pixel + ivec2(origin)
+    if local.x >= image_size(dst).x or local.y >= image_size(dst).y:
+        return
+    ivec2 at = local + ivec2(halo, halo)
+    vec4 kept = src[at]
+    vec4 taken_here = correction(at, smoothed(at))
+    if taken_here == vec4(0.0):
+        dst[local] = kept
+        return
+    dst[local] = straight(premultiplied(kept) - taken_here)

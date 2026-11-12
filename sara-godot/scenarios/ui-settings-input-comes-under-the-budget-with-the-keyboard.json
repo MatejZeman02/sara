@@ -1,0 +1,13 @@
+[
+  {"comment": "The Keyboard Shortcuts page and its row table moved from ui/settings/input to ui/settings/keyboard. Preferences opens on the page, the search finds a row, and the shot shows the rows the moved page builds."},
+  {"wait": 45},
+  {"open": "preferences"},
+  {"wait": 10},
+  {"page": "Keyboard Shortcuts"},
+  {"wait": 10},
+  {"shot": "01-the-page"},
+  {"shortcut": {"search": "fill", "focus": true, "show": "tool_bucket_fill"}},
+  {"wait": 5},
+  {"state": "02-searched"},
+  {"shot": "02-searched"}
+]

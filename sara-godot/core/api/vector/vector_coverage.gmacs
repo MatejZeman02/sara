@@ -1,0 +1,56 @@
+# Library: the signed area a straight edge adds to a pixel, the accumulation
+# method of font-rs and Vello's fine rasterizer.
+#
+# The winding number at a point counts, with their directions, the edges a ray
+# to its left crosses, an edge running down counting one and one running up
+# minus one. Its mean over a pixel is the sum, over every edge, of the edge's
+# direction times the share of the pixel lying right of it, row by row. That
+# share, for a pixel whose left side is at px.x, is h(u) = clamp(1 - u, 0, 1)
+# with u = x - px.x the edge's place across the pixel, and along a straight
+# edge u moves linearly with y, so the mean of h over the edge's height inside
+# the pixel's row is an integral in closed form and no sample is taken.
+#
+# The integral is summed in its three pieces, u below nought where h is one,
+# u between nought and one where h falls as 1 - u, and u past one where it is
+# nought, each a difference of the edge's own two ends. Written as the
+# difference of one antiderivative at both ends instead, an edge sixteen
+# texels left of the pixel would subtract two numbers near sixteen and keep
+# none of the bits a near vertical edge needs.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# Below this width across the pixel an edge is read as standing at one place,
+# its middle, since the share then barely moves along it.
+const float SA_VECTOR_STRAIGHT_UP = 0.000001
+
+# The share of a pixel lying right of an edge at u across it.
+
+
+def sa_vector_share(float u) -> float:
+    return clamp(1.0 - u, 0.0, 1.0)
+
+# The signed area the edge from *a* to *b* adds to the pixel whose top left
+# corner is *corner*, every number in the same texels.
+
+
+def sa_vector_edge_area(vec2 a, vec2 b, vec2 corner) -> float:
+    float top = max(min(a.y, b.y), corner.y)
+    float bottom = min(max(a.y, b.y), corner.y + 1.0)
+    if bottom <= top:
+        return 0.0
+    float slope = (b.x - a.x) / (b.y - a.y)
+    float u_top = a.x + (top - a.y) * slope - corner.x
+    float u_bottom = a.x + (bottom - a.y) * slope - corner.x
+    float low = min(u_top, u_bottom)
+    float high = max(u_top, u_bottom)
+    float mean = 0.0
+    if high - low < SA_VECTOR_STRAIGHT_UP:
+        mean = sa_vector_share(0.5 * (low + high))
+    else:
+        float left = max(min(high, 0.0) - low, 0.0)
+        float from = clamp(low, 0.0, 1.0)
+        float to = clamp(high, 0.0, 1.0)
+        float falling = (to - from) * (1.0 - 0.5 * (to + from))
+        mean = (left + falling) / (high - low)
+    float direction = b.y > a.y ? 1.0 : -1.0
+    return direction * (bottom - top) * mean

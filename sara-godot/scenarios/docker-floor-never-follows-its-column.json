@@ -1,0 +1,231 @@
+[
+ {
+  "wait": 30
+ },
+ {
+  "prefs": {
+   "docker_hide_button": true
+  }
+ },
+ {
+  "layout_preset": {
+   "delete": "full (custom)"
+  }
+ },
+ {
+  "layout_preset": {
+   "load": "full"
+  }
+ },
+ {
+  "wait": 30
+ },
+ {
+  "state": "01-every-docker-at-its-default"
+ },
+ {
+  "shot": "01-every-docker-at-its-default"
+ },
+ {
+  "docker_resize": {
+   "id": "ToolBoxDocker",
+   "by": [
+    -600,
+    -600
+   ],
+   "grip": true
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "docker_resize": {
+   "id": "LayersDocker",
+   "by": [
+    -600,
+    -600
+   ],
+   "grip": true
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "docker_resize": {
+   "id": "ColorDocker",
+   "by": [
+    -600,
+    -600
+   ],
+   "grip": true
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "docker_resize": {
+   "id": "InfoDocker",
+   "by": [
+    -600,
+    -600
+   ],
+   "grip": true
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "docker_resize": {
+   "id": "RecorderDocker",
+   "by": [
+    -600,
+    -600
+   ],
+   "grip": true
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "docker_resize": {
+   "id": "MinimapDocker",
+   "by": [
+    -600,
+    -600
+   ],
+   "grip": true
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "docker_resize": {
+   "id": "ToolOptionsDocker",
+   "by": [
+    -600,
+    -600
+   ],
+   "grip": true
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "docker_resize": {
+   "id": "GraphDocker",
+   "by": [
+    -600,
+    -600
+   ],
+   "grip": true
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "docker_resize": {
+   "id": "HistoryDocker",
+   "by": [
+    -600,
+    -600
+   ],
+   "grip": true
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "docker_resize": {
+   "id": "ReferenceDocker",
+   "by": [
+    -600,
+    -600
+   ],
+   "grip": true
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "wait": 15
+ },
+ {
+  "state": "02-every-docker-dragged-inward"
+ },
+ {
+  "shot": "02-every-docker-dragged-inward"
+ },
+ {
+  "docker_resize": {
+   "id": "MinimapDocker",
+   "by": [
+    -600,
+    -600
+   ],
+   "grip": true
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "docker_resize": {
+   "id": "MinimapDocker",
+   "by": [
+    -600,
+    -600
+   ],
+   "grip": true
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "docker_resize": {
+   "id": "MinimapDocker",
+   "by": [
+    -600,
+    -600
+   ],
+   "grip": true
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "state": "03-the-minimap-dragged-three-more-times"
+ },
+ {
+  "shot": "03-the-minimap-dragged-three-more-times"
+ },
+ {
+  "prefs": {
+   "docker_hide_button": true
+  }
+ },
+ {
+  "layout_preset": {
+   "load": "default"
+  }
+ },
+ {
+  "wait": 25
+ },
+ {
+  "layout_preset": {
+   "delete": "full (custom)"
+  }
+ }
+]

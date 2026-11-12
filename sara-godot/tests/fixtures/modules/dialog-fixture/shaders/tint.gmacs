@@ -1,0 +1,32 @@
+# Scales or adds a tint, so the preview has something a drag visibly changes.
+# Nothing here is an example worth copying: it is the shortest kernel that
+# reads five params of five different kinds and writes a picture.
+
+kernel tint
+
+image src: readonly
+image dst
+
+params:
+    vec4 tint
+    float amount
+    int invert
+    int channel
+    int mode
+
+
+def tint():
+    if pixel.x >= image_size(dst).x or pixel.y >= image_size(dst).y:
+        return
+    vec4 held = image_load(src, pixel)
+    vec4 made = held * tint * amount
+    if mode == 1:
+        made = held + tint * amount
+    if invert == 1:
+        made = vec4(1.0, 1.0, 1.0, 1.0) - made
+    if channel == 1:
+        made = vec4(made.r, held.g, held.b, held.a)
+    if channel == 2:
+        made = vec4(held.r, made.g, held.b, held.a)
+    made = vec4(made.r, made.g, made.b, held.a)
+    image_store(dst, pixel, made)

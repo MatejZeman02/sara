@@ -1,0 +1,185 @@
+[
+ {
+  "wait": 40
+ },
+ {
+  "layout_preset": {
+   "delete": "default (custom)"
+  }
+ },
+ {
+  "layout_preset": {
+   "load": "default"
+  }
+ },
+ {
+  "wait": 30
+ },
+ {
+  "tool": "brush"
+ },
+ {
+  "wait": 20
+ },
+ {
+  "state": "1-from-the-shipped-default"
+ },
+ {
+  "shot": "1-from-the-shipped-default"
+ },
+ {
+  "docker": "park"
+ },
+ {
+  "docker": {
+   "id": "ToolBoxDocker",
+   "at": [
+    40,
+    40
+   ],
+   "size": [
+    10,
+    10
+   ]
+  }
+ },
+ {
+  "docker": {
+   "id": "LayersDocker",
+   "at": [
+    40,
+    40
+   ],
+   "size": [
+    10,
+    10
+   ]
+  }
+ },
+ {
+  "docker": {
+   "id": "ColorDocker",
+   "at": [
+    40,
+    40
+   ],
+   "size": [
+    10,
+    10
+   ]
+  }
+ },
+ {
+  "docker": {
+   "id": "InfoDocker",
+   "at": [
+    40,
+    40
+   ],
+   "size": [
+    10,
+    10
+   ]
+  }
+ },
+ {
+  "docker": {
+   "id": "RecorderDocker",
+   "at": [
+    40,
+    40
+   ],
+   "size": [
+    10,
+    10
+   ]
+  }
+ },
+ {
+  "docker": {
+   "id": "MinimapDocker",
+   "at": [
+    40,
+    40
+   ],
+   "size": [
+    10,
+    10
+   ]
+  }
+ },
+ {
+  "docker": {
+   "id": "ToolOptionsDocker",
+   "at": [
+    40,
+    40
+   ],
+   "size": [
+    10,
+    10
+   ]
+  }
+ },
+ {
+  "docker": {
+   "id": "GraphDocker",
+   "at": [
+    40,
+    40
+   ],
+   "size": [
+    10,
+    10
+   ]
+  }
+ },
+ {
+  "docker": {
+   "id": "HistoryDocker",
+   "at": [
+    40,
+    40
+   ],
+   "size": [
+    10,
+    10
+   ]
+  }
+ },
+ {
+  "docker": {
+   "id": "ReferenceDocker",
+   "at": [
+    40,
+    40
+   ],
+   "size": [
+    10,
+    10
+   ]
+  }
+ },
+ {
+  "docker": {
+   "id": "BrushPresetsDocker",
+   "at": [
+    40,
+    40
+   ],
+   "size": [
+    10,
+    10
+   ]
+  }
+ },
+ {
+  "wait": 30
+ },
+ {
+  "state": "2-asked-to-be-ten-by-ten"
+ },
+ {
+  "shot": "2-asked-to-be-ten-by-ten"
+ }
+]

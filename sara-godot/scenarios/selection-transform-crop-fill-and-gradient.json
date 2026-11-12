@@ -1,0 +1,1649 @@
+[
+ {
+  "window": [
+   1920,
+   1080
+  ]
+ },
+ {
+  "wait": 45
+ },
+ {
+  "docker": "park"
+ },
+ {
+  "wait": 12
+ },
+ {
+  "colour": "#e8b23c"
+ },
+ {
+  "wait": 3
+ },
+ {
+  "fill": [
+   0.909803,
+   0.698039,
+   0.235294
+  ]
+ },
+ {
+  "wait": 10
+ },
+ {
+  "texel": [
+   [
+    900,
+    500
+   ]
+  ]
+ },
+ {
+  "state": "00-the-capture-fill-under-oklab"
+ },
+ {
+  "shot": "00-the-capture-fill-under-oklab"
+ },
+ {
+  "key": "b"
+ },
+ {
+  "wait": 6
+ },
+ {
+  "stroke": {
+   "from": [
+    500,
+    300
+   ],
+   "to": [
+    900,
+    500
+   ],
+   "pressure": 1.0,
+   "steps": 20
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "texel": [
+   [
+    600,
+    350
+   ]
+  ]
+ },
+ {
+  "state": "01-a-stroke-under-oklab"
+ },
+ {
+  "shot": "01-a-stroke-under-oklab"
+ },
+ {
+  "tool": {
+   "id": "bucket_fill",
+   "options": {
+    "fill_tolerance": 0.5,
+    "fill_contiguous": false
+   }
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "click": {
+   "at": [
+    1400,
+    900
+   ]
+  }
+ },
+ {
+  "wait": 14
+ },
+ {
+  "texel": [
+   [
+    1300,
+    830
+   ]
+  ]
+ },
+ {
+  "state": "02-the-bucket-fill-under-oklab"
+ },
+ {
+  "shot": "02-the-bucket-fill-under-oklab"
+ },
+ {
+  "key": {
+   "key": "backspace",
+   "alt": true
+  }
+ },
+ {
+  "wait": 14
+ },
+ {
+  "texel": [
+   [
+    900,
+    500
+   ]
+  ]
+ },
+ {
+  "state": "03-the-fill-command-under-oklab"
+ },
+ {
+  "shot": "03-the-fill-command-under-oklab"
+ },
+ {
+  "document": "srgb"
+ },
+ {
+  "wait": 20
+ },
+ {
+  "fill": [
+   0.38,
+   0.33,
+   0.3
+  ]
+ },
+ {
+  "colour": "#2f4fd0"
+ },
+ {
+  "wait": 6
+ },
+ {
+  "state": "04-an-srgb-document-at-rest"
+ },
+ {
+  "shot": "04-an-srgb-document-at-rest"
+ },
+ {
+  "tool": {
+   "id": "marquee",
+   "options": {
+    "selection_mode": 0,
+    "feather": 0.0
+   }
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "press": {
+   "button": "left",
+   "at": [
+    500,
+    300
+   ]
+  }
+ },
+ {
+  "move": [
+   800,
+   450
+  ]
+ },
+ {
+  "move": [
+   1100,
+   620
+  ]
+ },
+ {
+  "release": "left"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "05-marquee-replaced"
+ },
+ {
+  "shot": "05-marquee-replaced"
+ },
+ {
+  "press": {
+   "button": "left",
+   "at": [
+    1150,
+    650
+   ],
+   "shift": true
+  }
+ },
+ {
+  "move": [
+   1220,
+   700
+  ]
+ },
+ {
+  "move": [
+   1300,
+   750
+  ]
+ },
+ {
+  "release": "left"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "06-marquee-added"
+ },
+ {
+  "shot": "06-marquee-added"
+ },
+ {
+  "press": {
+   "button": "left",
+   "at": [
+    450,
+    290
+   ],
+   "alt": true
+  }
+ },
+ {
+  "move": [
+   800,
+   360
+  ]
+ },
+ {
+  "move": [
+   1150,
+   420
+  ]
+ },
+ {
+  "release": "left"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "07-marquee-subtracted"
+ },
+ {
+  "shot": "07-marquee-subtracted"
+ },
+ {
+  "key": {
+   "key": "i",
+   "ctrl": true,
+   "shift": true
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "08-inverted"
+ },
+ {
+  "shot": "08-inverted"
+ },
+ {
+  "key": {
+   "key": "d",
+   "ctrl": true
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "09-deselected"
+ },
+ {
+  "tool": "ellipse_select"
+ },
+ {
+  "wait": 8
+ },
+ {
+  "press": {
+   "button": "left",
+   "at": [
+    600,
+    350
+   ]
+  }
+ },
+ {
+  "move": [
+   900,
+   500
+  ]
+ },
+ {
+  "move": [
+   1100,
+   650
+  ]
+ },
+ {
+  "release": "left"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "10-ellipse-marquee"
+ },
+ {
+  "shot": "10-ellipse-marquee"
+ },
+ {
+  "key": {
+   "key": "d",
+   "ctrl": true
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "key": "l"
+ },
+ {
+  "wait": 8
+ },
+ {
+  "press": {
+   "button": "left",
+   "at": [
+    600,
+    300
+   ]
+  }
+ },
+ {
+  "move": [
+   900,
+   320
+  ]
+ },
+ {
+  "move": [
+   1000,
+   560
+  ]
+ },
+ {
+  "move": [
+   700,
+   600
+  ]
+ },
+ {
+  "move": [
+   610,
+   340
+  ]
+ },
+ {
+  "release": "left"
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "11-lasso-closed"
+ },
+ {
+  "shot": "11-lasso-closed"
+ },
+ {
+  "key": {
+   "key": "d",
+   "ctrl": true
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "tool": "marquee"
+ },
+ {
+  "wait": 8
+ },
+ {
+  "press": {
+   "button": "left",
+   "at": [
+    600,
+    350
+   ]
+  }
+ },
+ {
+  "move": [
+   900,
+   500
+  ]
+ },
+ {
+  "move": [
+   1100,
+   650
+  ]
+ },
+ {
+  "release": "left"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "colour": "#e8b23c"
+ },
+ {
+  "key": {
+   "key": "backspace",
+   "alt": true
+  }
+ },
+ {
+  "wait": 14
+ },
+ {
+  "texel": [
+   [
+    700,
+    400
+   ],
+   [
+    1200,
+    800
+   ]
+  ]
+ },
+ {
+  "state": "12-filled-inside-the-selection"
+ },
+ {
+  "shot": "12-filled-inside-the-selection"
+ },
+ {
+  "clipboard": "cut"
+ },
+ {
+  "wait": 14
+ },
+ {
+  "texel": [
+   [
+    700,
+    400
+   ]
+  ]
+ },
+ {
+  "state": "13-the-selection-cut-away"
+ },
+ {
+  "shot": "13-the-selection-cut-away"
+ },
+ {
+  "undo": 1
+ },
+ {
+  "wait": 14
+ },
+ {
+  "state": "14-the-cut-undone"
+ },
+ {
+  "shot": "14-the-cut-undone"
+ },
+ {
+  "key": {
+   "key": "d",
+   "ctrl": true
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "tool": {
+   "id": "wand",
+   "options": {
+    "wand_tolerance": 0.2,
+    "sample_merged": false,
+    "selection_mode": 0
+   }
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "click": {
+   "at": [
+    850,
+    500
+   ]
+  }
+ },
+ {
+  "wait": 14
+ },
+ {
+  "state": "15-wand-inside-the-block"
+ },
+ {
+  "shot": "15-wand-inside-the-block"
+ },
+ {
+  "click": {
+   "at": [
+    300,
+    900
+   ]
+  }
+ },
+ {
+  "wait": 14
+ },
+ {
+  "state": "16-wand-outside-the-block"
+ },
+ {
+  "shot": "16-wand-outside-the-block"
+ },
+ {
+  "click": {
+   "at": [
+    850,
+    500
+   ]
+  }
+ },
+ {
+  "wait": 14
+ },
+ {
+  "state": "17-wand-inside-the-block-again"
+ },
+ {
+  "key": {
+   "key": "x",
+   "ctrl": true,
+   "shift": true
+  }
+ },
+ {
+  "wait": 14
+ },
+ {
+  "state": "18-cropped-to-a-wand-selection"
+ },
+ {
+  "shot": "18-cropped-to-a-wand-selection"
+ },
+ {
+  "undo": 1
+ },
+ {
+  "wait": 14
+ },
+ {
+  "state": "19-that-crop-undone"
+ },
+ {
+  "key": {
+   "key": "d",
+   "ctrl": true
+  }
+ },
+ {
+  "undo": 1
+ },
+ {
+  "wait": 14
+ },
+ {
+  "state": "20-the-fill-undone"
+ },
+ {
+  "shot": "20-the-fill-undone"
+ },
+ {
+  "tool": {
+   "id": "bucket_fill",
+   "options": {
+    "fill_tolerance": 0.1,
+    "fill_contiguous": true
+   }
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "colour": "#2f4fd0"
+ },
+ {
+  "click": {
+   "at": [
+    900,
+    450
+   ]
+  }
+ },
+ {
+  "wait": 14
+ },
+ {
+  "texel": [
+   [
+    900,
+    450
+   ]
+  ]
+ },
+ {
+  "state": "21-bucket-filled"
+ },
+ {
+  "shot": "21-bucket-filled"
+ },
+ {
+  "undo": 1
+ },
+ {
+  "wait": 14
+ },
+ {
+  "state": "22-bucket-fill-undone"
+ },
+ {
+  "key": "b"
+ },
+ {
+  "wait": 6
+ },
+ {
+  "colour": "#e8b23c"
+ },
+ {
+  "stroke": {
+   "from": [
+    500,
+    380
+   ],
+   "to": [
+    980,
+    700
+   ],
+   "pressure": 0.9,
+   "steps": 24
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "23-a-stroke-to-move"
+ },
+ {
+  "shot": "23-a-stroke-to-move"
+ },
+ {
+  "select": [
+   400,
+   300,
+   500,
+   400
+  ]
+ },
+ {
+  "wait": 8
+ },
+ {
+  "key": {
+   "key": "t",
+   "ctrl": true
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "24-ctrl-t-opened-transform"
+ },
+ {
+  "shot": "24-ctrl-t-opened-transform"
+ },
+ {
+  "press": {
+   "button": "left",
+   "at": [
+    700,
+    500
+   ]
+  }
+ },
+ {
+  "move": [
+   780,
+   560
+  ]
+ },
+ {
+  "move": [
+   860,
+   620
+  ]
+ },
+ {
+  "release": "left"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "25-moved"
+ },
+ {
+  "shot": "25-moved"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "26-escape-cancelled-the-move"
+ },
+ {
+  "shot": "26-escape-cancelled-the-move"
+ },
+ {
+  "press": {
+   "button": "left",
+   "at": [
+    1000,
+    778
+   ]
+  }
+ },
+ {
+  "move": [
+   1080,
+   840
+  ]
+ },
+ {
+  "move": [
+   1160,
+   900
+  ]
+ },
+ {
+  "release": "left"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "27-corner-handle-scaled"
+ },
+ {
+  "shot": "27-corner-handle-scaled"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "28-escape-cancelled-the-scale"
+ },
+ {
+  "press": {
+   "button": "left",
+   "at": [
+    1000,
+    556
+   ]
+  }
+ },
+ {
+  "move": [
+   1100,
+   556
+  ]
+ },
+ {
+  "release": "left"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "29-edge-handle-scaled"
+ },
+ {
+  "shot": "29-edge-handle-scaled"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "press": {
+   "button": "left",
+   "at": [
+    1000,
+    556
+   ],
+   "shift": true
+  }
+ },
+ {
+  "move": [
+   1000,
+   620
+  ]
+ },
+ {
+  "move": [
+   1000,
+   680
+  ]
+ },
+ {
+  "release": "left"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "30-edge-handle-sheared"
+ },
+ {
+  "shot": "30-edge-handle-sheared"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "31-escape-cancelled-the-shear"
+ },
+ {
+  "press": {
+   "button": "left",
+   "at": [
+    1018,
+    315
+   ]
+  }
+ },
+ {
+  "move": [
+   1080,
+   360
+  ]
+ },
+ {
+  "move": [
+   1140,
+   440
+  ]
+ },
+ {
+  "release": "left"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "32-rotated"
+ },
+ {
+  "shot": "32-rotated"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "33-escape-cancelled-the-turn"
+ },
+ {
+  "shot": "33-escape-cancelled-the-turn"
+ },
+ {
+  "press": {
+   "button": "left",
+   "at": [
+    700,
+    500
+   ]
+  }
+ },
+ {
+  "move": [
+   780,
+   560
+  ]
+ },
+ {
+  "move": [
+   820,
+   580
+  ]
+ },
+ {
+  "release": "left"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "34-moved-again"
+ },
+ {
+  "key": "enter"
+ },
+ {
+  "wait": 14
+ },
+ {
+  "state": "35-enter-committed"
+ },
+ {
+  "shot": "35-enter-committed"
+ },
+ {
+  "click": {
+   "at": [
+    1500,
+    950
+   ]
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "36-the-tool-after-enter"
+ },
+ {
+  "undo": 1
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "37-the-click-undone"
+ },
+ {
+  "undo": 1
+ },
+ {
+  "wait": 14
+ },
+ {
+  "state": "38-the-transform-undone"
+ },
+ {
+  "shot": "38-the-transform-undone"
+ },
+ {
+  "undo": 1
+ },
+ {
+  "wait": 14
+ },
+ {
+  "state": "39-the-stroke-undone"
+ },
+ {
+  "shot": "39-the-stroke-undone"
+ },
+ {
+  "key": {
+   "key": "d",
+   "ctrl": true
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "key": "c"
+ },
+ {
+  "wait": 8
+ },
+ {
+  "press": {
+   "button": "left",
+   "at": [
+    700,
+    350
+   ]
+  }
+ },
+ {
+  "move": [
+   1000,
+   550
+  ]
+ },
+ {
+  "move": [
+   1250,
+   700
+  ]
+ },
+ {
+  "release": "left"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "40-crop-rectangle"
+ },
+ {
+  "shot": "40-crop-rectangle"
+ },
+ {
+  "press": {
+   "button": "left",
+   "at": [
+    1250,
+    700
+   ]
+  }
+ },
+ {
+  "move": [
+   1215,
+   670
+  ]
+ },
+ {
+  "move": [
+   1180,
+   640
+  ]
+ },
+ {
+  "release": "left"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "41-crop-handle-pulled"
+ },
+ {
+  "shot": "41-crop-handle-pulled"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "42-escape-dropped-the-crop"
+ },
+ {
+  "tool": {
+   "id": "crop",
+   "options": {
+    "crop_ratio": 1
+   }
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "press": {
+   "button": "left",
+   "at": [
+    700,
+    350
+   ]
+  }
+ },
+ {
+  "move": [
+   1000,
+   550
+  ]
+ },
+ {
+  "move": [
+   1250,
+   700
+  ]
+ },
+ {
+  "release": "left"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "43-crop-rectangle-under-a-ratio-lock"
+ },
+ {
+  "shot": "43-crop-rectangle-under-a-ratio-lock"
+ },
+ {
+  "key": "enter"
+ },
+ {
+  "wait": 14
+ },
+ {
+  "state": "44-cropped"
+ },
+ {
+  "shot": "44-cropped"
+ },
+ {
+  "undo": 1
+ },
+ {
+  "wait": 14
+ },
+ {
+  "state": "45-crop-undone"
+ },
+ {
+  "shot": "45-crop-undone"
+ },
+ {
+  "select": [
+   200,
+   200,
+   600,
+   500
+  ]
+ },
+ {
+  "wait": 8
+ },
+ {
+  "key": {
+   "key": "x",
+   "ctrl": true,
+   "shift": true
+  }
+ },
+ {
+  "wait": 14
+ },
+ {
+  "state": "46-cropped-to-a-marquee-selection"
+ },
+ {
+  "shot": "46-cropped-to-a-marquee-selection"
+ },
+ {
+  "undo": 1
+ },
+ {
+  "wait": 14
+ },
+ {
+  "state": "47-crop-to-selection-undone"
+ },
+ {
+  "key": {
+   "key": "d",
+   "ctrl": true
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "colour": "#20c040"
+ },
+ {
+  "key": {
+   "key": "backspace",
+   "alt": true
+  }
+ },
+ {
+  "wait": 14
+ },
+ {
+  "texel": [
+   [
+    900,
+    500
+   ]
+  ]
+ },
+ {
+  "state": "48-filled-with-foreground"
+ },
+ {
+  "shot": "48-filled-with-foreground"
+ },
+ {
+  "key": {
+   "key": "delete",
+   "alt": true
+  }
+ },
+ {
+  "wait": 14
+ },
+ {
+  "texel": [
+   [
+    900,
+    500
+   ]
+  ]
+ },
+ {
+  "state": "49-filled-with-background"
+ },
+ {
+  "shot": "49-filled-with-background"
+ },
+ {
+  "undo": 1
+ },
+ {
+  "wait": 12
+ },
+ {
+  "undo": 1
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "50-both-fills-undone"
+ },
+ {
+  "colour": "#2f4fd0"
+ },
+ {
+  "key": "x"
+ },
+ {
+  "wait": 3
+ },
+ {
+  "colour": "#e8b23c"
+ },
+ {
+  "wait": 3
+ },
+ {
+  "tool": {
+   "id": "gradient",
+   "options": {
+    "gradient_shape": 0,
+    "gradient_repeat": 0,
+    "gradient_replace": false
+   }
+  }
+ },
+ {
+  "docker": {
+   "id": "ToolOptionsDocker",
+   "at": [
+    1160,
+    120
+   ],
+   "size": [
+    440,
+    560
+   ]
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "state": "51-gradient-ready"
+ },
+ {
+  "shot": "51-gradient-ready"
+ },
+ {
+  "ramp": {
+   "add": 0.5
+  }
+ },
+ {
+  "ramp": {
+   "select": 1
+  }
+ },
+ {
+  "ramp": {
+   "open": true
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "shot": "52-the-picker-under-the-swatch"
+ },
+ {
+  "ramp": {
+   "pick": "#20c040"
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "ramp": {
+   "alpha": 0.4
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "ramp": {
+   "open": false
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "state": "52-three-stops-middle-green-and-faded"
+ },
+ {
+  "shot": "52-three-stops-middle-green-and-faded"
+ },
+ {
+  "press": {
+   "button": "left",
+   "at": [
+    300,
+    800
+   ]
+  }
+ },
+ {
+  "wait": 2
+ },
+ {
+  "state": "53-drag-opened"
+ },
+ {
+  "move": [
+   400,
+   800
+  ]
+ },
+ {
+  "state": "54-after-one-motion"
+ },
+ {
+  "move": [
+   500,
+   800
+  ]
+ },
+ {
+  "state": "55-after-another-motion"
+ },
+ {
+  "motion_burst": [
+   [
+    520,
+    800
+   ],
+   [
+    540,
+    800
+   ],
+   [
+    560,
+    800
+   ],
+   [
+    580,
+    800
+   ],
+   [
+    600,
+    800
+   ],
+   [
+    620,
+    800
+   ],
+   [
+    640,
+    800
+   ],
+   [
+    660,
+    800
+   ],
+   [
+    680,
+    800
+   ],
+   [
+    700,
+    800
+   ],
+   [
+    720,
+    800
+   ],
+   [
+    740,
+    800
+   ],
+   [
+    760,
+    800
+   ],
+   [
+    780,
+    800
+   ],
+   [
+    800,
+    800
+   ],
+   [
+    820,
+    800
+   ],
+   [
+    840,
+    800
+   ],
+   [
+    860,
+    800
+   ],
+   [
+    880,
+    800
+   ],
+   [
+    900,
+    800
+   ],
+   [
+    920,
+    800
+   ],
+   [
+    940,
+    800
+   ],
+   [
+    960,
+    800
+   ],
+   [
+    980,
+    800
+   ]
+  ]
+ },
+ {
+  "state": "56-after-a-burst-of-twenty-four"
+ },
+ {
+  "move": [
+   1000,
+   800
+  ]
+ },
+ {
+  "release": "left"
+ },
+ {
+  "wait": 14
+ },
+ {
+  "texel": [
+   [
+    270,
+    720
+   ],
+   [
+    630,
+    720
+   ],
+   [
+    900,
+    720
+   ]
+  ]
+ },
+ {
+  "state": "57-gradient-laid-down"
+ },
+ {
+  "shot": "57-gradient-laid-down"
+ },
+ {
+  "undo": 1
+ },
+ {
+  "wait": 14
+ },
+ {
+  "state": "58-gradient-undone"
+ },
+ {
+  "shot": "58-gradient-undone"
+ },
+ {
+  "tool": {
+   "id": "gradient",
+   "options": {
+    "gradient_shape": 1,
+    "gradient_repeat": 1
+   }
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "press": {
+   "button": "left",
+   "at": [
+    700,
+    500
+   ]
+  }
+ },
+ {
+  "move": [
+   800,
+   560
+  ]
+ },
+ {
+  "move": [
+   900,
+   620
+  ]
+ },
+ {
+  "release": "left"
+ },
+ {
+  "wait": 14
+ },
+ {
+  "state": "59-radial-mirrored"
+ },
+ {
+  "shot": "59-radial-mirrored"
+ },
+ {
+  "undo": 1
+ },
+ {
+  "wait": 14
+ },
+ {
+  "state": "60-radial-undone"
+ },
+ {
+  "shot": "60-radial-undone"
+ },
+ {
+  "ramp": {
+   "select": 1,
+   "alpha": 1.0
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "state": "61-at-rest"
+ },
+ {
+  "shot": "61-at-rest"
+ }
+]

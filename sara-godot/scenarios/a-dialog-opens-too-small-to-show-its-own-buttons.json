@@ -1,0 +1,8 @@
+[
+  {"wait": 20},
+  {"prefs": {"ui_font_scale": 1.5}},
+  {"open": "export"},
+  {"wait": 10},
+  {"shot": "png"},
+  {"state": "png"}
+]

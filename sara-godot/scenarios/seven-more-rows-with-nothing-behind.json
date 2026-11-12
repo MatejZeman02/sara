@@ -1,0 +1,77 @@
+[
+  {"window": [1600, 1200]},
+  {"wait": 60},
+  {"document": "srgb"},
+  {"wait": 20},
+
+  {"state": "01-a-fresh-bar"},
+  {"shot": "01-a-fresh-bar"},
+
+  {"open": "preferences"},
+  {"wait": 15},
+  {"page": "Top Menu Bar"}, {"layout_gesture": {"elements": "Top Bar"}},
+  {"wait": 12},
+  {"layout_rows": true},
+  {"state": "02-the-top-menu-bar-page"},
+  {"shot": "02-the-top-menu-bar-page"},
+
+  {"wheel": {"at": [914, 900], "notches": -20}},
+  {"wait": 10},
+  {"layout_rows": true},
+  {"shot": "03-the-seven-rows-before"},
+
+  {"layout_gesture": {"switch": "stabilizer_amount"}},
+  {"wait": 8},
+  {"layout_gesture": {"switch": "sample_size"}},
+  {"wait": 8},
+  {"layout_gesture": {"switch": "sample_merged"}},
+  {"wait": 8},
+  {"layout_gesture": {"switch": "marquee_shape"}},
+  {"wait": 8},
+  {"layout_gesture": {"switch": "selection_mode"}},
+  {"wait": 12},
+  {"layout_rows": true},
+  {"state": "04-six-of-the-seven-switched-on"},
+  {"shot": "04-six-of-the-seven-switched-on"},
+
+  {"prefs": {"top_bar_order": ["File", "Edit", "View", "Window", "Image", "Layer", "Select", "Filter", "Modules", "Help", "Brush Presets", "blend_mode", "Keep Blend Mode", "eraser_toggled", "radius", "opacity", "hardness", "flow", "exposure", "size_by_pressure", "opacity_by_pressure", "Second Row", "wand_tolerance", "Rotation", "Reset Rotation", "stabilizer_mode", "stabilizer_amount", "Mirror H", "Mirror V", "Radial", "Stabilizer Toggle", "sample_size", "sample_merged", "marquee_shape", "selection_mode"]}},
+  {"wait": 10},
+  {"page": "Top Menu Bar"}, {"layout_gesture": {"elements": "Top Bar"}},
+  {"wait": 12},
+  {"layout_rows": true},
+  {"layout_gesture": {"switch": "wand_tolerance"}},
+  {"wait": 12},
+  {"layout_rows": true},
+  {"state": "05-the-seventh-once-it-is-not-the-last-row"},
+  {"shot": "05-the-seventh-once-it-is-not-the-last-row"},
+
+  {"key": "escape"},
+  {"wait": 15},
+  {"state": "06-the-brush-with-smoothing-on-the-bar"},
+  {"shot": "06-the-brush-with-smoothing-on-the-bar"},
+
+  {"tool": "eyedropper"},
+  {"wait": 15},
+  {"state": "07-the-eyedropper-brings-its-two"},
+  {"shot": "07-the-eyedropper-brings-its-two"},
+
+  {"tool": "wand"},
+  {"wait": 15},
+  {"state": "08-the-wand-brings-its-three"},
+  {"shot": "08-the-wand-brings-its-three"},
+
+  {"tool": "marquee"},
+  {"wait": 15},
+  {"state": "09-the-marquee-brings-its-two"},
+  {"shot": "09-the-marquee-brings-its-two"},
+
+  {"tool": "lasso"},
+  {"wait": 15},
+  {"state": "10-the-lasso-brings-its-two"},
+  {"shot": "10-the-lasso-brings-its-two"},
+
+  {"tool": "brush"},
+  {"wait": 15},
+  {"state": "11-the-brush-takes-them-away-again"},
+  {"shot": "11-the-brush-takes-them-away-again"}
+]

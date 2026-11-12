@@ -1,0 +1,47 @@
+[
+  {"comment": "The pop-up palette carries a brush HUD, wanted in the pop-up palette (PaletteDocker). The palette is switched on under Preferences, Brush Slots, and opened by a press on its row in the Window menu, `docker_12`, then placed clear of the strokes, since the park step put it off the screen with every other docker. It opens at its shipped size, 360 by 448, taller than the 384 it had by the HUD's 64, so the ring keeps the 360 by 331 its names are fitted to. Under the ring the HUD shows the Brush's Radius on a row of its own and Opacity and Flow side by side. A stroke at the factory radius goes down first, then the `control` step moves the HUD's Radius, the shot of the palette reads the new radius on its slider, the state reads the stamp brush's radius at the new value on the bar's row, and a second stroke is wider by what the radius grew. Both strokes are the `stroke` step's pen, a press, eighteen moves at pressure 1 and a release, and `texel` reads a column across each, every two document pixels."},
+  {"wait": 40},
+  {"docker": "park"},
+  {"wait": 10},
+  {"tool": "brush"},
+  {"colour": "#000000"},
+  {"wait": 5},
+
+  {"open": "preferences"},
+  {"wait": 25},
+  {"page": "Brush Slots"},
+  {"wait": 20},
+  {"page_row": {"row": "brush_right_click", "value": 0}},
+  {"wait": 5},
+  {"open": "preferences"},
+  {"wait": 20},
+
+  {"menu": "Window"},
+  {"wait": 10},
+  {"shot": "1-the-window-menu-names-the-palette"},
+  {"click": {"control": "Label", "in": "Row_docker_12"}},
+  {"wait": 30},
+  {"key": {"key": "escape"}},
+  {"wait": 10},
+  {"state": "2-opened-through-window-taller-by-the-hud"},
+  {"docker": {"id": "PaletteDocker", "at": [1450, 300]}},
+  {"wait": 20},
+  {"state": "3-placed-clear-of-the-strokes"},
+  {"shot": "3-placed-clear-of-the-strokes"},
+
+  {"stroke": {"from": [150, 300], "to": [1150, 300], "space": "document", "pressure": 1.0, "steps": 18}},
+  {"wait": 30},
+  {"texel": [[650, 252],[650, 254],[650, 256],[650, 258],[650, 260],[650, 262],[650, 264],[650, 266],[650, 268],[650, 270],[650, 272],[650, 274],[650, 276],[650, 278],[650, 280],[650, 282],[650, 284],[650, 286],[650, 288],[650, 290],[650, 292],[650, 294],[650, 296],[650, 298],[650, 300],[650, 302],[650, 304],[650, 306],[650, 308],[650, 310],[650, 312],[650, 314],[650, 316],[650, 318],[650, 320],[650, 322],[650, 324],[650, 326],[650, 328],[650, 330],[650, 332],[650, 334],[650, 336],[650, 338],[650, 340],[650, 342],[650, 344],[650, 346],[650, 348]]},
+  {"state": "4-a-stroke-at-the-factory-radius"},
+
+  {"control": {"name": "PaletteHudRadius", "value": 0.03}},
+  {"wait": 20},
+  {"state": "5-the-hud-radius-moved"},
+  {"shot": "5-the-hud-radius-moved"},
+
+  {"stroke": {"from": [150, 700], "to": [1150, 700], "space": "document", "pressure": 1.0, "steps": 18}},
+  {"wait": 30},
+  {"texel": [[650, 652],[650, 654],[650, 656],[650, 658],[650, 660],[650, 662],[650, 664],[650, 666],[650, 668],[650, 670],[650, 672],[650, 674],[650, 676],[650, 678],[650, 680],[650, 682],[650, 684],[650, 686],[650, 688],[650, 690],[650, 692],[650, 694],[650, 696],[650, 698],[650, 700],[650, 702],[650, 704],[650, 706],[650, 708],[650, 710],[650, 712],[650, 714],[650, 716],[650, 718],[650, 720],[650, 722],[650, 724],[650, 726],[650, 728],[650, 730],[650, 732],[650, 734],[650, 736],[650, 738],[650, 740],[650, 742],[650, 744],[650, 746],[650, 748]]},
+  {"state": "6-a-stroke-at-the-new-radius"},
+  {"shot": "6-a-stroke-at-the-new-radius"}
+]

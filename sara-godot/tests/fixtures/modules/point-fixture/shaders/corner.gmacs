@@ -1,0 +1,25 @@
+# Kernel: corner
+# A point kernel, which writes each texel's document position into its own
+# red and green, the region's origin and global_id added to the chunk's
+# document corner the runner hands a kernel that declares `chunk`. Two texels
+# at one place in two chunks then differ by the chunk's side, and by nothing
+# when the corner never arrived.
+
+kernel corner
+
+image canvas
+image mask: r32f, readonly
+
+params:
+    float origin_x  # the dispatched region's origin in the chunk
+    float origin_y
+    vec2 chunk      # the chunk's document corner, in document pixels
+
+
+def corner():
+    ivec2 px = ivec2(global_id.xy) + ivec2(int(origin_x), int(origin_y))
+    ivec2 size = image_size(canvas)
+    if px.x >= size.x or px.y >= size.y:
+        return
+    vec2 placed = vec2(px) + chunk
+    image_store(canvas, px, vec4(placed.x, placed.y, 0.0, 1.0))

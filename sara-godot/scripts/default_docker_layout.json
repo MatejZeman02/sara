@@ -1,0 +1,182 @@
+{
+ "BlenderLiveDocker": {
+  "open": false,
+  "rect": [
+   2,
+   400,
+   300,
+   196
+  ],
+  "title": "Blender Live"
+ },
+ "BrushPresetsDocker": {
+  "open": true,
+  "rect": [
+   60,
+   517,
+   310,
+   491
+  ],
+  "title": "Brush Presets"
+ },
+ "ColorDocker": {
+  "open": true,
+  "rect": [
+   1600,
+   329,
+   310,
+   393
+  ],
+  "title": "Colour Picker"
+ },
+ "ExposureDocker": {
+  "open": false,
+  "rect": [
+   750,
+   399,
+   226,
+   272
+  ],
+  "title": "Exposure"
+ },
+ "FiltersDocker": {
+  "open": false,
+  "rect": [
+   1440,
+   544,
+   160,
+   504
+  ],
+  "title": "Filters"
+ },
+ "GraphDocker": {
+  "open": false,
+  "rect": [
+   900,
+   370,
+   380,
+   300
+  ],
+  "title": "Graph"
+ },
+ "HistoryDocker": {
+  "open": false,
+  "rect": [
+   900,
+   680,
+   300,
+   300
+  ],
+  "title": "Recent Presets"
+ },
+ "InfoDocker": {
+  "open": false,
+  "rect": [
+   390,
+   79,
+   500,
+   290
+  ],
+  "title": "Info"
+ },
+ "LayersDocker": {
+  "open": true,
+  "rect": [
+   1600,
+   722,
+   310,
+   287
+  ],
+  "title": "Layers"
+ },
+ "MinimapDocker": {
+  "open": true,
+  "rect": [
+   1600,
+   79,
+   310,
+   250
+  ],
+  "title": "Minimap"
+ },
+ "PaletteDocker": {
+  "open": false,
+  "rect": [
+   390,
+   600,
+   360,
+   448
+  ],
+  "title": "Pop-up Palette"
+ },
+ "RecorderDocker": {
+  "open": false,
+  "rect": [
+   900,
+   79,
+   300,
+   270
+  ],
+  "title": "Recorder"
+ },
+ "ReferenceDocker": {
+  "open": false,
+  "rect": [
+   1280,
+   320,
+   310,
+   223
+  ],
+  "title": "Reference"
+ },
+ "SphereDocker": {
+  "open": false,
+  "rect": [
+   750,
+   672,
+   150,
+   240
+  ],
+  "title": "Sphere"
+ },
+ "StatsDocker": {
+  "open": false,
+  "rect": [
+   390,
+   378,
+   300,
+   220
+  ],
+  "title": "Stats"
+ },
+ "ToolBoxDocker": {
+  "open": true,
+  "rect": [
+   0,
+   79,
+   60,
+   576
+  ],
+  "title": "Toolbox"
+ },
+ "ToolOptionsDocker": {
+  "open": true,
+  "rect": [
+   60,
+   79,
+   310,
+   438
+  ],
+  "title": "Tool Options"
+ },
+ "UndoDocker": {
+  "open": false,
+  "rect": [
+   1200,
+   680,
+   202,
+   340
+  ],
+  "title": "Undo History"
+ }
+}

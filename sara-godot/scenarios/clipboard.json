@@ -1,0 +1,16 @@
+[
+  {"wait": 30},
+  {"probe": [[500, 400], [1400, 400]]},
+  {"stroke": {"from": [500, 400], "to": [1400, 400], "pressure": 0.9, "steps": 24}},
+  {"wait": 5},
+  {"shot": "after-stroke"},
+  {"select": [700, 300, 500, 400]},
+  {"clipboard": "cut"},
+  {"wait": 5},
+  {"state": "after-cut"},
+  {"shot": "after-cut"},
+  {"clipboard": "paste"},
+  {"wait": 5},
+  {"state": "after-paste"},
+  {"shot": "after-paste"}
+]

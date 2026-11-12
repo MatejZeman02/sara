@@ -1,0 +1,43 @@
+[
+  {
+    "wait": 30
+  },
+  {
+    "open": "preferences"
+  },
+  {
+    "wait": 15
+  },
+  {
+    "page": "Top Menu Bar"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "note": {
+      "target": "SecondRowCheck",
+      "text": "The first note of the run names the file.",
+      "save": true
+    }
+  },
+  {
+    "wait": 90
+  },
+  {
+    "note": {
+      "target": "SecondRowCheck",
+      "text": "The second note of the same run appends to it.",
+      "save": true
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "shot": "after-two-notes"
+  },
+  {
+    "state": "after-two-notes"
+  }
+]

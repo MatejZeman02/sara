@@ -1,0 +1,38 @@
+# Kernel: apply_masked
+# Blends the run's shown result into the layer's own chunk in proportion to
+# the selection mask, so Apply stops at the mask's edge and not only at the
+# rectangle's. The bound check is copy_masked's own, and the blend is
+# fill.gmacs's premultiplied mix, because a straight-alpha colour cannot be
+# interpolated channel by channel.
+
+kernel apply_masked
+
+image layer
+image filtered: readonly
+# The document-wide selection, as in fill.gmacs: a 1 by 1 mask reads as 1.0
+# everywhere through the clamped read (core/api/selection/sa_selection.gd).
+image mask: r32f, readonly
+params:
+    float offset_x
+    float offset_y
+    float filtered_offset_x
+    float filtered_offset_y
+    float width
+    float height
+
+
+def apply_masked():
+    ivec2 px = ivec2(global_id.xy) + ivec2(int(offset_x), int(offset_y))
+    ivec2 size = image_size(layer)
+    if px.x >= size.x or px.y >= size.y:
+        return
+    if px.x >= int(offset_x + width) or px.y >= int(offset_y + height):
+        return
+    ivec2 filtered_px = px + ivec2(int(filtered_offset_x), int(filtered_offset_y))
+    vec4 original = layer[px]
+    vec4 filtered_color = filtered[filtered_px]
+    float coverage = mask[min(px, image_size(mask) - 1)].r
+    float out_a = mix(original.a, filtered_color.a, coverage)
+    vec3 premultiplied = mix(original.rgb * original.a, filtered_color.rgb * filtered_color.a, coverage)
+    vec3 out_rgb = out_a > 0.0 ? premultiplied / out_a : vec3(0.0)
+    layer[px] = vec4(out_rgb, out_a)

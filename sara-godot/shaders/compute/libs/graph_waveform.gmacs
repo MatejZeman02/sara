@@ -1,0 +1,161 @@
+# The waveform and the parade: the live grid they bin into, and the picture
+# they make of it.
+#
+# Apart from graph.gmacs because the live grid is one responsibility: the
+# waveform and the parade bin into a grid sized from the plot rather than the
+# fixed COLUMNS by
+# BINS planes the other modes share, so its size, its index, the level a value
+# lands on and the drawing that reads it back change together and nothing
+# else reads them. Included after the counts buffer, the push constant,
+# `flag_set` and `hlg`, and before `graph_clear`, which clears as far as
+# `live_size` reaches.
+#
+# `live_size` and `live_index` are what `graph_clear` and `graph_bin` use, and
+# `draw_parade`, `draw_waveform` and `draw_waveform_white` are what
+# `graph_draw`'s mode chain calls.
+
+# How many of a column's samples one bin has to hold to draw white on a
+#   waveform: a quarter, which is darktable's tones over forty at 160 tones.
+const float WAVE_BRIGHTNESS = 4.0
+# How many levels WAVE_BRIGHTNESS was tuned at. A live grid of more levels
+#   spreads a gradient's samples thinner, so the brightness is scaled by the
+#   levels over this, and a column draws as bright at every panel height.
+const float WAVE_TUNED_LEVELS = 256.0
+# How many columns one channel of the live grid has: a texel of the picture
+#   each, a third of the width for the parade, which lays the channels side by
+#   side. Never more than there are columns of samples, so a panel wider than
+#   the view it reads leaves no column empty and draws its columns wider
+#   instead. `SaGraphPlot.live_grid` answers the same.
+
+
+def live_columns(int mode) -> uint:
+    uint across = uint(plot_size().x)
+    if mode == MODE_PARADE:
+        across = across / 3u
+    return max(min(across, uint(samples.x)), 1u)
+
+# How many levels the live grid has between 0 and 1: one per texel of the
+#   picture below VALUE_TOP, so each row of the trace is one bin.
+
+
+def live_levels() -> uint:
+    return max(uint(plot_size().y * VALUE_TOP), 2u)
+
+# How many counts the live grid takes, and none when the pass bins the fixed
+#   grid or the mode has no columns.
+
+
+def live_size(int mode) -> uint:
+    if flag_set(FLAG_FIXED_GRID) or (mode != MODE_PARADE and mode != MODE_WAVEFORM and mode != MODE_WAVEFORM_WHITE):
+        return 0u
+    return 3u * live_columns(mode) * live_levels()
+
+
+def live_index(uint c, uint column, uint level, int mode) -> uint:
+    return LIVE_SLOT + (c * live_columns(mode) + column) * live_levels() + level
+
+
+def live_level_of(float value) -> uint:
+    return uint(clamp(value, 0.0, 1.0) * (live_levels() - 1u) + 0.5)
+# One column of the picture per column of the live grid and one row per
+#   level, so the trace is drawn at the resolution it was binned at: the
+#   parade lays the three planes side by side, the waveform lays them on top of
+#   one another. Both read the same counts.
+
+# A waveform bin by the share of its column it holds, the way darktable
+#   brightens one: at WAVE_TUNED_LEVELS levels a quarter of the column's
+#   samples in one bin is white, and the curve between is the hybrid log-gamma,
+#   so a gradient's one sample a bin still shows. Against the column and not
+#   the picture's busiest bin, which is what let a flat background put every
+#   trace a texel above black. The share is scaled by the levels, which is
+#   darktable's tones over forty, so a gradient spread over a taller picture's
+#   finer bins draws at the brightness it did over 256.
+
+
+def wave_level(uint index, int mode) -> float:
+    float per_column = samples.x * samples.y / float(live_columns(mode))
+    float share = float(counts.values[index]) / max(per_column, 1.0)
+    float brightness = WAVE_BRIGHTNESS * live_levels() / WAVE_TUNED_LEVELS
+    return hlg(share * brightness * gain)
+
+# The value a row of the waveform stands for, with 1.0 at eight ninths of the
+#   height, or a negative number in the headroom above it where nothing is
+#   binned.
+
+
+def wave_value(vec2 texel) -> float:
+    return (1.0 - (texel.y + 0.5) / plot_size().y) / VALUE_TOP
+
+
+def wave_bin(vec2 texel) -> int:
+    float value = wave_value(texel)
+    if value > 1.0:
+        return -1
+    return int(live_level_of(value))
+
+# darktable's nine lines across a waveform: one every ninth, the one at 1.0
+#   and the one at the middle drawn heavier, so a trace reads against a number.
+
+
+def value_lines(vec2 texel) -> vec3:
+    float unit = (texel.y + 0.5) / plot_size().y * 9.0
+    float nearest = round(unit)
+    float away = abs(unit - nearest) / 9.0 * plot_size().y
+    int k = int(nearest)
+    if k <= 0 or k >= 9:
+        return vec3(0.0)
+    float width = (k == 1) ? 1.4 : ((k == 5) ? 1.0 : 0.6)
+    float line = 1.0 - smoothstep(width * 0.5, width * 0.5 + 1.0, away)
+    float weight = (k == 1) ? 0.34 : ((k == 5) ? 0.26 : 0.14)
+    return vec3(line * weight)
+
+# Which live column the texel at *across*, a unit coordinate over the part of
+#   the picture one channel takes, reads.
+
+
+def live_column_at(float across, int mode) -> uint:
+    uint columns = live_columns(mode)
+    return min(uint(clamp(across, 0.0, 1.0) * columns), columns - 1u)
+
+
+def draw_parade(vec2 texel, float largest) -> vec3:
+    float across = texel.x / plot_size().x * 3.0
+    int c = clamp(int(across), 0, 2)
+    uint column = live_column_at(fract(across), MODE_PARADE)
+    vec3 colour = value_lines(texel)
+    int bin = wave_bin(texel)
+    if bin < 0:
+        return colour
+    float level = wave_level(live_index(uint(c), column, uint(bin), MODE_PARADE), MODE_PARADE)
+    vec3 channel = vec3(0.0)
+    channel[c] = 1.0
+    return colour + channel * level
+
+
+def draw_waveform(vec2 texel, float largest) -> vec3:
+    uint column = live_column_at((texel.x + 0.5) / plot_size().x, MODE_WAVEFORM)
+    vec3 colour = value_lines(texel)
+    int bin = wave_bin(texel)
+    if bin < 0:
+        return colour
+    for c in range(3):
+        vec3 channel = vec3(0.0)
+        channel[c] = 1.0
+        colour += channel * wave_level(live_index(uint(c), column, uint(bin), MODE_WAVEFORM), MODE_WAVEFORM)
+    return colour
+
+# The W of RGBW: one white trace where the three coloured ones would be, of
+#   Oklab lightness, which `graph_bin` puts in the first plane alone.
+#
+# Lightness rather than the largest of the three channels' levels, which would
+# read a pure red and a pure blue both at 100. Here the red reads 63 and the
+# blue 45, a level a painter can compare with a value.
+
+
+def draw_waveform_white(vec2 texel, float largest) -> vec3:
+    uint column = live_column_at((texel.x + 0.5) / plot_size().x, MODE_WAVEFORM_WHITE)
+    vec3 colour = value_lines(texel)
+    int bin = wave_bin(texel)
+    if bin < 0:
+        return colour
+    return colour + vec3(wave_level(live_index(0u, column, uint(bin), MODE_WAVEFORM_WHITE), MODE_WAVEFORM_WHITE))

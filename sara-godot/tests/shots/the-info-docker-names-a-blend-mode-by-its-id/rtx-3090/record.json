@@ -1,0 +1,12 @@
+{
+    "gpu": "NVIDIA GeForce RTX 3090",
+    "display": {
+        "resolution": "1920x1200",
+        "aspect": "16:10"
+    },
+    "taken": "dd69ec2db",
+    "repeats": true,
+    "leaves_out": [
+        "4-the-info-docker.png"
+    ]
+}

@@ -1,0 +1,7 @@
+# Clock: a filter whose picture is its time, `t` seconds in every channel but
+# the paint's own alpha, so a texel read back is the time it was drawn at.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+def pixel(ivec2 at) -> vec4:
+    return vec4(t, t, t, src(at).a)

@@ -1,0 +1,29 @@
+[
+  {"wait": 45},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 20},
+  {"document": "srgb"},
+  {"wait": 25},
+  {"load": "res://scenarios/fixtures/box-blur-exercise.sad"},
+  {"wait": 25},
+  {"layer": {"activate": "Layer 1"}},
+  {"wait": 10},
+  {"texel": [[256, 256], [280, 256], [336, 256]]},
+  {"state": "1-the-fixed-document"},
+  {"shot": "1-the-fixed-document"},
+
+  {"menu": "Filter"},
+  {"wait": 15},
+  {"shot": "2-the-row-under-the-modules-name"},
+  {"state": "2-the-row-under-the-modules-name"},
+
+  {"filter": {"open": "sara-base-modules.box_blur"}},
+  {"wait": 20},
+  {"filter": {"widget": "radius", "value": 24}},
+  {"wait": 15},
+  {"filter": "apply"},
+  {"wait": 25},
+  {"texel": [[256, 256], [280, 256], [336, 256]]},
+  {"shot": "3-applied"},
+  {"state": "3-applied"}
+]

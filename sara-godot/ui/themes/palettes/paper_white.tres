@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="SaPalette" load_steps=2 format=3]
+
+[ext_resource type="Script" uid="uid://dufcweud0h0ju" path="res://ui/themes/sa_palette.gd" id="1_palette"]
+
+[resource]
+script = ExtResource("1_palette")
+display_name = "Paper White"
+bg_primary = Color(0.94902, 0.945098, 0.929412, 1.0)
+bg_secondary = Color(0.890196, 0.882353, 0.858824, 1.0)
+bg_slider = Color(0.862745, 0.85098, 0.823529, 1.0)
+bg_input = Color(1.0, 1.0, 0.996078, 1.0)
+bg_panel = Color(0.984314, 0.980392, 0.968627, 1.0)
+bg_sidebar = Color(0.917647, 0.909804, 0.886275, 1.0)
+bg_track = Color(0.835294, 0.823529, 0.792157, 1.0)
+border_primary = Color(0.705882, 0.686275, 0.647059, 1.0)
+border_secondary = Color(0.792157, 0.776471, 0.741176, 1.0)
+border_selected = Color(0.435294, 0.411765, 0.376471, 1.0)
+border_drag = Color(0.760784, 0.337255, 0.058824, 1.0)
+accent_primary = Color(0.760784, 0.254902, 0.047059, 1.0)
+accent_fill = Color(0.878431, 0.478431, 0.270588, 1.0)
+accent_gauge = Color(0.184314, 0.435294, 0.309804, 1.0)
+accent_ceiling = Color(0.662745, 0.454902, 0.101961, 1.0)
+accent_stroke = Color(0.231373, 0.356863, 0.647059, 1.0)
+text_primary = Color(0.105882, 0.101961, 0.090196, 1.0)
+text_muted = Color(0.368627, 0.352941, 0.321569, 1.0)
+text_shadow = Color(1, 1, 1, 0.6)
+shadow = Color(0, 0, 0, 0.3)
+grip_light = Color(1, 1, 1, 0.9)
+grip_dark = Color(0.35, 0.33, 0.3, 0.65)

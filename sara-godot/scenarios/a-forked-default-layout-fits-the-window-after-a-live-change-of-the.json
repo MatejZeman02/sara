@@ -1,0 +1,19 @@
+[
+  {"wait": 30},
+  {"state": "launched-at-1"},
+
+  {"key": {"key": "f", "shift": true}},
+  {"wait": 20},
+  {"state": "forked-at-1"},
+  {"shot": "forked-at-1"},
+
+  {"prefs": {"ui_scale": 1.25}},
+  {"wait": 20},
+  {"state": "fork-at-1.25"},
+  {"shot": "fork-at-1.25"},
+
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 20},
+  {"state": "fork-back-at-1"},
+  {"shot": "fork-back-at-1"}
+]

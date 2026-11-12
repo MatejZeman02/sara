@@ -1,0 +1,930 @@
+[
+ {
+  "comment": "Thick Impasto at radius 40 and thickness 9 laid at 4, 12.3 and 30 px point spacing through the door, then one real pen stroke that scripts/virtual_pen_impasto_start.py plays before state 3. Played alone with sara_shot.py, state 3 holds the door strokes only. The relief shows only in the shots: a look step writes the layer's colour, flat, without the light."
+ },
+ {
+  "document": "srgb",
+  "size": [
+   800,
+   800
+  ],
+  "background": {
+   "kind": "colour",
+   "color": "#d9b27c",
+   "ground": "canvas"
+  }
+ },
+ {
+  "prefs": {
+   "autosave_interval_minutes": 0
+  }
+ },
+ {
+  "fit": true
+ },
+ {
+  "layer": {
+   "add": "L1"
+  }
+ },
+ {
+  "layer": {
+   "activate": "L1"
+  }
+ },
+ {
+  "brush": {
+   "preset": "Thick Impasto",
+   "colour": "#e6b44b",
+   "radius_px": 40.0,
+   "push_colour_below": false,
+   "bristle_count": 6,
+   "thickness": 9.0
+  }
+ },
+ {
+  "state": "1-thick-impasto-at-radius-40"
+ },
+ {
+  "stroke": {
+   "points": [
+    {
+     "at": [
+      120.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      124.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      128.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      132.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      136.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      140.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      144.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      148.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      152.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      156.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      160.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      164.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      168.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      172.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      176.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      180.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      184.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      188.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      192.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      196.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      200.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      204.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      208.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      212.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      216.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      220.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      224.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      228.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      232.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      236.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      240.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      244.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      248.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      252.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      256.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      260.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      264.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      268.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      272.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      276.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      280.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      284.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      288.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      292.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      296.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      300.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      304.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      308.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      312.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      316.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      320.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      324.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      328.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      332.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      336.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      340.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      344.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      348.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      352.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      356.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      360.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      364.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      368.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      372.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      376.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      380.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      384.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      388.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      392.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      396.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      400.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      404.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      408.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      412.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      416.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      420.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      424.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      428.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      432.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      436.0,
+      110
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      440.0,
+      110
+     ],
+     "pressure": 1.0
+    }
+   ],
+   "space": "document",
+   "route": "tool",
+   "smoothing": false
+  }
+ },
+ {
+  "stroke": {
+   "points": [
+    {
+     "at": [
+      120.0,
+      240
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      132.3,
+      240
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      144.6,
+      240
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      156.9,
+      240
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      169.2,
+      240
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      181.5,
+      240
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      193.8,
+      240
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      206.1,
+      240
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      218.4,
+      240
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      230.7,
+      240
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      243.0,
+      240
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      255.3,
+      240
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      267.6,
+      240
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      279.9,
+      240
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      292.2,
+      240
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      304.5,
+      240
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      316.8,
+      240
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      329.1,
+      240
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      341.4,
+      240
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      353.7,
+      240
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      366.0,
+      240
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      378.3,
+      240
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      390.6,
+      240
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      402.9,
+      240
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      415.2,
+      240
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      427.5,
+      240
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      439.8,
+      240
+     ],
+     "pressure": 1.0
+    }
+   ],
+   "space": "document",
+   "route": "tool",
+   "smoothing": false
+  }
+ },
+ {
+  "stroke": {
+   "points": [
+    {
+     "at": [
+      120.0,
+      370
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      150.0,
+      370
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      180.0,
+      370
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      210.0,
+      370
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      240.0,
+      370
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      270.0,
+      370
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      300.0,
+      370
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      330.0,
+      370
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      360.0,
+      370
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      390.0,
+      370
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      420.0,
+      370
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      450.0,
+      370
+     ],
+     "pressure": 1.0
+    }
+   ],
+   "space": "document",
+   "route": "tool",
+   "smoothing": false
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "2-three-door-strokes"
+ },
+ {
+  "shot": "2-three-door-strokes"
+ },
+ {
+  "state": "3-a-real-pen-stroke-below-them"
+ },
+ {
+  "shot": "3-a-real-pen-stroke-below-them"
+ }
+]

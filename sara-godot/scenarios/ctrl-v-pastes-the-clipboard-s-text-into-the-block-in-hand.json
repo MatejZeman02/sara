@@ -1,0 +1,127 @@
+[
+  {
+    "comment": "A door run started with sara_shot.py --desktop-clipboard holding two lines of plain text types a letter into a new block, presses Ctrl+V and Escape, and the state dump's drawn reads the letter followed by both lines. Ctrl+V with no block in hand leaves the layer stack as it was."
+  },
+  {
+    "wait": 60
+  },
+  {
+    "prefs": {
+      "ui_scale": 1.0,
+      "autosave_interval_minutes": 0
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "document": "srgb",
+    "size": [
+      800,
+      400
+    ]
+  },
+  {
+    "wait": 10
+  },
+  {
+    "fit": true
+  },
+  {
+    "wait": 5
+  },
+  {
+    "tool": {
+      "id": "text",
+      "options": {
+        "text_font": 0,
+        "text_size": 64
+      }
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "key": {
+      "key": "v",
+      "ctrl": true
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "state": "first-ctrl-v-no-block",
+    "dump": true
+  },
+  {
+    "wait": 60
+  },
+  {
+    "stroke": {
+      "from": [
+        60.0,
+        150.0
+      ],
+      "to": [
+        60.25,
+        150.0
+      ],
+      "space": "document",
+      "pressure": 1.0,
+      "smoothing": false
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "key": {
+      "key": "A",
+      "char": "A",
+      "shift": true
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "key": {
+      "key": "v",
+      "ctrl": true
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "key": "escape"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "after-the-letter-the-paste-and-escape"
+  },
+  {
+    "state": "after-the-letter-the-paste-and-escape",
+    "dump": true
+  },
+  {
+    "key": {
+      "key": "v",
+      "ctrl": true
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "shot": "final-ctrl-v-no-block"
+  },
+  {
+    "state": "final-ctrl-v-no-block",
+    "dump": true
+  }
+]

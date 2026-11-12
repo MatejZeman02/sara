@@ -1,0 +1,19 @@
+[
+  {"wait": 20},
+  {"docker": {"id": "BrushPresetsDocker", "at": [2, 340], "size": [280, 360]}},
+  {"docker": {"id": "ToolOptionsDocker", "at": [70, 445], "size": [310, 563]}},
+  {"stroke": {"from": [600, 400], "to": [1200, 600], "pressure": 1.0, "steps": 24}},
+  {"wait": 5},
+  {"key": "W"},
+  {"press": {"button": "left", "at": [300, 300]}},
+  {"release": "left"},
+  {"wait": 10},
+  {"shot": "wand-background-around-the-stroke"},
+  {"state": "wand-background"},
+  {"select": "none"},
+  {"press": {"button": "left", "at": [900, 500]}},
+  {"release": "left"},
+  {"wait": 10},
+  {"shot": "wand-the-stroke"},
+  {"state": "wand-the-stroke"}
+]

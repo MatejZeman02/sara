@@ -1,0 +1,8 @@
+{
+    "title": "A test picture",
+    "credit": "Made for the suite",
+    "variants": [
+        {"file": "evening.png", "hour": 18},
+        {"file": "morning.png", "hour": 6}
+    ]
+}

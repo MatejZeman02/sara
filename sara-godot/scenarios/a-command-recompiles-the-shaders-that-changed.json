@@ -1,0 +1,17 @@
+[
+ {"wait": 60},
+ {"prefs": {"ui_scale": 1.0}},
+ {"wait": 20},
+ {"layout_preset": {"load": "minimalistic"}},
+ {"wait": 20},
+ {"document": "srgb"},
+ {"wait": 10},
+ {"key": {"key": "R", "ctrl": true, "shift": true}},
+ {"wait": 10},
+ {"state": "1-reload-shaders-with-nothing-changed"},
+ {"shot": "1-reload-shaders-with-nothing-changed"},
+ {"menu": "Modules"},
+ {"wait": 15},
+ {"state": "2-the-modules-menu-carries-the-row"},
+ {"shot": "2-the-modules-menu-carries-the-row"}
+]

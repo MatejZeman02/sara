@@ -1,0 +1,39 @@
+[
+  {"wait": 35},
+  {"open": "preferences"},
+  {"wait": 20},
+  {"page": "Colour Spaces"},
+  {"wait": 15},
+  {"shot": "1-the-horseshoe-at-the-pages-own-size"},
+  {"state": "1-the-horseshoe-at-the-pages-own-size"},
+
+  {"click": {"control": "MaximizeButton"}},
+  {"wait": 25},
+  {"shot": "2-the-same-shape-on-a-page-twice-as-wide"},
+  {"state": "2-the-same-shape-on-a-page-twice-as-wide"},
+
+  {"dropdown": {"name": "CompareGamutOption", "row": "Compare: sRGB / Rec. 709"}},
+  {"wait": 10},
+  {"shot": "3-a-smaller-gamut-to-compare-against"},
+  {"state": "3-a-smaller-gamut-to-compare-against"},
+
+  {"dropdown": {"name": "GamutOption", "row": "Display P3"}},
+  {"wait": 10},
+  {"shot": "4-a-wider-space-over-the-same-horseshoe"},
+  {"state": "4-a-wider-space-over-the-same-horseshoe"},
+
+  {"click": {"control": "MaximizeButton"}},
+  {"wait": 20},
+  {"dropdown": {"name": "GamutOption", "row": "sRGB"}},
+  {"wait": 10},
+  {"state": "5-back-as-it-was"},
+
+  {"key": "escape"},
+  {"wait": 15},
+  {"open": "color_space"},
+  {"wait": 25},
+  {"shot": "6-the-same-drawing-in-the-dialogs-preview"},
+  {"state": "6-the-same-drawing-in-the-dialogs-preview"},
+  {"key": "escape"},
+  {"wait": 15}
+]

@@ -1,0 +1,124 @@
+[
+ {
+  "wait": 40
+ },
+ {
+  "document": "srgb"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "docker": "park"
+ },
+ {
+  "docker": {
+   "id": "ToolBoxDocker",
+   "at": [
+    1560,
+    40
+   ],
+   "size": [
+    340,
+    200
+   ]
+  }
+ },
+ {
+  "docker": {
+   "id": "ToolOptionsDocker",
+   "at": [
+    1560,
+    260
+   ],
+   "size": [
+    340,
+    420
+   ]
+  }
+ },
+ {
+  "wait": 25
+ },
+ {
+  "colour": "#d96626"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "tool": {
+   "id": "noise_brush",
+   "options": {
+    "radius": 0.05,
+    "opacity": 1.0
+   }
+  }
+ },
+ {
+  "wait": 30
+ },
+ {
+  "measure": {
+   "perf": "begin"
+  }
+ },
+ {
+  "stroke": {
+   "from": [
+    300,
+    300
+   ],
+   "to": [
+    1100,
+    450
+   ],
+   "pressure": 0.8,
+   "steps": 30
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "measure": {
+   "perf": "end"
+  }
+ },
+ {
+  "state": "0-the-first-noise-stroke"
+ },
+ {
+  "measure": {
+   "perf": "begin"
+  }
+ },
+ {
+  "stroke": {
+   "from": [
+    300,
+    600
+   ],
+   "to": [
+    1100,
+    750
+   ],
+   "pressure": 0.8,
+   "steps": 30
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "measure": {
+   "perf": "end"
+  }
+ },
+ {
+  "state": "1-the-second-noise-stroke"
+ },
+ {
+  "shot": "2-both-strokes"
+ }
+]

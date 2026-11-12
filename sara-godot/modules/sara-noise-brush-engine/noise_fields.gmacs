@@ -1,0 +1,519 @@
+# Library: noise_fields
+#
+# The noise brush's texture, the field a stroke lays its paint through. Three
+# fields ship, each read as two numbers at a texel's stroke coordinates: a
+# pressure map, the pressure the texel needs before it takes paint, and a
+# lightness, which the stroke writes into the layer's height.
+#
+# **Stroke coordinates are the contract every field answers in.** Along is the
+# distance travelled at the texel's nearest point less the drift, and across
+# runs from minus one to one over the tip's half-width. A Grain and a Picture
+# are read instead at the coordinates of a straight stroke from the first
+# point along the first heading (`noise_canvas_place`), so they stay on the
+# canvas and a turn does not bend them, unless Drift carries them.
+#
+# - Grain, isotropic value noise with a scale and a contrast.
+# - Bristle, streaks laid across the stroke.
+# - Picture, any pattern the door's store holds, decoded to one grey mask.
+#
+# **White needs the full pressure, black takes paint at any.** Grain's map is
+# the grain, Picture's the pattern's grey (Invert reads it the other way) and
+# Bristle's a streak's absence, so a light touch lays the hairs of least reach.
+#
+# **The stroke's offset is added before any field is read**, so two strokes
+# side by side never share one. Bristle takes it as a salt and a phase along
+# the stroke, since a bristle's position is across the stroke.
+#
+# **Drift is taken off along only**, so at full drift the field rides with the
+# tip and Bristle's streaks stop breaking.
+#
+# **Two bindings the importer declares before the import**, the way the door's
+# `brush_tip` leaves its table and picture to its importer:
+#
+#     buffer field: float values[]
+#     sampler field_image
+#
+# The buffer is the field's numbers, written once a stroke by `noise_fields.gd`,
+# and the sampler is the picture, a one by one white stand-in when the field
+# is not one.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# The buffer's slots. `noise_fields.gd` writes them in this order and names the
+# same numbers, so a slot moved here is moved there.
+const int NOISE_FIELD_SLOT = 0
+const int NOISE_FIELD_CHANNELS = 1
+const int NOISE_FIELD_RELIEF = 2
+const int NOISE_FIELD_OFFSET_X = 3
+const int NOISE_FIELD_OFFSET_Y = 4
+const int NOISE_FIELD_A = 5
+const int NOISE_FIELD_B = 6
+const int NOISE_FIELD_C = 7
+const int NOISE_FIELD_WIDTH = 8
+const int NOISE_FIELD_TONE_LOW = 9
+const int NOISE_FIELD_TONE_HIGH = 10
+# The brush's look, the rows a flat tip style preset is made of, written beside
+# the field's numbers because the dab and the field both read them once a
+# stroke: the strands' width, edge softness and taper as multiples of the
+# shapes below, the fill floor, the texture's tone, the rim's firmness and the
+# build-up a return lays. Each one's rest, the number that paints as the brush
+# did before the rows were there, is in `noise_fields.gd`.
+const int NOISE_FIELD_STRAND_WIDTH = 11
+const int NOISE_FIELD_STRAND_SOFT = 12
+const int NOISE_FIELD_STRAND_TAPER = 13
+const int NOISE_FIELD_FILL = 14
+const int NOISE_FIELD_TONE = 15
+const int NOISE_FIELD_RIM_FIRM = 16
+const int NOISE_FIELD_BUILD_UP = 17
+
+# How far the second grain is read from the first, in lattice cells, so the
+# two channels are two draws rather than one field seen twice.
+const vec2 NOISE_SECOND_GRAIN = vec2(71.3, 19.7)
+
+# The greatest reach a bristle takes, the pressure map on its streak's middle,
+# and the step between two neighbours' places in the run of reaches, the golden
+# ratio's fraction, which spreads any few bristles evenly over the range.
+const float NOISE_BRISTLE_REACH = 0.75
+const float NOISE_BRISTLE_STEP = 0.618034
+
+# The pressure map where no streak is, a streak's skirt as a share of its
+# core's height and how many of its half widths the skirt reaches, and the
+# run's noise over which a streak fades in, so it is gone below the first and
+# whole above the second.
+const float NOISE_BRISTLE_GAP = 0.95
+const float NOISE_BRISTLE_SKIRT_LEVEL = 0.6
+const float NOISE_BRISTLE_SKIRT_REACH = 2.2
+const vec2 NOISE_BRISTLE_BREAK = vec2(0.1, 0.4)
+
+# How many strands on each side are outer ones, and the share of the run's
+# period an outer strand's own run takes, from the first to the second.
+const float NOISE_BRISTLE_OUTER = 2.0
+const vec2 NOISE_BRISTLE_OUTER_RUN = vec2(0.04, 0.15)
+
+# A strand's half width as a share of its cell, from the narrowest to the
+# widest, and how far it swells and thins about that along a run of
+# [NOISE_STRAND_SWELL_RUN] of its own run's period. The share of its width its
+# edge falls over, sharpest to softest. The share of the period a strand of
+# the body runs, shortest to longest. How much of its tone is its own rather
+# than its wander along a run of [NOISE_STRAND_TONE_RUN] of its period. The
+# strands either side of a texel's own cell it reads, and how much less a
+# neighbour must need than the strand already taken to be taken instead, so
+# where none covers the texel its own cell's strand is taken on the GPU and in
+# the CPU's mirror alike, whatever the rounding. And how far a strand's
+# tone moves the paint's lightness, as a share of it either way. Last, how far
+# the softest strand widens the cut's band, as a multiple of the band the
+# Hardness leaves, and the band that widening stops short of, so a soft brush
+# keeps its outline and a hard one, whose band is nought, stays hard.
+const vec2 NOISE_STRAND_WIDTH = vec2(0.12, 0.6)
+# How far inside a whole cell the dab's edge may fall and still leave that
+# cell's strand out, so a dab at the Size row holds the preset's strands and no
+# more whatever the rounding of its width. And the share of the Size row's
+# width a dab's may differ by and still count as that width, so a brush whose
+# radius does not follow the pen, or one pressed fully, lays its strands where
+# it laid them before they kept their size, to the last bit.
+const float NOISE_STRAND_EDGE_SLACK = 0.001
+const float NOISE_STRAND_SAME_SIZE = 0.0001
+const float NOISE_STRAND_SWELL = 0.3
+const float NOISE_STRAND_SWELL_RUN = 0.25
+const vec2 NOISE_STRAND_SOFT = vec2(0.1, 1.0)
+const vec2 NOISE_STRAND_LENGTH = vec2(0.6, 1.0)
+const float NOISE_STRAND_TONE_SPLIT = 0.6
+const float NOISE_STRAND_TONE_RUN = 0.2
+const int NOISE_STRAND_NEIGHBOURS = 2
+
+# How far the cells' width wanders across the brush, as the steepest a cell
+# may stand wider or narrower than the mean for each unit of Spread, the most
+# it may at any Spread, and how many cells one wander spans. Spread 0.4, Bristle
+# Flat's, takes the whole of the most.
+const float NOISE_BRISTLE_CLUMP = 0.75
+const float NOISE_BRISTLE_CLUMP_MOST = 0.3
+const float NOISE_BRISTLE_CLUMP_CELLS = 3.0
+const float NOISE_STRAND_TIE = 0.0001
+const float NOISE_STRAND_TONE = 0.15
+const float NOISE_STRAND_DRY = 2.0
+const float NOISE_STRAND_DRY_BAND = 0.5
+# The lowest height a strand draws, and how far a grain's octaves lie from
+# their middle at their second and ninety eighth hundredths, read off forty
+# thousand texels of `NoiseFieldReading.value_fbm`.
+const float NOISE_STRAND_HEIGHT_LOW = 0.35
+# How far Strand Softness past one widens a soft strand's cut, at two, and the
+# share of that widening laid inside the strand rather than out past it. The
+# cut alone is a step a texel wide at a working Hardness, so a strand drawn at
+# its softest had no room to show it, and a widening laid evenly either side
+# merged the strands into a fill before their edges read soft.
+const float NOISE_STRAND_SOFTER = 0.4
+const float NOISE_STRAND_SOFTER_IN = 0.65
+const float NOISE_GRAIN_TONE_HALF = 0.28
+# How far from a texel, in pixels, the ring of readings `noise_relief` takes
+# the height's lightness from lies. Three, measured on Firm Fill: at 1.5 a
+# single stroke's relief still lit 14 texels in 2744 under 0.7 of the colour,
+# at 2.5 one in 8400 at a pressure that rises and falls, and at 3 none.
+const float NOISE_RELIEF_REACH = 3.0
+
+# One lattice cell to a number in 0 to 1, by integer arithmetic alone.
+#
+# **Not the library's `sa_hash21`, on purpose**. The texture
+# sensor reads this field again on the CPU at every point's centre, and the
+# library's hash folds a cell through float products in the thousands, where a
+# fused multiply or a reordered sum on the GPU moves the last bit and the fract
+# after it turns that bit into a different number. At a stroke offset of a few
+# thousand pixels one cell in six read differently on the two sides. Integers
+# wrap the same on every machine, so this hash is the same number on the CPU
+# and the GPU, bit for bit. The cell is floored first, so a coordinate a hair
+# either side of a lattice line lands in one cell or its neighbour, which the
+# smoothstep weights of the noise below make the same reading.
+
+
+def noise_hash(vec2 p) -> float:
+    ivec2 cell = ivec2(floor(p))
+    uint h = uint(cell.x) * 1597334677u + uint(cell.y) * 3812015801u
+    h = (h ^ (h >> 16u)) * 2146121005u
+    h = (h ^ (h >> 15u)) * 2221713035u
+    h = h ^ (h >> 16u)
+    return (h >> 8u) / 16777216.0
+
+# Value noise over `noise_hash`, `sa_value_noise` with the hash swapped.
+
+
+def noise_value(vec2 p) -> float:
+    vec2 cell = floor(p)
+    vec2 f = p - cell
+    vec2 smoothed = f * f * (3.0 - 2.0 * f)
+    float a = noise_hash(cell)
+    float b = noise_hash(cell + vec2(1.0, 0.0))
+    float c = noise_hash(cell + vec2(0.0, 1.0))
+    float d = noise_hash(cell + vec2(1.0, 1.0))
+    return mix(mix(a, b, smoothed.x), mix(c, d, smoothed.x), smoothed.y)
+
+# Three octaves of `noise_value`, `sa_value_fbm` with the hash swapped.
+
+
+def noise_fbm(vec2 p) -> float:
+    float total = 0.0
+    float amplitude = 0.5
+    float weight = 0.0
+    vec2 at = p
+    for i in range(3):
+        total += amplitude * noise_value(at)
+        weight += amplitude
+        amplitude *= 0.5
+        at *= 2.0
+    return total / weight
+
+# Grain at a point already offset, in pixels: three octaves of value noise at
+# a feature size of A pixels, stretched by B about its middle so the two ends
+# of Contrast both do something, and clamped back into 0 to 1.
+
+
+def noise_grain(vec2 at, vec2 lattice_shift) -> float:
+    float scale = max(field.values[NOISE_FIELD_A], 0.5)
+    float grain = noise_fbm(at / scale + lattice_shift)
+    return clamp((grain - 0.5) * field.values[NOISE_FIELD_B] + 0.5, 0.0, 1.0)
+
+# Bristle at stroke coordinates *along* and *across*, where the tip reaches
+# *half_width* pixels either side of the path. Answers one less the
+# pressure the texel needs, the bristle's own height, each in 0 to 1, and the
+# strand's tone, a share of the paint's lightness from minus one to one.
+#
+# Across the stroke it is cut into cells of the brush's width at its Size row
+# over A, one bristle a cell, each placed at the cell's middle moved by up to
+# half a cell times B, and laid out from the path, so A of them span a dab at
+# the Size row. A dab the pen's pressure narrows holds fewer bristles of the
+# same width rather than the same A drawn thinner, as a real brush's hairs keep
+# their size however hard it is pressed, and a bristle keeps its place beside
+# the path as the dab swells and thins. Along it,
+# each bristle's run is value noise at a period of C times the brush's width
+# at its Size row, so a streak breaks and starts again, and a bristle's run
+# does not line up with its neighbour's.
+#
+# **More bristles as the pen presses.** Each bristle takes a reach, the
+# pressure map on its streak's middle, so a light touch lays the few of the
+# lowest reach and each harder press brings more in. The reaches run from
+# nought to [NOISE_BRISTLE_REACH] in the golden ratio's steps from a start the
+# stroke's salt draws, so neighbours stand far apart in reach and any pressure
+# lays a share of the bristles near its own share of the range.
+#
+# **A working press paints most of the body.** The map rises from a streak's
+# reach on its middle to [NOISE_BRISTLE_GAP] where the streak is gone, so a
+# gap is a press short of a full one rather than the full press alone. A
+# streak's core falls away inside its own half width, and a skirt at
+# [NOISE_BRISTLE_SKIRT_LEVEL] of the core's height carries on out to
+# [NOISE_BRISTLE_SKIRT_REACH] half widths, so a firmer press widens every
+# streak until the gaps close while the core stays a line a cut well above the
+# press still finds. A streak's run is broken only where the run's noise is
+# low, under [NOISE_BRISTLE_BREAK]. A core alone, a gap of the full press and
+# a run broken half the time leave a press of 0.8 laying a quarter of the body,
+# and a painter going over a colour many times.
+#
+# **Each outer strand runs a length of its own.** The [NOISE_BRISTLE_OUTER]
+# strands nearest each edge of the dab where the texel is take a run of
+# [NOISE_BRISTLE_OUTER_RUN] of the period, drawn for each, so the stroke's
+# outline is several strands that break at lengths of their own rather than
+# the one long run of the body's.
+#
+# **No two hairs alike.** A comb of strands of one shape, evenly on or off and
+# all one colour, reads as a drawn pattern, and a loaded brush's hairs differ.
+# Each strand draws its own half width from [NOISE_STRAND_WIDTH] of a cell,
+# so a wide one runs into its neighbour and the two merge, and it swells and
+# thins by [NOISE_STRAND_SWELL] along its run. Its edge falls over a share of
+# its width it draws from [NOISE_STRAND_SOFT], from a hair's sharp line to one
+# that fades out dry. The body's runs take [NOISE_STRAND_LENGTH] of the period,
+# so streaks stop at a spread of lengths, and where a run breaks the strand
+# narrows with it to a point rather than fading at its full width. Its tone is
+# a lightness of its own, [NOISE_STRAND_TONE_SPLIT] of it the strand's and the
+# rest a wander along the run, which `noise_strand_look` hands the dab and the
+# height never sees. So a texel reads the [NOISE_STRAND_NEIGHBOURS] strands
+# either side of its cell as well as its own, and takes the one that needs the
+# least pressure there.
+#
+# **The cells are not one width.** A comb of strands at one spacing reads as
+# a comb however each strand is drawn, and a brush's hairs lie in clumps. So
+# the place across the brush is moved by a wander of value noise the stroke's
+# salt draws, spanning [NOISE_BRISTLE_CLUMP_CELLS] cells, before it is cut
+# into cells, and a cell where the wander rises is narrower and one where it
+# falls is wider, its strand with it, by up to [NOISE_BRISTLE_CLUMP] of the
+# mean for each unit of Spread and never more than
+# [NOISE_BRISTLE_CLUMP_MOST]. Both ends of the dab at the Size row stay where
+# they were, so it holds the preset's strands and no more, and Spread 0 lays
+# the even comb it always did.
+#
+# **The brush's rows scale the shapes.** Strand Width multiplies the drawn half
+# width and Strand Softness, up to one, twice the draw that picks each hair's
+# softness, capped at the softest, so nought draws every hair sharp. Past one
+# it fades the edges further in the dab, by [NOISE_STRAND_SOFTER]. Strand Taper
+# is how much of a strand's narrowing to a point at the end of its run is kept,
+# all of it at one and none at nought, where a strand keeps its width until its
+# presence fades it. At their rests, one and a half, the reading is the one
+# above, bit for bit, since a doubled half is one exactly, which is why the
+# taper of one is a branch and the softness scales the draw: a product on the
+# drawn softness, branch or not, moved the last bit of Bristle Flat's and Wood
+# Grain's strokes.
+
+
+def noise_strand(float strand, float cells, float run_at, float period, vec2 edges, float spread, float salt) -> vec4:
+    float middle = strand + 0.5 + (noise_hash(vec2(strand, salt)) - 0.5) * spread
+    float phase = 17.0 * noise_hash(vec2(strand, salt + 2.0))
+    float own = period * mix(NOISE_STRAND_LENGTH.x, NOISE_STRAND_LENGTH.y, noise_hash(vec2(strand, salt + 6.0)))
+    if strand < edges.x + NOISE_BRISTLE_OUTER or strand >= edges.y - NOISE_BRISTLE_OUTER:
+        own = period * mix(NOISE_BRISTLE_OUTER_RUN.x, NOISE_BRISTLE_OUTER_RUN.y, noise_hash(vec2(strand, salt + 5.0)))
+    own = max(own, 1.0)
+    float run = noise_value(vec2(run_at / own + phase, 3.7 * strand + salt))
+    float presence = smoothstep(NOISE_BRISTLE_BREAK.x, NOISE_BRISTLE_BREAK.y, run)
+    float swell = noise_value(vec2(run_at / (own * NOISE_STRAND_SWELL_RUN) + phase, 5.3 * strand + salt + 11.0))
+    float drawn = noise_hash(vec2(strand, salt + 1.0))
+    float half_width = mix(NOISE_STRAND_WIDTH.x, NOISE_STRAND_WIDTH.y, drawn * drawn) * field.values[NOISE_FIELD_STRAND_WIDTH]
+    float taper = field.values[NOISE_FIELD_STRAND_TAPER]
+    half_width *= (1.0 + NOISE_STRAND_SWELL * (2.0 * swell - 1.0)) * (taper >= 1.0 ? presence : mix(1.0, presence, max(taper, 0.0)))
+    half_width = max(half_width, 0.001)
+    float soft = mix(NOISE_STRAND_SOFT.x, NOISE_STRAND_SOFT.y, min(noise_hash(vec2(strand, salt + 7.0)) * 2.0 * clamp(field.values[NOISE_FIELD_STRAND_SOFT], 0.0, 1.0), 1.0))
+    float off_middle = abs(cells - middle)
+    float core = 1.0 - smoothstep(0.5 * half_width * (1.0 - soft), half_width, off_middle)
+    float skirt_from = half_width * (1.0 + (NOISE_BRISTLE_SKIRT_REACH - 1.0) * (1.0 - soft))
+    float skirt_to = NOISE_BRISTLE_SKIRT_REACH * half_width + 0.001
+    float skirt = NOISE_BRISTLE_SKIRT_LEVEL * (1.0 - smoothstep(skirt_from, skirt_to, off_middle))
+    float cover = max(core, skirt) * presence
+    float height = NOISE_STRAND_HEIGHT_LOW + (1.0 - NOISE_STRAND_HEIGHT_LOW) * noise_hash(vec2(strand, salt + 3.0))
+    float reach = NOISE_BRISTLE_REACH * fract(noise_hash(vec2(0.0, salt + 4.0)) + strand * NOISE_BRISTLE_STEP)
+    float needed = reach + (NOISE_BRISTLE_GAP - reach) * (1.0 - cover)
+    float wander = noise_value(vec2(run_at / (own * NOISE_STRAND_TONE_RUN) + phase, 7.9 * strand + salt + 19.0))
+    float tone = NOISE_STRAND_TONE_SPLIT * (2.0 * noise_hash(vec2(strand, salt + 8.0)) - 1.0) + (1.0 - NOISE_STRAND_TONE_SPLIT) * (2.0 * wander - 1.0)
+    return vec4(1.0 - needed, height, tone, soft)
+
+# The wander at *cells* across the brush, from nought to one.
+
+
+def noise_bristle_wander(float cells, float salt) -> float:
+    return noise_value(vec2(cells / NOISE_BRISTLE_CLUMP_CELLS, salt + 23.0))
+
+# The place *cells* across the brush moves to, in cells of their mean width,
+# for a brush of *count* cells at *spread*, the wander pinned at both ends.
+
+
+def noise_bristle_place(float cells, float count, float spread, float salt) -> float:
+    float steepest = min(NOISE_BRISTLE_CLUMP * spread, NOISE_BRISTLE_CLUMP_MOST)
+    if steepest <= 0.0:
+        return cells
+    float amount = steepest / (1.5 / NOISE_BRISTLE_CLUMP_CELLS + 1.0 / count)
+    float first = noise_bristle_wander(0.0, salt)
+    float last = noise_bristle_wander(count, salt)
+    return cells + amount * (noise_bristle_wander(cells, salt) - mix(first, last, cells / count))
+
+
+def noise_bristle_strands(float along, float across, float half_width) -> vec4:
+    float width = max(field.values[NOISE_FIELD_WIDTH], 1.0)
+    float count = max(field.values[NOISE_FIELD_A], 1.0)
+    float spread = clamp(field.values[NOISE_FIELD_B], 0.0, 1.0)
+    float period = max(field.values[NOISE_FIELD_C] * width, 1.0)
+    float salt = field.values[NOISE_FIELD_OFFSET_X]
+    float run_at = along + field.values[NOISE_FIELD_OFFSET_Y]
+    float reach = count * 2.0 * max(half_width, 1e-6) / width
+    if abs(reach - count) <= NOISE_STRAND_SAME_SIZE * count:
+        reach = count
+    float low = 0.5 * (count - reach)
+    float cells = noise_bristle_place(low + (across * 0.5 + 0.5) * reach, count, spread, salt)
+    float high = noise_bristle_place(0.5 * (count + reach), count, spread, salt)
+    low = noise_bristle_place(low, count, spread, salt)
+    vec2 edges = vec2(floor(low + NOISE_STRAND_EDGE_SLACK), ceil(high - NOISE_STRAND_EDGE_SLACK))
+    float index = floor(cells)
+    vec4 best = vec4(1.0 - NOISE_BRISTLE_GAP, NOISE_STRAND_HEIGHT_LOW, 0.0, 0.0)
+    bool found = false
+    for i in range_inclusive(2 * NOISE_STRAND_NEIGHBOURS):
+        float side = i % 2 == 0 ? 1.0 : -1.0
+        float strand = index + side * floor(0.5 * (i + 1))
+        if strand < edges.x or strand >= edges.y:
+            continue
+        vec4 reading = noise_strand(strand, cells, run_at, period, edges, spread, salt)
+        if not found or reading.x > best.x + NOISE_STRAND_TIE:
+            best = reading
+            found = true
+    return best
+
+
+def noise_bristle(float along, float across, float half_width) -> vec2:
+    return noise_bristle_strands(along, across, half_width).xy
+
+# The strand a texel at stroke coordinates *along* and *across*, with the tip
+# *half_width* pixels either side of the path, takes its paint from: x its tone, from minus one to one, and y how soft its edge is,
+# from nought to one. Both are nought where the field is not Bristle. The dab
+# scales the paint's colour by the tone, which moves its lightness and leaves
+# its hue, and the lightness of the field's second channel stays the height's
+# alone, because a bump baked into colour cannot be relit. It widens the cut's
+# band by the softness, because a cut of Hardness 0.9 lays a strand's edge
+# whole within a texel whatever the field's slope there, so a dry hair's soft
+# edge is a softer cut along it.
+
+
+def noise_strand_look(float along, float across, float half_width) -> vec2:
+    float slot = field.values[NOISE_FIELD_SLOT]
+    if slot < 0.5 or slot > 1.5:
+        return vec2(0.0)
+    vec4 strand = noise_bristle_strands(along, across, half_width)
+    float soft = (strand.w - NOISE_STRAND_SOFT.x) / max(NOISE_STRAND_SOFT.y - NOISE_STRAND_SOFT.x, 0.001)
+    return vec2(strand.z, soft)
+
+# Picture at a point already offset, in pixels: turned by B degrees, one repeat
+# spanning the pattern's own texels times A, and tiled.
+#
+# **The grey is spread over the pressure's range by the picture's own tones**.
+# A pattern's greys sit in a band of their own, Paper Grain from about 0.67 to
+# 0.94, so a cut only made a texture inside that band and every other press
+# painted solid. The state measures where the pattern's darkest and lightest
+# few texels sit once a pattern, and the grey is stretched from that low to that
+# high onto nought to one, as Grain Contrast stretches the grain, so every
+# pressure lands inside the pattern.
+
+
+def noise_picture(vec2 at) -> float:
+    float scale = max(field.values[NOISE_FIELD_A], 0.01)
+    float angle = radians(field.values[NOISE_FIELD_B])
+    float c = cos(angle)
+    float s = sin(angle)
+    vec2 turned = vec2(at.x * c + at.y * s, -at.x * s + at.y * c)
+    vec2 tile = max(vec2(texture_size(field_image, 0)), vec2(1.0)) * scale
+    float grey = texture(field_image, fract(turned / tile)).r
+    float low = field.values[NOISE_FIELD_TONE_LOW]
+    float span = max(field.values[NOISE_FIELD_TONE_HIGH] - low, 0.001)
+    return clamp((grey - low) / span, 0.0, 1.0)
+
+# Whether the field is read at the texel's place on the canvas, in the frame
+# whose heading is *axis*: a Grain or a Picture whose stroke has that frame. A
+# turn read in stroke coordinates would draw the grain out into rays round the
+# joint, since every texel the turn opens out to is nearest the joint, and a dab
+# before the turn and one after would meet a field that does not continue. A
+# Bristle's streaks follow the pen on purpose, and a module's own field answers
+# the stroke coordinate contract, so both keep them.
+
+
+def noise_field_on_canvas(vec2 axis) -> bool:
+    float slot = field.values[NOISE_FIELD_SLOT]
+    return dot(axis, axis) > 0.0 and (slot < 0.5 or (slot > 1.5 and slot < 2.5))
+
+# The along and the across a straight stroke from *origin* along *axis*, at
+# *along* there, gives *p*, with the tip *half_width* pixels either side. On a
+# straight stroke that is the stroke's own coordinates, so a stroke that never
+# turns reads the field it always did, and on one that turns it is a place
+# that stays where it is under the pen.
+
+
+def noise_canvas_place(vec2 p, vec2 origin, vec2 axis, float along, float half_width) -> vec2:
+    vec2 offset = p - origin
+    return vec2(along + dot(offset, axis), dot(offset, vec2(-axis.y, axis.x)) / max(half_width, 1e-6))
+
+# The field's two readings at stroke coordinates *along* and *across*, where
+# the tip is *half_width* pixels either side of the path: x is the pressure map
+# the cut reads, y the lightness.
+
+
+def noise_field(float along, float across, float half_width) -> vec2:
+    vec2 at = vec2(along, across * half_width) + vec2(field.values[NOISE_FIELD_OFFSET_X], field.values[NOISE_FIELD_OFFSET_Y])
+    float slot = field.values[NOISE_FIELD_SLOT]
+    bool two = field.values[NOISE_FIELD_CHANNELS] > 1.5
+    vec2 reading = vec2(1.0)
+    if slot > 1.5:
+        float picture = noise_picture(at)
+        float needed = field.values[NOISE_FIELD_C] > 0.5 ? 1.0 - picture : picture
+        return vec2(needed, picture)
+    elif slot > 0.5:
+        vec2 bristle = noise_bristle(along, across, half_width)
+        if not two:
+            return vec2(1.0 - bristle.x, bristle.x)
+        reading = vec2(1.0 - bristle.x, bristle.y)
+    else:
+        float grain = noise_grain(at, vec2(0.0))
+        if not two:
+            return vec2(grain, grain)
+        reading = vec2(grain, noise_grain(at, NOISE_SECOND_GRAIN))
+    float relief = field.values[NOISE_FIELD_RELIEF]
+    return vec2(reading.x, clamp(0.5 + (reading.y - 0.5) * relief, 0.0, 1.0))
+
+# The field's lightness *lightness*, as `noise_field` answers it, spread over
+# the field's own range onto nought to one, so Texture Tone reads a field's
+# darkest as black and its lightest as white whatever squeezed it. A grain's
+# three octaves sit within [NOISE_GRAIN_TONE_HALF] of their middle but for a
+# few texels in a hundred, Contrast widens that and Relief narrows the second
+# channel's, which is the height's and so stands near its middle on a brush of
+# low relief. A strand's height is drawn from [NOISE_STRAND_HEIGHT_LOW] up,
+# a one channel Bristle's lightness is its streak, from the gap's up, and a
+# picture's grey is already spread by its own tones. A module's field answers
+# as it wrote it, since nothing here knows its range.
+
+
+def noise_field_tone(float lightness) -> float:
+    float slot = field.values[NOISE_FIELD_SLOT]
+    bool two = field.values[NOISE_FIELD_CHANNELS] > 1.5
+    float relief = two ? field.values[NOISE_FIELD_RELIEF] : 1.0
+    if slot < 0.5:
+        float spread = min(NOISE_GRAIN_TONE_HALF * max(field.values[NOISE_FIELD_B], 0.0), 0.5) * relief
+        return clamp(0.5 + 0.5 * (lightness - 0.5) / max(spread, 0.001), 0.0, 1.0)
+    if slot < 1.5:
+        float low = two ? 0.5 + (NOISE_STRAND_HEIGHT_LOW - 0.5) * relief : 1.0 - NOISE_BRISTLE_GAP
+        float high = two ? 0.5 + 0.5 * relief : 1.0
+        return clamp((lightness - low) / max(high - low, 0.001), 0.0, 1.0)
+    return lightness
+
+# The lightness a Grain or a Picture raises the paint's height by at stroke
+# coordinates *along* and *across*, where the field read *lightness*: the mean
+# of that reading and eight more on a ring NOISE_RELIEF_REACH pixels round it.
+# The view lights the height by its slope, and a grain's finer octaves rise and
+# fall within a texel or two, so read at one point they would light a pit's far
+# wall nearly black, a dark speck scattered through every fill. The mean leaves the
+# grain's larger forms in the relief and takes out the steps of a texel or two.
+# A Bristle's ridges are the strand's own shape and keep the one reading, as
+# does a module's own field, which this kernel cannot read at other places.
+
+
+def noise_relief(float along, float across, float half_width, float lightness) -> float:
+    float slot = field.values[NOISE_FIELD_SLOT]
+    if (slot > 0.5 and slot < 1.5) or slot > 2.5:
+        return lightness
+    vec2 at = vec2(along, across * half_width) + vec2(field.values[NOISE_FIELD_OFFSET_X], field.values[NOISE_FIELD_OFFSET_Y])
+    bool two = field.values[NOISE_FIELD_CHANNELS] > 1.5
+    vec2 shift = two ? NOISE_SECOND_GRAIN : vec2(0.0)
+    float relief = two ? field.values[NOISE_FIELD_RELIEF] : 1.0
+    float sum = lightness
+    for i in range(8):
+        float angle = 0.785398 * i
+        vec2 there = at + vec2(cos(angle), sin(angle)) * NOISE_RELIEF_REACH
+        float grey = slot > 1.5 ? noise_picture(there) : clamp(0.5 + (noise_grain(there, shift) - 0.5) * relief, 0.0, 1.0)
+        sum += grey
+    return sum / 9.0

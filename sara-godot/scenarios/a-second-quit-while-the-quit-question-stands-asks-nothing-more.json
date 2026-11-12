@@ -1,0 +1,137 @@
+[
+ {
+  "wait": 30
+ },
+ {
+  "tool": "brush"
+ },
+ {
+  "wait": 5
+ },
+ {
+  "press": {
+   "button": "left",
+   "at": [
+    500,
+    500
+   ]
+  }
+ },
+ {
+  "move": [
+   700,
+   500
+  ]
+ },
+ {
+  "release": {
+   "button": "left",
+   "at": [
+    700,
+    500
+   ]
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "key": {
+   "key": "n",
+   "ctrl": true
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "key": "enter"
+ },
+ {
+  "wait": 30
+ },
+ {
+  "press": {
+   "button": "left",
+   "at": [
+    500,
+    600
+   ]
+  }
+ },
+ {
+  "move": [
+   700,
+   600
+  ]
+ },
+ {
+  "release": {
+   "button": "left",
+   "at": [
+    700,
+    600
+   ]
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "state": "01-two-documents-painted"
+ },
+ {
+  "key": {
+   "key": "q",
+   "ctrl": true
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "key": {
+   "key": "q",
+   "ctrl": true
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "02-ctrl-q-twice"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "03-cancelled"
+ },
+ {
+  "key": {
+   "key": "q",
+   "ctrl": true
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "04-asked-again"
+ },
+ {
+  "shot": "04-asked-again"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "05-cancelled-again"
+ }
+]

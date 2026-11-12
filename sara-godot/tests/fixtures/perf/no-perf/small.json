@@ -1,0 +1,13 @@
+{
+ "build": {
+  "built": "",
+  "commit": "030601b",
+  "commit_full": "030601bff8a9ce12cb66f41b87ce7c6b813a96cc",
+  "dirty": false,
+  "source": "working tree",
+  "version": "0.12.0"
+ },
+ "gpu": {
+  "dispatches": 1
+ }
+}

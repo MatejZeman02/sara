@@ -1,0 +1,14 @@
+[
+  {"document": "srgb"},
+  {"docker": {"id": "ColorDocker", "at": [400, 300]}},
+  {"docker": {"id": "MinimapDocker", "at": [640, 480]}},
+  {"wait": 20},
+  {"state": "f67-01-placed-with-no-wait-in-front-of-it"},
+  {"shot": "f67-01-placed-with-no-wait-in-front-of-it"},
+  {"wait": 60},
+  {"state": "f67-02-and-still-there-past-the-settle"},
+  {"docker": {"id": "ColorDocker", "at": [200, 200]}},
+  {"wait": 20},
+  {"state": "f67-03-moved-again-after-the-settle"},
+  {"shot": "f67-03-moved-again-after-the-settle"}
+]

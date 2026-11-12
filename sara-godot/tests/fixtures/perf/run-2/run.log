@@ -1,0 +1,5 @@
+Vulkan 1.4.351 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 3070 Laptop GPU
+    [38;2;111;120;133mRenderer    [39m  Vulkan 1.4.351  [38;2;111;120;133m·[39m  Forward+[0m
+    [38;2;111;120;133mDevice      [39m  [38;2;95;211;243mNVIDIA GeForce RTX 3070 Laptop GPU[39m[0m
+  [38;2;126;200;106m●[39m [38;2;207;214;224mReady in 2111 ms[39m   [38;2;111;120;133mkernels 467 ms (90 cached, 0 compiled), modules 7 ms[39m[0m
+SaCapture: measure perf {"window":{"open":true}}

@@ -1,0 +1,30 @@
+[
+  {"comment": "File > New's colour rows are the colour space picker: the preset, the gamut with its primaries as xy, the white point, the curve, the gamma, the colour model and Save as, with the drawing beside them. A space no preset names is typed, saved under a name, and picked again as the Target of Image > Colour Space."},
+  {"wait": 40},
+
+  {"open": "new_document"},
+  {"wait": 20},
+  {"page_row": {"page": "NewDocumentPage", "row": "details", "value": true}},
+  {"wait": 20},
+  {"shot": "01-file-new-with-the-details-open-shows-the-picker-whole"},
+  {"state": "01-file-new-with-the-details-open-shows-the-picker-whole"},
+
+  {"new_document_row": {"white": "D50", "transfer": "Gamma 2.2", "primaries": [[0.7347, 0.2653], [0.1152, 0.8264], [0.1566, 0.0177]]}},
+  {"wait": 10},
+  {"shot": "02-typed-primaries-at-d50-under-gamma-2-2-read-custom"},
+  {"state": "02-typed-primaries-at-d50-under-gamma-2-2-read-custom"},
+
+  {"new_document_row": {"save_space": "Wide print"}},
+  {"wait": 10},
+  {"shot": "03-saved-as-wide-print-the-preset-row-names-it"},
+  {"state": "03-saved-as-wide-print-the-preset-row-names-it"},
+  {"new_document_row": {"close": true}},
+  {"wait": 10},
+
+  {"open": "color_space"},
+  {"wait": 20},
+  {"page_row": {"page": "TargetRows", "row": "space", "value": 8}},
+  {"wait": 20},
+  {"shot": "04-image-colour-space-with-the-saved-space-as-its-target"},
+  {"state": "04-image-colour-space-with-the-saved-space-as-its-target"}
+]

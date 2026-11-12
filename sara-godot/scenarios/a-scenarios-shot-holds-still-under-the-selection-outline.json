@@ -1,0 +1,11 @@
+[
+  {"wait": 30},
+  {"stroke": {"from": [500, 400], "to": [1400, 400], "pressure": 0.9, "steps": 24}},
+  {"stroke": {"from": [500, 600], "to": [1400, 600], "pressure": 0.9, "steps": 24}},
+  {"select": [700, 300, 500, 500]},
+  {"wait": 40},
+  {"shot": "1-the-outline"},
+  {"wait": 45},
+  {"shot": "2-the-outline-three-quarters-of-a-second-later"},
+  {"state": "2-held"}
+]

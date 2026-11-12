@@ -1,0 +1,27 @@
+# Library: a float32's bit pattern kept to 12 significant bits, as a save the
+# painter asked for rounds a full precision colour field.
+#
+# The implicit leading one is among the twelve, so the lowest 12 of the 23
+# stored mantissa bits are rounded away, to nearest with ties to even. A carry
+# out of the mantissa raises the exponent, which is the correct rounding.
+# Infinities and NaNs are left as they are, and so is a value the rounding would
+# carry to infinity. A second rounding changes nothing, since the low twelve
+# bits are then zero. SaSadSnapshot.round_bits is the same arithmetic on the
+# CPU for a suite. The kernel that rounds a save's copy and the one that asks
+# whether a texture is rounded already both take it from here, so the two
+# never disagree on what rounded means.
+
+# The exponent of a float's pattern, all ones for an infinity or a NaN.
+const uint SA_SAVE_EXPONENT = 0x7F800000u
+# The bits that stay, the sign, the exponent and the 11 highest mantissa bits.
+const uint SA_SAVE_KEPT = 0xFFFFF000u
+
+
+def sa_save_rounded(uint bits) -> uint:
+    """*bits* kept to 12 significant bits, or as they are where that is not finite."""
+    if (bits & SA_SAVE_EXPONENT) == SA_SAVE_EXPONENT:
+        return bits
+    uint near = (bits + 0x7FFu + ((bits >> 12) & 1u)) & SA_SAVE_KEPT
+    if (near & SA_SAVE_EXPONENT) == SA_SAVE_EXPONENT:
+        return bits
+    return near

@@ -1,0 +1,164 @@
+# Value noise and Voronoi, Sara's first noise functions.
+#
+# Written as a library rather than inside the gradient tool's kernel, which
+# lives in the base module, because the gradient is only the first caller.
+# The old backlog's brush tip engine wanted exactly these two to break up a
+# stamp's edge, so the first is written where the second caller can reach it.
+# So everything here takes a position in *pixels* and a feature size in pixels,
+# rather than a normalised coordinate that only means something to a ramp.
+#
+# A file with no #kernel line is registered as a library rather than as a
+# shader, which is how libs/oklab_color_space.gmacs works beside it.
+#
+# **The hash is sine-free on purpose.** The usual
+# `fract( sin( dot( p, vec2( 12.9898, 78.233 ) ) ) * 43758.5453 )` is one line
+# and is a different value on different drivers: GLSL does not pin `sin`'s
+# precision, and at the magnitudes that idiom feeds it the low bits are all that
+# survive. A gradient that wobbles differently on two machines is a gradient a
+# painter cannot rely on and a capture cannot check, so this uses the
+# multiply-and-fract construction instead, which is exact float arithmetic and
+# gives the same answer everywhere. Over a volume it did not, and the time
+# input's lattice below is hashed in integers by `sa_lattice_hash`, from the
+# library imported here, for the reason that library gives.
+
+import lattice_hash
+
+# One number in 0 to 1 from a point. The value noise reads its corners through
+# `sa_lattice_hash` rather than this, for the reason written above it, and
+# this stays for the callers that hash a point that is no lattice corner.
+
+
+def sa_hash21(vec2 p) -> float:
+    vec3 q = fract(vec3(p.xyx) * 0.1031)
+    q += dot(q, q.yzx + 33.33)
+    return fract((q.x + q.y) * q.z)
+
+# Two numbers in 0 to 1 from a point, for a lattice cell's own offset.
+
+
+def sa_hash22(vec2 p) -> vec2:
+    vec3 q = fract(vec3(p.xyx) * vec3(0.1031, 0.1030, 0.0973))
+    q += dot(q, q.yzx + 33.33)
+    return fract((q.xx + q.yz) * q.zy)
+
+# Value noise in 0 to 1: one number a lattice corner, smoothed between them.
+#
+# The smoothstep curve rather than a straight lerp, because a linear blend
+# between lattice values leaves a visible diamond grid wherever the gradient of
+# the field changes sign, which on a gradient reads as creases rather than as a
+# wobble.
+#
+# **The corners are hashed as integers**, by `sa_lattice_hash` at a z of
+# nought, the volume's own hash. They were hashed by `sa_hash21` from the
+# float `cell` and `cell + 1.0`, and on an NVIDIA GPU a paper at a scale of 40
+# jumped by about thirty levels of 255 at rows of its finest cell: a corner
+# shared by two cells was read through two expressions, and
+# a hash that keeps the fraction of a product near a hundred turns a last-bit
+# difference into another number. An integer corner is one value, whichever
+# cell reads it. So the flat field is the volume's slice at nought, and
+# `sa_value_fbm_at` with a time of nought draws what `sa_value_fbm` does.
+
+
+def sa_value_noise(vec2 p) -> float:
+    vec2 floored = floor(p)
+    ivec3 cell = ivec3(ivec2(floored), 0)
+    vec2 f = p - floored
+    vec2 smoothed = f * f * (3.0 - 2.0 * f)
+    float a = sa_lattice_hash(cell)
+    float b = sa_lattice_hash(cell + ivec3(1, 0, 0))
+    float c = sa_lattice_hash(cell + ivec3(0, 1, 0))
+    float d = sa_lattice_hash(cell + ivec3(1, 1, 0))
+    return mix(mix(a, b, smoothed.x), mix(c, d, smoothed.x), smoothed.y)
+
+# Three octaves of value noise, still in 0 to 1.
+#
+# Three rather than one because a single octave is a smooth swell and reads as
+# a bend rather than as a wobble, and rather than five because the fourth and
+# fifth are below a pixel at the feature sizes a gradient uses and cost a hash
+# each. The 2.0 and 0.5 are the ordinary lacunarity and gain, and the sum is
+# divided by what the weights add to so the result stays inside 0 to 1.
+
+
+def sa_value_fbm(vec2 p) -> float:
+    float total = 0.0
+    float amplitude = 0.5
+    float weight = 0.0
+    vec2 at = p
+    for i in range(3):
+        total += amplitude * sa_value_noise(at)
+        weight += amplitude
+        amplitude *= 0.5
+        at *= 2.0
+    return total / weight
+
+# Value noise in 0 to 1 over a volume: one number a lattice corner, the eight
+# around the point smoothed between, on the same curve as the flat one.
+
+
+def sa_value_noise3(vec3 p) -> float:
+    vec3 floored = floor(p)
+    ivec3 cell = ivec3(floored)
+    vec3 f = p - floored
+    vec3 smoothed = f * f * (3.0 - 2.0 * f)
+    float near = mix(
+        mix(sa_lattice_hash(cell), sa_lattice_hash(cell + ivec3(1, 0, 0)), smoothed.x),
+        mix(sa_lattice_hash(cell + ivec3(0, 1, 0)), sa_lattice_hash(cell + ivec3(1, 1, 0)), smoothed.x),
+        smoothed.y
+    )
+    float far = mix(
+        mix(sa_lattice_hash(cell + ivec3(0, 0, 1)), sa_lattice_hash(cell + ivec3(1, 0, 1)), smoothed.x),
+        mix(sa_lattice_hash(cell + ivec3(0, 1, 1)), sa_lattice_hash(cell + ivec3(1, 1, 1)), smoothed.x),
+        smoothed.y
+    )
+    return mix(near, far, smoothed.z)
+
+# The time input: three octaves of value noise, still in 0 to 1, at the point
+# *p* of a picture *t* seconds on.
+#
+# The picture is a slice through a volume of noise, and time carries the slice
+# through it at *velocity*, in cells a second: its x and y slide the field
+# across the picture, which is the drift, and its z turns the field over in
+# place, so what drifts is a weather and not a wallpaper. A function of *t*
+# and not of the frame before, so the hundredth frame costs one evaluation as
+# the first does, and the same time gives the same picture however it was
+# reached. A velocity of nought is the picture at nought for every time.
+#
+# A function of its own rather than a time argument on `sa_value_fbm`, whose
+# callers, the wobble among them, read the flat field and keep its values.
+# The octaves are the flat one's, each twice as fine and half as strong, and
+# the velocity is the caller's to pass rather than an angle to turn here,
+# because a sine is the one call that differs between drivers.
+
+
+def sa_value_fbm_at(vec2 p, vec3 velocity, float t) -> float:
+    float total = 0.0
+    float amplitude = 0.5
+    float weight = 0.0
+    vec3 at = vec3(p, 0.0) - velocity * t
+    for i in range(3):
+        total += amplitude * sa_value_noise3(at)
+        weight += amplitude
+        amplitude *= 0.5
+        at *= 2.0
+    return total / weight
+
+# Voronoi: the distance to the nearest of a jittered lattice of points, scaled
+# so an ordinary cell lands inside 0 to 1.
+#
+# The nine cells around the point are enough because a point is jittered inside
+# its own cell, so nothing outside that ring can be nearer than something in it.
+# The 1.4 is the diagonal of a cell, which is the furthest the nearest point can
+# be, and dividing by it is what keeps the return in the same 0 to 1 range the
+# noise above uses so a caller can swap one for the other.
+
+
+def sa_voronoi(vec2 p) -> float:
+    vec2 cell = floor(p)
+    vec2 f = fract(p)
+    float nearest = 8.0
+    for y in range_inclusive(-1, 1):
+        for x in range_inclusive(-1, 1):
+            vec2 neighbour = vec2(x, y)
+            vec2 point = neighbour + sa_hash22(cell + neighbour)
+            nearest = min(nearest, length(point - f))
+    return clamp(nearest / 1.4, 0.0, 1.0)

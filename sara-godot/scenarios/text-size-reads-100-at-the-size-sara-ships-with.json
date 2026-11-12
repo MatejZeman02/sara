@@ -1,0 +1,20 @@
+[
+  {"comment": "On a fresh profile Preferences opens on Interface and Font size reads 100% beside its slider, the size Sara ships with and draws as before. A door's prefs step then names the new reading, ui_text_size 1.2, and the page reads 120%."},
+  {"wait": 45},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 20},
+  {"window": [1920, 1080]},
+  {"wait": 20},
+  {"open": "preferences"},
+  {"wait": 25},
+  {"page": "Interface"},
+  {"wait": 15},
+  {"state": "1-a-fresh-profile-reads-100-percent"},
+  {"shot": "1-a-fresh-profile-reads-100-percent"},
+  {"prefs": {"ui_text_size": 1.2}},
+  {"wait": 25},
+  {"page": "Interface"},
+  {"wait": 15},
+  {"state": "2-the-door-sets-120-percent"},
+  {"shot": "2-the-door-sets-120-percent"}
+]

@@ -1,0 +1,71 @@
+[
+  {"wait": 40},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 20},
+  {"layout_preset": {"load": "default"}},
+  {"wait": 25},
+  {"document": "srgb"},
+  {"wait": 15},
+  {"tool": "brush"},
+
+  {"window": [1920, 1080]},
+  {"wait": 30},
+  {"shot": "01-new-document-1920x1080-scale1"},
+  {"state": "01-new-document-1920x1080-scale1"},
+
+  {"prefs": {"ui_scale": 2.0}},
+  {"wait": 25},
+  {"shot": "02-new-document-1920x1080-scale2"},
+  {"state": "02-new-document-1920x1080-scale2"},
+
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 20},
+  {"window": [1280, 800]},
+  {"wait": 30},
+  {"shot": "03-new-document-1280x800-scale1"},
+  {"state": "03-new-document-1280x800-scale1"},
+
+  {"prefs": {"ui_scale": 2.0}},
+  {"wait": 25},
+  {"shot": "04-new-document-1280x800-scale2"},
+  {"state": "04-new-document-1280x800-scale2"},
+
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 20},
+  {"window": [1920, 1080]},
+  {"wait": 30},
+
+  {"layer": {"add": "Sky", "fill": [0.55, 0.68, 0.82, 1.0]}},
+  {"layer": {"add": "Ground", "fill": [0.32, 0.24, 0.14, 1.0]}},
+  {"layer": {"add": "Paint"}},
+  {"wait": 10},
+  {"colour": "#1c1c1c"},
+  {"stroke": {"from": [700, 350], "to": [1300, 650], "pressure": 1.0, "steps": 14}},
+  {"colour": "#d2561c"},
+  {"stroke": {"from": [700, 650], "to": [1300, 350], "pressure": 0.8, "steps": 14}},
+  {"wait": 15},
+
+  {"shot": "05-content-document-1920x1080-scale1"},
+  {"state": "05-content-document-1920x1080-scale1"},
+
+  {"prefs": {"ui_scale": 2.0}},
+  {"wait": 25},
+  {"shot": "06-content-document-1920x1080-scale2"},
+  {"state": "06-content-document-1920x1080-scale2"},
+
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 20},
+  {"window": [1280, 800]},
+  {"wait": 30},
+  {"shot": "07-content-document-1280x800-scale1"},
+  {"state": "07-content-document-1280x800-scale1"},
+
+  {"prefs": {"ui_scale": 2.0}},
+  {"wait": 25},
+  {"shot": "08-content-document-1280x800-scale2"},
+  {"state": "08-content-document-1280x800-scale2"},
+
+  {"prefs": {"ui_scale": 1.0}},
+  {"window": [1920, 1080]},
+  {"wait": 20}
+]

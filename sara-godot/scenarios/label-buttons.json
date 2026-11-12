@@ -1,0 +1,80 @@
+[
+    {
+        "wait": 5
+    },
+    {
+        "preset": {
+            "save": "Inker"
+        }
+    },
+    {
+        "preset": {
+            "save": "Liner"
+        }
+    },
+    {
+        "preset": {
+            "load": "Inker"
+        }
+    },
+    {
+        "preset": {
+            "open": true
+        }
+    },
+    {
+        "wait": 5
+    },
+    {
+        "shot": "preset-menu"
+    },
+    {
+        "state": "preset-menu"
+    },
+    {
+        "blend": "Darken"
+    },
+    {
+        "wait": 5
+    },
+    {
+        "shot": "blend-menu"
+    },
+    {
+        "state": "blend-menu"
+    },
+    {
+        "menu": "View"
+    },
+    {
+        "wait": 5
+    },
+    {
+        "shot": "view-menu"
+    },
+    {
+        "state": "view-menu"
+    },
+    {
+        "dropdown": "StabilizerModeOpt"
+    },
+    {
+        "wait": 10
+    },
+    {
+        "shot": "docker-dropdown"
+    },
+    {
+        "state": "docker-dropdown"
+    },
+    {
+        "preset": {
+            "delete": "Inker"
+        }
+    },
+    {
+        "preset": {
+            "delete": "Liner"
+        }
+    }
+]

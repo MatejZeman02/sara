@@ -1,0 +1,300 @@
+[
+  {
+    "wait": 45
+  },
+  {"docker": "park"},
+  {
+    "docker": {
+      "id": "ToolBoxDocker",
+      "at": [
+        0,
+        90
+      ],
+      "size": [
+        60,
+        420
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "ToolOptionsDocker",
+      "at": [
+        0,
+        300
+      ],
+      "size": [
+        280,
+        430
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "ReferenceDocker",
+      "at": [
+        0,
+        760
+      ],
+      "size": [
+        280,
+        260
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "ColorDocker",
+      "at": [
+        1600,
+        90
+      ],
+      "size": [
+        310,
+        480
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "LayersDocker",
+      "at": [
+        1600,
+        600
+      ],
+      "size": [
+        310,
+        400
+      ]
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "colour": "#e8b23c"
+  },
+  {
+    "tool": "brush"
+  },
+  {
+    "wait": 4
+  },
+  {
+    "stroke": {
+      "from": [
+        350,
+        450
+      ],
+      "to": [
+        1200,
+        800
+      ],
+      "pressure": 0.9,
+      "steps": 28
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "tool": "transform"
+  },
+  {
+    "wait": 6
+  },
+  {
+    "select": [
+      400,
+      400,
+      500,
+      400
+    ]
+  },
+  {
+    "wait": 8
+  },
+  {
+    "move": [
+      1450,
+      200
+    ]
+  },
+  {
+    "wait": 4
+  },
+  {
+    "shot": "01-selected-before-the-drag"
+  },
+  {
+    "state": "01-selected-before-the-drag"
+  },
+  {
+    "press": {
+      "button": "left",
+      "at": [
+        650,
+        584
+      ]
+    }
+  },
+  {
+    "move": [
+      750,
+      634
+    ]
+  },
+  {
+    "move": [
+      850,
+      684
+    ]
+  },
+  {
+    "wait": 6
+  },
+  {
+    "release": "left"
+  },
+  {
+    "wait": 6
+  },
+  {
+    "shot": "02-moved-and-let-go"
+  },
+  {
+    "state": "02-moved-and-let-go"
+  },
+  {
+    "key": "escape"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "move": [
+      1450,
+      200
+    ]
+  },
+  {
+    "wait": 4
+  },
+  {
+    "shot": "03-escape-put-it-back"
+  },
+  {
+    "state": "03-escape-put-it-back"
+  },
+  {
+    "press": {
+      "button": "left",
+      "at": [
+        650,
+        584
+      ]
+    }
+  },
+  {
+    "move": [
+      800,
+      500
+    ]
+  },
+  {
+    "wait": 6
+  },
+  {
+    "release": "left"
+  },
+  {
+    "wait": 6
+  },
+  {
+    "move": [
+      1450,
+      200
+    ]
+  },
+  {
+    "wait": 4
+  },
+  {
+    "shot": "04-moved-again"
+  },
+  {
+    "state": "04-moved-again"
+  },
+  {
+    "tool": "brush"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "move": [
+      1450,
+      200
+    ]
+  },
+  {
+    "wait": 4
+  },
+  {
+    "shot": "05-a-tool-switch-put-it-back"
+  },
+  {
+    "state": "05-a-tool-switch-put-it-back"
+  },
+  {
+    "tool": "transform"
+  },
+  {
+    "wait": 8
+  },
+  {
+    "press": {
+      "button": "left",
+      "at": [
+        650,
+        584
+      ]
+    }
+  },
+  {
+    "move": [
+      850,
+      684
+    ]
+  },
+  {
+    "wait": 6
+  },
+  {
+    "release": "left"
+  },
+  {
+    "wait": 6
+  },
+  {
+    "key": "enter"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "move": [
+      1450,
+      200
+    ]
+  },
+  {
+    "wait": 4
+  },
+  {
+    "shot": "06-enter-commits"
+  },
+  {
+    "state": "06-enter-commits"
+  }
+]

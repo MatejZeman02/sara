@@ -1,0 +1,38 @@
+# Two rules of the simulation suite's own, under the contract a rule's kernel
+# keeps: the previous state padded by the reach at binding 0, the mask at 1 and
+# the next state at 2.
+#
+# `shift_right` moves every cell one texel right a step, reading the texel to
+# its left, so a texel painted beside a chunk's right edge crosses into the
+# next chunk only through the halo, and lands exactly where the count of steps
+# says only if the swap happened once a step. `scatter` writes the hash of the
+# cell and the step, so two runs from one seed are proved the same picture.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel shift_right
+kernel scatter
+
+image src: readonly
+image mask: r32f, readonly
+image dst
+
+params:
+    vec2 origin  # the dispatched region's corner in the chunk
+    int halo  # how far the source is padded, written by the runner
+    vec2 chunk  # the chunk's corner in the layer's texels, written by the runner
+    int step  # the number of the step being taken
+
+import neighbourhood
+import simulation
+
+
+def shift_right():
+    ivec2 at = pixel + ivec2(origin)
+    sa_finish(at, sa_kept(at), src[at + ivec2(halo - 1, halo)])
+
+
+def scatter():
+    ivec2 at = pixel + ivec2(origin)
+    float chance = sa_step_random(at)
+    sa_finish(at, sa_kept(at), vec4(chance, chance, chance, 1.0))

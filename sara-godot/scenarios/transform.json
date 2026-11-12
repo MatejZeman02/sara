@@ -1,0 +1,415 @@
+[
+  {
+    "wait": 45
+  },
+  {"docker": "park"},
+  {
+    "docker": {
+      "id": "ToolBoxDocker",
+      "at": [
+        0,
+        90
+      ],
+      "size": [
+        60,
+        420
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "ToolOptionsDocker",
+      "at": [
+        0,
+        300
+      ],
+      "size": [
+        280,
+        430
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "ReferenceDocker",
+      "at": [
+        0,
+        760
+      ],
+      "size": [
+        280,
+        260
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "ColorDocker",
+      "at": [
+        1600,
+        90
+      ],
+      "size": [
+        310,
+        480
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "LayersDocker",
+      "at": [
+        1600,
+        600
+      ],
+      "size": [
+        310,
+        400
+      ]
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "colour": "#e8b23c"
+  },
+  {
+    "tool": "brush"
+  },
+  {
+    "wait": 4
+  },
+  {
+    "stroke": {
+      "from": [
+        350,
+        450
+      ],
+      "to": [
+        1200,
+        800
+      ],
+      "pressure": 0.9,
+      "steps": 28
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "01-painted"
+  },
+  {
+    "state": "01-painted"
+  },
+  {
+    "tool": "transform"
+  },
+  {
+    "wait": 6
+  },
+  {
+    "state": "02-no-selection-box-is-the-paint"
+  },
+  {
+    "select": [
+      400,
+      400,
+      500,
+      400
+    ]
+  },
+  {
+    "wait": 6
+  },
+  {
+    "state": "03-selection-moves-the-box"
+  },
+  {
+    "shot": "03-selection-moves-the-box"
+  },
+  {
+    "press": {
+      "button": "left",
+      "at": [
+        650,
+        584
+      ]
+    }
+  },
+  {
+    "move": [
+      750,
+      634
+    ]
+  },
+  {
+    "wait": 6
+  },
+  {
+    "shot": "04a-mid-drag-the-ants-have-followed"
+  },
+  {
+    "state": "04a-mid-drag-the-ants-have-followed"
+  },
+  {
+    "move": [
+      850,
+      684
+    ]
+  },
+  {
+    "wait": 6
+  },
+  {
+    "shot": "04-moving"
+  },
+  {
+    "state": "04-moving"
+  },
+  {
+    "release": "left"
+  },
+  {
+    "wait": 6
+  },
+  {
+    "state": "05-let-go-not-committed"
+  },
+  {
+    "key": "escape"
+  },
+  {
+    "wait": 8
+  },
+  {
+    "shot": "06-escape-puts-it-back"
+  },
+  {
+    "state": "06-escape-puts-it-back"
+  },
+  {
+    "press": {
+      "button": "left",
+      "at": [
+        900,
+        784
+      ]
+    }
+  },
+  {
+    "move": [
+      1000,
+      850
+    ]
+  },
+  {
+    "move": [
+      1100,
+      900
+    ]
+  },
+  {
+    "wait": 6
+  },
+  {
+    "shot": "07-scaled-by-a-corner"
+  },
+  {
+    "state": "07-scaled-by-a-corner"
+  },
+  {
+    "release": "left"
+  },
+  {
+    "key": "escape"
+  },
+  {
+    "wait": 8
+  },
+  {
+    "state": "08-escape-after-the-scale"
+  },
+  {
+    "tool": "brush"
+  },
+  {
+    "tool": "transform"
+  },
+  {
+    "wait": 6
+  },
+  {
+    "press": {
+      "button": "left",
+      "at": [
+        913,
+        797
+      ]
+    }
+  },
+  {
+    "move": [
+      1000,
+      800
+    ]
+  },
+  {
+    "move": [
+      1100,
+      740
+    ]
+  },
+  {
+    "wait": 6
+  },
+  {
+    "shot": "09-rotated-outside-a-corner"
+  },
+  {
+    "state": "09-rotated-outside-a-corner"
+  },
+  {
+    "release": "left"
+  },
+  {
+    "key": "escape"
+  },
+  {
+    "wait": 8
+  },
+  {
+    "state": "10-escape-after-the-turn"
+  },
+  {
+    "tool": "brush"
+  },
+  {
+    "tool": "transform"
+  },
+  {
+    "wait": 6
+  },
+  {
+    "state": "10b-back-from-the-brush"
+  },
+  {
+    "press": {
+      "button": "left",
+      "at": [
+        900,
+        584
+      ],
+      "shift": true
+    }
+  },
+  {
+    "move": [
+      920,
+      660
+    ]
+  },
+  {
+    "move": [
+      940,
+      740
+    ]
+  },
+  {
+    "wait": 6
+  },
+  {
+    "shot": "11-sheared-by-an-edge"
+  },
+  {
+    "state": "11-sheared-by-an-edge"
+  },
+  {
+    "release": "left"
+  },
+  {
+    "key": "escape"
+  },
+  {
+    "wait": 8
+  },
+  {
+    "state": "12-escape-after-the-shear"
+  },
+  {
+    "tool": "brush"
+  },
+  {
+    "tool": "transform"
+  },
+  {
+    "wait": 6
+  },
+  {
+    "press": {
+      "button": "left",
+      "at": [
+        650,
+        584
+      ]
+    }
+  },
+  {
+    "move": [
+      700,
+      500
+    ]
+  },
+  {
+    "move": [
+      750,
+      420
+    ]
+  },
+  {
+    "release": "left"
+  },
+  {
+    "wait": 6
+  },
+  {
+    "key": "enter"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "shot": "13-committed"
+  },
+  {
+    "state": "13-committed"
+  },
+  {
+    "key": {
+      "key": "z",
+      "ctrl": true
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "shot": "14-undone"
+  },
+  {
+    "state": "14-undone"
+  },
+  {
+    "select": "none"
+  },
+  {
+    "wait": 6
+  },
+  {
+    "state": "15-deselect-returns-the-box-to-the-paint"
+  },
+  {
+    "shot": "15-deselect-returns-the-box-to-the-paint"
+  }
+]
