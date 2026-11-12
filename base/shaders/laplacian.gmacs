@@ -1,0 +1,175 @@
+# Kernels: laplacian
+# The Laplacian of the usual set, the second derivative laid over the picture in
+# Overlay as a sharpen, or drawn as the detail map alone. A neighbourhood kernel
+# of radius one under the SaNeighbourhoodPass contract: the padded chunk at
+# binding 0, the selection mask at binding 1, the chunk-sized target at
+# binding 2.
+#
+# The map is the neutral plus the strength times the texel's luminance less the
+# mean of its four neighbours' (the five-tap Laplacian with its sign turned, so a
+# bright crest reads above the neutral, the sign Overlay needs to steepen an
+# edge). The neutral is the mid grey of the document's RGB view, half its blend
+# reference white, so a flat area reads exactly the neutral and Overlay leaves
+# it alone at any white. A grey is written from the luminance, so no hue moves
+# and the grey goes back through rgb_to_document (a raw grey in an Oklab document
+# shows orange). Nothing clamps: a strong edge takes the map past one or below
+# zero and Overlay decides what shows.
+#
+# The map is laid over the texel it was read at, in Overlay at the amount's
+# opacity, as a duplicate layer holding the map would, so Apply sharpens in one
+# step. With raw at 1 the map is written alone.
+#
+# The helpers are adjust.gmacs's and the Overlay is the compositor's, repeated
+# because a .gmacs block cannot be shared between files without sharing the push
+# constant that names it.
+
+kernel laplacian
+
+import linear_srgb_color_space
+import transfer_curve
+import positive_channels
+
+image src: readonly
+image mask: r32f, readonly
+image dst
+
+# origin and halo are written per dispatch by the pass's Runner, and the two
+# fields are named here so that it finds them.
+params:
+    float strength  # how far the detail is scaled around the neutral, 0 to 4
+    int halo  # how far the source is padded, one chunk at the most
+    vec2 origin  # the dispatched region's origin in the chunk, in pixels
+    float doc_to_linear_srgb[9]
+    float linear_srgb_to_doc[9]
+    float transfer_slope
+    float transfer_threshold
+    float transfer_gain
+    float transfer_exponent
+    float coordinates
+    float amount  # the opacity the map is laid over the texel at, 0 to 1
+    float raw  # 1 writes the map alone, 0 lays it over the texel
+    float blend_white  # the document's blend reference white, which Overlay windows by
+
+# The mask's blend and the texel as it was, imported after
+# the params because the library reads `halo` and the three images by name.
+import neighbourhood
+
+# The value a flat area reads at a blend white of one, and the one Overlay leaves
+# a backdrop alone for. A wider white scales it, see neutral() below.
+const float NEUTRAL = 0.5
+
+
+def to_linear_srgb_matrix() -> mat3:
+    return mat3(
+        doc_to_linear_srgb[0], doc_to_linear_srgb[1], doc_to_linear_srgb[2],
+        doc_to_linear_srgb[3], doc_to_linear_srgb[4], doc_to_linear_srgb[5],
+        doc_to_linear_srgb[6], doc_to_linear_srgb[7], doc_to_linear_srgb[8])
+
+
+def from_linear_srgb_matrix() -> mat3:
+    return mat3(
+        linear_srgb_to_doc[0], linear_srgb_to_doc[1], linear_srgb_to_doc[2],
+        linear_srgb_to_doc[3], linear_srgb_to_doc[4], linear_srgb_to_doc[5],
+        linear_srgb_to_doc[6], linear_srgb_to_doc[7], linear_srgb_to_doc[8])
+
+
+def document_to_linear(vec3 c) -> vec3:
+    return sa_transfer_decode(c, transfer_slope, transfer_threshold, transfer_gain, transfer_exponent)
+
+
+def linear_to_document(vec3 c) -> vec3:
+    return sa_transfer_encode(c, transfer_slope, transfer_threshold, transfer_gain, transfer_exponent)
+
+const int SA_COORDS_OKLAB = 1
+
+
+def document_is_oklab() -> bool: return int(coordinates + 0.5) == SA_COORDS_OKLAB
+
+
+def document_to_rgb(vec3 c) -> vec3:
+    if not document_is_oklab(): return c
+    return linear_to_document(from_linear_srgb_matrix() * oklab_to_linear_srgb(c))
+
+
+def rgb_to_document(vec3 c) -> vec3:
+    if not document_is_oklab(): return c
+    return linear_srgb_to_oklab(to_linear_srgb_matrix() * document_to_linear(c))
+
+# The pixel dialect's own luminance, which a raw kernel has to write for itself.
+# Above the read below, because the dialect has no forward declaration and a
+# function has to be defined before the one that calls it. On an RGB document
+# the view is the identity, so this is the coefficient dot product over the
+# stored value, and on an Oklab one it is the same dot product over the RGB the
+# stored value stands for.
+
+
+def luminance(vec3 rgb) -> float:
+    return dot(rgb, vec3(0.2126, 0.7152, 0.0722))
+
+# The luminance of the source at *at* offset by *dx* and *dy*, through the
+# padding: a position no chunk holds reads as transparent, which the Runner
+# cleared, and a transparent texel has no luminance to contribute.
+#
+# *at* is already in chunk-local pixels, so the halo is added here and at the
+# centre read below rather than at the call site.
+
+
+def lum_at(ivec2 at, int dx, int dy) -> float:
+    return luminance(document_to_rgb(src[at + ivec2(halo + dx, halo + dy)].rgb))
+
+# --- The compositor's Overlay ---------------------------------------------------
+#
+# overlay() of composite.gmacs, with the two helpers it calls from
+# composite_blend_ops.gmacs, on the document's RGB view. Both inputs go into the
+# window by the blend white, the source through the positive-channels net, and
+# the formula runs on each input's share of white with what the shares left out
+# added back. A neutral source leaves any backdrop as it was, above white too.
+
+
+def window_scale() -> float: return blend_white > 0.0 ? blend_white : 1.0
+
+# The grey Overlay leaves a backdrop alone for, half the blend white, which the
+# window takes to NEUTRAL.
+
+
+def neutral() -> float: return NEUTRAL * window_scale()
+
+
+def white_share(vec3 c) -> vec3:
+    vec3 over = max(c - 1.0, vec3(0.0))
+    return min(c, 1.0 / (1.0 + over * over))
+
+
+def past_white(vec3 on_shares, vec3 s, vec3 d) -> vec3: return on_shares + (s - white_share(s)) + (d - white_share(d))
+
+# The map *source* laid over the *backdrop* in Overlay, both in the RGB view.
+
+
+def overlay(vec3 source, vec3 backdrop) -> vec3:
+    float w = window_scale()
+    vec3 s = sa_positive_channels(source / w)
+    vec3 d = backdrop / w
+    vec3 ws = white_share(s)
+    vec3 wd = white_share(d)
+    vec3 B = mix(2.0 * ws * wd, 1.0 - 2.0 * (1.0 - ws) * (1.0 - wd), step(0.5, wd))
+    return past_white(B, s, d) * w
+
+
+def laplacian():
+    ivec2 at = pixel + ivec2(origin)
+    if at.x >= image_size(dst).x or at.y >= image_size(dst).y:
+        return
+    float centre = lum_at(at, 0, 0)
+    float around = (lum_at(at, 0, -1) + lum_at(at, -1, 0) + lum_at(at, 1, 0) + lum_at(at, 0, 1)) * 0.25
+    float detail = neutral() + (centre - around) * strength
+    vec4 c = sa_kept(at)
+    if raw > 0.5:
+        sa_finish(at, c, vec4(rgb_to_document(vec3(detail)), c.a))
+        return
+    # The compositor mixes its blend into the backdrop by the source's coverage,
+    # here the amount over a texel as covered as itself. The alpha stays the
+    # texel's own, since a sharpen adds no coverage, which on an opaque texel is
+    # the duplicate's composite exactly.
+    vec3 backdrop = document_to_rgb(c.rgb)
+    vec3 sharpened = mix(backdrop, overlay(vec3(detail), backdrop), amount)
+    sa_finish(at, c, vec4(rgb_to_document(sharpened), c.a))

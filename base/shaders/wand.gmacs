@@ -1,0 +1,834 @@
+# The magic wand: a contiguous flood over the selection mask, one chunk at a
+# time, that crosses chunk seams through the neighbour's bits.
+#
+# A chunk joins the flood through `classify`, which tests every texel against
+# the seed once and packs what is passable into the `bits` buffer, 32 texels a
+# word. A sweep then works on those bits alone: one workgroup holds the chunk in
+# its own memory, takes the neighbours' edge bits across the seams, and runs
+# rows and columns until nothing moves. A texel change raises the buffer's
+# counter, and a selected texel on a chunk's edge raises the flag that tells the
+# CPU which neighbour to sweep next, so only chunks the flood reaches are
+# dispatched. Once it settles, `unpack` writes each chunk's bits into its mask.
+#
+# Masks are r32f whatever the document paints at. The colour binding is the
+# document's depth: the merged output at the chunk's offset, the layer's own
+# chunk at no offset, or a 1 by 1 transparent texel where the layer has no chunk.
+#
+# `select_matching` is the global reading, the bucket fill's Contiguous off:
+# every texel within the tolerance of the seed, joined to it or not, measured by
+# the same `similar` the sweeps use, with no carry.
+#
+# A colour is measured premultiplied and with its alpha, see `held` below.
+#
+# The bucket fill's Close gaps adds four passes the wand never dispatches.
+# `close` runs once a chunk before its first sweep and removes from what is
+# passable every texel within `radius` of a wall. Once the flood settles,
+# `rival`, `contest` and `grow` replace `unpack`, see above `rival`. All four
+# read the neighbours' slots, so a wall across a seam closes.
+#
+# On a document whose kind wraps, the canvas edge is a seam like the others, see
+# `steps_to`: a flood reaching the edge carries on from the far side.
+
+kernel seed
+kernel sweep_rows
+kernel sweep_columns
+kernel select_matching
+kernel classify
+kernel unpack
+kernel close
+kernel rival
+kernel contest
+kernel grow
+
+image mask: r32f
+image colour: readonly
+# `flags` is five per chunk. The first four, left, right, up and down, are
+# raised when the flood reaches that edge so the CPU knows which neighbour joins
+# the next sweep. The fifth is raised when a texel of the chunk changes, so the
+# CPU sweeps again only the chunks where the flood can still move.
+buffer flood: uint changed; uint pad1; uint pad2; uint pad3; vec4 seed; uint flags[]
+# Every chunk of the canvas has a slot of CHUNK_WORDS words at its grid index:
+# first what is passable, then what is selected, a row of WORDS words after
+# another. A texel is passable when it is selected or within the tolerance.
+buffer bits: uint words[]
+# A fill that closes gaps keeps three more planes a chunk here, GAP_WORDS words
+# at its grid index: the walls, the other regions and what the fill takes, see
+# above `rival`. The wand binds a buffer of one slot and nothing writes it.
+buffer gaps: uint words[]
+
+params:
+    # Where this chunk's texel (0, 0) sits in the colour image.
+    float colour_x
+    float colour_y
+    # How much of the chunk is inside the canvas.
+    float valid_w
+    float valid_h
+    float tolerance
+    float chunk_index
+    # The seed texel in the colour image, for the seed kernel, and in the
+    # chunk's own mask texels for `classify`, where it is -1 off the chunk.
+    # The gap passes take it in the chunk's texels wherever it lies.
+    float seed_x
+    float seed_y
+    # Texels of the colour image per texel of the mask. One for the
+    # merged picture and for a chunk at full resolution, and the chunk's
+    # `resolution_scale` for one stored smaller, so a mask texel reads the
+    # colour texel under it rather than the one at its own coordinates.
+    float colour_scale
+    # Which neighbours have a slot in `bits`, HAS_LEFT and the rest, and the
+    # canvas's width in chunks, which is how far the slot above is.
+    float neighbours
+    float grid_width
+    # Half the widest gap the fill closes, in texels, for the gap passes.
+    float radius
+    # Where the canvas meets its far edge, for a document whose kind wraps:
+    # the width of the last column of chunks when the rows wrap and the
+    # height of the last row when the columns do, nought along an axis that
+    # does not. With the canvas's height in chunks they say which neighbour
+    # lies across the seam, see `steps_to`.
+    float seam_width
+    float seam_height
+    float grid_height
+
+const uint LEFT = 0u
+const uint RIGHT = 1u
+const uint UP = 2u
+const uint DOWN = 3u
+const uint CHANGED = 4u
+const uint FLAGS_PER_CHUNK = 5u
+
+
+def colour_at(ivec2 local) -> vec4:
+    ivec2 at = ivec2(vec2(local) * colour_scale) + ivec2(int(colour_x), int(colour_y))
+    return colour[min(at, image_size(colour) - 1)]
+
+# *c* as the distance reads it, its colour premultiplied and its alpha beside
+# it. A straight alpha texel's rgb is the colour it would be at full coverage,
+# so a texel the brush barely touched holds the same rgb as the middle of the
+# stroke and only its alpha says otherwise. Premultiplied, that texel sits near
+# an empty one and far from the middle, and the tolerance decides between them.
+#
+# **No backdrop is guessed.** Compositing the colours over what lies behind the
+# layer, read from the merged picture at the seed, reads the seed's own layer
+# back: under a dark airbrush blob, near opaque, the backdrop is the blob, so
+# every empty texel reads as the seed's colour and a fill takes the whole
+# layer. A neutral grey in its place matches every empty texel to an opaque
+# grey seed. With the
+# alpha in the distance an empty texel is as far from a seed as the seed's own
+# alpha, whatever either colour is.
+
+
+def held(vec4 c) -> vec4:
+    return vec4(c.rgb * c.a, c.a)
+
+
+def similar(ivec2 local) -> bool:
+    vec4 d = abs(held(colour_at(local)) - held(flood.seed))
+    return max(max(d.r, d.g), max(d.b, d.a)) <= tolerance
+
+
+def selected(ivec2 local) -> bool:
+    return mask[local].r >= 0.5
+
+# The seed texel's colour, into the buffer, so no sweep reads it back.
+
+
+def seed():
+    if global_id.x != 0u or global_id.y != 0u:
+        return
+    ivec2 at = ivec2(vec2(seed_x, seed_y) * colour_scale)
+    flood.seed = colour[min(at, image_size(colour) - 1)]
+
+
+def raise(uint direction):
+    flood.flags[uint(chunk_index) * FLAGS_PER_CHUNK + direction] = 1u
+
+# A chunk is settled by one workgroup of SIDE threads, which holds the whole
+# chunk as bits in its own memory and runs rows and columns over it until
+# nothing moves, so a chunk the flood crosses settles in one dispatch and only
+# its seams carry to the next round. The colours are not read here at all:
+# `classify` reads them once when the chunk joined, and a sweep reads 16 words
+# a thread rather than each texel several times a dispatch, which on an
+# integrated part is most of the cost of a click.
+#
+# A run is a stretch of passable texels between two that are not. Every similar
+# texel of a run ends selected when anything in that run is, the neighbour's
+# texel across the seam included. `sweep_rows` takes its seams from the
+# neighbours left and right, `sweep_columns` from the neighbours above and
+# below, and each settles the whole chunk, so a round is still one list a
+# direction.
+#
+# The mask is `SaChunk.SIZE` across, which the wand holds equal to SIDE, since
+# the memory below and the workgroup size are fixed when the kernel compiles. A
+# row is WORDS words of 32 texels, bit b of word j being texel 32 j + b.
+const int SIDE = 256
+const int WORDS = 8
+const int PLANE = 2048
+const int CHUNK_WORDS = 4096
+# The three planes a slot of `gaps` holds, and its size.
+const int GAP_WALLS = 0
+const int GAP_RIVALS = 2048
+const int GAP_TAKEN = 4096
+const int GAP_WORDS = 6144
+# The column pass cuts each column of words into SEGMENTS pieces of
+# SEGMENT_ROWS rows, one thread a piece, so SEGMENTS times WORDS is SIDE.
+const int SEGMENTS = 32
+const int SEGMENT_ROWS = 8
+# Rows and columns run this many times at most in one dispatch. A chunk still
+# moving then has its changed flag up, so the CPU sweeps it again next round.
+const int MAX_SETTLE = 64
+# The bits of `neighbours`, which of the four has a slot in the flood, and for
+# the gap passes the four corners as well.
+const uint HAS_LEFT = 1u
+const uint HAS_RIGHT = 2u
+const uint HAS_UP = 4u
+const uint HAS_DOWN = 8u
+const uint HAS_UP_LEFT = 16u
+const uint HAS_UP_RIGHT = 32u
+const uint HAS_DOWN_LEFT = 64u
+const uint HAS_DOWN_RIGHT = 128u
+
+# What is passable, what is selected now, and what was selected when the
+# dispatch began, a word each for 32 texels of a row, 24 KB in all.
+shared uint passable[2048]
+shared uint lit[2048]
+shared uint lit_before[2048]
+# Per piece of a column of words, one thread each: the bits every row of it
+# lets through, and what it lights from its own seeds downwards and upwards.
+# After the chain the last two hold what arrives at the piece from above and
+# from below instead.
+shared uint piece_through[256]
+shared uint piece_down[256]
+shared uint piece_up[256]
+# Raised by any thread whose words changed in this pass of the settle.
+shared uint moved
+
+# Where the slot of the chunk *steps* grid places along from this one begins.
+
+
+def slot(int steps) -> int:
+    return (int(chunk_index) + steps) * CHUNK_WORDS
+
+# Where this chunk's slot of `gaps` begins.
+
+
+def gap_slot() -> int:
+    return int(chunk_index) * GAP_WORDS
+
+
+def has(uint neighbour) -> bool:
+    return (uint(neighbours) & neighbour) != 0u
+
+# Where this chunk sits in the grid. Only the passes that read a neighbour
+# ask, and those are handed the grid's width.
+
+
+def column() -> int:
+    return int(chunk_index) % max(int(grid_width), 1)
+
+
+def grid_row() -> int:
+    return int(chunk_index) / max(int(grid_width), 1)
+
+# How many slots along from this chunk's the one *across* and *down* steps
+# away is, each -1, 0 or 1. Past the seam of a canvas that wraps, the
+# neighbour is the chunk at the far end of the row or the column, so the
+# flood steps from the last column to the first and back.
+
+
+def steps_to(int across, int down) -> int:
+    int wide = int(grid_width)
+    int tall = int(grid_height)
+    int sideways = across
+    if seam_width > 0.0 and across < 0 and column() == 0:
+        sideways = wide - 1
+    if seam_width > 0.0 and across > 0 and column() == wide - 1:
+        sideways = 1 - wide
+    int upways = down
+    if seam_height > 0.0 and down < 0 and grid_row() == 0:
+        upways = tall - 1
+    if seam_height > 0.0 and down > 0 and grid_row() == tall - 1:
+        upways = 1 - tall
+    return sideways + upways * wide
+
+# How far this chunk's rows and columns run before the neighbour's begin: a
+# whole chunk, but for the last column or row of a canvas that wraps there,
+# whose texels past the canvas are the first column's or row's.
+
+
+def row_length() -> int:
+    return seam_width > 0.0 ? int(valid_w) : SIDE
+
+
+def column_length() -> int:
+    return seam_height > 0.0 ? int(valid_h) : SIDE
+
+# How long the rows of the neighbour to the left run, and the columns of the
+# one above: the last column's or row's own length across the seam.
+
+
+def left_length() -> int:
+    return (seam_width > 0.0 and column() == 0) ? int(seam_width) : SIDE
+
+
+def up_length() -> int:
+    return (seam_height > 0.0 and grid_row() == 0) ? int(seam_height) : SIDE
+
+# Row *y*, both ways, in place. The fill towards higher bits adds the seeds to
+# the passable bits, which carries each seed up through its run and stops at
+# the first gap, and the carry out of a word is the run arriving at the next.
+# The seeds are passable, so the sum lights each run from its lowest seed up
+# and the seeds themselves are put back after. The way down is the same over
+# the bits reversed, the words taken from the far end.
+
+
+def fill_row(int y):
+    int base = y * WORDS
+    bool changed = false
+    uint carry = 0u
+    for j in range(WORDS):
+        uint p = passable[base + j]
+        uint s = lit[base + j]
+        uint first = 0u
+        uint second = 0u
+        uint sum = uadd_carry(p, s, first)
+        sum = uadd_carry(sum, carry, second)
+        carry = first | second
+        uint filled = s | ((sum ^ p) & p)
+        changed = changed or filled != s
+        lit[base + j] = filled
+    carry = 0u
+    for k in range(WORDS):
+        int j = WORDS - 1 - k
+        uint p = bitfield_reverse(passable[base + j])
+        uint s = bitfield_reverse(lit[base + j])
+        uint first = 0u
+        uint second = 0u
+        uint sum = uadd_carry(p, s, first)
+        sum = uadd_carry(sum, carry, second)
+        carry = first | second
+        uint filled = s | ((sum ^ p) & p)
+        changed = changed or filled != s
+        lit[base + j] = bitfield_reverse(filled)
+    if changed:
+        moved = 1u
+
+# Every column, 32 at once in a word. A step down a column is carry = p and
+# (carry or s), so a piece of rows is carry out = through and carry in, or
+# what it lights alone. Each thread works out its piece, one thread a column
+# of words chains the pieces, and each piece is run again with what reaches it.
+# Called by every thread of the workgroup, since it holds a barrier.
+
+
+def fill_columns(int t):
+    int w = t % WORDS
+    int first = (t / WORDS) * SEGMENT_ROWS
+    uint through = 0xffffffffu
+    uint down = 0u
+    uint up = 0u
+    for k in range(SEGMENT_ROWS):
+        int i = (first + k) * WORDS + w
+        through = through & passable[i]
+        down = passable[i] & (down | lit[i])
+        int r = (first + SEGMENT_ROWS - 1 - k) * WORDS + w
+        up = passable[r] & (up | lit[r])
+    piece_through[t] = through
+    piece_down[t] = down
+    piece_up[t] = up
+    barrier()
+    if t < WORDS:
+        uint carry = 0u
+        for g in range(SEGMENTS):
+            int i = g * WORDS + t
+            uint beyond = (piece_through[i] & carry) | piece_down[i]
+            piece_down[i] = carry
+            carry = beyond
+        carry = 0u
+        for k in range(SEGMENTS):
+            int i = (SEGMENTS - 1 - k) * WORDS + t
+            uint beyond = (piece_through[i] & carry) | piece_up[i]
+            piece_up[i] = carry
+            carry = beyond
+    barrier()
+    bool changed = false
+    uint carry = piece_down[t]
+    for k in range(SEGMENT_ROWS):
+        int i = (first + k) * WORDS + w
+        uint s = lit[i]
+        carry = passable[i] & (carry | s)
+        changed = changed or carry != s
+        lit[i] = carry
+    carry = piece_up[t]
+    for k in range(SEGMENT_ROWS):
+        int i = (first + SEGMENT_ROWS - 1 - k) * WORDS + w
+        uint s = lit[i]
+        carry = passable[i] & (carry | s)
+        changed = changed or carry != s
+        lit[i] = carry
+    if changed:
+        moved = 1u
+
+
+def sweep(bool rows):
+    int t = int(local_id.x)
+    int width = int(valid_w)
+    int height = int(valid_h)
+    int own = slot(0)
+
+    # The chunk's bits, a row a thread.
+    for j in range(WORDS):
+        int i = t * WORDS + j
+        passable[i] = bits.words[own + i]
+        uint s = bits.words[own + PLANE + i]
+        lit[i] = s
+        lit_before[i] = s
+    barrier()
+
+    # The seams, from the neighbour's bits across each, where it has a slot.
+    # Along the rows thread *t* takes row *t*, a bit at each end. Down the
+    # columns the first WORDS threads take a word of the top and bottom rows.
+    # The neighbour's last texel is its row's or column's own length in, which
+    # across the seam of a canvas that wraps is where the canvas ends.
+    if rows:
+        if t < height:
+            int last = width - 1
+            int edge = left_length() - 1
+            int left_word = slot(steps_to(-1, 0)) + PLANE + t * WORDS + edge / 32
+            if has(HAS_LEFT) and (bits.words[left_word] & (1u << uint(edge % 32))) != 0u:
+                lit[t * WORDS] = lit[t * WORDS] | (passable[t * WORDS] & 1u)
+            if has(HAS_RIGHT) and (bits.words[slot(steps_to(1, 0)) + PLANE + t * WORDS] & 1u) != 0u:
+                uint bit = 1u << uint(last % 32)
+                int at = t * WORDS + last / 32
+                lit[at] = lit[at] | (passable[at] & bit)
+    elif t < WORDS:
+        if has(HAS_UP):
+            uint above = bits.words[slot(steps_to(0, -1)) + PLANE + (up_length() - 1) * WORDS + t]
+            lit[t] = lit[t] | (above & passable[t])
+        if has(HAS_DOWN):
+            int bottom = (height - 1) * WORDS + t
+            uint below = bits.words[slot(steps_to(0, 1)) + PLANE + t]
+            lit[bottom] = lit[bottom] | (below & passable[bottom])
+    barrier()
+
+    for settle in range(MAX_SETTLE):
+        if t == 0:
+            moved = 0u
+        barrier()
+        fill_row(t)
+        barrier()
+        fill_columns(t)
+        barrier()
+        bool still = moved != 0u
+        barrier()
+        if not still:
+            break
+
+    # What turned on goes back into the slot, and the flags say what the CPU
+    # sweeps next: the chunk again when it changed, a neighbour when the flood
+    # sits on the seam towards it. A neighbour sweeping in the same list may
+    # read a word here before or after it is written, and either is a word
+    # whose bits only ever turn on.
+    ivec2 size = image_size(mask)
+    uint taken = 0u
+    for j in range(WORDS):
+        int i = t * WORDS + j
+        uint fresh = lit[i] & ~lit_before[i]
+        if fresh != 0u:
+            taken += uint(bit_count(fresh))
+            bits.words[own + PLANE + i] = lit[i]
+    if taken > 0u:
+        atomic_add(flood.changed, taken)
+        raise(CHANGED)
+    # The canvas's edge is a seam too where it wraps, so the last column and
+    # row raise the flag past it as every other chunk does.
+    if t < height:
+        if (lit[t * WORDS] & 1u) != 0u:
+            raise(LEFT)
+        int last = width - 1
+        bool right_seam = width == size.x or seam_width > 0.0
+        if right_seam and (lit[t * WORDS + last / 32] & (1u << uint(last % 32))) != 0u:
+            raise(RIGHT)
+    if t < WORDS:
+        if lit[t] != 0u:
+            raise(UP)
+        bool bottom_seam = height == size.y or seam_height > 0.0
+        if bottom_seam and lit[(height - 1) * WORDS + t] != 0u:
+            raise(DOWN)
+
+
+@workgroup_size(256)
+def sweep_rows():
+    sweep(true)
+
+
+@workgroup_size(256)
+def sweep_columns():
+    sweep(false)
+
+# One texel a thread over a fresh mask chunk. A texel that matches raises the
+# chunk's changed flag, so the CPU keeps only the chunks that hold one.
+
+
+def select_matching():
+    ivec2 local = ivec2(global_id.xy)
+    if local.x >= int(valid_w) or local.y >= int(valid_h):
+        return
+    if similar(local):
+        mask[local] = vec4(1.0)
+        raise(CHANGED)
+
+# A chunk joining the flood, a word a thread: which of its 32 texels are
+# passable, and none selected but the seed's when the seed is in the chunk.
+# The one place a sweep's colours are read, so a chunk swept four times reads
+# them once. No branch inside the word, so the compiler can issue its reads
+# before it waits on the first. For a fill that closes gaps it writes the walls
+# too, the texels inside the canvas that are not passable. A texel past the
+# canvas is never passable, and is no wall either, so the canvas's edge closes
+# no gap.
+
+
+def classify():
+    int j = int(global_id.x)
+    int y = int(global_id.y)
+    if j >= WORDS or y >= SIDE:
+        return
+    int width = int(valid_w)
+    int height = int(valid_h)
+    uint p = 0u
+    uint walls = 0u
+    for b in range(32):
+        int x = j * 32 + b
+        uint inside = (x < width and y < height) ? 1u : 0u
+        uint near = similar(ivec2(x, y)) ? inside : 0u
+        p = p | (near << uint(b))
+        walls = walls | ((inside ^ near) << uint(b))
+    uint s = 0u
+    if int(seed_y) == y and int(seed_x) / 32 == j and seed_x >= 0.0:
+        s = 1u << uint(int(seed_x) % 32)
+    int own = slot(0) + y * WORDS + j
+    bits.words[own] = p | s
+    bits.words[own + PLANE] = s
+    if radius > 0.0:
+        gaps.words[gap_slot() + GAP_WALLS + y * WORDS + j] = walls & ~s
+
+# A settled chunk's bits into its mask, a texel a thread. The mask is a fresh
+# chunk, so only what is selected is written.
+
+
+def unpack():
+    ivec2 local = ivec2(global_id.xy)
+    if local.x >= int(valid_w) or local.y >= int(valid_h):
+        return
+    uint word = bits.words[slot(0) + PLANE + local.y * WORDS + local.x / 32]
+    if (word & (1u << uint(local.x % 32))) != 0u:
+        mask[local] = vec4(1.0)
+
+# The bit of `neighbours` that says the chunk *across* and *down* steps away
+# has a slot, 0 for this chunk.
+
+
+def neighbour_bit(int across, int down) -> uint:
+    if down == 0:
+        return across < 0 ? HAS_LEFT : (across > 0 ? HAS_RIGHT : 0u)
+    if down < 0:
+        return across < 0 ? HAS_UP_LEFT : (across > 0 ? HAS_UP_RIGHT : HAS_UP)
+    return across < 0 ? HAS_DOWN_LEFT : (across > 0 ? HAS_DOWN_RIGHT : HAS_DOWN)
+
+
+def word_at(bool from_gaps, int at) -> uint:
+    return from_gaps ? gaps.words[at] : bits.words[at]
+
+# *count* texels of the row of words starting at *base*, from texel *start*,
+# as the low bits of the answer. A texel before the row's first or past its
+# last reads nothing.
+
+
+def texels_of(bool from_gaps, int base, int start, int count) -> uint:
+    int lo = max(start, 0)
+    int hi = min(start + count, SIDE)
+    if lo >= hi:
+        return 0u
+    int word = lo / 32
+    int bit = lo % 32
+    uint got = word_at(from_gaps, base + word) >> uint(bit)
+    if bit != 0 and word + 1 < WORDS:
+        got = got | (word_at(from_gaps, base + word + 1) << uint(32 - bit))
+    int n = hi - lo
+    uint keep = n >= 32 ? 0xffffffffu : ((1u << uint(n)) - 1u)
+    return (got & keep) << uint(lo - start)
+
+# Word *j* of row *y* of a plane of `bits` or of `gaps`: the 32 texels from x
+# 32 j, both counted from this chunk's corner and reaching up to a chunk past
+# it on every side. Nothing where that neighbour has no slot: past the canvas,
+# never classified, or outside the chunks a pass runs over.
+#
+# **Across the seam of a canvas that wraps** the neighbour is the far end of
+# the row or the column, and the last column or row ends where the canvas
+# does rather than a whole chunk on, so the texels of one word can come from
+# two chunks and from the middle of a word of either. Each part is read at
+# its own place, and on a flat canvas every part is a whole word.
+
+
+def frame_word(bool from_gaps, int plane, int y, int j) -> uint:
+    int height = column_length()
+    int down = y < 0 ? -1 : (y >= height ? 1 : 0)
+    int row = y < 0 ? y + up_length() : (down > 0 ? y - height : y)
+    if row < 0 or row >= SIDE:
+        return 0u
+    int width = row_length()
+    int stride = from_gaps ? GAP_WORDS : CHUNK_WORDS
+    int start = j * 32
+    uint found = 0u
+    for across in range_inclusive(-1, 1):
+        int lo = across < 0 ? start : (across == 0 ? max(start, 0) : max(start, width))
+        int hi = across < 0 ? min(start + 32, 0) : (across == 0 ? min(start + 32, width) : start + 32)
+        uint needed = neighbour_bit(across, down)
+        if lo >= hi or (needed != 0u and not has(needed)):
+            continue
+        int shift = across < 0 ? left_length() : (across > 0 ? -width : 0)
+        int base = (int(chunk_index) + steps_to(across, down)) * stride + plane + row * WORDS
+        found = found | (texels_of(from_gaps, base, lo + shift, hi - lo) << uint(lo - start))
+    return found
+
+
+def bits_at(int plane, int y, int j) -> uint:
+    return frame_word(false, plane, y, j)
+
+
+def gaps_at(int plane, int y, int j) -> uint:
+    return frame_word(true, plane, y, j)
+
+# The middle of three words of one row, every bit set that has a set bit within
+# *reach* of it along the row. The step doubles, so twenty texels are five
+# steps rather than forty shifts. A reach under 32 needs no word past the two
+# beside it: what the outer two miss from beyond them travels inwards by the
+# sum of the steps at most, and never reaches the middle.
+
+
+def spread(uint left, uint middle, uint right, int reach) -> uint:
+    uint l = left
+    uint m = middle
+    uint r = right
+    for k in range(5):
+        int shift = 1 << k
+        if (reach & shift) == 0:
+            continue
+        uint s = uint(shift)
+        uint q = uint(32 - shift)
+        uint grown_l = l | (l << s) | (l >> s) | (m << q)
+        uint grown_m = m | (m << s) | (m >> s) | (l >> q) | (r << q)
+        uint grown_r = r | (r << s) | (r >> s) | (m >> q)
+        l = grown_l
+        m = grown_m
+        r = grown_r
+    return m
+
+# How far along a row a disc of radius *r* reaches at *dy* rows from its centre,
+# -1 past it. The quarter keeps a square under the float's rounding.
+
+
+def half_chord(int r, int dy) -> int:
+    int left = r * r - dy * dy
+    return left < 0 ? -1 : int(sqrt(left + 0.25))
+
+# The bits of word *j* of row *y* that lie within `radius` of the seed, see
+# `close` and `contest`.
+
+
+def near_seed(int y, int j) -> uint:
+    int reach = half_chord(int(radius), y - int(seed_y))
+    if reach < 0:
+        return 0u
+    int lo = max(int(seed_x) - reach - j * 32, 0)
+    int hi = min(int(seed_x) + reach - j * 32, 31)
+    if lo > hi:
+        return 0u
+    return (0xffffffffu >> uint(31 - hi)) & (0xffffffffu << uint(lo))
+
+# The bits of word *j* of row *y* inside the canvas.
+
+
+def inside_bits(int y, int j) -> uint:
+    int across = clamp(int(valid_w) - j * 32, 0, 32)
+    if y >= int(valid_h):
+        return 0u
+    return across >= 32 ? 0xffffffffu : (1u << uint(across)) - 1u
+
+# Every texel within `radius` of a wall, the walls of the slots around word *j*
+# of row *y* grown into a disc. It reads the neighbours' walls, so a line
+# across a seam closes the gap beside it.
+
+
+def near_wall(int y, int j) -> uint:
+    int r = int(radius)
+    uint near = 0u
+    for dy in range_inclusive(-r, r):
+        int row = y + dy
+        uint left = gaps_at(GAP_WALLS, row, j - 1)
+        uint middle = gaps_at(GAP_WALLS, row, j)
+        uint right = gaps_at(GAP_WALLS, row, j + 1)
+        near = near | spread(left, middle, right, half_chord(r, dy))
+    return near
+
+# A chunk joining a fill that closes gaps, a word a thread, after `classify`
+# has written its slot and every neighbour's: what is passable loses every
+# texel within `radius` of a wall, so a gap up to twice that wide does not
+# let the flood through.
+#
+# **The disc around the seed stays open.** A click nearer a line than the
+# radius would otherwise sit in a closed texel and fill nothing past it. Open,
+# the flood leaves the disc for the texels far from every wall and goes on,
+# and `contest` grows the flood from none of the disc, so a seed by a thin line
+# never reaches across it. A click within the radius of a gap can leak through
+# it, the one thing the open disc costs.
+
+
+def close():
+    int j = int(global_id.x)
+    int y = int(global_id.y)
+    if j >= WORDS or y >= SIDE:
+        return
+    uint shut = near_wall(y, j) & ~near_seed(y, j)
+    int own = slot(0) + y * WORDS + j
+    bits.words[own] = bits.words[own] & ~shut
+
+# The rest of a fill that closes gaps runs once the flood has settled, in place
+# of `unpack`, three lists over the region and the chunks around it, each a
+# word a thread. Each list writes only its own chunk's words and reads what its
+# neighbours wrote in the list before, so no read races a write.
+#
+# The flood stops `radius` short of every line, and so would every other region
+# the close left. `rival` marks those regions, and `contest` grows both them
+# and the flood by `radius`, so each reaches its own lines, and gives a texel
+# both reach to the nearer, in steps of a quarter of the radius. A gap the
+# close shut is so shared out down its middle, and the fill stops there rather
+# than short of it or past it. `grow` then steps the fill on a texel at a time
+# into the dents of a ragged line that no disc of the radius fits into, which
+# the plain fill reaches and a fill at a setting otherwise would not.
+
+# The other regions, into the second plane of `gaps`: texels that were passable
+# and lie further than `radius` from every wall, the flood's own left out.
+
+
+def rival():
+    int j = int(global_id.x)
+    int y = int(global_id.y)
+    if j >= WORDS or y >= SIDE:
+        return
+    int own = y * WORDS + j
+    uint passable_before = inside_bits(y, j) & ~gaps.words[gap_slot() + GAP_WALLS + own]
+    uint flooded = bits.words[slot(0) + PLANE + own]
+    gaps.words[gap_slot() + GAP_RIVALS + own] = passable_before & ~near_wall(y, j) & ~flooded
+
+# How many radii `contest` measures the two sides at, a quarter of `radius` a
+# step, and the radius of step *k*.
+const int LEVELS = 4
+
+
+def level_radius(int k) -> int:
+    return ((k + 1) * int(radius) + LEVELS - 1) / LEVELS
+
+# What the fill takes once both sides have grown, into the third plane of
+# `gaps`, and what `grow` may step into, into the first of `bits`. Both sides
+# are grown at every step's radius, and a texel goes to the side that reaches
+# it at a step the other does not: the flood's, when it was passable before the
+# close, and the others' to keep out of. A texel both reach at one step is
+# neither's, and `grow` may take it. A texel the flood reached in the disc
+# around the seed grows nothing, since it may sit closer to a wall than the
+# radius and would reach past a thin one.
+
+
+def contest():
+    int j = int(global_id.x)
+    int y = int(global_id.y)
+    if j >= WORDS or y >= SIDE:
+        return
+    int r = int(radius)
+    uint ours_within[LEVELS]
+    uint theirs_within[LEVELS]
+    for k in range(LEVELS):
+        ours_within[k] = 0u
+        theirs_within[k] = 0u
+    for dy in range_inclusive(-r, r):
+        int row = y + dy
+        uint ours_l = bits_at(PLANE, row, j - 1) & ~near_seed(row, j - 1)
+        uint ours_m = bits_at(PLANE, row, j) & ~near_seed(row, j)
+        uint ours_r = bits_at(PLANE, row, j + 1) & ~near_seed(row, j + 1)
+        uint theirs_l = gaps_at(GAP_RIVALS, row, j - 1)
+        uint theirs_m = gaps_at(GAP_RIVALS, row, j)
+        uint theirs_r = gaps_at(GAP_RIVALS, row, j + 1)
+        for k in range(LEVELS):
+            int reach = half_chord(level_radius(k), dy)
+            if reach < 0:
+                continue
+            ours_within[k] = ours_within[k] | spread(ours_l, ours_m, ours_r, reach)
+            theirs_within[k] = theirs_within[k] | spread(theirs_l, theirs_m, theirs_r, reach)
+    int own = y * WORDS + j
+    uint passable_before = inside_bits(y, j) & ~gaps.words[gap_slot() + GAP_WALLS + own]
+    uint flooded = bits.words[slot(0) + PLANE + own]
+    uint ours = 0u
+    uint theirs = gaps.words[gap_slot() + GAP_RIVALS + own]
+    for k in range(LEVELS):
+        ours = ours | (ours_within[k] & ~theirs_within[k])
+        theirs = theirs | (theirs_within[k] & ~ours_within[k])
+    gaps.words[gap_slot() + GAP_TAKEN + own] = flooded | (ours & passable_before)
+    bits.words[slot(0) + own] = passable_before & ~(theirs & ~flooded)
+
+# The steps `grow` takes, and the rows and words of the window it holds.
+const int GROW_STEPS = 8
+const int GROW_ROWS = 17
+const int GROW_WORDS = 51
+
+# What `contest` took, stepped on GROW_STEPS texels along rows and columns into
+# what it left open, written into the mask. A ragged line leaves dents a disc of
+# `radius` never enters, and a fill with gaps left open fills them, so without
+# this a closed ring filled at a setting came out a few texels short of its
+# line where the plain fill did not.
+#
+# A thread holds the window of rows and words its word can be reached from in
+# that many steps, and steps all of it at once. A row is stepped from the rows
+# beside it as they stood before the step, so what the window cannot see from
+# beyond its edge moves inwards a row a step and never reaches the middle. It
+# raises the chunk's changed flag when anything is written, so the CPU keeps
+# only the chunks that hold a texel, the neighbours the fill reaches into
+# without its flood among them.
+
+
+def grow():
+    int j = int(global_id.x)
+    int y = int(global_id.y)
+    if j >= WORDS or y >= SIDE:
+        return
+    uint lit_window[GROW_WORDS]
+    uint open_window[GROW_WORDS]
+    for k in range(GROW_ROWS):
+        for w in range(3):
+            lit_window[k * 3 + w] = gaps_at(GAP_TAKEN, y + k - GROW_STEPS, j + w - 1)
+            open_window[k * 3 + w] = bits_at(0, y + k - GROW_STEPS, j + w - 1)
+    for taken_steps in range(GROW_STEPS):
+        uint above_l = 0u
+        uint above_m = 0u
+        uint above_r = 0u
+        for k in range(GROW_ROWS):
+            uint l = lit_window[k * 3]
+            uint m = lit_window[k * 3 + 1]
+            uint r = lit_window[k * 3 + 2]
+            uint below_l = k + 1 < GROW_ROWS ? lit_window[k * 3 + 3] : 0u
+            uint below_m = k + 1 < GROW_ROWS ? lit_window[k * 3 + 4] : 0u
+            uint below_r = k + 1 < GROW_ROWS ? lit_window[k * 3 + 5] : 0u
+            uint reach_l = (l << 1u) | (l >> 1u) | (m << 31u) | above_l | below_l
+            uint reach_m = (m << 1u) | (l >> 31u) | (m >> 1u) | (r << 31u) | above_m | below_m
+            uint reach_r = (r << 1u) | (m >> 31u) | (r >> 1u) | above_r | below_r
+            lit_window[k * 3] = l | (reach_l & open_window[k * 3])
+            lit_window[k * 3 + 1] = m | (reach_m & open_window[k * 3 + 1])
+            lit_window[k * 3 + 2] = r | (reach_r & open_window[k * 3 + 2])
+            above_l = l
+            above_m = m
+            above_r = r
+    uint taken = lit_window[GROW_STEPS * 3 + 1] & inside_bits(y, j)
+    if taken == 0u:
+        return
+    for b in range(32):
+        if ((taken >> uint(b)) & 1u) != 0u:
+            mask[ivec2(j * 32 + b, y)] = vec4(1.0)
+    raise(CHANGED)

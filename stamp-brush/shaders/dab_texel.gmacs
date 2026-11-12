@@ -1,0 +1,852 @@
+# Include: dab_texel
+#
+# One dab at one texel of the canvas: the tip's coverage, the paper, the masking
+# brush, the selection, the colour and the paint mode's rule, in that order.
+# `dab.gmacs` runs it for the one dab its push constant carries and `dabs.gmacs`
+# for each dab of a walk, so a fix is made once and a suite hashing strokes
+# catches no drift between the two.
+#
+# Included rather than compiled: it declares no kernel and no binding. It reads
+# the dab by the names of `dab.gmacs`'s params (globals that `dabs.gmacs` loads
+# from a record before each call) and the ten bindings by `dab.gmacs`'s names,
+# so an importer declares both first.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# Every height the exchange sums is taken as at most this many millimetres,
+# three times the centimetre the display is tuned for and a little over. It is
+# the ceiling the fixed point is sized for, and a texel above it is summed at
+# it rather than overflowing the sum.
+const float SA_EXCHANGE_CEILING = 32.0
+
+# Where the smudge carry's load sits in its row 0, `SA_CARRY_LOAD` in the
+# door's `smudge_pickup.gmacs` and `SaSmudgeReservoir.LOAD`.
+const int SA_CARRY_LOAD = 4
+
+# How many of the canvas's texels lie along one document pixel: 2 on a chunk of
+# a double resolution layer, 1 on everything else. Read off the canvas's width
+# against a chunk's at 1.0, `SaChunk.SIZE`, the rule
+# `SaDocumentTexels.density_of` applies on the CPU, because `dab.gmacs`'s block
+# is full to its 128 bytes and Godot refuses a push constant one float longer. A
+# canvas no wider than a chunk is 1, which keeps every suite's small canvas and
+# the selection's one texel stand-in where they were.
+const float SA_CHUNK_SIZE_AT_ONE = 256.0
+
+
+def sa_texel_scale() -> float: return max(1.0, float(image_size(canvas).x) / SA_CHUNK_SIZE_AT_ONE)
+
+# The tip's falloffs, the angle fold, the mirror signs and the sharpness cut,
+# from the door's brush library. Imported here rather than
+# before the importer's uniforms because `sa_softness_at` reads the softness buffer and
+# `sa_image_coverage` reads the tip sampler, and an import is text.
+import brush_tip
+
+# The tip's coverage at a document point: into the tip's frame, fold the
+# spikes, then whichever falloff the tip named.
+#
+# `shape` wins over `generator`, because a rectangle is a different outline
+# rather than a different falloff, and the ramp a rectangle runs is the
+# DEFAULT one per axis. A soft rectangle is therefore a rectangle, and the
+# record says so rather than leaving a painter to discover it.
+#
+# *side* is how many samples a side the texel *at* belongs to is read at,
+# `sa_supersample_side`'s answer, and only the rectangle hears it. **A rectangle
+# sampled more than once takes no pixel ramp**, because the samples are its
+# antialiasing and the ramp pulls its core in by a whole pixel on top of them. A
+# Flat Brush blade under two pixels thick is all ramp that way, so no dab of it
+# covers a texel and its stroke never reaches full cover. The ellipse keeps
+# both, because a round dab's growth below the pixel mode, `SaSmallDab.GROWTH`,
+# was measured with the ramp in it.
+
+
+def sa_tip_coverage(vec2 at, int side) -> float:
+    vec2 offset = at - dab_center
+    # Rotating by the negated dab angle puts the point in the tip's own frame,
+    # and the cosine and sine arrive precomputed because a per-texel pair of
+    # trigonometric calls is the one thing this loop cannot afford.
+    vec2 local = vec2(
+    offset.x * rotation.x + offset.y * rotation.y,
+    -offset.x * rotation.y + offset.y * rotation.x
+    )
+    # The per-dab mirror: after the rotation and before the generator, so
+    # it flips the tip inside its own rectangle rather than moving the dab.
+    # **This is not `core/api/document/sa_symmetry.gd`**, which paints several images of one
+    # dab and is applied by `SaPaintContext`. The two compose, and the option's
+    # tooltip says which is which.
+    #
+    # The CPU negates the dab's rotation when exactly one bit is set: one flip
+    # turns a right-handed frame left-handed, and an angle measured in a
+    # left-handed frame runs the other way.
+    local *= sa_mirror_signs(mirror)
+
+    # The image tip is read before the fold and before the absolute y, because
+    # folding a picture mirrors it about its own axes, which is a different tip
+    # rather than a spiked one.
+    if generator > 2.5:
+        return sa_image_coverage(local, half_extent, vec2(falloff_x, falloff_y), fade)
+
+    # The fold is against the absolute y, so the wedge is measured in the upper
+    # half and mirrored into the lower one, and one sector describes the whole
+    # tip rather than half of it.
+    local = sa_fold_into_wedge(vec2(local.x, abs(local.y)), spikes)
+
+    if shape > 0.5:
+        return sa_rectangle_coverage(local, half_extent, fade, side == 1 ? antialias : 0.0)
+    if generator > 1.5 and generator < 2.5:
+        return sa_soft_coverage(local, half_extent, antialias)
+    if generator > 0.5 and generator < 1.5:
+        return sa_gauss_coverage(local, half_extent, fade, antialias)
+    return sa_circle_coverage(local, half_extent, fade, antialias)
+
+# Where each of the masking brush's numbers sits in the `masking` buffer, and where
+# its softness table starts. The names are the same ones
+# `sa_brush_tip_mask.gd` writes them under, because the two files have to agree
+# and a bare index at either end would be the one thing a reader cannot check.
+const int SA_MASK_ACTIVE = 0
+const int SA_MASK_STRENGTH = 1
+const int SA_MASK_HALF_X = 2
+const int SA_MASK_HALF_Y = 3
+const int SA_MASK_COS = 4
+const int SA_MASK_SIN = 5
+const int SA_MASK_FADE_X = 6
+const int SA_MASK_FADE_Y = 7
+const int SA_MASK_SPIKES = 8
+const int SA_MASK_GENERATOR = 9
+const int SA_MASK_SHAPE = 10
+const int SA_MASK_ANTIALIAS = 11
+const int SA_MASK_MIRROR = 12
+# The painted tip's own lightness row, which is not the mask's and shares its
+# buffer because `dab.gmacs`'s push constant is exactly full. The
+# name is `sa_brush_tip_mask.gd`'s for the reason every other name in this block
+# is: the two ends of a storage buffer have to agree.
+const int SA_MASK_TIP_LIGHTNESS = 13
+# Which of the two ways the shift moves the colour, and, in the RGB one, the
+# four numbers that document's values were encoded through.
+#
+# **The kernel cannot ask what the chunks hold.** A document storing Oklab
+# coordinates holds a lightness already and the shift is an add to the first
+# number. One storing encoded RGB needs a decode, the Oklab round trip and an
+# encode back. Which of the two is a property of the document, and a dab
+# dispatch's push constant carries a colour and not a colour space, so the CPU
+# answers it in the buffer the rest of this row already travels in.
+const int SA_MASK_TIP_LIGHTNESS_MODE = 14
+const int SA_MASK_TRANSFER_SLOPE = 15
+const int SA_MASK_TRANSFER_THRESHOLD = 16
+const int SA_MASK_TRANSFER_GAIN = 17
+const int SA_MASK_TRANSFER_EXPONENT = 18
+# How the mask meets the dab's coverage, `SaMaskingBrush.Op` as a float, nought
+# being multiply so a block that leaves the slot unwritten reads as a plain
+# mask. The five values follow the header's names.
+const int SA_MASK_OP = 19
+# Where the mask's own scatter puts its centre, in document pixels from the
+# dab's, last so that no slot ahead of it shifts.
+const int SA_MASK_OFFSET_X = 20
+const int SA_MASK_OFFSET_Y = 21
+# The document's two gamut matrices, nine floats each column by column as
+# `SaColorSpacePushConstant` packs them for every composite kernel: its linear
+# RGB into linear sRGB from 22, and back from 31. Read only in RGB mode, and
+# behind the scatter so that no slot ahead of them shifts.
+const int SA_MASK_TO_LINEAR_SRGB = 22
+const int SA_MASK_FROM_LINEAR_SRGB = 31
+# The stroke's seed, folded to 24 bits, which each store's rounding draws from.
+const int SA_MASK_STROKE_SEED = 40
+const int SA_MASK_HEADER = 41
+
+# Every colour store of a dab, rounded to a half where the canvas narrows it.
+import stochastic_half
+# Where the smudge stage's carry meets the brush's colour, in the brush's mode.
+import smudge_met
+
+
+def sa_dab_store(ivec2 at, vec4 value): sa_store_rounded(at, value, uint(masking.second_tip[SA_MASK_STROKE_SEED]), uint(seed))
+
+# The two values `SA_MASK_TIP_LIGHTNESS_MODE` takes, which are
+# `SaStampBindings.LIGHTNESS_RGB` and `LIGHTNESS_OKLAB` and are repeated here
+# because a `.gmacs` cannot read a GDScript constant.
+const float SA_TIP_LIGHTNESS_RGB = 0.0
+const float SA_TIP_LIGHTNESS_OKLAB = 1.0
+
+# Mid grey, which is the lightness a texel of a picture with no colour in it
+# carries, and therefore the value that makes the shift exactly nought.
+# It is `SaTipImage.NEUTRAL_LIGHTNESS` and the constant is repeated
+# rather than shared because a `.gmacs` cannot read a GDScript constant.
+const float SA_TIP_LIGHTNESS_NEUTRAL = 0.5
+
+# Mid grey again, which is the paper value the lightness mode shifts a colour
+# by nothing at. It is the same number as the tip's neutral for
+# the same reason and is named apart because the two name two different maps:
+# one is where a picture's own colour is neutral and this is where the paper's
+# is, and a reader changing one is changing a different thing from the other.
+const float SA_PATTERN_LIGHTNESS_NEUTRAL = 0.5
+
+# The masking brush, its falloff, coverage and the five ops that meet the tip.
+import masking_tip
+
+# The painted tip's own lightness at *at*, or mid grey when there is no picture
+# to read it off.
+#
+# **The same map `sa_image_coverage` takes**, because the two read one texture:
+# the point is turned into the tip's frame, mirrored, and divided by the tip's
+# own size. It is written out rather than shared with that function, which
+# returns one number, and the two are asked at different points: the coverage is
+# a supersampled average over the texel and the lightness is read once at the
+# texel's own position, which is the whole of the difference between a mask and
+# a map laid over one.
+#
+# **Mid grey rather than nought when there is nothing to read.** The caller
+# subtracts `SA_TIP_LIGHTNESS_NEUTRAL` from this, so a procedural tip, a dab
+# whose picture did not load and a texel outside the picture all answer a shift
+# of exactly nought, which is what leaves a brush with no lightness map laying
+# its texels untouched.
+#
+# The generator test is the one `sa_tip_coverage` takes to reach the image
+# sampler, and the same one: the stand-in bound in place of a missing picture is
+# one clear texel, and its green channel is nought, which is not the neutral.
+# Asking the generator rather than the texture is what keeps a dab with no image
+# behind it out of that channel altogether.
+
+
+def sa_tip_lightness(vec2 at) -> float:
+    if generator < 2.5:
+        return SA_TIP_LIGHTNESS_NEUTRAL
+    vec2 offset = at - dab_center
+    vec2 local = vec2(
+    offset.x * rotation.x + offset.y * rotation.y,
+    -offset.x * rotation.y + offset.y * rotation.x
+    )
+    local *= sa_mirror_signs(mirror)
+    vec2 uv = local / max(half_extent * 2.0, vec2(1e-6)) + vec2(0.5)
+    if uv.x < 0.0 or uv.x > 1.0 or uv.y < 0.0 or uv.y > 1.0:
+        return SA_TIP_LIGHTNESS_NEUTRAL
+    return clamp(texture(tip_image, uv).g, 0.0, 1.0)
+
+# The nine floats from slot *at* of the masking buffer as a matrix, column by
+# column, which is the order `SaColorSpacePushConstant` writes them in.
+
+
+def sa_mask_matrix(int at) -> mat3:
+    return mat3(
+    masking.second_tip[at], masking.second_tip[at + 1], masking.second_tip[at + 2],
+    masking.second_tip[at + 3], masking.second_tip[at + 4], masking.second_tip[at + 5],
+    masking.second_tip[at + 6], masking.second_tip[at + 7], masking.second_tip[at + 8]
+    )
+
+# The colour a gradient-map dab lays at *at*, the preset's ramp read at the
+# painted tip's lightness, or the dab's own colour with an alpha of one.
+#
+# **The ramp is already the document's values**, converted on the CPU through
+# the document's space when it was uploaded, so the read is the colour and
+# nothing here decodes, encodes or clamps it. Its texels sit at their centres,
+# so a lightness of nought reads the first stop and one the last.
+#
+# **Off is the stand-in, one texel wide**, which is how the smudge and height
+# bindings say off too, and a dab with no picture behind it is off as well,
+# since its lightness is mid grey everywhere. Off answers `color.rgb` and one
+# exactly, so the caller's multiply and mix leave every other dab's texels as
+# they were to the bit.
+
+
+def sa_ramp_color(vec2 at) -> vec4:
+    if generator < 2.5 or texture_size(ramp, 0).x < 2:
+        return vec4(color.rgb, 1.0)
+    return texture(ramp, vec2(sa_tip_lightness(at), 0.5))
+
+# *rgb*, the dab's colour in the document's own encoding, moved in Oklab's
+# lightness by *shift*.
+#
+# **Oklab's lightness and not a multiply on the channels.** Krita's lightness
+# map is a perceptual dimming that keeps the hue, and the multiply a channel
+# rule would do drags a saturated colour's hue with it: a red taken to half its
+# channels is the same hue only because the arithmetic happens to agree when all
+# three move together, and it stops agreeing the moment the tip's own colour
+# differs across a texel, which is the whole of what this reads. Oklab is where
+# the dab's own colour dynamics already shift a colour and its lightness is
+# already one of nought to one over the display range, so a channel reading of
+# nought and one is a whole shift each way and needs no scale.
+#
+# This is `SaColorDynamics._shift`'s maths on the GPU, and the two branches are
+# the two things a document's chunks can hold.
+#
+# **Oklab coordinates take the shift as one add.** The triple already *is*
+# (L, a, b), so moving its lightness is moving its first number, with no curve
+# and no round trip and nothing to be approximately the identity. That is the
+# branch Sara's own default document takes, `oklab_p3` being the space
+# `SaEasel` opens on, and it is exact for every document that stores Oklab.
+#
+# **Encoded RGB takes the document's own curve under an Oklab round trip.** The
+# four numbers `sa_transfer_decode` and `sa_transfer_encode` take are the
+# document's, not sRGB's: a gamma 2.2 document run through the sRGB curve would
+# be a near miss at mid grey and a long way out in a shadow, which is the whole
+# of why the curve travels beside the mode.
+#
+# **And the document's own primaries, through its two matrices.** Oklab is
+# defined against linear sRGB, so a Display P3, ACEScg or Rec.2020 document's
+# linear values go through its matrix into linear sRGB first and come back
+# through the inverse, the road `SaColorDynamics` takes on the CPU for the Hue,
+# Saturation and Value offsets. Read as sRGB's primaries instead, the shift
+# would land off the number a painter dials, visibly so on ACEScg. On an
+# sRGB-gamut document both matrices are exactly the identity, which a multiply
+# passes through to the bit, so its texels come out unchanged.
+#
+# **Skipped outright at a shift of nought**, rather than computed and left to
+# cancel. A round trip through two cube roots and two 3 by 3 matrices is close
+# to the identity and is not the identity, and a texel claim that says a plain
+# tip is unchanged has to be about the arithmetic and not about a tolerance.
+
+
+def sa_lightness_shifted(vec3 rgb, float shift) -> vec3:
+    if abs(shift) < 1e-6:
+        return rgb
+    if masking.second_tip[SA_MASK_TIP_LIGHTNESS_MODE] > 0.5:
+        return vec3(rgb.x + shift, rgb.y, rgb.z)
+    float slope = masking.second_tip[SA_MASK_TRANSFER_SLOPE]
+    float threshold = masking.second_tip[SA_MASK_TRANSFER_THRESHOLD]
+    float gain = masking.second_tip[SA_MASK_TRANSFER_GAIN]
+    float exponent = masking.second_tip[SA_MASK_TRANSFER_EXPONENT]
+    vec3 linear = sa_transfer_decode(rgb, slope, threshold, gain, exponent)
+    vec3 lab = linear_srgb_to_oklab(sa_mask_matrix(SA_MASK_TO_LINEAR_SRGB) * linear)
+    lab.x += shift
+    vec3 back = sa_mask_matrix(SA_MASK_FROM_LINEAR_SRGB) * oklab_to_linear_srgb(lab)
+    return sa_transfer_encode(back, slope, threshold, gain, exponent)
+
+# The paper's texel at *at*, in the document-space tile, with the invert folded
+# in.
+#
+# **One function rather than the sample inlined in the rules below**, because
+# the paper has two more readers that want the same texel read the same way:
+# the height rule compares it with the strength and the lightness rule turns it
+# into a shift of the dab's colour. The four modes sample the texture exactly
+# once between them, the lightness one here and the other three in
+# `sa_pattern_applied`.
+#
+# **Tiled in document coordinates, so the paper stays put while the brush moves
+# over it.** That is Krita's rule as well, and it is the whole of the difference
+# between a texture on the canvas and a texture on the brush: a mask tiled in
+# the dab's own frame travels with the dab, so a stroke over paper grain would
+# carry its grain along with it and no single screenshot would say so.
+# `pattern_offset` is the document texel the grid starts at, so every chunk of
+# one stroke reads the same grid.
+#
+# **The tile is the texture, so its size is asked of the sampler.** The
+# pattern resource answers a texture at its tile size, which leaves nothing for
+# a fourth push-constant float to say and no way for the two to disagree.
+#
+# **The wrap is `fract` rather than the sampler's repeat mode**, because the
+# sampler is created by whoever binds the texture, the stand-in is bound
+# clamped today, and a kernel that is only correct under one repeat mode paints
+# one stretched smear under the other. The half texel puts the sample at a
+# texel's own centre, so a pattern at its own scale is read exactly rather than
+# interpolated with its neighbour.
+
+
+def sa_pattern_sampled(ivec2 at) -> float:
+    vec2 tile = max(vec2(texture_size(pattern, 0)), vec2(1.0))
+    vec2 uv = (vec2(at) + vec2(pattern_offset_x, pattern_offset_y) + vec2(0.5)) / tile
+    float sampled = clamp(texture(pattern, fract(uv)).r, 0.0, 1.0)
+    # The sign is the Texture page's invert toggle: the block
+    # was full, so the one bit left was the sign of a number that is
+    # never negative on its own. Below nought the paper is turned over.
+    if pattern_strength < 0.0:
+        sampled = 1.0 - sampled
+    return sampled
+
+# The three modes that are Krita's own alpha arithmetic and the
+# one port in these lines, which is why they are a file of their own.
+import pattern_modes
+
+# One texel's coverage after the tiled paper, which is the multiply binding 4
+# was reserved for, and the subtract and the two others beside it.
+#
+# **The coverage goes in as well as out**, because a subtract is not a factor.
+# Multiply's share could be answered on its own and multiplied by the caller,
+# subtract's cannot: what it takes off is an amount rather than a fraction, and
+# an amount only means something against the coverage it is taken from.
+#
+# **The mode is the magnitude of `pattern_strength`**, for the reason the push
+# constant's own paragraph gives: the block is full, and neither of the other
+# two carriers, a storage buffer and a texture, has room for a mode. The seven
+# bands do not touch because `SaDabPattern.strength_for` offsets by a whole
+# number per mode: at or under one is multiply, one to two is subtract, two to
+# three is the lightness mode, which the coverage does not hear from, three to
+# four is height, and the three Krita ports take the next three, colour burn,
+# hard mix softer and linear height. A band is the whole numbers under the
+# magnitude, so a strength of exactly one is the top of its band and never the
+# floor of the next.
+
+
+def sa_pattern_applied(ivec2 at, float coverage) -> float:
+    if pattern_strength == 0.0:
+        return coverage
+    float strength = abs(pattern_strength)
+    float band = ceil(strength) - 1.0
+    float amount = strength - band
+    # Lightness, the one mode whose answer is not a coverage at all: the
+    # paper moves the dab colour's lightness instead, and `sa_pattern_lightness`
+    # below reads the same texel for it. Nothing is sampled here.
+    if band == 2.0:
+        return coverage
+    float sampled = sa_pattern_sampled(at)
+    # The three Krita's own arithmetic paints, above height.
+    if band == 4.0:
+        return sa_pattern_burned(sampled, coverage, amount)
+    if band == 5.0:
+        return sa_pattern_hard_mixed(sampled, coverage, amount)
+    if band >= 6.0:
+        return sa_pattern_linear_height(sampled, coverage, amount)
+    # Height, the band above three. **A gate and not a factor**, which is
+    # the opposite of the two below: the paper is read as a height field and the
+    # dab paints where it is below the strength, so a light touch catches only
+    # the valleys and a heavy one paints everything. Krita's own height modes in
+    # `KisMaskingBrushCompositeOp.h` were read for the shape of that rule and no
+    # line of them is taken: the arithmetic here is Sara's own, and its strength
+    # is a height rather than the divisor Krita makes of one.
+    if band == 3.0:
+        if sampled > amount:
+            return 0.0
+        return coverage
+    # Subtract, the band above one. The tooth is `1 - sampled`
+    # in both modes, so a dark texel is what takes paint away either way and
+    # the invert above means the same thing in both. What differs is how: a
+    # multiply thins the whole dab in proportion, a subtract takes a fixed
+    # amount off and stops at nothing, so the paint is lifted away where the
+    # grain sits and left alone where it does not.
+    if band == 1.0:
+        return max(coverage - amount * (1.0 - sampled), 0.0)
+    return coverage * mix(1.0, sampled, clamp(amount, 0.0, 1.0))
+
+# What the paper asks the dab's colour to do at *at*, in Oklab's lightness, and
+# nought for every mode that is not the lightness one.
+#
+# **The paper's neutral is mid grey and the shift is about it**, which is the
+# rule for the tip's own map and the reason a paper at a half leaves every
+# colour exactly where it was. Outside the lightness mode nothing calls this at
+# all, and inside it a mid-grey paper is the identity rather than a shift by the
+# strength.
+#
+# **A shift rather than a shifted colour**, because the composite is
+# `sa_lightness_shifted` above and this is the paper's half of it. By the time
+# `sa_dab_texel` calls this the colour has already met the smudge stage's carry and the
+# tip's own lightness, and the two shifts travel through one round trip rather
+# than two.
+
+
+def sa_pattern_lightness(ivec2 at) -> float:
+    if pattern_strength == 0.0:
+        return 0.0
+    float strength = abs(pattern_strength)
+    if strength <= 2.0 or strength > 3.0:
+        return 0.0
+    return (sa_pattern_sampled(at) - SA_PATTERN_LIGHTNESS_NEUTRAL) * (strength - 2.0)
+
+# How many samples a texel is worth, decided by the dab's size rather than by a
+# setting.
+#
+# **A small dab is mostly edge.** One sample per texel answers a yes or a no,
+# which is all a large dab's interior needs, but a dab a few pixels across is
+# edge everywhere and a yes or a no there is a dashed line. So the sampling
+# follows the size: nine samples under five pixels of half-extent, and
+# thirty-six under half a pixel, where a texel is more tip than the tip is
+# texel and thirty-six is the smallest grid that resolves a coverage a painter
+# would call a fraction.
+#
+# The grid is regular and offset by half a step, so the samples straddle the
+# texel rather than sitting on its corner and the dab does not drift half a
+# pixel towards the origin.
+
+
+def sa_supersample_side() -> int:
+    if antialias <= 0.5:
+        return 1
+    float smallest = min(half_extent.x, half_extent.y)
+    if smallest < 0.5:
+        return 6
+    if smallest < 5.0:
+        return 3
+    return 1
+
+# The paint's height under a smudging dab: moved towards the
+# height the carry holds, at the rate the carried colour moves, by the
+# deposition rule of the door's `height_deposit`, and reported to the next
+# pickup. *share* is the dab's own coverage here, the one the colour is laid
+# by. Texel 1 of the carry is the strength, the height, the rate and whether
+# it holds one, which `smudge_pickup.gmacs` writes.
+#
+# **The scale of the sums is the dab's own.** `atomic_add` has no float form
+# here, so the two sums are fixed point, and a scale that suits a small dab
+# overflows a large one. The largest sum a dab can reach is its box, up to
+# eight mirrored images, times the ceiling above, and the scale puts that at
+# half a `uint`. The pickup divides one sum by the other, so the scale cancels.
+
+
+def sa_smudge_height(ivec2 at, float share):
+    vec4 carry = image_load(smudge, ivec2(1, 0))
+    float thick = image_load(height, at).r
+    # In texels, so a dab on a chunk at 2.0 sums four times the texels and
+    # the scale leaves the same room.
+    float side = 2.0 * max(half_extent.x, half_extent.y) + 4.0
+    float texel_scale = sa_texel_scale()
+    if texel_scale != 1.0:
+        side = side * texel_scale
+    float scale = 2147483648.0 / (8.0 * SA_EXCHANGE_CEILING * side * side)
+    float weight = share * scale
+    atomic_add(exchange.sums[0], uint(weight + 0.5))
+    atomic_add(exchange.sums[1], uint(weight * clamp(thick, 0.0, SA_EXCHANGE_CEILING) + 0.5))
+    if carry.b > 0.0:
+        image_store(height, at, vec4(sa_height_towards(thick, carry.g, carry.b, share), 0.0, 0.0, 1.0))
+
+# The colour a blurring dab lays at *pos*, read off the lattice
+# `smudge_blur.gmacs` left in the carry's rows from 1 down, or *otherwise*, the
+# carry's mean, where the lattice holds no paint or there is none yet. Texel 2
+# of row 0 is where the dab's centre sits on the lattice, in cells, and how many
+# cells a document pixel is, and texel 3 is the lattice's size.
+#
+# **Bilinear over the cells**, so the colour moves smoothly from one cell to
+# the next and the ramp has no steps where a cell ends. The cells hold colour
+# times alpha beside alpha, so a cell over bare canvas pulls nothing towards
+# black, and the colour is their quotient.
+#
+# **The alpha comes back too**, the lattice's own at this texel, one where
+# there is no lattice yet. It caps how much the dab lays, so a blur spreads a
+# thin edge as thin as it was rather than laying it opaque, which the carry's
+# load alone did over the whole dab. A cap rather than a load, because
+# the load's rule grows with the texel's own alpha, and a stroke of many dabs
+# then climbed past the paint it blurred.
+
+
+def sa_smudge_blurred(vec2 pos, vec3 otherwise) -> vec4:
+    vec4 frame = image_load(smudge, ivec2(2, 0))
+    vec2 count = image_load(smudge, ivec2(3, 0)).xy
+    if count.x < 1.0 or count.y < 1.0:
+        return vec4(otherwise, 1.0)
+    vec2 at = clamp(frame.xy + (pos - dab_center) * frame.z, vec2(0.0), count - 1.0)
+    ivec2 low = ivec2(floor(at))
+    ivec2 high = min(low + 1, ivec2(count) - 1)
+    vec2 part = at - vec2(low)
+    vec4 top = mix(image_load(smudge, ivec2(low.x, low.y + 1)), image_load(smudge, ivec2(high.x, low.y + 1)), part.x)
+    vec4 bottom = mix(image_load(smudge, ivec2(low.x, high.y + 1)), image_load(smudge, ivec2(high.x, high.y + 1)), part.x)
+    vec4 blurred = mix(top, bottom, part.y)
+    if blurred.a <= 0.0:
+        return vec4(otherwise, 0.0)
+    return vec4(blurred.rgb / blurred.a, clamp(blurred.a, 0.0, 1.0))
+
+# *under* moved by *rate* towards the lattice's paint, *rgb* at *alpha*, on
+# premultiplied colour, so the alpha stays between the two and a thin texel
+# takes the lattice's colour in proportion to the paint each holds.
+
+
+def sa_blurred_towards(vec4 under, vec3 rgb, float alpha, float rate) -> vec4:
+    float out_a = mix(under.a, alpha, rate)
+    if out_a <= 0.0:
+        return vec4(rgb, 0.0)
+    return vec4((under.rgb * under.a * (1.0 - rate) + rgb * alpha * rate) / out_a, out_a)
+
+# What an over dab lays where the selection is *selected* and the stroke
+# already holds *under*, given the *laid* alpha that already carries the
+# selection once. The stroke buffer then holds the selection times the alpha
+# the stroke would have laid with nothing selected, as the stroke's opacity
+# scales it at the commit, so a texel at 0.2 ends at 0.2 at the most however
+# many dabs cross it, where each dab laid over the last would stack it as
+# 1 - (1 - s)^n. The over rule fills the room left to one, and the
+# selection leaves only the room up to itself, so the dab's own share is
+# taken against that room. A wash needs none of this, because its ceiling
+# already carries the selection once.
+#
+# **Only where the selection is short of one**, which the caller tests, so a
+# stroke with nothing selected keeps every expression it had and every shipped
+# preset's hash. A hard selection is nought or one, so it still clips from the
+# first dab. An alpha-locked dab keeps the layer's alpha and is not
+# asked.
+#
+# **A whole alpha under the dab is no ceiling reached.** A mask, a group's or a
+# filter's mask included, holds its coverage in one float channel, so every
+# texel of it reads an alpha of one, and so does opaque paint under a stroke
+# laid straight in. The over rule cannot raise that alpha, only move the colour,
+# so there is nothing for a ceiling to hold and the dab lays its own share,
+# which already carries the selection once. Read as a reached ceiling, a mask
+# took nothing at all through any selection short of one.
+
+
+def sa_selection_share(float laid, float selected, float under) -> float:
+    if under >= 1.0:
+        return laid
+    if under >= selected:
+        return 0.0
+    return laid * (selected - under) / (selected * (1.0 - under))
+
+# One texel of the dab, *pixel_coords*, which the calling kernel has already
+# found inside the canvas.
+#
+# `pixel_coords` is in the canvas's texels. `pos` is that texel's centre in
+# document pixels, where the centre, the radii and the falloffs are stated, so
+# a tip is one shape at any density and a chunk at 2.0 paints it in four times
+# the texels. `document_pixel` is the pixel the texel lies in, which the
+# selection and the paper are read at, both stored at the document's
+# resolution. At 1.0 all three are the texel, as they always were.
+
+
+def sa_dab_texel(ivec2 pixel_coords):
+    # The 1.0 path keeps the expressions it had, the scaled ones behind a test
+    # of the scale: one run time division or one reordered sum shifts the last
+    # bit of every shipped preset's strokes, which a suite hashes.
+    #
+    # **A picture tip on a finer layer is read at the document pixel**, as a
+    # plain layer reads it. The picture is sampled at a point per texel with no
+    # filtering, so a plain layer shows one sample of its grain per document
+    # pixel and a double layer two a side, which drew Bush and Dry Strokes'
+    # specks at about half their size, a finer and greyer texture than the same
+    # brush on a plain layer. Read at the document pixel the four texels take
+    # the plain layer's sample and the grain is the size it is there.
+    float texel_scale = sa_texel_scale()
+    vec2 pos = vec2(pixel_coords)
+    ivec2 document_pixel = pixel_coords
+    float sample_scale = texel_scale
+    if texel_scale != 1.0:
+        document_pixel = ivec2(floor(vec2(pixel_coords) / texel_scale))
+        if generator > 2.5:
+            pos = vec2(document_pixel)
+            sample_scale = 1.0
+        else:
+            pos = (vec2(pixel_coords) + 0.5) / texel_scale - 0.5
+    int side = sa_supersample_side()
+    float coverage = 0.0
+    if side == 1:
+        coverage = sa_tip_coverage(pos, side)
+    else:
+        float step_size = 1.0 / side
+        for sy in range(side):
+            for sx in range(side):
+                vec2 at = pos + (vec2(sx, sy) + 0.5) * step_size - 0.5
+                if sample_scale != 1.0:
+                    at = pos + ((vec2(sx, sy) + 0.5) * step_size - 0.5) / sample_scale
+                coverage += sa_tip_coverage(at, side)
+        coverage /= side * side
+
+    # The threshold is applied to the mask, after the supersampling that made
+    # it a fraction and before anything that scales it: randomness, the paper,
+    # the masking brush, the dab opacity, the selection and flow all come after
+    # it. Applying it after `flow` would binarise the flow as well, which is not
+    # what a sharp brush at half flow means.
+    coverage = sa_apply_threshold(coverage, sharpness, sharpness_soft)
+
+    if coverage <= 0.0:
+        return
+
+    # Randomness thins each texel and density drops texels outright, in that
+    # order. The order matters: density is decided on the visible pixels of
+    # the mask, and randomness is what decides which of them are visible.
+    #
+    # A compute kernel has no random source, so both hash the pixel
+    # and the dab's seed. **The seed is the dab sequence number**, so two dabs
+    # at the same place are not the same dab, which is the whole difference
+    # between a spatter and a stencil. Two hashes rather than one, offset, so a
+    # thinned texel and a dropped one do not agree.
+    #
+    # Both hash the document pixel and not the texel, so a speck is a document
+    # pixel on a double resolution layer as on a plain one, never a quarter of
+    # one. At 1.0 the two are the same texel.
+    if randomness > 0.0:
+        vec2 hashed = vec2(document_pixel) + vec2(seed, -seed)
+        coverage *= (1.0 - randomness) + randomness * sa_hash21(hashed)
+    if density < 1.0 and coverage > 0.0:
+        vec2 hashed = vec2(document_pixel) + vec2(seed + 17.0, 31.0 - seed)
+        if density < sa_hash21(hashed):
+            return
+
+    # The paper is one multiply ahead of the step that multiplies by flow and
+    # the dab opacity, which runs further down with the selection: the paper
+    # scales the coverage first, so flow, the dab opacity and the selection each
+    # still mean afterwards exactly what they meant before. The second mode
+    # subtracts rather than multiplies, which is why the coverage goes in as
+    # well as out and the one multiply is now one of two.
+    coverage = sa_pattern_applied(document_pixel, coverage)
+
+    # The masking brush, in the same place and for the same reason:
+    # the second tip's coverage over this texel meets the coverage the
+    # first one laid down through the preset's composite op, a multiply unless
+    # the preset's op field says otherwise, so flow, the dab opacity and the
+    # selection each still mean afterwards exactly what they meant before.
+    #
+    # **After the threshold rather than before it.** Sharpness binarises the
+    # coverage it is given, and a mask folded in before that would be binarised
+    # with the dab, which turns a soft mask into a stencil at every sharpness
+    # above nought. Krita composites its masking brush onto the alpha the dab
+    # would have laid, and this is that line.
+    #
+    # It would commute with the pattern above if both were multiplies on one
+    # number, and the subtract mode is why they do not: a subtract then a
+    # multiply is not the same number as a multiply then a subtract. Paper first
+    # and mask second, which is the order Krita applies them in.
+    coverage = sa_mask_applied(pos, coverage)
+    # A mask that closed the coverage here saves the selection read below, which
+    # is the only work left that costs anything. **It is not the dirty rectangle
+    # narrowing**: the box is still the painted tip's own, because every op the
+    # mask composites with answers nothing where the dab laid nothing, so it
+    # can take texels away and can never add one outside that box.
+    if coverage <= 0.0:
+        return
+
+    # What a dab at full flow would lay here, and what this one actually lays.
+    # Wash needs both: flow is the *rate* it approaches the first, not a
+    # scale on the opacity it ends at, so the alpha rule below reads `full_a`
+    # and every other rule reads `src_a`.
+    float full_a = coverage * color.a
+    # Coverage scales the dab, so a feathered selection paints a feathered edge.
+    # The over rules below take the same number once more, as a ceiling, so
+    # overlapping dabs never climb past it.
+    float selected = image_load(mask, min(document_pixel, image_size(mask) - 1)).r
+    full_a *= selected
+    # A gradient-map dab's colour, whose alpha is how much of the ramp a stop
+    # lays and so scales the coverage before flow reads it, as a transparent
+    # stop should. The tip's coverage, the opacity and the blend stay the dab's.
+    vec4 mapped = sa_ramp_color(pos)
+    full_a *= mapped.a
+    float src_a = full_a * flow
+    if src_a <= 0.0:
+        return
+
+    # The colour this dab lays, which is the brush's own, or the ramp's in
+    # gradient map mode, until the smudge stage carries something. Only the colour moves: the alpha rules
+    # below read `color.a` and the coverage, and a smudge drags paint along
+    # without making the stroke any more or less opaque than it was set to.
+    # A blurring stroke's carry is taller than its two texels, and the colour
+    # it lays is the lattice's at this texel rather than the carry's mean.
+    vec4 carried = image_load(smudge, ivec2(0, 0))
+    vec3 carried_rgb = carried.rgb
+    float blurred_a = 1.0
+    if image_size(smudge).y > 1:
+        vec4 blurred = sa_smudge_blurred(pos, carried.rgb)
+        carried_rgb = blurred.rgb
+        blurred_a = blurred.a
+    vec3 paint_rgb = sa_smudge_met(mapped.rgb, carried_rgb, carried.a)
+
+    # The tip's own lightness over the colour this dab lays. After the smudge
+    # stage's mix, because what the stage carries is what the dab is painting,
+    # and the map is a property of the brush rather than of where the paint came
+    # from. Nought for a dab with no lightness map: a procedural tip and a
+    # picture with no colour in it both answer mid grey, so the round trip below
+    # is skipped and the texels are identical rather than close.
+    float tip_lightness = (sa_tip_lightness(pos) - SA_TIP_LIGHTNESS_NEUTRAL) * masking.second_tip[SA_MASK_TIP_LIGHTNESS]
+    paint_rgb = sa_lightness_shifted(paint_rgb, tip_lightness)
+
+    # The paper's own lightness over the colour, which is the tip's
+    # composite fed by the paper rather than by the tip. The coverage is not
+    # touched by it, which is what makes the lightness mode the one the paper
+    # rules above never see.
+    #
+    # **After the tip's shift and not before it.** The two do not commute:
+    # `sa_lightness_shifted` decodes, moves the lightness and encodes again, and
+    # two round trips in either order do not agree to the last bit. The tip's
+    # shift goes first, and neither number is the correction of the other: a
+    # tip's map is the brush's own property and the paper's is the surface's.
+    paint_rgb = sa_lightness_shifted(paint_rgb, sa_pattern_lightness(document_pixel))
+
+    vec4 original_color = image_load(canvas, pixel_coords)
+    float dst_a = original_color.a
+    bool alpha_locked = alpha_lock > 0.5
+    if alpha_locked and dst_a <= 0.0:
+        return
+
+    # **A smear thins where the layer is empty.** Nothing but the dab's alpha
+    # stood between the carry and full opacity, so Oil Smudge dragged off a
+    # disc laid the brush's colour at full alpha to the end of the drag. The
+    # carry's load, which `smudge_pickup.gmacs` keeps at one while the dab is
+    # over paint and decays by the smear length once it leaves it, scales the
+    # alpha by as much as the texel under the dab lacks: by the load over an
+    # empty texel and by exactly one over an opaque texel or under a full load.
+    # The texel is the stroke buffer's for a stroke that paints into one, so
+    # there the load alone decides. The product is one less two shortfalls,
+    # because a mix rounds either end off one.
+    #
+    # **A path of its own, with its own stores**, and not a multiply on `src_a`
+    # ahead of the shared ones. That multiply is by exactly one for every dab
+    # without the stage, and it still moves the last bit of presets that never
+    # smudge, because the compiler is free to fuse the products another way,
+    # which `test_every_shipped_preset_paints_as_before` would catch. A carry
+    # too narrow to hold the load, the stand-in or a suite's two texels, and an
+    # erasing dab take the shared path.
+    if image_size(smudge).x > SA_CARRY_LOAD and paint_mode < 1.5:
+        float load = clamp(image_load(smudge, ivec2(SA_CARRY_LOAD, 0)).r, 0.0, 1.0)
+        # **A blur moves the texel towards the lattice and lays nothing over
+        # it**. The cap below holds one dab, but a share laid over the
+        # texel, however small, climbs towards one, and the twenty dabs a texel
+        # sees and a few strokes took a wisp of mean alpha 0.01 opaque. The
+        # carry's share of the dab mixes the texel towards the lattice instead,
+        # alpha and colour premultiplied, so a texel never stands past the
+        # paint the lattice blurred and the layer's sum barely moves. The same
+        # in wash, because a blur has no opacity of its own to climb to, and
+        # the stroke paints straight into its layer (`sa_stroke_route.gd`). A
+        # brush's own colour, the rest of the share, is still laid over. A
+        # branch ahead of the smear's rather than inside it, so the smear's
+        # expressions compile as they did and its strokes keep their hashes.
+        # A blur's lattice says so in texel 3's third channel, which
+        # `smudge_blur.gmacs` sets and Oil Smudge's dragging field leaves at
+        # nought, since a smear moves paint along and lays it as it did.
+        if image_load(smudge, ivec2(3, 0)).z > 0.5 and not alpha_locked:
+            float capped = min(1.0 - (1.0 - load) * (1.0 - clamp(dst_a, 0.0, 1.0)), blurred_a)
+            if src_a * capped <= 0.0:
+                return
+            if image_size(height).x > 1:
+                sa_smudge_height(pixel_coords, src_a * capped)
+            float moving = src_a * clamp(carried.a, 0.0, 1.0)
+            vec4 moved = sa_blurred_towards(original_color, paint_rgb, blurred_a, moving)
+            float own_a = (src_a - moving) * capped
+            if own_a > 0.0:
+                moved = sa_laid_over(moved, paint_rgb, own_a, false)
+            sa_dab_store(pixel_coords, moved)
+            return
+        float thinned = min(1.0 - (1.0 - load) * (1.0 - clamp(dst_a, 0.0, 1.0)), blurred_a)
+        float thin_a = src_a * thinned
+        # Nothing to lay, which a blurring dab that found no paint or a lattice
+        # with none at this texel now asks for. Returned here, because the wash
+        # weighs the paint by its alpha against the texel's, and two noughts
+        # there are a NaN in the colour.
+        if thin_a <= 0.0:
+            return
+        if image_size(height).x > 1:
+            sa_smudge_height(pixel_coords, thin_a)
+        if paint_mode > 0.5:
+            sa_dab_store(pixel_coords, sa_washed(original_color, paint_rgb, thin_a, full_a * thinned, flow, alpha_locked))
+            return
+        if selected < 1.0 and not alpha_locked:
+            thin_a = sa_selection_share(thin_a, selected, dst_a)
+            if thin_a <= 0.0:
+                return
+        sa_dab_store(pixel_coords, sa_laid_over(original_color, paint_rgb, thin_a, alpha_locked))
+        return
+
+    # The height moves with the colour on a smudge stroke that moves it,
+    # before the two painting modes part, because both lay the
+    # carry's colour and the height goes where the colour goes. A one texel
+    # carry is the stand-in and a one texel height is no layer's, so every
+    # other dab skips this.
+    if paint_mode < 1.5 and image_size(smudge).x > 1 and image_size(height).x > 1:
+        sa_smudge_height(pixel_coords, src_a)
+
+    # Alpha darken, which is what makes a wash stroke reach the opacity it
+    # was set to and stop. A wash is a ceiling rather than an accumulation, and
+    # the rule and its reasons, the climb and the weight, are with
+    # `sa_washed` in the door's `brush_paint_modes`.
+    if paint_mode > 0.5 and paint_mode < 1.5:
+        sa_dab_store(pixel_coords, sa_washed(original_color, paint_rgb, src_a, full_a, flow, alpha_locked))
+        return
+
+    # Erase. The slot is `paint_mode` and the brush now sends all three.
+    if paint_mode > 1.5:
+        if alpha_locked:
+            return  # Alpha lock forbids moving alpha, so an erase does nothing.
+        sa_dab_store(pixel_coords, sa_erased(original_color, src_a))
+        # The height by the deposition rule with a target of nought and the
+        # eraser's own strength, its opacity times its flow, as the rate. The
+        # coverage is the rest of *src_a*, the tip, the pattern, the mask and
+        # the selection, so the height falls by the share the alpha does.
+        if image_size(height).x > 1:
+            float strength = color.a * flow
+            float thick = image_load(height, pixel_coords).r
+            image_store(height, pixel_coords, vec4(sa_height_towards(thick, 0.0, strength, src_a / strength), 0.0, 0.0, 1.0))
+        return
+
+    if selected < 1.0 and not alpha_locked:
+        src_a = sa_selection_share(src_a, selected, dst_a)
+        if src_a <= 0.0:
+            return
+    sa_dab_store(pixel_coords, sa_laid_over(original_color, paint_rgb, src_a, alpha_locked))

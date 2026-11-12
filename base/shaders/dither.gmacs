@@ -1,0 +1,174 @@
+# Kernels: dither
+# Dither, the first finishing effect. A point kernel under the SaPointPass
+# contract: the colour field at binding 0, the selection mask at binding 1, the
+# blue noise tile at binding 2, the region's origin and the chunk's document
+# corner in the push constant.
+#
+# Each channel of the document's RGB view is quantised to `levels` even steps of
+# the encoding the record picks: by default the document's own encoded value
+# (in linear light the dark steps sit too far apart to dither between),
+# otherwise linear light raised to the pure power `spacing`. The step a value
+# lands on is chosen by a threshold the pattern gives each document pixel, so a
+# flat tone between two levels becomes a mix of the two in its own proportion.
+# Nothing clamps: a value above one quantises to a level above one, the curves
+# being mirrored powers with no ceiling.
+#
+# The pattern is a function of the document pixel, the texel added to the
+# chunk's corner, never of the chunk-local texel, so interleaved gradient noise,
+# which has no period, does not restart at every chunk border.
+#
+# One kernel with the pattern as a number rather than three entry points,
+# because a uniform set has to cover every binding the compiled kernel kept: the
+# blue noise tile is bound on every dispatch and only the third pattern reads it.
+
+kernel dither
+
+import linear_srgb_color_space
+import transfer_curve
+
+image canvas
+# The document-wide selection, as in adjust.gmacs: a 1 by 1 mask reads as 1.0
+# everywhere through the clamped read (core/api/selection/sa_selection.gd).
+image mask: r32f, readonly
+# The blue noise tile, TILE by TILE thresholds in rows, each in 0 to 1.
+buffer blue_noise: float thresholds[]
+
+# 128 bytes: the four settings, the region's origin, the chunk's corner on its
+# eight byte boundary, the colour space tail exactly as
+# SaColorSpacePushConstant writes it, then the spacing in the tail's last
+# float, which the tail leaves as padding.
+params:
+    float levels  # steps per channel, two or more
+    float strength  # 0 rounds to the nearest level, 1 is the full pattern
+    float pattern  # 0 Bayer, 1 interleaved gradient noise, 2 blue noise
+    float texel_scale  # the node's texels per document pixel, 1 or 2
+    float origin_x  # the dispatched region's origin in the chunk, in texels
+    float origin_y  # zero for the destructive pass, which covers the chunk
+    vec2 chunk  # the chunk's document corner, in document pixels
+    float doc_to_linear_srgb[9]
+    float linear_srgb_to_doc[9]
+    float transfer_slope
+    float transfer_threshold
+    float transfer_gain
+    float transfer_exponent
+    float coordinates
+    float spacing  # the gamma the levels are even steps of, 0 for the document's encoding
+
+const int PATTERN_BAYER = 0
+const int PATTERN_GRADIENT = 1
+const int TILE = 64
+
+
+def to_linear_srgb_matrix() -> mat3:
+    return mat3(
+        doc_to_linear_srgb[0], doc_to_linear_srgb[1], doc_to_linear_srgb[2],
+        doc_to_linear_srgb[3], doc_to_linear_srgb[4], doc_to_linear_srgb[5],
+        doc_to_linear_srgb[6], doc_to_linear_srgb[7], doc_to_linear_srgb[8])
+
+
+def from_linear_srgb_matrix() -> mat3:
+    return mat3(
+        linear_srgb_to_doc[0], linear_srgb_to_doc[1], linear_srgb_to_doc[2],
+        linear_srgb_to_doc[3], linear_srgb_to_doc[4], linear_srgb_to_doc[5],
+        linear_srgb_to_doc[6], linear_srgb_to_doc[7], linear_srgb_to_doc[8])
+
+
+def document_to_linear(vec3 c) -> vec3:
+    return sa_transfer_decode(c, transfer_slope, transfer_threshold, transfer_gain, transfer_exponent)
+
+
+def linear_to_document(vec3 c) -> vec3:
+    return sa_transfer_encode(c, transfer_slope, transfer_threshold, transfer_gain, transfer_exponent)
+
+const int SA_COORDS_OKLAB = 1
+
+
+def document_is_oklab() -> bool: return int(coordinates + 0.5) == SA_COORDS_OKLAB
+
+
+def document_to_rgb(vec3 c) -> vec3:
+    if not document_is_oklab(): return c
+    return linear_to_document(from_linear_srgb_matrix() * oklab_to_linear_srgb(c))
+
+
+def rgb_to_document(vec3 c) -> vec3:
+    if not document_is_oklab(): return c
+    return linear_srgb_to_oklab(to_linear_srgb_matrix() * document_to_linear(c))
+
+
+def coverage_at(ivec2 px) -> float:
+    return mask[min(px, image_size(mask) - 1)].r
+
+# *v* modulo *n*, never negative, as wrap_offset.gmacs takes it, since a chunk
+# left of or above the document's origin has a negative corner.
+
+
+def wrapped(int v, int n) -> int:
+    return v - n * int(floor(float(v) / float(n)))
+
+# The 8 by 8 Bayer matrix without its table: the index is the bits of x xor y
+# and of y interleaved from the lowest up, which is the recursive construction
+# written out. 0, 32, 8, 40 along the top row.
+
+
+def bit_of(int v, int i) -> int:
+    return wrapped(v / (1 << i), 2)
+
+
+def bayer(ivec2 at) -> float:
+    int x = wrapped(at.x, 8)
+    int y = wrapped(at.y, 8)
+    int index = 0
+    for i in range(3):
+        int xb = bit_of(x, i)
+        int yb = bit_of(y, i)
+        index = index * 4 + abs(xb - yb) * 2 + yb
+    return (index + 0.5) / 64.0
+
+# Jimenez's interleaved gradient noise, from "Next Generation Post Processing
+# in Call of Duty: Advanced Warfare", 2014.
+
+
+def gradient_noise(ivec2 at) -> float:
+    return fract(52.9829189 * fract(0.06711056 * at.x + 0.00583715 * at.y))
+
+
+def blue(ivec2 at) -> float:
+    return blue_noise.thresholds[wrapped(at.y, TILE) * TILE + wrapped(at.x, TILE)]
+
+
+def threshold_at(ivec2 at) -> float:
+    int kind = int(pattern + 0.5)
+    float t = kind == PATTERN_BAYER ? bayer(at) : (kind == PATTERN_GRADIENT ? gradient_noise(at) : blue(at))
+    return 0.5 + strength * (t - 0.5)
+
+# The document's encoded RGB into the encoding the levels are even in, and
+# back. Spacing nought leaves it as it is, which is the path a record that
+# names no spacing takes. Otherwise the
+# value is decoded to linear light by the document's curve and raised to the
+# pure power, which the identity branch of transfer_curve.gmacs leaves alone
+# at one.
+
+
+def to_spacing(vec3 rgb) -> vec3:
+    if spacing <= 0.0: return rgb
+    return sa_transfer_encode(document_to_linear(rgb), 1.0, 0.0, 1.0, spacing)
+
+
+def from_spacing(vec3 v) -> vec3:
+    if spacing <= 0.0: return v
+    return linear_to_document(sa_transfer_decode(v, 1.0, 0.0, 1.0, spacing))
+
+
+def dither():
+    ivec2 px = ivec2(global_id.xy) + ivec2(int(origin_x), int(origin_y))
+    ivec2 size = image_size(canvas)
+    if px.x >= size.x or px.y >= size.y:
+        return
+    vec4 c = canvas[px]
+    ivec2 at = ivec2(chunk * texel_scale) + px
+    float steps = max(levels - 1.0, 1.0)
+    vec3 spaced = to_spacing(document_to_rgb(c.rgb))
+    vec3 quantised = floor(spaced * steps + vec3(threshold_at(at))) / steps
+    vec3 out_rgb = rgb_to_document(from_spacing(quantised))
+    canvas[px] = vec4(mix(c.rgb, out_rgb, coverage_at(px)), c.a)

@@ -1,0 +1,291 @@
+# Kernels: magnetic_blank, magnetic_gather, magnetic_oklab, magnetic_features, magnetic_local, magnetic_links
+# The Magnetic Lasso's cost, the local cost of Mortensen and Barrett's
+# "Intelligent Scissors for Image Composition" (SIGGRAPH 1995), over a square
+# window of the picture round the trace's last anchor.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# The window is a grid of cells, one document pixel at a zoom of one and more
+# where the view is zoomed out, so a trace costs what a screen costs. Every
+# pass runs over the window and nothing else (hard rule 2).
+#
+# `magnetic_blank` clears the picture since a layer's gather writes only where
+# it holds a chunk. `magnetic_gather` adds each source's premultiplied share of
+# every cell from up to four by four taps. `magnetic_oklab` turns the cell into
+# Oklab lightness and both chroma axes times alpha, with alpha beside them, so
+# an edge between two colours of one lightness is an edge in a or b and a
+# layer's paint edge is one in alpha. `magnetic_features` takes the Sobel and
+# Laplacian of the four channels, the gradient's size over all four and its
+# direction the main axis of their structure tensor. `magnetic_local` gives the
+# paper's fZ (nought on a Laplacian zero crossing, one elsewhere) and fG (one
+# less the gradient's share of a full edge), both one under the Contrast
+# option's threshold, plus the edge's direction and where across the cell its
+# middle lies (the peak of a parabola through the gradient's size). A path
+# through cell middles would cut every convex bend by up to half a cell and
+# close the selection that much short of the edge. `magnetic_links` weighs the
+# eight links out of each cell, l = 0.43 fZ(q) + 0.43 fG(q) + 0.14 fD(p, q), a
+# byte each, then the cell's own cost as a ninth byte for the pointer's snap and
+# the edge's place in the cell as the tenth and eleventh.
+#
+# The links are bytes in a buffer rather than floats in an image because the
+# path's search is on the CPU and reads them by the million. The buffer is read
+# back once each time the window moves, a tool's read outside any stroke.
+
+kernel magnetic_blank
+kernel magnetic_gather
+kernel magnetic_oklab
+kernel magnetic_features
+kernel magnetic_local
+kernel magnetic_links
+
+import oklab_color_space
+import transfer_curve
+
+# The picture the cost reads: the merged output or one chunk of the layer.
+image src: readonly
+# Premultiplied colour then Oklab, a cell a texel, the window's size.
+image picture: rgba32f
+# The gradient's size and its unit direction.
+image gradient: rgba32f
+# The Laplacian of L, a, b and alpha.
+image laplacian: rgba32f
+# fZ, fG and the edge's unit direction.
+image local: rgba32f
+# How far the edge's middle lies from the cell's, in cells, along x and y.
+image nearest: rgba32f
+# Three words a cell: the eight links' bytes, then the cell's own cost.
+buffer costs: uint words[]
+
+params:
+    # The window's cell (0, 0) in document pixels.
+    vec2 window_origin
+    # Document pixels a cell spans along each axis.
+    float cell
+    # The gradient below which a cell is no edge, in Oklab units a pixel.
+    float contrast
+    # Where the source's texel (0, 0) sits in document pixels, and how many of
+    # its texels lie along one document pixel.
+    vec2 source_origin
+    float source_scale
+    # How many cells the window has along a side.
+    float side
+    float doc_to_linear_srgb[9]
+    float linear_srgb_to_doc[9]
+    float transfer_slope
+    float transfer_threshold
+    float transfer_gain
+    float transfer_exponent
+    float coordinates
+    float spare
+
+const int SA_COORDS_OKLAB = 1
+# The gradient, in Oklab units a pixel, a cell counts as a full edge at. A hard
+# edge between two colours a quarter apart reads about 0.12, and the noise of a
+# photograph's flat ground about 0.01.
+const float FULL_EDGE = 0.06
+# The paper's weights for the zero crossing, the gradient and the direction.
+const float W_ZERO = 0.43
+const float W_GRADIENT = 0.43
+const float W_DIRECTION = 0.14
+const float PI = 3.14159265
+
+
+def to_linear_srgb_matrix() -> mat3:
+    return mat3(
+        doc_to_linear_srgb[0], doc_to_linear_srgb[1], doc_to_linear_srgb[2],
+        doc_to_linear_srgb[3], doc_to_linear_srgb[4], doc_to_linear_srgb[5],
+        doc_to_linear_srgb[6], doc_to_linear_srgb[7], doc_to_linear_srgb[8])
+
+
+def document_to_oklab(vec3 c) -> vec3:
+    if int(coordinates + 0.5) == SA_COORDS_OKLAB:
+        return c
+    vec3 linear = sa_transfer_decode(c, transfer_slope, transfer_threshold, transfer_gain, transfer_exponent)
+    return linear_srgb_to_oklab(to_linear_srgb_matrix() * linear)
+
+
+def inside(ivec2 at) -> bool:
+    int n = int(side + 0.5)
+    return at.x >= 0 and at.y >= 0 and at.x < n and at.y < n
+
+# A neighbour's texel, the nearest one inside the window past its edge.
+
+
+def clamped(ivec2 at) -> ivec2:
+    int n = int(side + 0.5)
+    return clamp(at, ivec2(0), ivec2(n - 1))
+
+# The eight steps out of a cell, east first and on round clockwise on screen,
+# the order `sa_live_wire.gd` reads the bytes in.
+
+
+def step_of(int k) -> ivec2:
+    if k == 0:
+        return ivec2(1, 0)
+    if k == 1:
+        return ivec2(1, 1)
+    if k == 2:
+        return ivec2(0, 1)
+    if k == 3:
+        return ivec2(-1, 1)
+    if k == 4:
+        return ivec2(-1, 0)
+    if k == 5:
+        return ivec2(-1, -1)
+    if k == 6:
+        return ivec2(0, -1)
+    return ivec2(1, -1)
+
+
+def magnetic_blank():
+    ivec2 at = ivec2(global_id.xy)
+    if not inside(at):
+        return
+    picture[at] = vec4(0.0)
+
+
+def magnetic_gather():
+    ivec2 at = ivec2(global_id.xy)
+    if not inside(at):
+        return
+    ivec2 size = image_size(src)
+    int taps = clamp(int(cell + 0.5), 1, 4)
+    vec4 sum = vec4(0.0)
+    for j in range(taps):
+        for i in range(taps):
+            vec2 doc = window_origin + (vec2(at) + (vec2(i, j) + 0.5) / taps) * cell
+            ivec2 texel = ivec2(floor((doc - source_origin) * source_scale))
+            if texel.x < 0 or texel.y < 0 or texel.x >= size.x or texel.y >= size.y:
+                continue
+            vec4 c = src[texel]
+            sum += vec4(c.rgb * c.a, c.a)
+    if sum.a <= 0.0:
+        return
+    picture[at] = picture[at] + sum / (taps * taps)
+
+
+def magnetic_oklab():
+    ivec2 at = ivec2(global_id.xy)
+    if not inside(at):
+        return
+    vec4 c = picture[at]
+    if c.a <= 0.0:
+        picture[at] = vec4(0.0)
+        return
+    float alpha = min(c.a, 1.0)
+    vec3 lab = document_to_oklab(c.rgb / c.a)
+    picture[at] = vec4(lab * alpha, alpha)
+
+
+def magnetic_features():
+    ivec2 at = ivec2(global_id.xy)
+    if not inside(at):
+        return
+    vec4 tl = picture[clamped(at + ivec2(-1, -1))]
+    vec4 t = picture[clamped(at + ivec2(0, -1))]
+    vec4 tr = picture[clamped(at + ivec2(1, -1))]
+    vec4 l = picture[clamped(at + ivec2(-1, 0))]
+    vec4 c = picture[at]
+    vec4 r = picture[clamped(at + ivec2(1, 0))]
+    vec4 bl = picture[clamped(at + ivec2(-1, 1))]
+    vec4 b = picture[clamped(at + ivec2(0, 1))]
+    vec4 br = picture[clamped(at + ivec2(1, 1))]
+    # A difference across two cells of 1, 2, 1 rows, so an eighth of the sum is
+    # the change across one cell, and over the cell's span a change a pixel.
+    vec4 gx = ((tr + 2.0 * r + br) - (tl + 2.0 * l + bl)) / (8.0 * cell)
+    vec4 gy = ((bl + 2.0 * b + br) - (tl + 2.0 * t + tr)) / (8.0 * cell)
+    float jxx = dot(gx, gx)
+    float jyy = dot(gy, gy)
+    float jxy = dot(gx, gy)
+    float size = sqrt(jxx + jyy)
+    float angle = 0.5 * atan(2.0 * jxy, jxx - jyy)
+    gradient[at] = vec4(size, cos(angle), sin(angle), 0.0)
+    laplacian[at] = (tl + t + tr + l + r + bl + b + br) - 8.0 * c
+
+# Whether a channel of the Laplacian changes sign between the cell and a
+# neighbour, with the cell the one nearer the zero, which marks one cell of the
+# two a crossing lies between rather than both.
+
+
+def crossing(vec4 here, vec4 there) -> bool:
+    bvec4 opposite = less_than(here * there, vec4(0.0))
+    bvec4 nearer = less_than_equal(abs(here), abs(there))
+    return any(bvec4(opposite.x and nearer.x, opposite.y and nearer.y, opposite.z and nearer.z, opposite.w and nearer.w))
+
+# The gradient's size at a place between cells, read bilinearly.
+
+
+def size_at(vec2 at) -> float:
+    vec2 base = floor(at)
+    vec2 f = at - base
+    ivec2 corner = ivec2(base)
+    float top = mix(gradient[clamped(corner)].x, gradient[clamped(corner + ivec2(1, 0))].x, f.x)
+    float bottom = mix(gradient[clamped(corner + ivec2(0, 1))].x, gradient[clamped(corner + ivec2(1, 1))].x, f.x)
+    return mix(top, bottom, f.y)
+
+
+def magnetic_local():
+    ivec2 at = ivec2(global_id.xy)
+    if not inside(at):
+        return
+    vec4 g = gradient[at]
+    vec2 along = vec2(-g.z, g.y)
+    nearest[at] = vec4(0.0)
+    if g.x < contrast:
+        local[at] = vec4(1.0, 1.0, along)
+        return
+    vec2 across = g.yz
+    float before = size_at(vec2(at) - across)
+    float after = size_at(vec2(at) + across)
+    float bend = before - 2.0 * g.x + after
+    if bend < 0.0:
+        float t = clamp(0.5 * (before - after) / bend, -0.5, 0.5)
+        nearest[at] = vec4(across * t, 0.0, 0.0)
+    vec4 here = laplacian[at]
+    bool zero = false
+    for k in range(0, 8, 2):
+        if crossing(here, laplacian[clamped(at + step_of(k))]):
+            zero = true
+    float f_gradient = 1.0 - min(g.x / FULL_EDGE, 1.0)
+    local[at] = vec4(zero ? 0.0 : 1.0, f_gradient, along)
+
+
+def magnetic_links():
+    ivec2 at = ivec2(global_id.xy)
+    if not inside(at):
+        return
+    vec4 own = local[at]
+    vec2 d_p = own.zw
+    uint low = 0u
+    uint high = 0u
+    for k in range(8):
+        ivec2 offset = step_of(k)
+        ivec2 next = at + offset
+        uint cost = 255u
+        if inside(next):
+            vec4 there = local[next]
+            vec2 link = normalize(vec2(offset))
+            if dot(d_p, link) < 0.0:
+                link = -link
+            float d_here = clamp(dot(d_p, link), 0.0, 1.0)
+            float d_there = clamp(abs(dot(link, there.zw)), 0.0, 1.0)
+            float f_direction = (acos(d_here) + acos(d_there)) / PI
+            # A link along a side is a pixel long and one across a corner the
+            # square root of two, and the paper weighs the gradient term by
+            # the length so a diagonal step costs what its length is worth.
+            float length_weight = (k % 2 == 0) ? 0.70710678 : 1.0
+            float l = W_ZERO * there.x + W_GRADIENT * there.y * length_weight + W_DIRECTION * f_direction
+            cost = uint(clamp(round(l * 254.0) + 1.0, 1.0, 255.0))
+        if k < 4:
+            low = low | (cost << uint(8 * k))
+        else:
+            high = high | (cost << uint(8 * (k - 4)))
+    int n = int(side + 0.5)
+    uint word = uint(at.y * n + at.x) * 3u
+    costs.words[word] = low
+    costs.words[word + 1u] = high
+    float own_cost = (W_ZERO * own.x + W_GRADIENT * own.y) / (W_ZERO + W_GRADIENT)
+    vec2 shift = nearest[at].xy
+    uint shift_x = uint(clamp(round(shift.x * 254.0) + 128.0, 1.0, 255.0))
+    uint shift_y = uint(clamp(round(shift.y * 254.0) + 128.0, 1.0, 255.0))
+    costs.words[word + 2u] = uint(clamp(round(own_cost * 255.0), 0.0, 255.0)) | (shift_x << 8u) | (shift_y << 16u)

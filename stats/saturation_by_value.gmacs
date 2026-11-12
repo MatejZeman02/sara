@@ -1,0 +1,120 @@
+# The Stats docker's saturation by value: Oklab chroma tallied by Oklab L over
+# the composite, a chunk's share of it to a slot, of which the tally alone is
+# read back.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# **One kernel, one slot a chunk.** The reduction service dispatches once over
+# each painted chunk that changed since its last run, each adding into a slot of
+# its own, `CELLS` uints. The service folds a changed chunk's slot into the total in place
+# of its last, so the result follows the paint without a pass over the whole
+# canvas (hard rules 2 and 3).
+#
+# **Two cells a step of lightness.** The lightness is cut into `BINS` steps.
+# Cell `2 * bin` adds a texel's alpha in steps of one `WHOLE`th and cell
+# `2 * bin + 1` its chroma times its alpha in steps of one `CHROMA_WHOLE`th, so
+# the part reads a step's mean chroma as the second over the first and folds the
+# steps into the bands it shows. A slot holds at most 65536 texels, so the cells
+# reach 65536 times 255 and 65536 times 65535, under 2^32, for the reason
+# `measure.gmacs` writes down.
+#
+# **A texel weighs what it covers.** The composite holds straight alpha, so what
+# a texel leaves uncovered is the background it shows through. The part adds
+# that remainder at the background's own lightness and chroma for every chunk no
+# layer holds, so nothing is dispatched over canvas no layer holds.
+#
+# **Value and chroma are Oklab**, through the document's own colour space as in
+# `measure.gmacs`, so a wide gamut document reads true. A lightness past white
+# goes into the last step and one below black into the first, and a chroma past
+# `CHROMA_MOST` counts as that much. Both are counted and never stored, so the
+# canvas keeps every value (hard rule 5).
+
+kernel chroma_by_lightness
+
+# linear_srgb_color_space brings oklab_color_space with it.
+import linear_srgb_color_space
+import transfer_curve
+
+image field
+
+# CELLS uints per chunk slot, the darkest step first.
+buffer tally: uint cells[]
+
+# Packed by the saturation by value part in the order written here, every
+# field a float for the reason measure.gmacs gives.
+params:
+    # The chunk's share of the canvas, in composite pixels, where the dispatch
+    # starts and where it ends.
+    float begin_x
+    float begin_y
+    float end_x
+    float end_y
+    # Which CELLS cells of the buffer this chunk adds into.
+    float slot
+    # See SaColorSpace.Coordinates. An Oklab document needs no conversion.
+    float coordinates
+    # The document's transfer curve, for the decode into light.
+    float transfer_slope
+    float transfer_threshold
+    float transfer_gain
+    float transfer_exponent
+    # The document's linear RGB into linear sRGB, white point adapted. A
+    # float[9] and not a mat3 for the reason composite.gmacs records.
+    float to_linear_srgb[9]
+
+# Must match SaColorSpace.Coordinates.
+const int SA_COORDS_OKLAB = 1
+
+# Must match the part's BINS, WHOLE and CHROMA_WHOLE.
+const uint BINS = 20u
+const float WHOLE = 255.0
+const float CHROMA_WHOLE = 65535.0
+
+# Oklab chroma reaches about 0.32 at the sRGB cusp and 0.4 for a wide gamut
+# primary, so a whole unit is room for paint brighter than white as well, and
+# the clamp is a guard for the cell's bound rather than a limit paint meets.
+const float CHROMA_MOST = 1.0
+
+
+def to_linear_srgb_matrix() -> mat3:
+    return mat3(
+        to_linear_srgb[0], to_linear_srgb[1], to_linear_srgb[2],
+        to_linear_srgb[3], to_linear_srgb[4], to_linear_srgb[5],
+        to_linear_srgb[6], to_linear_srgb[7], to_linear_srgb[8]
+    )
+
+# One stored triple as Oklab, decoded the way measure.gmacs decodes it.
+
+
+def stored_to_oklab(vec3 stored) -> vec3:
+    if int(coordinates + 0.5) == SA_COORDS_OKLAB:
+        return stored
+    vec3 linear = sa_transfer_decode(
+        stored, transfer_slope, transfer_threshold, transfer_gain, transfer_exponent
+    )
+    return linear_srgb_to_oklab(to_linear_srgb_matrix() * linear)
+
+
+def chroma_by_lightness():
+    ivec2 px = ivec2(global_id.xy) + ivec2(int(begin_x), int(begin_y))
+    ivec2 size = image_size(field)
+    if px.x >= size.x or px.y >= size.y:
+        return
+    if px.x >= int(end_x) or px.y >= int(end_y):
+        return
+    vec4 texel = field[px]
+    float alpha = clamp(texel.a, 0.0, 1.0)
+    uint weight = uint(alpha * WHOLE + 0.5)
+    if weight == 0u:
+        return
+    vec3 lab = stored_to_oklab(texel.rgb)
+    float chroma = length(lab.yz)
+    # A NaN has no step, and the clamps below would hand it on to an index.
+    if isnan(lab.x) or isnan(chroma):
+        return
+    float bin = clamp(floor(lab.x * BINS), 0.0, float(BINS - 1u))
+    uint coloured = uint(clamp(chroma, 0.0, CHROMA_MOST) / CHROMA_MOST * alpha * CHROMA_WHOLE + 0.5)
+    uint at = uint(slot) * BINS * 2u + uint(bin) * 2u
+    atomic_add(tally.cells[at], weight)
+    if coloured > 0u:
+        atomic_add(tally.cells[at + 1u], coloured)

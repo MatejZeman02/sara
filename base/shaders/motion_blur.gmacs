@@ -1,0 +1,47 @@
+# The motion blur, one neighbourhood kernel under the contract
+# SaNeighbourhoodPass writes: the padded source at binding 0, the selection
+# mask at binding 1, the chunk-sized target at binding 2.
+#
+# A line of samples through the texel, one a pixel of the length and centred
+# on it, each read bilinear so a shallow angle does not staircase. The angle
+# is in degrees, anticlockwise from the horizontal as a painter reads it, so
+# the step's y is negated because the canvas's y grows downwards.
+#
+# Colour is straight alpha, so every read is premultiplied before it is summed
+# and the sum is divided back out by its own alpha. A read past the padded
+# source is transparent black, the shape the library neighbourhood.gmacs reads. Nothing
+# clamps.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel motion_blur
+
+image src: readonly
+image mask: r32f, readonly
+image dst
+
+params:
+    float angle  # degrees, anticlockwise from the horizontal
+    int samples  # one a pixel of the line, at least one
+    int halo  # how far the source is padded, written by the runner
+    vec2 origin  # the dispatched region's corner in the chunk
+
+# The premultiplied read, the bilinear sample and the mask's blend,
+# imported after the params because the library reads `halo` and the
+# three images by name.
+import neighbourhood
+
+
+def motion_blur():
+    ivec2 at = pixel + ivec2(origin)
+    int count = max(samples, 1)
+    vec2 direction = vec2(cos(radians(angle)), -sin(radians(angle)))
+    vec2 centre = vec2(at + ivec2(halo, halo))
+    vec4 sum = vec4(0.0)
+    for j in range(count):
+        float t = j - (count - 1) * 0.5
+        sum += sa_sample(centre + direction * t)
+    vec4 straight = vec4(0.0)
+    if sum.a != 0.0:
+        straight = vec4(sum.rgb / sum.a, sum.a / count)
+    sa_finish(at, sa_kept(at), straight)

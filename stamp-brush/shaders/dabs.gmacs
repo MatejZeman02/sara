@@ -1,0 +1,128 @@
+# Kernel: dabs
+#
+# A walk's dabs over one chunk in one dispatch. Each texel of the box the dabs
+# cover runs every dab whose own box holds it, in the order the walk laid them,
+# through the `dab_texel` lines `dab.gmacs` runs for one. A small tip lays a dab
+# every half pixel, and a dispatch a dab left the card running thousands of
+# dispatches too small to fill it.
+#
+# A dab reads and writes the texel it paints and no other, so running the dabs
+# in turn in one invocation paints what separate dispatches painted, to the bit.
+# What reads past its own texel (the smudge's carry, the exchange its height
+# sums into) stays on the one dab path.
+# A record is the thirty-two floats of `dab.gmacs`'s push constant and the box
+# the dab's own dispatch would cover. The tip, paper and masking block are the
+# stroke's, so a dab that moves them from dab to dab goes on its own.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel dabs
+
+import noise
+import brush_paint_modes
+import height_deposit
+import linear_srgb_color_space
+import transfer_curve
+
+# The ten bindings of `dab.gmacs`, in its order and by its names, because
+# `dab_texel` reads them by name and the brush binds the same things on both.
+image canvas
+image mask: r32f, readonly
+buffer softness: float curve[]
+sampler tip_image
+sampler pattern
+buffer masking: float second_tip[]
+image smudge: rgba32f, readonly
+image height: r16f
+buffer exchange: uint sums[]
+sampler ramp
+# The dabs, `SA_DAB_RECORD` floats each: the push constant of
+# `dab.gmacs` in its order, then the width and height of the box, in texels from
+# the dab's `render_offset`, that its own dispatch would have covered.
+buffer records: float values[]
+
+params:
+    vec2 origin  # the chunk texel the dispatch's first workgroup starts at
+    float first_record  # the first record this chunk reads
+    float record_count  # how many records it reads from there
+
+# The dab `dab_texel` reads, under the names `dab.gmacs`'s params give it,
+# loaded from a record before each call.
+vec2 dab_center
+vec2 render_offset
+vec4 color
+vec2 half_extent
+vec2 rotation
+vec2 fade
+float flow
+float spikes
+float generator
+float shape
+float antialias
+float density
+float randomness
+float seed
+float sharpness
+float sharpness_soft
+float paint_mode
+float alpha_lock
+float mirror
+float falloff_x
+float falloff_y
+float pattern_strength
+float pattern_offset_x
+float pattern_offset_y
+
+import dab_texel
+
+# Floats a record takes, `SaWalkBatch.RECORD_FLOATS`, and where its box's size
+# starts, past the thirty-two of the push constant. Repeated rather than shared
+# because a `.gmacs` cannot read a GDScript constant.
+const int SA_DAB_RECORD = 34
+const int SA_DAB_EXTENT = 32
+
+# Loads the record at float *at* into the globals above, field by field in the
+# push constant's order.
+
+
+def sa_dab_load(int at):
+    dab_center = vec2(records.values[at], records.values[at + 1])
+    render_offset = vec2(records.values[at + 2], records.values[at + 3])
+    color = vec4(records.values[at + 4], records.values[at + 5], records.values[at + 6], records.values[at + 7])
+    half_extent = vec2(records.values[at + 8], records.values[at + 9])
+    rotation = vec2(records.values[at + 10], records.values[at + 11])
+    fade = vec2(records.values[at + 12], records.values[at + 13])
+    flow = records.values[at + 14]
+    spikes = records.values[at + 15]
+    generator = records.values[at + 16]
+    shape = records.values[at + 17]
+    antialias = records.values[at + 18]
+    density = records.values[at + 19]
+    randomness = records.values[at + 20]
+    seed = records.values[at + 21]
+    sharpness = records.values[at + 22]
+    sharpness_soft = records.values[at + 23]
+    paint_mode = records.values[at + 24]
+    alpha_lock = records.values[at + 25]
+    mirror = records.values[at + 26]
+    falloff_x = records.values[at + 27]
+    falloff_y = records.values[at + 28]
+    pattern_strength = records.values[at + 29]
+    pattern_offset_x = records.values[at + 30]
+    pattern_offset_y = records.values[at + 31]
+
+
+def dabs():
+    ivec2 pixel_coords = ivec2(global_id.xy) + ivec2(origin)
+    ivec2 size = image_size(canvas)
+    if pixel_coords.x >= size.x or pixel_coords.y >= size.y:
+        return
+    int first = int(first_record)
+    for record in range(first, first + int(record_count)):
+        int at = record * SA_DAB_RECORD
+        ivec2 low = ivec2(int(records.values[at + 2]), int(records.values[at + 3]))
+        ivec2 high = low + ivec2(int(records.values[at + SA_DAB_EXTENT]), int(records.values[at + SA_DAB_EXTENT + 1]))
+        if pixel_coords.x < low.x or pixel_coords.y < low.y or pixel_coords.x >= high.x or pixel_coords.y >= high.y:
+            continue
+        sa_dab_load(at)
+        sa_dab_texel(pixel_coords)

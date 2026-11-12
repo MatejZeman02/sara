@@ -1,0 +1,53 @@
+# The lens blur, one neighbourhood kernel under the contract
+# SaNeighbourhoodPass writes: the padded source at binding 0, the selection
+# mask at binding 1, the chunk-sized target at binding 2.
+#
+# A disc, not a bell. Every texel of the square out to ceil(radius) weighs how
+# much of the disc covers it, one inside, nothing well outside and a fraction
+# on the rim, so a bright point spreads into a flat circle with a soft edge
+# rather than a ring of steps. The disc does not separate, so this is the
+# square walk, (2 * ceil(radius) + 1) ^ 2 reads a texel.
+#
+# Colour is straight alpha, so every tap is premultiplied before it is summed
+# and the sum is divided back out at the end. Nothing clamps but the
+# coordinates and the rim's coverage, which is a weight and not a colour, so a
+# texel above one keeps its energy across the disc.
+
+kernel lens_blur
+
+image src: readonly
+image mask: r32f, readonly
+image dst
+
+params:
+    float radius
+    int halo
+    vec2 origin
+
+# The premultiplied colour, the straightening and the mask's blend,
+# imported after the params because the library reads `halo` and the
+# three images by name.
+import neighbourhood
+
+
+def lens_blur():
+    ivec2 at = pixel + ivec2(origin)
+    if at.x >= image_size(dst).x or at.y >= image_size(dst).y:
+        return
+    float r = max(radius, 0.0)
+    int reach = min(int(ceil(r)), halo)
+    ivec2 last = image_size(src) - 1
+    vec4 kept = sa_kept(at)
+    vec4 sum = vec4(0.0)
+    float total = 0.0
+    for dy in range_inclusive(-reach, reach):
+        for dx in range_inclusive(-reach, reach):
+            float w = clamp(r + 0.5 - length(vec2(dx, dy)), 0.0, 1.0)
+            if w > 0.0:
+                ivec2 tap = clamp(at + ivec2(dx, dy) + ivec2(halo, halo), ivec2(0, 0), last)
+                sum += w * sa_premultiplied(src[tap])
+                total += w
+    vec4 blurred = kept
+    if total > 0.0:
+        blurred = sa_straight(sum / total)
+    sa_finish(at, kept, blurred)

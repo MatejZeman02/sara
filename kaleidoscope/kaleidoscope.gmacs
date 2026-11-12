@@ -1,0 +1,101 @@
+# Kernel: kaleidoscope
+# Filter > Kaleidoscope. Every texel is folded round *centre* into one wedge
+# between two mirrors and reads the picture there, so the wedge that starts at
+# *angle* is repeated round the circle, every other copy mirrored.
+#
+# *mirrors* is the number of mirror lines through the centre, so the circle is
+# cut into twice as many wedges. Two wedges a mirror, not a wedge of a full turn
+# over the count, which leaves a seam along one ray whenever the count is odd.
+#
+# The pass reads the whole node, since a folded texel may read from the far side
+# of the canvas. Binding 0 is the node's chunks gathered into one texture and
+# read in document pixels through `chunk` and `source`, the mask is at 1 and the
+# target at 2. The read is bilinear by four `image_load` calls (the pass binds
+# images only), weighs premultiplied colour so a soft edge picks up no colour
+# from the transparent black around it, and clamps nothing. The read, the sample
+# and the mask's blend are the library `neighbourhood.gmacs`.
+#
+# **A block** of more than one texel is the canvas preview of a drag, drawn
+# coarser: one lane of each square *block* texels on a side folds the square's
+# middle into shared memory and every lane finishes its own texel from it. The
+# folds and samples fall by the square of the block while the dispatch stays a
+# lane a texel (a lane a block measured slower, since the preview gives each
+# chunk its own compute list and 64 workgroups leave a wide card idle). A block
+# of 0 or 1 is the exact pass.
+#
+# The block's grid is anchored at the dispatch's corner, a multiple of the
+# workgroup's 8 for the preview's whole-node pass. A piece off that grid would
+# show a seam inside the draft.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel kaleidoscope
+
+image src: readonly
+image mask: r32f, readonly
+image dst
+
+params:
+    vec2 origin
+    int halo
+    vec2 chunk
+    vec2 source
+    vec2 centre
+    float angle
+    int mirrors
+    int block
+
+const float KALEIDOSCOPE_PI = 3.14159265358979323846
+
+# The side of the workgroup, which the dialect's `@workgroup_size` default
+#   fixes at 8 by 8. A block larger than this folds one point a workgroup.
+const int KALEIDOSCOPE_GROUP = 8
+
+# What one lane of each block read where the block's middle folds to, one slot
+#   a block of the workgroup. Sixty-four is a block of one, a lane each.
+shared vec4 group_turned[64]
+
+# The read, the sample and the finish every neighbourhood kernel shares.
+# Imported after the params, because it reads `halo` and the three
+# images by name.
+import neighbourhood
+
+# Where the gathered node holds the document point *at*, since it starts at
+# `source` and is padded by the halo.
+
+
+def node_point(vec2 at) -> vec2:
+    return at - source + vec2(halo, halo)
+
+# Where the document point *at* reads from once folded into the wedge that
+# starts at *angle*.
+
+
+def folded(vec2 at) -> vec2:
+    vec2 away = at - centre
+    float reach = length(away)
+    if reach <= 0.0:
+        return at
+    float wedge = KALEIDOSCOPE_PI / max(mirrors, 1)
+    float turned = mod(atan(away.y, away.x) - angle, 2.0 * wedge)
+    if turned > wedge:
+        turned = 2.0 * wedge - turned
+    float from = turned + angle
+    return centre + reach * vec2(cos(from), sin(from))
+
+
+def kaleidoscope():
+    int side = clamp(max(block, 1), 1, KALEIDOSCOPE_GROUP)
+    ivec2 inside = ivec2(local_id.xy)
+    ivec2 cell = inside / side
+    int slot = cell.y * (KALEIDOSCOPE_GROUP / side) + cell.x
+    ivec2 at = pixel + ivec2(origin)
+    # Every lane reaches the barrier, so the one past the canvas folds too.
+    if inside == cell * side:
+        vec2 middle = chunk + vec2(at) + vec2(0.5 * (side - 1))
+        group_turned[slot] = sa_sample(node_point(folded(middle)))
+    barrier()
+    ivec2 size = image_size(dst)
+    if at.x < size.x and at.y < size.y:
+        vec4 kept = sa_read(ivec2(node_point(chunk + vec2(at))))
+        sa_finish_premultiplied(at, kept, group_turned[slot])

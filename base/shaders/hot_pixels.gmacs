@@ -1,0 +1,186 @@
+# Kernels: hot_pixels
+# Filter > Hot Pixels, a sensor's stuck texels taken out one by one. A
+# neighbourhood kernel of radius one under SaNeighbourhoodPass's contract: the
+# padded source at binding 0, the selection mask at binding 1, the target at
+# binding 2.
+#
+# A texel is hot when it stands further than the threshold from every one of its
+# eight neighbours, the distance being the largest of the four premultiplied
+# channel differences. It is then replaced by the per-channel median of those
+# neighbours and every other texel is written back as read. Two bright texels
+# side by side are not hot, so a highlight or a flat area above one keeps every
+# texel. The median rather than the mean, so a dot on a boundary takes the value
+# of one side and not a grey the picture never had.
+#
+# A neighbour past the canvas is left out, since the runner would give it the
+# nearest texel inside, which on the first column is the hot texel itself. A
+# corner is judged by its three neighbours and an edge by its five. Nothing
+# clamps, hard rule 5.
+#
+# Eight registers and a fixed network, never an array. The eight neighbours are
+# named colours sorted by the same nineteen exchanges for every texel, so the
+# compiler keeps them in registers. An array filled at a count known only at run
+# time lives in local memory and ran 1.2 to 2.1 times slower at 4000 by 3000. A
+# neighbour past the canvas is positive infinity, which no texel is near and
+# which sorts after the real ones, so the median is read from the front.
+
+kernel hot_pixels
+
+image src: readonly
+image mask: r32f, readonly
+image dst
+
+# origin, halo, chunk and scale are written per dispatch by the pass's Runner.
+params:
+    float threshold  # in stored values, 0 takes out every texel unlike all its neighbours
+    int halo  # how far the source is padded
+    vec2 origin  # the dispatched region's origin in the chunk, in its texels
+    vec2 chunk  # the chunk's corner in the chunk's texels
+    vec2 canvas  # the canvas in document pixels, zero when no document bounds it
+    float scale  # the chunk's texels per document pixel
+
+# The premultiplied colour, the texel as it was and the mask's blend taken
+# premultiplied, imported after the params because the library reads `halo` and
+# the three images by name.
+import neighbourhood
+
+
+def on_canvas(ivec2 at) -> bool:
+    """Whether the texel *at*, counted in the chunk's texels from the
+    document's corner, is on the canvas, which every texel is when the canvas
+    is not known. The canvas is in document pixels, so it is taken into the
+    texels first, twice as many on a layer at twice the document's
+    resolution."""
+    if canvas.x <= 0.0 or canvas.y <= 0.0:
+        return true
+    vec2 side = canvas * (scale > 0.0 ? scale : 1.0)
+    return at.x >= 0 and at.y >= 0 and at.x < side.x and at.y < side.y
+
+
+def inside(ivec2 place) -> bool:
+    """Whether all eight neighbours of the texel *place* are on the
+    canvas, which is every texel but the canvas's outermost ring."""
+    return on_canvas(place - ivec2(1, 1)) and on_canvas(place + ivec2(1, 1))
+
+
+def neighbour(ivec2 at, ivec2 place, bool whole, int dx, int dy) -> vec4:
+    """The neighbour *dx*, *dy* away from the dispatch texel *at*, premultiplied,
+    or positive infinity in every channel when it lies past the canvas. *whole*
+    says no neighbour of *place* does, which spares the question."""
+    if not whole and not on_canvas(place + ivec2(dx, dy)):
+        return vec4(uint_bits_to_float(0x7f800000u))
+    return sa_premultiplied(src[at + ivec2(halo + dx, halo + dy)])
+
+
+def near(vec4 tap, vec4 kept) -> bool:
+    """Whether *tap* is within the threshold of *kept* in every channel. A
+    neighbour past the canvas never is, nor is any neighbour of a texel at
+    infinity, whose difference is not a number."""
+    vec4 gap = abs(tap - kept)
+    return max(max(gap.r, gap.g), max(gap.b, gap.a)) <= threshold
+
+
+def on_canvas_count(ivec2 place) -> int:
+    """How many of the eight neighbours of *place* are on the canvas."""
+    int count = 0
+    for dy in range_inclusive(-1, 1):
+        for dx in range_inclusive(-1, 1):
+            if (dx != 0 or dy != 0) and on_canvas(place + ivec2(dx, dy)):
+                count += 1
+    return count
+
+
+def order(inout vec4 low, inout vec4 high):
+    """One exchange of the network: *low* takes the smaller of the two in each
+    channel and *high* the larger."""
+    vec4 least = min(low, high)
+    high = max(low, high)
+    low = least
+
+
+def ranked(int rank, vec4 s0, vec4 s1, vec4 s2, vec4 s3, vec4 s4, vec4 s5, vec4 s6, vec4 s7) -> vec4:
+    """The sorted eight's entry at *rank*, read by comparison rather than by an
+    index so the eight stay in registers."""
+    if rank <= 0:
+        return s0
+    if rank == 1:
+        return s1
+    if rank == 2:
+        return s2
+    if rank == 3:
+        return s3
+    if rank == 4:
+        return s4
+    if rank == 5:
+        return s5
+    if rank == 6:
+        return s6
+    return s7
+
+
+def hot_pixels():
+    ivec2 at = pixel + ivec2(origin)
+    if at.x >= image_size(dst).x or at.y >= image_size(dst).y:
+        return
+    vec4 original = sa_kept(at)
+    if sa_chosen(at) == 0.0:
+        dst[at] = original
+        return
+    vec4 kept = sa_premultiplied(original)
+    ivec2 place = ivec2(chunk) + at
+    bool whole = inside(place)
+    vec4 n0 = neighbour(at, place, whole, -1, -1)
+    vec4 n1 = neighbour(at, place, whole, 0, -1)
+    vec4 n2 = neighbour(at, place, whole, 1, -1)
+    vec4 n3 = neighbour(at, place, whole, -1, 0)
+    vec4 n4 = neighbour(at, place, whole, 1, 0)
+    vec4 n5 = neighbour(at, place, whole, -1, 1)
+    vec4 n6 = neighbour(at, place, whole, 0, 1)
+    vec4 n7 = neighbour(at, place, whole, 1, 1)
+    bool close = near(n0, kept) or near(n1, kept) or near(n2, kept) or near(n3, kept)
+    close = close or near(n4, kept) or near(n5, kept) or near(n6, kept) or near(n7, kept)
+    # An untouched texel goes back as it was read, so it keeps its bits and a
+    # transparent one keeps the colour it stored. Nearly every texel of a
+    # picture ends here, having cost eight reads and no sort.
+    if close:
+        dst[at] = original
+        return
+    int count = 8
+    if not whole:
+        count = on_canvas_count(place)
+    if count == 0:
+        dst[at] = original
+        return
+    # Batcher's odd-even merge sort of eight, each channel on its own, since
+    # min and max of two vec4s order each channel apart.
+    order(n0, n1)
+    order(n2, n3)
+    order(n4, n5)
+    order(n6, n7)
+    order(n0, n2)
+    order(n1, n3)
+    order(n4, n6)
+    order(n5, n7)
+    order(n1, n2)
+    order(n5, n6)
+    order(n0, n4)
+    order(n1, n5)
+    order(n2, n6)
+    order(n3, n7)
+    order(n2, n4)
+    order(n3, n5)
+    order(n1, n2)
+    order(n3, n4)
+    order(n5, n6)
+    # The neighbours on the canvas are the first *count* of the eight, the
+    # ones past it having sorted last, so the median is read from the middle
+    # of those.
+    vec4 median = ranked(count / 2, n0, n1, n2, n3, n4, n5, n6, n7)
+    if count % 2 == 0:
+        median = 0.5 * (ranked(count / 2 - 1, n0, n1, n2, n3, n4, n5, n6, n7) + median)
+    # A texel the mask takes whole is the median and nothing of what it was,
+    # since mixing by one rounds a dot at 4.0 put back to 0.4 one place off.
+    if sa_chosen(at) >= 1.0:
+        dst[at] = sa_straight(median)
+        return
+    sa_finish_premultiplied(at, kept, median)

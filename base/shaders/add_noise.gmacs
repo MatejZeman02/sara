@@ -1,0 +1,281 @@
+# Kernel: add_noise
+# Add noise: white, film grain, a camera sensor's and salt and pepper over one
+# chunk of a colour field, through the selection mask. A neighbourhood kernel of
+# radius zero under the SaNeighbourhoodPass contract: the source at binding 0,
+# the selection mask at binding 1, the chunk-sized target at binding 2, the
+# settings at binding 3.
+#
+# Radius zero rather than a point pass, because the noise is a function of the
+# document pixel and the seed alone, and only the neighbourhood runner hands a
+# kernel the chunk's place in the document. Noise drawn from the chunk-local
+# pixel would crawl when the painter strokes beside an attached filter.
+#
+# Film grain is value noise on a lattice of `size` document pixels, with a second
+# lattice at half the size turned against the first to hide its squares. Each
+# lattice's value is divided by the spread of its four corner weights so the
+# grain's level holds from a cell's corner to its middle. Monochrome moves Oklab
+# lightness alone, weighed by 4L(1 - L). In colour the three channels grain
+# apart, each scaled by (1 + x) cubed with x the lightness grain's relative step,
+# so where the fields agree the lightness moves as Monochrome moves it.
+#
+# Every draw hashes integers (document pixel or lattice corner as x and y, the
+# seed and the draw's index as z) through `sa_lattice_hash`. The float hash of
+# `noise.gmacs` with the seed added to the pixel fails: past a seed of about
+# 3000 the sum keeps a hundredth of a pixel, rows 97 apart draw alike, and a
+# shared film-grain corner is hashed from two sums that round two ways.
+#
+# Colour is straight alpha and alpha is never written. Every kind is scaled by
+# the texel's own alpha, so an unpainted texel stays empty. Nothing clamps (hard
+# rule 5): noise is added to whatever the texel holds, above one and below zero.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel add_noise
+
+import noise
+import linear_srgb_color_space
+import transfer_curve
+
+image src: readonly
+image mask: r32f, readonly
+image dst
+# The settings the push constant has no room for, in the order SETTING_ names
+# them below.
+buffer settings: float values[]
+
+# 128 bytes, the most a push constant is sure of, with the two vectors first so
+# no field waits on an eight byte boundary.
+params:
+    vec2 origin  # the dispatched region's corner in the chunk, written by the runner
+    vec2 chunk  # the chunk's corner in the chunk's texels, written by the runner
+    int kind  # 0 white, 1 film grain, 2 CMOS, 3 salt and pepper
+    int seed  # the draw, 0 to 9999
+    int halo  # how far the source is padded, written by the runner
+    float scale  # the chunk's texels per document pixel, written by the runner
+    int monochrome  # 1 draws one grain for all three channels
+    float doc_to_linear_srgb[9]
+    float linear_srgb_to_doc[9]
+    float transfer_slope
+    float transfer_threshold
+    float transfer_gain
+    float transfer_exponent
+    float coordinates
+
+# The mask's blend and the texel as it was, and the document's Oklab view,
+# imported after the params because both libraries read them by name.
+import neighbourhood
+import composite_color_space
+
+const int KIND_WHITE = 0
+const int KIND_FILM_GRAIN = 1
+const int KIND_CMOS = 2
+const int KIND_SALT_AND_PEPPER = 3
+# Where each setting sits in the buffer.
+const int SETTING_AMOUNT = 0  # 0 to 1
+const int SETTING_SIZE = 1  # a film grain clump, in document pixels, one or more
+const int SETTING_SHADOWS = 2  # 0 to 1, how far the grain keeps to the darks
+const int SETTING_TINT = 3  # three floats, the grain's colour in linear sRGB
+const float NOISE_TAU = 6.28318530718
+# The read noise of the CMOS kind, a fixed standard deviation.
+const float READ_NOISE = 0.02
+# How strong the CMOS kind's column pattern is against its amount.
+const float FIXED_PATTERN = 0.1
+# The spread of the lightness film grain moves at Amount 100 and at the
+# midtones, a tenth of the way from black to white.
+const float GRAIN_SPREAD = 0.1
+# What film grain's fine lattice weighs against the coarse one.
+const float FINE_WEIGHT = 0.5
+# The fine lattice's turn against the coarse one, about 37 degrees, an angle
+# whose lattice points never fall back on the coarse one's.
+const float TURN_COS = 0.8
+const float TURN_SIN = 0.6
+# A draw uniform in -1 to 1 has a spread of one over the square root of three,
+# and this takes it to one.
+const float UNIT_SPREAD = 1.7320508
+# How many draws one seed holds in the hash's z. A seed's draws are z from
+# seed times this to one below the next seed's.
+const int DRAWS_PER_SEED = 32
+# The draws of one texel, each its own index within the seed. Sensor (CMOS)'s
+# Gaussians take two draws each from DRAW_GAUSSIAN on, and film grain's
+# lattices two per layer from DRAW_LATTICE on, the coarse then the fine.
+const int DRAW_WHITE = 0  # three, one per channel
+const int DRAW_GAUSSIAN = 4  # eight, the shot's three and the read noise
+const int DRAW_COLUMN = 12
+const int DRAW_LATTICE = 16  # eight, layer zero is Monochrome's field
+
+
+def amount() -> float:
+    return settings.values[SETTING_AMOUNT]
+
+
+def tint() -> vec3:
+    return vec3(settings.values[SETTING_TINT], settings.values[SETTING_TINT + 1], settings.values[SETTING_TINT + 2])
+
+# Whether the grain's colour is white, which leaves the noise as it was drawn.
+
+
+def untinted() -> bool:
+    return tint() == vec3(1.0)
+
+# The hash's z of the draw *index* of this seed.
+
+
+def draw_z(int index) -> int:
+    return seed * DRAWS_PER_SEED + index
+
+# One draw in 0 to 1 from the document pixel *at* and the seed, *index* telling
+# the draws of one texel apart.
+
+
+def draw(ivec2 at, int index) -> float:
+    return sa_lattice_hash(ivec3(at, draw_z(index)))
+
+# Zero mean and unit spread from two draws, Box-Muller, the *index*th Gaussian.
+
+
+def gaussian(ivec2 at, int index) -> float:
+    float h1 = draw(at, DRAW_GAUSSIAN + 2 * index)
+    float h2 = draw(at, DRAW_GAUSSIAN + 2 * index + 1)
+    return sqrt(-2.0 * log(max(h1, 1e-6))) * cos(NOISE_TAU * h2)
+
+# How much of the grain a texel of Oklab *lightness* takes under Shadows: one
+# at black and below, nought at white and past it, smooth between, mixed in by
+# Shadows' own amount. Exactly one at Shadows nought.
+
+
+def shadow_weight(float lightness) -> float:
+    float shadows = settings.values[SETTING_SHADOWS]
+    if shadows <= 0.0:
+        return 1.0
+    return mix(1.0, 1.0 - smoothstep(0.0, 1.0, lightness), shadows)
+
+# White and Sensor (CMOS)'s grain at the document pixel *at* for the colour *c*,
+# what the texel gains before the tint and the weight.
+
+
+def drawn(vec4 c, ivec2 at) -> vec3:
+    if kind == KIND_WHITE:
+        if monochrome != 0:
+            return vec3(2.0 * draw(at, DRAW_WHITE) - 1.0) * amount() * c.a
+        vec3 grain = vec3(draw(at, DRAW_WHITE), draw(at, DRAW_WHITE + 1), draw(at, DRAW_WHITE + 2))
+        return (2.0 * grain - 1.0) * amount() * c.a
+    vec3 photons = sqrt(max(c.rgb, vec3(0.0)))
+    vec3 shot = vec3(gaussian(at, 0), gaussian(at, 1), gaussian(at, 2))
+    if monochrome != 0:
+        photons = vec3(sqrt(max((c.r + c.g + c.b) / 3.0, 0.0)))
+        shot = vec3(shot.x)
+    float read = READ_NOISE * gaussian(at, 3)
+    # The column alone, so every row of a column draws the one value.
+    float column = FIXED_PATTERN * (2.0 * draw(ivec2(at.x, 0), DRAW_COLUMN) - 1.0)
+    return (shot * photons + vec3(read + column)) * amount() * c.a
+
+# Salt and pepper over *c*, a texel hit as often as *weight* lets it.
+
+
+def salted(vec4 c, ivec2 at, float weight) -> vec4:
+    float h = draw(at, DRAW_WHITE)
+    float band = amount() * 0.5 * weight
+    if h < band:
+        return vec4(mix(c.rgb, linear_view_to_document(tint()), c.a), c.a)
+    if h < 2.0 * band:
+        return vec4(mix(c.rgb, vec3(0.0), c.a), c.a)
+    return c
+
+# One lattice of value noise at *q*, in lattice cells, its corners drawn as
+# the draw *index* of the seed. Its spread is one over the square root of three
+# wherever *q* falls in its cell. A corner is an integer before it is hashed,
+# so the corner two cells share is one number from either side.
+
+
+def lattice(vec2 q, int index) -> float:
+    vec2 floored = floor(q)
+    ivec3 cell = ivec3(ivec2(floored), draw_z(index))
+    vec2 f = q - floored
+    vec2 s = f * f * (3.0 - 2.0 * f)
+    vec2 t = vec2(1.0) - s
+    vec4 corners = vec4(
+        sa_lattice_hash(cell),
+        sa_lattice_hash(cell + ivec3(1, 0, 0)),
+        sa_lattice_hash(cell + ivec3(0, 1, 0)),
+        sa_lattice_hash(cell + ivec3(1, 1, 0))
+    )
+    vec4 weights = vec4(t.x * t.y, s.x * t.y, t.x * s.y, s.x * s.y)
+    return dot(weights, 2.0 * corners - vec4(1.0)) / length(weights)
+
+# Film grain's field of *layer* at the document pixel *at*, of spread one, the
+# same for the same seed wherever the dispatch that asks for it stands.
+
+
+def grain_at(vec2 at, int layer) -> float:
+    vec2 q = at / max(settings.values[SETTING_SIZE], 1.0)
+    vec2 turned = 2.0 * vec2(TURN_COS * q.x - TURN_SIN * q.y, TURN_SIN * q.x + TURN_COS * q.y)
+    int coarse = DRAW_LATTICE + 2 * layer
+    float both = lattice(q, coarse) + FINE_WEIGHT * lattice(turned, coarse + 1)
+    return both * UNIT_SPREAD / sqrt(1.0 + FINE_WEIGHT * FINE_WEIGHT)
+
+# How much film grain a texel of Oklab *lightness* takes, one at the middle and
+# nothing at black, at white and past either.
+
+
+def midtones(float lightness) -> float:
+    return clamp(4.0 * lightness * (1.0 - lightness), 0.0, 1.0)
+
+# The midtones' weight divided by the *lightness* it weighs, 4(1 - L), the
+# share of its own light a channel moves under colour film grain. Nothing at
+# black, at white and past either, as the midtones' weight.
+
+
+def layer_weight(float lightness) -> float:
+    if lightness <= 0.0 or lightness >= 1.0:
+        return 0.0
+    return 4.0 * (1.0 - lightness)
+
+# *grained*, the document colour *c* with the grain added, with the light the
+# grain added multiplied by the grain's colour.
+
+
+def tinted(vec3 c, vec3 grained) -> vec3:
+    vec3 was = document_to_linear_view(c)
+    return linear_view_to_document(was + (document_to_linear_view(grained) - was) * tint())
+
+# Film grain over the document colour *c* of Oklab *lab*, scaled by *weight*.
+
+
+def film_grained(vec3 c, vec3 lab, vec2 at, float weight) -> vec3:
+    if monochrome == 0:
+        vec3 fields = vec3(grain_at(at, 1), grain_at(at, 2), grain_at(at, 3))
+        vec3 grow = vec3(1.0) + amount() * GRAIN_SPREAD * layer_weight(lab.x) * fields * weight
+        return linear_view_to_document(document_to_linear_view(c) * grow * grow * grow)
+    vec3 moved = lab
+    moved.x += amount() * GRAIN_SPREAD * midtones(lab.x) * grain_at(at, 0) * weight
+    return oklab_cartesian_to_document(moved)
+
+
+def add_noise():
+    ivec2 at = pixel + ivec2(origin)
+    if at.x >= image_size(dst).x or at.y >= image_size(dst).y:
+        return
+    vec4 kept = sa_kept(at)
+    if kept.a <= 0.0:
+        sa_finish(at, kept, kept)
+        return
+    # The runner hands `chunk` in the chunk's own texels, as it does `origin`,
+    # so film grain's document place is the texel place over the density.
+    vec2 document = (chunk + vec2(at)) / (scale > 0.0 ? scale : 1.0)
+    vec3 lab = document_to_oklab_cartesian(kept.rgb)
+    float weight = shadow_weight(lab.x)
+    # The texel's own place, which the three kinds drawn per texel have always
+    # drawn from, where film grain's clumps are measured in document pixels.
+    ivec2 texel = ivec2(floor(chunk)) + at
+    if kind == KIND_SALT_AND_PEPPER:
+        sa_finish(at, kept, salted(kept, texel, weight))
+        return
+    vec3 grained
+    if kind == KIND_FILM_GRAIN:
+        grained = film_grained(kept.rgb, lab, document, weight)
+    else:
+        grained = kept.rgb + drawn(kept, texel) * weight
+    if untinted():
+        sa_finish(at, kept, vec4(grained, kept.a))
+        return
+    sa_finish(at, kept, vec4(tinted(kept.rgb, grained), kept.a))

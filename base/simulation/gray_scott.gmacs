@@ -1,0 +1,64 @@
+# Gray-Scott, the base module's reaction-diffusion: a substrate fed in
+# everywhere and a catalyst that turns it into more of itself, both spreading,
+# the catalyst at half the substrate's pace, which with a feed and a kill rate
+# between them settles into spots, stripes or waves.
+#
+# A simulation's step under the contract `SaSimulation` keeps, a neighbourhood
+# pass's: the previous state padded by one texel at binding 0, the mask at
+# binding 1, the next state at binding 2. The state is the rule's own field
+# rather than the paint, `gray_scott`: red holds how much of the substrate is
+# spent (one less what is there) and green the catalyst, so nought is the rest,
+# substrate whole and no catalyst. That is what a chunk a ring grew into is
+# cleared to and what the halo reads beside a chunk the layer does not hold.
+# `gray_scott_colour.gmacs` seeds the field from the paint's cover and colours
+# it into `albedo`.
+#
+# **The step** is Karl Sims's form at a time step of one: u and v react as
+# u v squared, the feed F tops the substrate up towards one, the kill k takes
+# catalyst away, and each spreads by its rate times the Laplacian over the eight
+# neighbours (a fifth on each side, a twentieth on each corner, minus one on the
+# cell). The weights sum to nought, so the Laplacian of what is spent is minus
+# that of the substrate and the spent part steps as `s + Du lap(s) + u v v - F s`.
+# Nothing clamps either concentration (hard rule 5).
+#
+# Past the canvas the step reads the nearest texel inside it, so the edge lets
+# nothing through and nothing drains out of it.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel gray_scott
+
+image src: readonly
+image mask: r32f, readonly
+image dst
+
+params:
+    float feed  # how fast the substrate is fed back, F
+    float kill  # how fast the catalyst is taken away, k
+    float diffusion_u  # how fast the substrate spreads
+    float diffusion_v  # how fast the catalyst spreads
+    vec2 origin  # the dispatched region's corner in the chunk
+    int halo  # how far the source is padded, written by the runner
+
+import neighbourhood
+
+# The spent substrate and the catalyst *dx* and *dy* texels from the
+# dispatch texel *at*, read from the padded source.
+
+
+def gray_scott_at(ivec2 at, int dx, int dy) -> vec2:
+    return src[at + ivec2(halo + dx, halo + dy)].rg
+
+
+def gray_scott():
+    ivec2 at = pixel + ivec2(origin)
+    vec4 own = sa_kept(at)
+    vec2 sides = gray_scott_at(at, -1, 0) + gray_scott_at(at, 1, 0) + gray_scott_at(at, 0, -1) + gray_scott_at(at, 0, 1)
+    vec2 corners = gray_scott_at(at, -1, -1) + gray_scott_at(at, 1, -1) + gray_scott_at(at, -1, 1) + gray_scott_at(at, 1, 1)
+    vec2 spread = 0.2 * sides + 0.05 * corners - own.rg
+    float spent = own.r
+    float catalyst = own.g
+    float reaction = (1.0 - spent) * catalyst * catalyst
+    float next_spent = spent + diffusion_u * spread.x + reaction - feed * spent
+    float next_catalyst = catalyst + diffusion_v * spread.y + reaction - (feed + kill) * catalyst
+    sa_finish(at, own, vec4(next_spent, next_catalyst, 0.0, 0.0))

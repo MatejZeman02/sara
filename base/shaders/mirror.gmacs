@@ -1,0 +1,80 @@
+# Kernel: mirror
+# Filter > Mirror. Every texel reads the point its mirror image across a line
+# stands on, so the paint on one side of the line shows reflected on the other,
+# the way still water shows a boat above it.
+#
+# The line passes through *point*, in document pixels, along the unit vector
+# *along*. A texel's middle is its index plus a half, so a line through the
+# canvas's middle at y 512 sends row 511 to row 512 and row 0 to row 1023, and
+# the read is the texel itself, not a blend of two.
+#
+# *fade* is the distance from the line, in document pixels, at which the
+# reflection has faded out, linearly, and nought keeps it whole however far it
+# reaches. The tint is *tint* mixed into the reflection's colour by
+# *tint_amount*, in the document's own stored values, so nought leaves the
+# colour exactly as it was read. Nothing clamps a colour (hard rule 5).
+#
+# The pass reads the whole node, since a texel may read from the far side of
+# the canvas. Binding 0 is the node's chunks gathered into one texture and read
+# in document pixels through `chunk` and `source`, the mask is at 1 and the
+# target at 2. The read is bilinear and premultiplied, the library's
+# `sa_sample`, so a tilted line does not step a soft edge.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel mirror
+
+image src: readonly
+image mask: r32f, readonly
+image dst
+
+params:
+    vec2 origin
+    int halo
+    vec2 chunk
+    vec2 source
+    vec2 point
+    vec2 along
+    float fade
+    float tint_amount
+    vec4 tint
+
+# The read, the sample and the finish every neighbourhood kernel shares,
+# imported after the params because the library reads `halo` and the three
+# images by name.
+import neighbourhood
+
+# Where the gathered node holds the document point *at*. The halo is nought on
+# a pass that reads the whole node, and is kept so the read stays the
+# library's.
+
+
+def node_point(vec2 at) -> vec2:
+    return at - source + vec2(halo, halo)
+
+# The document point *at* reflected across the line.
+
+
+def mirrored(vec2 at) -> vec2:
+    vec2 away = at - point
+    return point + 2.0 * dot(away, along) * along - away
+
+# How much of the reflection is left at *distance* from the line.
+
+
+def faded(float distance) -> float:
+    if fade <= 0.0:
+        return 1.0
+    return max(1.0 - distance / fade, 0.0)
+
+
+def mirror():
+    ivec2 at = pixel + ivec2(origin)
+    vec2 here = chunk + vec2(at)
+    vec2 middle = here + vec2(0.5, 0.5)
+    vec4 seen = sa_sample(node_point(mirrored(middle) - vec2(0.5, 0.5)))
+    float distance = abs(dot(middle - point, vec2(-along.y, along.x)))
+    vec3 toned = mix(seen.rgb, tint.rgb * seen.a, tint_amount)
+    vec4 reflected = vec4(toned, seen.a) * faded(distance)
+    vec4 kept = sa_read(ivec2(node_point(here)))
+    sa_finish_premultiplied(at, kept, reflected)

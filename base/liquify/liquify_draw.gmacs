@@ -1,0 +1,64 @@
+# The liquify tool's draw: part of a layer chunk read out of the original
+# picture through the session's displacement field.
+#
+# The original is the part of the layer the session saved before its first
+# dab, stitched into one texture around the dab's rectangle, because a texel
+# near a chunk's edge reads from the chunk beside it. The read is the
+# transform's own, `transform_read`, bilinear and unclamped, so a whole
+# texel's offset copies the texel exactly and nothing softens where the field
+# holds whole numbers. In linear light by the document's curve, and where a
+# pinch squeezes the picture it averages the texels the squeeze put under one,
+# up to `SA_LIQUIFY_MOST` across: the original is stitched two texels past the
+# dabs' reach, and a wider box would read the empty margin past that.
+#
+# A kernel of its own file rather than a second kernel beside the dab, because
+# a file's kernels share their images and the dab binds neither the original
+# nor the layer.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel liquify_draw
+
+image source: readonly
+image field: rgba32f, readonly
+image destination: writeonly
+
+params:
+    # Where the dispatch starts inside the layer chunk, and how big it is, in
+    # the chunk's own texels.
+    vec4 dest
+    # Where the chunk's own (0, 0) sits in the stitched original, and the
+    # stitched part's size, in texels.
+    vec4 origin
+    # The document's transfer curve, the four numbers `transfer_curve.gmacs`
+    # takes, and the identity for a field that is not colour.
+    vec4 curve
+
+import transform_read
+
+# The widest box the draw averages, which the stitch's margin bounds.
+const float SA_LIQUIFY_MOST = 3.0
+
+# How the field's offset changes one texel along `step`, read ahead and, at
+# the chunk's last texel, behind.
+
+
+def sa_field_step(ivec2 local, ivec2 step, ivec2 size) -> vec2:
+    ivec2 ahead = local + step
+    if ahead.x >= size.x or ahead.y >= size.y:
+        return field[local].xy - field[max(local - step, ivec2(0))].xy
+    return field[ahead].xy - field[local].xy
+
+
+def liquify_draw():
+    ivec2 local = ivec2(global_id.xy) + ivec2(dest.xy)
+    if local.x >= int(dest.x + dest.z) or local.y >= int(dest.y + dest.w):
+        return
+    ivec2 size = image_size(destination)
+    if local.x >= size.x or local.y >= size.y:
+        return
+    vec2 at = vec2(local) + origin.xy + field[local].xy
+    vec2 along_x = vec2(1.0, 0.0) + sa_field_step(local, ivec2(1, 0), size)
+    vec2 along_y = vec2(0.0, 1.0) + sa_field_step(local, ivec2(0, 1), size)
+    vec2 footprint = min(sa_footprint(along_x, along_y), vec2(SA_LIQUIFY_MOST))
+    destination[local] = sa_read_source(at, ivec2(origin.zw), false, footprint, curve)

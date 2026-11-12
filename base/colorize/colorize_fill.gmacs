@@ -1,0 +1,272 @@
+# Kernels: colorize_clear, colorize_lines, colorize_near_rows, colorize_walls, colorize_unreach, colorize_keys, colorize_sweep_rows, colorize_sweep_columns, colorize_write
+# A Colourise layer's flats: every pixel of a window round the line art takes
+# the colour of the key scribble it is nearest to, by a distance where open
+# paper costs one a pixel and a pixel of line costs as much as ten thousand of
+# them, a geodesic labelling after LazyBrush (Sýkora, Dingliana and Collins,
+# 2009) done as sweeps rather than a graph cut.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# The window is the bounding box of the chunks the line art and the scribbles
+# hold, so an update costs what the drawing covers and never the canvas (hard
+# rule 2). The line's cost is its cover times its darkness, so black ink on a
+# transparent layer and a scan of ink on white paper both read as line.
+#
+# Gap Closing (`colorize_near_rows`, `colorize_walls`) turns a pixel within
+# `radius` of a line pixel into a wall, measured as an exact disc in two
+# separable passes, so a break up to twice the radius across is shut. The first
+# pass keeps each pixel's row distance to the nearest line pixel in `dist`,
+# which nothing else holds yet.
+#
+# The sweeps carry the distance along every row and column, both ways, and
+# count the lines that moved in `moved`, which the CPU runs in turn until a
+# round moves nothing. A step costs the pixel stepped onto, so a path pays for
+# every line pixel it crosses and two colours meet at the middle of the line
+# between them. The colour runs under the line to its centre, so the line art
+# drawn over it shows no pale halo.
+#
+# `colorize_write` keeps the line art's own strength uncovered so the ink shows
+# and leaves empty the open paper a path reaches only across a line, so a
+# scribble inside a closed shape fills the shape and not the page round it.
+
+kernel colorize_clear
+kernel colorize_lines
+kernel colorize_near_rows
+kernel colorize_walls
+kernel colorize_unreach
+kernel colorize_keys
+kernel colorize_sweep_rows
+kernel colorize_sweep_columns
+kernel colorize_write
+
+# One chunk of the line art or of the scribbles, at the document's depth.
+image src: readonly
+# One chunk of the layer's flats, which `colorize_write` writes.
+image flats: rgba16f
+# The line's strength, then the cost of stepping onto the pixel.
+image cost: r32f
+# How far the pixel is from the nearest key along the cheapest path.
+image dist: r32f
+# The colour of that key, its alpha one, or nought for the Transparent key and
+# for a pixel no key reaches.
+image label: rgba16f
+# How many lines a sweep moved, which the CPU reads to know it is done.
+buffer moved: uint count
+
+params:
+    # Where the window's texel (0, 0) sits in document pixels, and its size.
+    vec2 window_origin
+    vec2 window_size
+    # Where the chunk's texel (0, 0) sits in document pixels, and how many of
+    # its texels lie along one document pixel (hard rule 3).
+    vec2 chunk_origin
+    float chunk_scale
+    # Half the widest gap closed, in pixels, below one for none.
+    float radius
+    # The Transparent key's colour, and how near a scribble's colour has to be
+    # to it to count as that key.
+    vec4 transparent
+    float tolerance
+    # In `colorize_write`, how many texels of the line art chunk in `src` lie
+    # along one document pixel, or nought when there is none to keep showing.
+    float spare_a
+    float spare_b
+    float spare_c
+
+const float UNREACHED = 1e30
+# What a pixel of full line costs to step onto, against one for open paper. A
+# region of a 4000 pixel drawing is at most some 8000 steps across, so one
+# pixel of line outweighs any path round the inside of a region.
+const float LINE_COST = 10000.0
+# The strength from which a pixel is line for the gap closing.
+const float LINE_FROM = 0.5
+# The share of cover from which a scribbled pixel is a key.
+const float KEY_FROM = 0.5
+
+
+def in_window(ivec2 at) -> bool:
+    return at.x >= 0 and at.y >= 0 and at.x < int(window_size.x) and at.y < int(window_size.y)
+
+# The texel of the chunk under document pixel *doc*, clamped to the chunk.
+
+
+def chunk_texel(vec2 doc) -> ivec2:
+    ivec2 texel = ivec2(floor((doc - chunk_origin + 0.5) * chunk_scale))
+    return clamp(texel, ivec2(0), image_size(src) - 1)
+
+# The window pixel under the document pixel the thread stands on in a chunk.
+
+
+def window_at(ivec2 local) -> ivec2:
+    return ivec2(chunk_origin - window_origin) + local
+
+
+def colorize_clear():
+    ivec2 at = ivec2(global_id.xy)
+    if not in_window(at):
+        return
+    cost[at] = vec4(0.0)
+    dist[at] = vec4(UNREACHED)
+    label[at] = vec4(0.0)
+
+# The line's strength, its cover times how dark it is. A colour above white
+# reads as no darkness rather than a negative one.
+
+
+def colorize_lines():
+    ivec2 local = ivec2(global_id.xy)
+    ivec2 at = window_at(local)
+    if not in_window(at):
+        return
+    vec4 c = src[chunk_texel(chunk_origin + vec2(local))]
+    float luma = dot(clamp(c.rgb, vec3(0.0), vec3(1.0)), vec3(0.2126, 0.7152, 0.0722))
+    float strength = clamp(c.a, 0.0, 1.0) * (1.0 - luma)
+    cost[at] = vec4(max(cost[at].r, strength))
+
+# The distance along the row to the nearest line pixel within the radius, or
+# unreached where there is none.
+
+
+def colorize_near_rows():
+    ivec2 at = ivec2(global_id.xy)
+    if not in_window(at):
+        return
+    int reach = int(floor(radius))
+    float nearest = UNREACHED
+    for dx in range_inclusive(-reach, reach):
+        ivec2 other = at + ivec2(dx, 0)
+        if in_window(other) and cost[other].r >= LINE_FROM:
+            nearest = min(nearest, abs(float(dx)))
+    dist[at] = vec4(nearest)
+
+# The cost of stepping onto the pixel: one, and the line's price times its
+# strength, or the whole price within the radius of a line pixel. The disc is
+# exact: the nearest line pixel is the least of each row's distance squared
+# plus the rows between squared.
+
+
+def colorize_walls():
+    ivec2 at = ivec2(global_id.xy)
+    if not in_window(at):
+        return
+    float strength = cost[at].r
+    if radius >= 1.0:
+        int reach = int(floor(radius))
+        float limit = radius * radius
+        for dy in range_inclusive(-reach, reach):
+            ivec2 other = at + ivec2(0, dy)
+            if not in_window(other):
+                continue
+            float along = dist[other].r
+            if along < UNREACHED and along * along + (dy * dy) <= limit:
+                strength = 1.0
+    cost[at] = vec4(1.0 + LINE_COST * strength)
+
+
+def colorize_unreach():
+    ivec2 at = ivec2(global_id.xy)
+    if not in_window(at):
+        return
+    dist[at] = vec4(UNREACHED)
+
+# A scribbled pixel is a key at a distance of nought. The Transparent key is
+# told by its colour, the rest carry theirs.
+
+
+def colorize_keys():
+    ivec2 local = ivec2(global_id.xy)
+    ivec2 at = window_at(local)
+    if not in_window(at):
+        return
+    vec4 k = src[chunk_texel(chunk_origin + vec2(local))]
+    if k.a < KEY_FROM:
+        return
+    vec3 off = abs(k.rgb - transparent.rgb)
+    bool clear = max(off.r, max(off.g, off.b)) <= tolerance
+    dist[at] = vec4(0.0)
+    label[at] = clear ? vec4(0.0) : vec4(k.rgb, 1.0)
+
+# One line of the window, *count* pixels from *start* a *step* apart, carried
+# forward and then back: a pixel the carried path reaches for less takes the
+# path's distance and colour, and otherwise its own become the carried ones.
+# Whether anything moved.
+
+
+def sweep_line(ivec2 start, ivec2 step, int count) -> bool:
+    bool changed = false
+    float carried = UNREACHED
+    vec4 colour = vec4(0.0)
+    for i in range(count):
+        ivec2 at = start + step * i
+        float here = dist[at].r
+        float through = carried + cost[at].r
+        if through < here:
+            dist[at] = vec4(through)
+            label[at] = colour
+            carried = through
+            changed = true
+        else:
+            carried = here
+            colour = label[at]
+    carried = UNREACHED
+    for i in range(count):
+        ivec2 at = start + step * (count - 1 - i)
+        float here = dist[at].r
+        float through = carried + cost[at].r
+        if through < here:
+            dist[at] = vec4(through)
+            label[at] = colour
+            carried = through
+            changed = true
+        else:
+            carried = here
+            colour = label[at]
+    return changed
+
+
+@workgroup_size(64)
+def colorize_sweep_rows():
+    int y = int(global_id.x)
+    if y >= int(window_size.y):
+        return
+    if sweep_line(ivec2(0, y), ivec2(1, 0), int(window_size.x)):
+        atomic_add(moved.count, 1u)
+
+
+@workgroup_size(64)
+def colorize_sweep_columns():
+    int x = int(global_id.x)
+    if x >= int(window_size.x):
+        return
+    if sweep_line(ivec2(x, 0), ivec2(0, 1), int(window_size.y)):
+        atomic_add(moved.count, 1u)
+
+# A chunk of the flats from the window, a texel a thread at the chunk's own
+# density, and nothing where no key reached or the window does not reach.
+
+
+def colorize_write():
+    ivec2 texel = ivec2(global_id.xy)
+    ivec2 size = image_size(flats)
+    if texel.x >= size.x or texel.y >= size.y:
+        return
+    vec2 doc = chunk_origin + (vec2(texel) + 0.5) / chunk_scale
+    ivec2 at = ivec2(floor(doc - window_origin))
+    if not in_window(at) or dist[at].r >= UNREACHED:
+        flats[texel] = vec4(0.0)
+        return
+    # Open paper that only a path across a line reaches belongs to a region no
+    # scribble is in, such as the page outside a closed shape, so it stays
+    # empty rather than taking the colour of the nearest scribble.
+    if cost[at].r < 1.5 and dist[at].r >= LINE_COST:
+        flats[texel] = vec4(0.0)
+        return
+    vec4 shown = label[at]
+    # The ink stays visible: a texel of line art of strength s keeps 1 - s of
+    # the flat over it, so a full line leaves the line art showing through.
+    if spare_a > 0.0:
+        ivec2 ink = clamp(ivec2(floor((doc - chunk_origin) * spare_a)), ivec2(0), image_size(src) - 1)
+        vec4 c = src[ink]
+        float luma = dot(clamp(c.rgb, vec3(0.0), vec3(1.0)), vec3(0.2126, 0.7152, 0.0722))
+        shown.a = shown.a * (1.0 - clamp(c.a, 0.0, 1.0) * (1.0 - luma))
+    flats[texel] = shown

@@ -1,0 +1,812 @@
+# Kernels: opendrt
+# OpenDRT v1.1.0 as a Tonemap method, a display transform made for photographs
+# where `tonemap.gmacs` is the painter's Paper. Ported from Jed Smith's
+# `OpenDRT.dctl` of open-display-transform v1.1.0, whose own banner stands here
+# verbatim, the three lines under it and the version line above them:
+#
+#   OpenDRT v1.1.0
+#
+#   Written by Jed Smith
+#   https://github.com/jedypod/open-display-transform
+#   License: GPLv3
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# THIRDPARTY.txt at the root of the source names the port.
+# The DCTL's licence is GPLv3 and Sara's own is GPLv3-or-later, so what is
+# taken from it stays GPLv3 and the rest of this file is Sara's to license.
+#
+# The transform is the DCTL's `transform` under the Stickshift control set, with
+# its input gamut, input transfer, display encoding, surround and clamp fixed.
+# A point kernel under the SaPointPass contract: the colour field at binding 0,
+# the selection mask at binding 1, the parameter block at binding 2, the
+# dispatched region's origin in the push constant.
+#
+# Input is the document's own linear RGB (Rec.709 primaries, linear transfer),
+# so the filter has no input row. The display encoding is sRGB Display (Rec.709,
+# 2.2 power, bright surround), but the final 2.2 power is not taken: the
+# document stores linear light and the canvas view encodes it, so writing the
+# encoded number would apply the power twice.
+#
+# The tonescale and the creative white stay on scene-linear light, since Oklab
+# lightness is not defined on it. The hue-selective modules read their hue from
+# Oklab, and what purity compression leaves outside the display's cube is fitted
+# by the Oklab gamut map `tonemap.gmacs` also carries, instead of a per-channel
+# clip. `oklab_hue` off computes what the DCTL computes, so a preset can be
+# matched against Resolve, and that branch keeps the DCTL's per-channel clamp.
+#
+# Three additions the DCTL does not have, whose defaults leave its numbers
+# untouched: C, M and Y Brilliance windows beside R, G and B, a per-channel
+# switch on Contrast Low, and `pt_enable` gating the purity limit.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel opendrt
+
+# Brings in oklab_color_space itself, the way tonemap.gmacs takes it.
+import linear_srgb_color_space
+import transfer_curve
+
+# The view's two slacks on the gamut test, float's own and an F16 Oklab texel's
+# as a share of its largest channel.
+const float GAMUT_EPSILON = 1e-5
+const float GAMUT_ROUNDING = 2e-3
+
+image canvas
+# The document-wide selection, as in adjust.gmacs: a 1 by 1 mask reads as 1.0
+# everywhere through the clamped read (core/api/selection/sa_selection.gd).
+image mask: r32f, readonly
+# The parameters, in the order SaTonemapFilter's OpenDRT block packs them and
+# SETTINGS_FLOATS of them. A storage buffer rather than the push constant,
+# which is 128 bytes and this is 72 floats.
+buffer settings: float values[]
+
+# 128 bytes: the region's origin, whether Oklab carries the hue, the document's
+# reference white, four spares, then the colour space tail exactly as
+# SaColorSpacePushConstant writes it.
+params:
+    float origin_x  # the dispatched region's origin in the chunk, in pixels
+    float origin_y  # zero for the destructive pass, which covers the chunk
+    float oklab_hue  # 1 to compute Oklab's hue and fit with its gamut map
+    float blend_white  # the document's reference white, 1.0 for most
+    float spare0
+    float spare1
+    float spare2
+    float spare3
+    float doc_to_linear_srgb[9]
+    float linear_srgb_to_doc[9]
+    float transfer_slope
+    float transfer_threshold
+    float transfer_gain
+    float transfer_exponent
+    float coordinates
+
+const int SA_COORDS_OKLAB = 1
+
+# The parameter block's slots, in the order the filter writes them. The names
+# are the DCTL's, so a line here can be read against a line of the port.
+const int TN_LP = 0
+const int TN_GB = 1
+const int PT_HDR = 2
+const int TN_LG = 3
+const int TN_CON = 4
+const int TN_SH = 5
+const int TN_TOE = 6
+const int TN_OFF = 7
+const int TN_HCON_ENABLE = 8
+const int TN_HCON = 9
+const int TN_HCON_PV = 10
+const int TN_HCON_ST = 11
+const int TN_LCON_ENABLE = 12
+const int TN_LCON = 13
+const int TN_LCON_W = 14
+const int TN_LCON_PC = 15
+const int CWP = 16
+const int CWP_LM = 17
+const int RS_SA = 18
+const int RS_RW = 19
+const int RS_BW = 20
+const int PT_ENABLE = 21
+const int PT_LML = 22
+const int PT_LML_R = 23
+const int PT_LML_G = 24
+const int PT_LML_B = 25
+const int PT_LMH = 26
+const int PT_LMH_R = 27
+const int PT_LMH_B = 28
+const int PTL_ENABLE = 29
+const int PTL_C = 30
+const int PTL_M = 31
+const int PTL_Y = 32
+const int PTM_ENABLE = 33
+const int PTM_LOW = 34
+const int PTM_LOW_RNG = 35
+const int PTM_LOW_ST = 36
+const int PTM_HIGH = 37
+const int PTM_HIGH_RNG = 38
+const int PTM_HIGH_ST = 39
+const int BRL_ENABLE = 40
+const int BRL = 41
+const int BRL_R = 42
+const int BRL_G = 43
+const int BRL_B = 44
+const int BRL_RNG = 45
+const int BRL_ST = 46
+const int BRL_C = 47
+const int BRL_M = 48
+const int BRL_Y = 49
+const int BRPL_ENABLE = 50
+const int BRPL = 51
+const int BRPL_R = 52
+const int BRPL_G = 53
+const int BRPL_B = 54
+const int HC_ENABLE = 55
+const int HC_R = 56
+const int HC_R_RNG = 57
+const int HS_RGB_ENABLE = 58
+const int HS_R = 59
+const int HS_R_RNG = 60
+const int HS_G = 61
+const int HS_G_RNG = 62
+const int HS_B = 63
+const int HS_B_RNG = 64
+const int HS_CMY_ENABLE = 65
+const int HS_C = 66
+const int HS_C_RNG = 67
+const int HS_M = 68
+const int HS_M_RNG = 69
+const int HS_Y = 70
+const int HS_Y_RNG = 71
+# How many floats the block holds, which SaTonemapFilter also asserts.
+const int SETTINGS_FLOATS = 72
+
+# The DCTL's own constants.
+const float SQRT3 = 1.7320508075688772935
+const float PI = 3.14159265358979
+# The DCTL builds the shoulder's top as 2 ^ (6 * tn_sh + 4).
+const float SHOULDER_TOP_EXPONENT = 6.0
+const float SHOULDER_TOP_LIFT = 4.0
+# The DCTL's own rotation of its hue angle, so that red reads nought.
+const float HUE_RED_ROTATION = 1.10714931
+# The sRGB Display preset's surround, index 2 of the DCTL's dark, dim and
+# bright, which is what its `ts_p` divides by.
+const float SURROUND = 2.0
+
+# The six windows an even sixth of the circle apart, the reason to move them
+# into Oklab at all. Each centre is named for the primary or secondary it
+# reaches, red at nought and the angle rising through yellow, green, cyan, blue
+# and magenta.
+const float SIXTH = 1.0471975511965976
+const float TWO_SIXTHS = 2.0943951023931953
+const float FOUR_SIXTHS = 4.1887902047863905
+const float FIVE_SIXTHS = 5.235987755982989
+# A whole turn, the range the hue reads over. The DCTL's own hue is `fmod` of a
+# positive argument, so it runs nought to a turn, and its window offsets are
+# laid out for that. Oklab's `atan` answers minus pi to pi, and a hue left
+# negative makes every window past pi a whole turn away from it, so the angle
+# is brought into the same range as the DCTL's.
+const float TWO_PI = 6.283185307179586
+# Linear sRGB red's own Oklab hue angle, so that a hue here reads nought at red
+# as the DCTL's does.
+const float OKLAB_RED_HUE = 0.5102275498
+# The DCTL's own relative shifts of the hue shift's red and blue windows, kept
+# as offsets from the centres above so the arrangement stays the DCTL's.
+const float HUE_SHIFT_RED = -0.5
+const float HUE_SHIFT_BLUE = 0.2
+# The DCTL's window widths, in radians squared, the Gaussian's variance.
+const float HUE_WIDTH_RGB = 0.66
+const float HUE_WIDTH_CMY = 0.5
+
+
+def to_linear_srgb_matrix() -> mat3:
+    return mat3(
+        doc_to_linear_srgb[0], doc_to_linear_srgb[1], doc_to_linear_srgb[2],
+        doc_to_linear_srgb[3], doc_to_linear_srgb[4], doc_to_linear_srgb[5],
+        doc_to_linear_srgb[6], doc_to_linear_srgb[7], doc_to_linear_srgb[8])
+
+
+def from_linear_srgb_matrix() -> mat3:
+    return mat3(
+        linear_srgb_to_doc[0], linear_srgb_to_doc[1], linear_srgb_to_doc[2],
+        linear_srgb_to_doc[3], linear_srgb_to_doc[4], linear_srgb_to_doc[5],
+        linear_srgb_to_doc[6], linear_srgb_to_doc[7], linear_srgb_to_doc[8])
+
+
+def document_is_oklab() -> bool: return int(coordinates + 0.5) == SA_COORDS_OKLAB
+
+
+def oklab_hue_is_on() -> bool: return oklab_hue > 0.5
+
+# The stored numbers as linear light in the document's own primaries, and back.
+
+
+def document_to_linear(vec3 c) -> vec3:
+    if document_is_oklab():
+        return from_linear_srgb_matrix() * oklab_to_linear_srgb(c)
+    return sa_transfer_decode(c, transfer_slope, transfer_threshold, transfer_gain, transfer_exponent)
+
+
+def linear_to_document(vec3 c) -> vec3:
+    if document_is_oklab():
+        return linear_srgb_to_oklab(to_linear_srgb_matrix() * c)
+    return sa_transfer_encode(c, transfer_slope, transfer_threshold, transfer_gain, transfer_exponent)
+
+
+def coverage_at(ivec2 px) -> float:
+    return mask[min(px, image_size(mask) - 1)].r
+
+# The DCTL's small helpers, in GLSL's spelling. A safe power returns its base
+# when that base is at or below zero, where pow() would be undefined, and a
+# safe division answers nought for a nought divisor.
+
+
+def safe_pow(float a, float p) -> float:
+    if a <= 0.0:
+        return a
+    return pow(a, p)
+
+
+def safe_div(float a, float b) -> float:
+    if b == 0.0:
+        return 0.0
+    return a / b
+
+
+def safe_div3(vec3 a, float b) -> vec3:
+    return vec3(safe_div(a.x, b), safe_div(a.y, b), safe_div(a.z, b))
+
+
+def hypot2(vec2 v) -> float:
+    return sqrt(max(0.0, v.x * v.x + v.y * v.y))
+
+
+def hypot3(vec3 v) -> float:
+    return sqrt(max(0.0, v.x * v.x + v.y * v.y + v.z * v.z))
+
+# The DCTL's fmod, which keeps the sign of its left side where GLSL's mod keeps
+# the sign of its right one. The hue angle is the only caller and the
+# difference would show there, as a hue that missed a window by a whole turn.
+
+
+def dctl_fmod(float a, float b) -> float:
+    return a - b * trunc(a / b)
+
+
+def compress_hyperbolic_power(float x, float s, float p) -> float:
+    return safe_pow(x / (x + s), p)
+
+
+def compress_toe_quadratic(float x, float toe, int inv) -> float:
+    if toe == 0.0:
+        return x
+    if inv == 0:
+        return safe_pow(x, 2.0) / (x + toe)
+    return (x + sqrt(x * (4.0 * toe + x))) / 2.0
+
+
+def compress_toe_cubic(float x, float m, float w, int inv) -> float:
+    if m == 1.0:
+        return x
+    float x2 = x * x
+    if inv == 0:
+        return x * (x2 + m * w) / (x2 + w)
+    float p0 = x2 - 3.0 * m * w
+    float p1 = 2.0 * x2 + 27.0 * w - 9.0 * m * w
+    float p2 = pow(sqrt(x2 * p1 * p1 - 4.0 * p0 * p0 * p0) / 2.0 + x * p1 / 2.0, 1.0 / 3.0)
+    return p0 / (3.0 * p2) + p2 / 3.0 + x / 3.0
+
+# The DCTL's high exposure adjustment with its linear extension, as a branch
+# because the dialect has no early return inside a ternary. It is never called
+# with `inv` one here, and the branch is kept because the body is the DCTL's.
+
+
+def contrast_high(float x, float p, float pv, float pv_lx, int inv) -> float:
+    float x0 = 0.18 * pow(2.0, pv)
+    if x < x0 or p == 1.0:
+        return x
+    float o = x0 - x0 / p
+    float s0 = pow(x0, 1.0 - p) / p
+    float x1 = x0 * pow(2.0, pv_lx)
+    float k1 = p * s0 * pow(x1, p) / x1
+    float y1 = s0 * pow(x1, p) + o
+    if inv == 1:
+        if x > y1:
+            return (x - y1) / k1 + x1
+        return pow((x - o) / s0, 1.0 / p)
+    if x > x1:
+        return k1 * (x - x1) + y1
+    return s0 * pow(x, p) + o
+
+
+def softplus(float x, float s) -> float:
+    if x > 10.0 * s or s < 1e-4:
+        return x
+    return s * log(max(0.0, 1.0 + exp(x / s)))
+
+
+def gauss_window(float x, float w) -> float:
+    return exp(-x * x / w)
+
+
+def opponent(vec3 rgb) -> vec2:
+    return vec2(rgb.x - rgb.z, rgb.y - (rgb.x + rgb.z) / 2.0)
+
+
+def hue_offset(float h, float o) -> float:
+    return dctl_fmod(h - o + PI, 2.0 * PI) - PI
+
+# Oklab's own hue angle, red at nought and rising through yellow, green, cyan,
+# blue and magenta, which is the space the six windows are laid out in. A
+# positive scale of a linear RGB triple scales all three of Oklab's axes, so
+# the angle is the same for a colour and for any positive multiple of it.
+
+
+def oklab_hue_angle(vec3 rgb) -> float:
+    vec3 lab = linear_srgb_to_oklab(rgb)
+    float hue = atan(lab.z, lab.y) - OKLAB_RED_HUE
+    return hue - TWO_PI * floor(hue / TWO_PI)
+
+# The DCTL's two hue window sets, in whichever space carries the hue. Under
+# Oklab the six centres are an even sixth apart and the DCTL's own relative
+# shift of the hue shift's red and blue windows is kept as an offset from them.
+
+
+def rgb_windows(float hue, int shifted) -> vec3:
+    if oklab_hue_is_on():
+        float red = hue_offset(hue, shifted == 1 ? HUE_SHIFT_RED : 0.0)
+        float blue = FOUR_SIXTHS + (shifted == 1 ? HUE_SHIFT_BLUE : 0.0)
+        return vec3(
+            gauss_window(red, HUE_WIDTH_RGB),
+            gauss_window(hue_offset(hue, TWO_SIXTHS), HUE_WIDTH_RGB),
+            gauss_window(hue_offset(hue, blue), HUE_WIDTH_RGB))
+    if shifted == 1:
+        return vec3(
+            gauss_window(hue_offset(hue, -0.4), HUE_WIDTH_RGB),
+            gauss_window(hue_offset(hue, 4.3), HUE_WIDTH_RGB),
+            gauss_window(hue_offset(hue, 2.5), HUE_WIDTH_RGB))
+    return vec3(
+        gauss_window(hue_offset(hue, 0.1), HUE_WIDTH_RGB),
+        gauss_window(hue_offset(hue, 4.3), HUE_WIDTH_RGB),
+        gauss_window(hue_offset(hue, 2.3), HUE_WIDTH_RGB))
+
+
+def cmy_windows(float hue) -> vec3:
+    if oklab_hue_is_on():
+        return vec3(
+            gauss_window(hue_offset(hue, PI), HUE_WIDTH_CMY),
+            gauss_window(hue_offset(hue, FIVE_SIXTHS), HUE_WIDTH_CMY),
+            gauss_window(hue_offset(hue, SIXTH), HUE_WIDTH_CMY))
+    return vec3(
+        gauss_window(hue_offset(hue, 3.3), HUE_WIDTH_CMY),
+        gauss_window(hue_offset(hue, 1.3), HUE_WIDTH_CMY),
+        gauss_window(hue_offset(hue, -1.15), HUE_WIDTH_CMY))
+
+# Rec.709 and P3-D65 through XYZ, the DCTL's own matrices in GLSL's column
+# order. Only the D65 rows of its colour space table are here: the input is
+# always a document's linear RGB and the display is always Rec.709.
+
+
+def rec709_to_xyz() -> mat3:
+    return mat3(
+        0.412390799265959229, 0.212639005871510217, 0.0193308187155918181,
+        0.357584339383878125, 0.71516867876775625, 0.119194779794626018,
+        0.180480788401834347, 0.0721923153607337414, 0.950532152249661033)
+
+
+def xyz_to_rec709() -> mat3:
+    return mat3(
+        3.24096994190452348, -0.969243636280879506, 0.0556300796969936354,
+        -1.53738317757009435, 1.87596750150771996, -0.20397695888897649,
+        -0.498610760293003552, 0.0415550574071755843, 1.05697151424287816)
+
+
+def p3d65_to_xyz() -> mat3:
+    return mat3(
+        0.486570948648216151, 0.228974564069748754, -4.0e-17,
+        0.265667693169093004, 0.691738521836506193, 0.0451133818589026167,
+        0.198217285234362467, 0.079286914093744984, 1.04394436890097575)
+
+
+def xyz_to_p3d65() -> mat3:
+    return mat3(
+        2.49349691194142542, -0.829488969561574696, 0.0358458302437844531,
+        -0.93138361791912383, 1.76266406031834655, -0.0761723892680418041,
+        -0.402710784450716841, 0.0236246858419435941, 0.956884524007687309)
+
+# The creative white conversions from D65, the DCTL's own table. Its index two
+# is D65 itself and the DCTL applies nothing there, which is the default below.
+
+
+def d65_to_creative_white(int cwp) -> mat3:
+    if cwp == 0:
+        return mat3(
+            0.95703423023223877, -0.0179296955466270447, 0.00127589143812656403,
+            -0.0247171502560377121, 0.990019857883453369, 0.00427919067442417058,
+            0.0624028593301773071, 0.0248119533061981201, 1.29345715045928955)
+    if cwp == 1:
+        return mat3(
+            0.981001079082489014, -0.00843488052487373352, 0.000552809564396739006,
+            -0.0116619253531098366, 0.996506094932556152, 0.00179840810596942902,
+            0.0265614092350006104, 0.0105696544051170349, 1.12374722957611084)
+    if cwp == 3:
+        return mat3(
+            1.01182246208190918, 0.00561682833358645439, -0.000335735734552145004,
+            0.00778879318386316299, 1.00150644779205322, -0.0010509500280022619,
+            -0.0157783031463623047, -0.00628517568111419678, 0.927366673946380615)
+    if cwp == 4:
+        return mat3(
+            1.02585089206695557, 0.0129133854061365128, -0.000719940289855003032,
+            0.0179439820349216461, 1.00214779376983643, -0.00218106806278228803,
+            -0.0332137793302536011, -0.0132421031594276428, 0.84868013858795166)
+    if cwp == 5:
+        return mat3(
+            1.04257404804229736, 0.0221935361623764038, -0.00116488314233720303,
+            0.03089117631316185, 1.00185668468475342, -0.00342052709311246915,
+            -0.052812620997428894, -0.0210737623274326324, 0.761789083480834961)
+    return mat3(1.0)
+
+# Rec.709's own normalisation factors, the DCTL's pre-calculated table, which
+# hold the peak luminance at the display's maximum however the creative white
+# is set.
+
+
+def rec709_white_norm(int cwp) -> float:
+    if cwp == 0:
+        return 0.744192699063
+    if cwp == 1:
+        return 0.873470832146
+    if cwp == 3:
+        return 0.955936992163
+    if cwp == 4:
+        return 0.905671332781
+    if cwp == 5:
+        return 0.850004385027
+    return 1.0
+
+# The DCTL's `display_gamut_whitepoint` at its Rec.709 row, which is the row
+# the sRGB Display preset picks. The creative white is mixed in against the
+# neutral axis by how far up the tonescale the value stands, and the result is
+# normalised only by the share that mixing moved.
+
+
+def display_gamut_whitepoint(vec3 rgb, float tsn, float cwp_lm, int cwp) -> vec3:
+    vec3 neutral = p3d65_to_xyz() * rgb
+    vec3 aligned = d65_to_creative_white(cwp) * neutral
+    float mix = pow(max(tsn, 0.0), 2.0 * cwp_lm)
+    vec3 mixed = aligned * mix + neutral * (1.0 - mix)
+    vec3 rendered = xyz_to_rec709() * mixed
+    float norm = rec709_white_norm(cwp)
+    return rendered * (norm * mix + 1.0 - mix)
+
+# The view's Oklab gamut map, body for body the one tonemap.gmacs carries and
+# the one shaders/canvas/tonemap.gdshader solves, so a colour OpenDRT leaves
+# outside the display's cube gives up chroma with its lightness and hue held
+# rather than being clipped per channel. Three copies of one body is what the
+# rule against a shared include costs, and the filter's suite reads this file
+# beside the other two.
+
+
+def in_display_gamut(vec3 linear) -> bool:
+    float slack = max(GAMUT_EPSILON, GAMUT_ROUNDING * max(abs(linear.x), max(abs(linear.y), abs(linear.z))))
+    return all(greater_than_equal(linear, vec3(-slack))) and all(less_than_equal(linear, vec3(1.0 + slack)))
+
+
+def with_chroma_scale(vec3 lab, float factor) -> vec3:
+    return vec3(lab.x, lab.yz * factor)
+
+
+def signed_cbrt(float x) -> float:
+    return sign(x) * pow(abs(x), 1.0 / 3.0)
+
+
+def largest_cubic_root(float d3, float d2, float d1, float d0) -> float:
+    float a = d2 / d3
+    float b = d1 / d3
+    float c = d0 / d3
+    float p = b - a * a / 3.0
+    float q = 2.0 * a * a * a / 27.0 - a * b / 3.0 + c
+    float disc = 0.25 * q * q + p * p * p / 27.0
+    if disc > 0.0:
+        float root = sqrt(disc)
+        return signed_cbrt(-0.5 * q + root) + signed_cbrt(-0.5 * q - root) - a / 3.0
+    if p >= 0.0:
+        return -a / 3.0
+    float r = sqrt(-p / 3.0)
+    float angle = acos(clamp(1.5 * q / (p * r), -1.0, 1.0))
+    return 2.0 * r * cos(angle / 3.0) - a / 3.0
+
+
+def channel_exit(vec3 w, vec3 k, float to_white) -> float:
+    float d2 = 3.0 * dot(w, k)
+    float d1 = 3.0 * dot(w, k * k)
+    float d0 = dot(w, k * k * k)
+    float s = 1e30
+    float to_black = largest_cubic_root(1.0, d2, d1, d0)
+    if to_black > 0.0:
+        s = 1.0 / to_black
+    float to_one = largest_cubic_root(to_white, d2, d1, d0)
+    if to_one > 0.0:
+        s = min(s, 1.0 / to_one)
+    return s
+
+
+def gamut_map(vec3 lab) -> vec3:
+    vec3 linear = oklab_to_linear_srgb(lab)
+    if in_display_gamut(linear):
+        return linear
+    if lab.x <= 0.0:
+        return vec3(0.0)
+    float chroma = length(lab.yz)
+    if lab.x >= 1.0 or chroma <= 0.0:
+        return oklab_to_linear_srgb(with_chroma_scale(lab, 0.0))
+    vec2 hue = lab.yz / chroma
+    vec3 k = vec3(
+        0.3963377774 * hue.x + 0.2158037573 * hue.y,
+        -0.1055613458 * hue.x - 0.0638541728 * hue.y,
+        -0.0894841775 * hue.x - 1.2914855480 * hue.y)
+    float to_white = min(1.0 - 1.0 / (lab.x * lab.x * lab.x), -1e-6)
+    float s = chroma / lab.x
+    s = min(s, channel_exit(vec3(4.0767416621, -3.3077115913, 0.2309699292), k, to_white))
+    s = min(s, channel_exit(vec3(-1.2684380046, 2.6097574011, -0.3413193965), k, to_white))
+    s = min(s, channel_exit(vec3(-0.0041960863, -0.7034186147, 1.7076147010), k, to_white))
+    return oklab_to_linear_srgb(with_chroma_scale(lab, s * lab.x / chroma))
+
+
+def fit_to_cube(vec3 linear) -> vec3:
+    return gamut_map(linear_srgb_to_oklab(linear))
+
+# The DCTL's `transform`, read against it line by line. Everything the DCTL
+# takes from its preset combo boxes arrives in the settings buffer instead, and
+# the input gamut, the input transfer, the display encoding, the surround and
+# the clamp are the five the kernel fixes rather than reads.
+
+
+def opendrt():
+    ivec2 px = ivec2(global_id.xy) + ivec2(int(origin_x), int(origin_y))
+    ivec2 size = image_size(canvas)
+    if px.x >= size.x or px.y >= size.y:
+        return
+
+    float tn_lp = settings.values[TN_LP]
+    float tn_gb = settings.values[TN_GB]
+    float pt_hdr = settings.values[PT_HDR]
+    float tn_lg = settings.values[TN_LG]
+    float tn_con = settings.values[TN_CON]
+    float tn_sh = settings.values[TN_SH]
+    float tn_toe = settings.values[TN_TOE]
+    float tn_off = settings.values[TN_OFF]
+    float tn_hcon = settings.values[TN_HCON]
+    float tn_hcon_pv = settings.values[TN_HCON_PV]
+    float tn_hcon_st = settings.values[TN_HCON_ST]
+    float tn_lcon = settings.values[TN_LCON]
+    float tn_lcon_w = settings.values[TN_LCON_W]
+    float cwp_lm = settings.values[CWP_LM]
+    float rs_sa = settings.values[RS_SA]
+    float rs_rw = settings.values[RS_RW]
+    float rs_bw = settings.values[RS_BW]
+    float pt_lml = settings.values[PT_LML]
+    float pt_lml_r = settings.values[PT_LML_R]
+    float pt_lml_g = settings.values[PT_LML_G]
+    float pt_lml_b = settings.values[PT_LML_B]
+    float pt_lmh = settings.values[PT_LMH]
+    float pt_lmh_r = settings.values[PT_LMH_R]
+    float pt_lmh_b = settings.values[PT_LMH_B]
+    int cwp = int(settings.values[CWP] + 0.5)
+
+    # The tonescale's constraints. The DCTL says these should be
+    # pre-calculated and cannot be, so they are per pixel here too.
+    float ts_x1 = pow(2.0, SHOULDER_TOP_EXPONENT * tn_sh + SHOULDER_TOP_LIFT)
+    float ts_y1 = tn_lp / 100.0
+    float ts_x0 = 0.18 + tn_off
+    float ts_y0 = tn_lg / 100.0 * (1.0 + tn_gb * log2(ts_y1))
+    float ts_s0 = compress_toe_quadratic(ts_y0, tn_toe, 1)
+    # The sRGB Display preset's own surround compensation.
+    float ts_p = tn_con / (1.0 + SURROUND * 0.05)
+    float ts_s10 = ts_x0 * (pow(ts_s0, -1.0 / tn_con) - 1.0)
+    float ts_m1 = ts_y1 / pow(ts_x1 / (ts_x1 + ts_s10), tn_con)
+    float ts_m2 = compress_toe_quadratic(ts_m1, tn_toe, 1)
+    float ts_s = ts_x0 * (pow(ts_s0 / ts_m2, -1.0 / tn_con) - 1.0)
+    # The 2.2 power display's own display scale, 100 over the peak luminance.
+    float ts_dsc = 100.0 / tn_lp
+    float pt_cmp_lf = pt_hdr * min(1.0, (tn_lp - 100.0) / 900.0)
+    float s_lp100 = ts_x0 * (pow(tn_lg / 100.0, -1.0 / tn_con) - 1.0)
+    float ts_s1 = ts_s * pt_cmp_lf + s_lp100 * (1.0 - pt_cmp_lf)
+
+    vec4 c = canvas[px]
+    float white = max(blend_white, 1e-6)
+    vec3 rgb = document_to_linear(c.rgb) / white
+
+    # Rec.709 in and P3-D65 to render in, the DCTL's own path for a Rec.709
+    # input and its fixed display gamut.
+    rgb = xyz_to_p3d65() * (rec709_to_xyz() * rgb)
+
+    # Rendering space: "desaturate" to control the scale of the colour volume
+    # in the rgb ratios.
+    vec3 rs_w = vec3(rs_rw, 1.0 - rs_rw - rs_bw, rs_bw)
+    float sat_l = dot(rgb, rs_w)
+    rgb = sat_l * rs_sa + rgb * (1.0 - rs_sa)
+
+    rgb = rgb + vec3(tn_off)
+
+    float tsn = hypot3(rgb) / SQRT3
+    rgb = safe_div3(rgb, tsn)
+
+    vec2 opp = opponent(rgb)
+    float ach_d = hypot2(opp) / 2.0
+    ach_d = 1.25 * compress_toe_quadratic(ach_d, 0.25, 0)
+
+    # Hue angle. Under Oklab it is Oklab's own and red reads nought after the
+    # constant that places red there. With `oklab_hue` off it is the DCTL's,
+    # rotated so that red reads nought.
+    float hue = dctl_fmod(atan(opp.x, opp.y) + PI + HUE_RED_ROTATION, 2.0 * PI)
+    if oklab_hue_is_on():
+        hue = oklab_hue_angle(rgb)
+
+    vec3 ha_rgb = rgb_windows(hue, 0)
+    vec3 ha_rgb_hs = rgb_windows(hue, 1)
+    vec3 ha_cmy = cmy_windows(hue)
+
+    # Brilliance. The DCTL sums three windows, R, G and B, and the parameters
+    # page lists six, so C, M and Y are three more windows of the same sum.
+    # Their defaults are nought, so a DCTL preset leaves the sum exactly as the
+    # DCTL computes it.
+    if settings.values[BRL_ENABLE] > 0.5:
+        float brl_tsf = pow(tsn / (tsn + 1.0), 1.0 - settings.values[BRL_RNG])
+        float brl_exf = (
+            settings.values[BRL]
+            + settings.values[BRL_R] * ha_rgb.x
+            + settings.values[BRL_G] * ha_rgb.y
+            + settings.values[BRL_B] * ha_rgb.z
+            + settings.values[BRL_C] * ha_cmy.x
+            + settings.values[BRL_M] * ha_cmy.y
+            + settings.values[BRL_Y] * ha_cmy.z
+        ) * pow(ach_d, 1.0 / max(settings.values[BRL_ST], 1e-4))
+        float brl_shaped = brl_tsf
+        if brl_exf >= 0.0:
+            brl_shaped = 1.0 - brl_tsf
+        tsn *= pow(2.0, brl_exf * brl_shaped)
+
+    # Contrast Low. Per channel is this port's own switch and not the DCTL's:
+    # on, the curve is applied to each channel of the light the ratios stand for
+    # and the norm is taken back from the result, so a channel lifts on its own.
+    # Off is the DCTL's own branch.
+    if settings.values[TN_LCON_ENABLE] > 0.5:
+        float lcon_m = pow(2.0, -tn_lcon)
+        float lcon_w = tn_lcon_w / 4.0
+        lcon_w *= lcon_w
+        float lcon_spread = compress_toe_cubic(ts_x0, lcon_m, lcon_w, 1) / ts_x0
+        if settings.values[TN_LCON_PC] > 0.5:
+            vec3 light = rgb * tsn * lcon_spread
+            light = vec3(
+                compress_toe_cubic(light.x, lcon_m, lcon_w, 0),
+                compress_toe_cubic(light.y, lcon_m, lcon_w, 0),
+                compress_toe_cubic(light.z, lcon_m, lcon_w, 0))
+            tsn = max(hypot3(light) / SQRT3, 1e-8)
+            rgb = safe_div3(light, tsn)
+        else:
+            tsn *= lcon_spread
+            tsn = compress_toe_cubic(tsn, lcon_m, lcon_w, 0)
+
+    # Contrast High.
+    if settings.values[TN_HCON_ENABLE] > 0.5:
+        float hcon_p = pow(2.0, tn_hcon)
+        tsn = contrast_high(tsn, hcon_p, tn_hcon_pv, tn_hcon_st, 0)
+
+    # Hyperbolic compression, whose three results the rest of the transform
+    # reads: the compressed norm, its uncompressed-exposure form, and the form
+    # the purity limit and the creative white mix by.
+    float tsn_pt = compress_hyperbolic_power(tsn, ts_s1, ts_p)
+    float tsn_const = compress_hyperbolic_power(tsn, s_lp100, ts_p)
+    tsn = compress_hyperbolic_power(tsn, ts_s, ts_p)
+
+    # Hue Contrast R.
+    if settings.values[HC_ENABLE] > 0.5:
+        float hc_ts = 1.0 - tsn_const
+        float hc_c = hc_ts * (1.0 - ach_d) + ach_d * (1.0 - hc_ts)
+        hc_c *= ach_d * ha_rgb.x
+        hc_ts = pow(hc_ts, 1.0 / max(settings.values[HC_R_RNG], 1e-4))
+        float hc_f = settings.values[HC_R] * (hc_c - 2.0 * hc_c * hc_ts) + 1.0
+        rgb = vec3(rgb.x, rgb.y * hc_f, rgb.z * hc_f)
+
+    # Hue Shift, the RGB set by the purity compress tonescale and the CMY set by
+    # its complement, so one shifts more as intensity rises and the other less.
+    if settings.values[HS_RGB_ENABLE] > 0.5:
+        vec3 hs_rgb = vec3(
+            ha_rgb_hs.x * ach_d * pow(tsn_pt, 1.0 / max(settings.values[HS_R_RNG], 1e-4)),
+            ha_rgb_hs.y * ach_d * pow(tsn_pt, 1.0 / max(settings.values[HS_G_RNG], 1e-4)),
+            ha_rgb_hs.z * ach_d * pow(tsn_pt, 1.0 / max(settings.values[HS_B_RNG], 1e-4)))
+        vec3 hsf = vec3(
+            hs_rgb.x * settings.values[HS_R],
+            hs_rgb.y * -settings.values[HS_G],
+            hs_rgb.z * -settings.values[HS_B])
+        rgb += vec3(hsf.z - hsf.y, hsf.x - hsf.z, hsf.y - hsf.x)
+    if settings.values[HS_CMY_ENABLE] > 0.5:
+        float tsn_compl = 1.0 - tsn_pt
+        vec3 hs_cmy = vec3(
+            ha_cmy.x * ach_d * pow(tsn_compl, 1.0 / max(settings.values[HS_C_RNG], 1e-4)),
+            ha_cmy.y * ach_d * pow(tsn_compl, 1.0 / max(settings.values[HS_M_RNG], 1e-4)),
+            ha_cmy.z * ach_d * pow(tsn_compl, 1.0 / max(settings.values[HS_Y_RNG], 1e-4)))
+        vec3 hsf = vec3(
+            hs_cmy.x * -settings.values[HS_C],
+            hs_cmy.y * settings.values[HS_M],
+            hs_cmy.z * settings.values[HS_Y])
+        rgb += vec3(hsf.z - hsf.y, hsf.x - hsf.z, hsf.y - hsf.x)
+
+    # Purity Limit, low and high. The DCTL's own presets always leave the limit
+    # on and its transform never reads the switch, so here the switch is what
+    # its name says and off leaves the ratios alone.
+    float ptf = 1.0
+    if settings.values[PT_ENABLE] > 0.5:
+        float pt_lml_p = (
+            1.0
+            + 4.0
+            * (1.0 - tsn_pt)
+            * (pt_lml + pt_lml_r * ha_rgb_hs.x + pt_lml_g * ha_rgb_hs.y + pt_lml_b * ha_rgb_hs.z))
+        ptf = 1.0 - pow(tsn_pt, pt_lml_p)
+        float pt_lmh_p = (1.0 - ach_d * (pt_lmh_r * ha_rgb_hs.x + pt_lmh_b * ha_rgb_hs.z)) * (1.0 - pt_lmh * ach_d)
+        ptf = pow(ptf, pt_lmh_p)
+
+    # Mid-Range Purity, which boosts mid range purity low down and reduces it
+    # high up.
+    if settings.values[PTM_ENABLE] > 0.5:
+        float ptm_low_f = 1.0
+        if settings.values[PTM_LOW_ST] != 0.0 and settings.values[PTM_LOW_RNG] != 0.0:
+            ptm_low_f = (
+                1.0
+                + settings.values[PTM_LOW]
+                * exp(-2.0 * ach_d * ach_d / settings.values[PTM_LOW_ST])
+                * pow(1.0 - tsn_const, 1.0 / settings.values[PTM_LOW_RNG]))
+        float ptm_high_f = 1.0
+        if settings.values[PTM_HIGH_ST] != 0.0 and settings.values[PTM_HIGH_RNG] != 0.0:
+            ptm_high_f = (
+                1.0
+                + settings.values[PTM_HIGH]
+                * exp(-2.0 * ach_d * ach_d / settings.values[PTM_HIGH_ST])
+                * pow(tsn_pt, 1.0 / (4.0 * settings.values[PTM_HIGH_RNG])))
+        ptf *= ptm_low_f * ptm_high_f
+
+    # The ratios lerp to the peak achromatic by ptf, and back out of the
+    # rendering space.
+    rgb = rgb * ptf + 1.0 - ptf
+    sat_l = dot(rgb, rs_w)
+    rgb = (sat_l * rs_sa - rgb) / (rs_sa - 1.0)
+
+    rgb = display_gamut_whitepoint(rgb, tsn_const, cwp_lm, cwp)
+
+    # Post Brilliance.
+    if settings.values[BRPL_ENABLE] > 0.5:
+        float brlp_ach_d = hypot2(opponent(rgb)) / 4.0
+        brlp_ach_d = 1.1 * (brlp_ach_d * brlp_ach_d / (brlp_ach_d + 0.1))
+        vec3 brlp_ha_rgb = ach_d * ha_rgb
+        float brlp_m = (
+            settings.values[BRPL]
+            + settings.values[BRPL_R] * brlp_ha_rgb.x
+            + settings.values[BRPL_G] * brlp_ha_rgb.y
+            + settings.values[BRPL_B] * brlp_ha_rgb.z)
+        rgb *= pow(2.0, brlp_m * brlp_ach_d * tsn)
+
+    # Purity Compress Low.
+    if settings.values[PTL_ENABLE] > 0.5:
+        rgb = vec3(
+            softplus(rgb.x, settings.values[PTL_C]),
+            softplus(rgb.y, settings.values[PTL_M]),
+            softplus(rgb.z, settings.values[PTL_Y]))
+
+    # The tonescale's last two steps, its inverse toe and the display scale for
+    # the 2.2 power display, and then the ratios are multiplied back into a
+    # light. The DCTL's inverse display EOTF is not taken, as the header says.
+    tsn *= ts_m2
+    tsn = compress_toe_quadratic(tsn, tn_toe, 0)
+    tsn *= ts_dsc
+    rgb *= tsn
+
+    # The two branches the DCTL's clamp stands at. Oklab fits what purity
+    # compression left outside the cube, and with `oklab_hue` off the DCTL's
+    # per-channel clamp is what keeps a preset comparable with Resolve.
+    if oklab_hue_is_on():
+        rgb = fit_to_cube(rgb)
+    else:
+        rgb = clamp(rgb, vec3(0.0), vec3(1.0))
+
+    rgb *= white
+    canvas[px] = vec4(mix(c.rgb, linear_to_document(rgb), coverage_at(px)), c.a)

@@ -1,0 +1,141 @@
+# Kernels: high_pass
+# The High Pass of Filter, the picture less its Gaussian blur drawn about a
+# neutral grey, laid over the picture in Overlay or Soft Light as a sharpen, or
+# drawn as the map alone. A neighbourhood kernel under the SaNeighbourhoodPass
+# contract: the padded source at binding 0, the selection mask at binding 1, the
+# chunk-sized target at binding 2.
+#
+# The blur is the Gaussian blur's own, `sa_gaussian_blurred` of the `gaussian`
+# library, rather than the unsharp mask's three steps, because the high pass
+# promises that its map and the Gaussian blur at one radius add back to the
+# picture, and the same sums in the same order keep that promise to the last bit.
+#
+# The detail is taken in the document's RGB view and added to that view's mid
+# grey, half the blend reference white, so a flat area reads exactly the neutral
+# and Soft Light or Overlay leave a backdrop alone. The grey goes back through
+# rgb_to_document, since a raw grey in an Oklab document shows orange. Alpha is
+# the texel's own. Nothing clamps (hard rule 5): an edge above one writes past
+# the neutral by its whole difference and the blend decides what shows.
+#
+# The map is laid over the texel it was read at, in the mode's blend at the
+# amount's opacity, as a duplicate layer holding the map would, so Apply
+# sharpens in one step. With raw at 1 the map is written alone. The two blends
+# are the compositor's, repeated because a .gmacs block cannot be shared between
+# files without sharing the push constant that names it.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel high_pass
+
+import linear_srgb_color_space
+import transfer_curve
+import positive_channels
+
+image src: readonly
+image mask: r32f, readonly
+image dst
+
+params:
+    int radius  # the blur's reach, in texels, which is the halo the filter declares
+    int halo  # how far the source is padded, written by the runner
+    vec2 origin  # the dispatched region's corner in the chunk
+    float doc_to_linear_srgb[9]
+    float linear_srgb_to_doc[9]
+    float transfer_slope
+    float transfer_threshold
+    float transfer_gain
+    float transfer_exponent
+    float coordinates
+    float mode  # the blend the map is laid over the texel in, 0 Overlay and 1 Soft Light
+    float amount  # the opacity the map is laid over the texel at, 0 to 1
+    float raw  # 1 writes the map alone, 0 lays it over the texel
+    float blend_white  # the document's blend reference white, which both blends window by
+
+# The harness, the Gaussian and the document's RGB view, imported after the
+# params because all three read them by name.
+import neighbourhood
+import gaussian
+import composite_color_space
+
+# What a flat area reads, in the document's RGB view, at a blend white of one.
+# SaHighPassFilter holds the same number. A wider white scales it, see neutral()
+# below.
+const float NEUTRAL = 0.5
+
+# The mode's value for Soft Light, where Overlay is 0. SaHighPassFilter hands
+# over the same two numbers.
+const int MODE_SOFT_LIGHT = 1
+
+# --- The compositor's Overlay and Soft Light ----------------------------------
+#
+# overlay() and soft_light() of composite.gmacs, with the two helpers they call
+# from composite_blend_ops.gmacs, on the document's RGB view. Both inputs go
+# into the window by the blend white, the source through the positive-channels
+# net, Soft Light's backdrop through it as well, and the formula runs on each
+# input's share of white with what the shares left out added back. A neutral
+# source leaves any backdrop as it was in either, above white too.
+
+
+def window_scale() -> float: return blend_white > 0.0 ? blend_white : 1.0
+
+# The grey both blends leave a backdrop alone for, half the blend white, which
+# the window takes to NEUTRAL.
+
+
+def neutral() -> float: return NEUTRAL * window_scale()
+
+
+def white_share(vec3 c) -> vec3:
+    vec3 over = max(c - 1.0, vec3(0.0))
+    return min(c, 1.0 / (1.0 + over * over))
+
+
+def past_white(vec3 on_shares, vec3 s, vec3 d) -> vec3: return on_shares + (s - white_share(s)) + (d - white_share(d))
+
+# The map *source* laid over the *backdrop* in Overlay, both in the RGB view.
+
+
+def overlay(vec3 source, vec3 backdrop) -> vec3:
+    float w = window_scale()
+    vec3 s = sa_positive_channels(source / w)
+    vec3 d = backdrop / w
+    vec3 ws = white_share(s)
+    vec3 wd = white_share(d)
+    vec3 B = mix(2.0 * ws * wd, 1.0 - 2.0 * (1.0 - ws) * (1.0 - wd), step(0.5, wd))
+    return past_white(B, s, d) * w
+
+# The same in Soft Light, W3C's, whose square root is why the backdrop is netted.
+
+
+def soft_light(vec3 source, vec3 backdrop) -> vec3:
+    float w = window_scale()
+    vec3 s = sa_positive_channels(source / w)
+    vec3 b = sa_positive_channels(backdrop / w)
+    vec3 ws = white_share(s)
+    vec3 wb = white_share(b)
+    vec3 d = mix(((16.0 * wb - 12.0) * wb + 4.0) * wb, sqrt(wb), step(0.25, wb))
+    vec3 B = mix(wb - (1.0 - 2.0 * ws) * wb * (1.0 - wb), wb + (2.0 * ws - 1.0) * (d - wb), step(0.5, ws))
+    return past_white(B, s, b) * w
+
+
+def high_pass():
+    ivec2 at = pixel + ivec2(origin)
+    bool inside = at.x < image_size(dst).x and at.y < image_size(dst).y
+    # Every thread walks, since the walk's barriers wait for the whole group.
+    vec4 premultiplied = sa_gaussian_blurred(at, max(min(radius, halo), 0))
+    if not inside:
+        return
+    vec4 kept = sa_kept(at)
+    vec4 blurred = sa_straight(premultiplied)
+    vec3 backdrop = document_to_rgb(kept.rgb)
+    vec3 detail = backdrop - document_to_rgb(blurred.rgb)
+    vec3 map = vec3(neutral()) + detail
+    if raw > 0.5:
+        sa_finish(at, kept, vec4(rgb_to_document(map), kept.a))
+        return
+    # The compositor mixes its blend into the backdrop by the source's coverage,
+    # here the amount over a texel as covered as itself. The alpha stays the
+    # texel's own, since a sharpen adds no coverage, which on an opaque texel is
+    # the duplicate's composite exactly.
+    vec3 laid = int(mode + 0.5) == MODE_SOFT_LIGHT ? soft_light(map, backdrop) : overlay(map, backdrop)
+    sa_finish(at, kept, vec4(rgb_to_document(mix(backdrop, laid, amount)), kept.a))

@@ -1,0 +1,356 @@
+# Kernels: local_contrast_lightness, local_contrast_reduce, local_contrast_collapse, local_contrast_last
+# Filter > Local Contrast, the local laplacian filter of Paris, Hasinoff and
+# Kautz (2011) as darktable's local contrast module runs it, written for Sara
+# from the paper and from darktable's src/common/locallaplacian.c.
+#
+# The picture's Oklab lightness is taken down a Gaussian pyramid, halving with
+# the spline [1, 4, 6, 4, 1] / 16 each way. Six reference lightnesses,
+# (k + 0.5) / 6, each remap the lightness through curve() below, and each remap
+# is taken down a pyramid of its own. The output is collapsed from the coarsest
+# level up: every texel is the level above expanded, plus the detail of the two
+# remaps whose references bracket the texel's own lightness, blended between
+# them. A texel takes its detail from a picture remapped about its own tone, so
+# an edge between two tones is never pushed past either, which is why the
+# method draws no halo.
+#
+# One change for hard rule 2. darktable's pyramid runs down to one pixel, so a
+# texel reads the whole picture. Here it stops at LEVELS levels and the bounded
+# reach is declared as the pass's radius, see local_contrast_filter.gd. Levels
+# are taken on a grid of the padded frame whose first texel is the chunk's corner
+# less the halo. Chunk corners are a multiple of every level's spacing apart, so
+# all chunks share one grid and a texel reads the same whichever chunk ran it.
+#
+# The pyramid lives in the storage buffer, one region a level, since the collapse
+# reads every level the reduce wrote. Level 0 holds two floats a texel (alpha,
+# lightness). Every level above holds eight: alpha, the lightness the collapse
+# overwrites with its output, and the six remaps. Level 0's remaps are never
+# stored, being curve() of the lightness at the same texel. The steps run in
+# order for one chunk before the next starts, so one buffer serves every chunk.
+#
+# The colour space tail is the `space` buffer, read as `space.tail`, and not
+# fields of the push constant: as 23 named fields on each of nine steps, a
+# preview would look each up by name on every dispatch, CPU it cannot afford.
+#
+# Every sum is weighted by alpha and divided by the weight it took, so paint on
+# a transparent layer is filtered as if nothing lay round it and a flat colour
+# reads back unchanged. With every remap the identity the collapse rebuilds each
+# level exactly, so Detail at 100 % and Shadows and Highlights at 100 % give the
+# picture back.
+#
+# Only the lightness changes: the last step writes the texel's own a and b back,
+# so no hue moves. Nothing clamps, hard rule 5: a lightness past 0 or 1 is
+# blended about the nearest reference and curve() is linear out there.
+#
+# Intermediate steps are dispatched over the region grown by the halo. A read
+# past what the step before wrote reads what the buffer held before, but those
+# reads feed only texels nearer the frame's edge than the reach, which no texel
+# the last step writes reads.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel local_contrast_lightness
+kernel local_contrast_reduce
+kernel local_contrast_collapse
+kernel local_contrast_last
+
+import linear_srgb_color_space
+import transfer_curve
+
+image src: readonly  # the padded source
+image mask: r32f, readonly
+image dst
+# Read by no step. Declared so the Runner runs every step of the list, which it
+# does for a file with an image at this binding, see SaNeighbourhoodPass.
+image previous: readonly
+buffer pyramid: float cells[]
+buffer space: float tail[]
+
+# origin and halo are written per dispatch by the pass's Runner.
+params:
+    vec2 origin  # the dispatched region's corner in the chunk
+    int halo  # how far the source is padded
+    int level  # the level a reduce or a collapse step writes
+    float sigma  # the midtone range
+    float shadows  # the slope past the midtone range above the reference
+    float highlights  # and below it
+    float clarity  # the detail less one
+
+# The mask's blend and the texel as it was, imported after the params because
+# the library reads `halo` and the three images by name.
+import neighbourhood
+
+# The reference lightnesses, darktable's num_gamma.
+const int GAMMAS = 6
+# Floats a texel of level 0 holds, and a texel of every level above.
+const int FINEST = 2
+const int COARSE = 8
+# Where each value sits in a texel's floats.
+const int ALPHA = 0
+const int VALUE = 1
+const int REMAPS = 2
+# Below this an alpha sum holds no paint to divide by.
+const float NO_WEIGHT = 1e-12
+const int SA_COORDS_OKLAB = 1
+
+
+struct Level:
+    int start
+    ivec2 size
+    int stride
+
+# --- The document's colour --------------------------------------------------
+
+
+def to_linear_srgb_matrix() -> mat3:
+    return mat3(
+        space.tail[0], space.tail[1], space.tail[2],
+        space.tail[3], space.tail[4], space.tail[5],
+        space.tail[6], space.tail[7], space.tail[8])
+
+
+def from_linear_srgb_matrix() -> mat3:
+    return mat3(
+        space.tail[9], space.tail[10], space.tail[11],
+        space.tail[12], space.tail[13], space.tail[14],
+        space.tail[15], space.tail[16], space.tail[17])
+
+
+def document_is_oklab() -> bool: return int(space.tail[22] + 0.5) == SA_COORDS_OKLAB
+
+# The Oklab of a stored colour: itself in an Oklab document, and the Oklab of
+# its light in an RGB one, so both read one lightness for one picture.
+
+
+def to_lab(vec3 stored) -> vec3:
+    if document_is_oklab(): return stored
+    vec3 linear = sa_transfer_decode(stored, space.tail[18], space.tail[19], space.tail[20], space.tail[21])
+    return linear_srgb_to_oklab(to_linear_srgb_matrix() * linear)
+
+
+def from_lab(vec3 lab) -> vec3:
+    if document_is_oklab(): return lab
+    vec3 linear = from_linear_srgb_matrix() * oklab_to_linear_srgb(lab)
+    return sa_transfer_encode(linear, space.tail[18], space.tail[19], space.tail[20], space.tail[21])
+
+# --- The remapping curve ----------------------------------------------------
+#
+# darktable's curve_scalar, from src/common/locallaplacian.c,
+# Copyright (C) 2016-2026 darktable developers, GPL-3.0-or-later, carried over
+# as written but for the names: dt_fast_expf is exp, and CLAMPS is clamp, which
+# holds the Bezier's own parameter in its span and is no clamp of a colour.
+# *x* is remapped about the reference *g*. Past twice the midtone range from
+# it the curve is linear, with the slope shadows above and highlights below, and
+# within it a quadratic Bezier blends into those lines. The clarity term adds
+# the midtone detail. The names are darktable's, shadows on the side above the
+# reference included.
+
+
+def curve(float x, float g) -> float:
+    float c = x - g
+    float val
+    if c > 2.0 * sigma:
+        val = g + sigma + shadows * (c - sigma)
+    elif c < -2.0 * sigma:
+        val = g - sigma + highlights * (c + sigma)
+    elif c > 0.0:
+        float t = clamp(c / (2.0 * sigma), 0.0, 1.0)
+        float t2 = t * t
+        float mt = 1.0 - t
+        val = g + sigma * 2.0 * mt * t + t2 * (sigma + sigma * shadows)
+    else:
+        float t = clamp(-c / (2.0 * sigma), 0.0, 1.0)
+        float t2 = t * t
+        float mt = 1.0 - t
+        val = g - sigma * 2.0 * mt * t + t2 * (-sigma - sigma * highlights)
+    val += clarity * c * exp(-c * c / (2.0 * sigma * sigma / 3.0))
+    return val
+
+
+def reference(int k) -> float:
+    return (k + 0.5) / GAMMAS
+
+# The two references round *v*, darktable's search: the pair nearest it when it
+# lies past the first or the last.
+
+
+def bracket(float v) -> ivec2:
+    int hi = 1
+    while hi < GAMMAS - 1 and reference(hi) <= v:
+        hi += 1
+    return ivec2(hi - 1, hi)
+
+# --- The pyramid in the buffer ----------------------------------------------
+
+
+def level_size(int l) -> ivec2:
+    return ((image_size(src) - 1) >> l) + 1
+
+
+def level_of(int l) -> Level:
+    ivec2 frame = image_size(src)
+    int start = 0
+    if l > 0:
+        start = frame.x * frame.y * FINEST
+    for i in range(1, l):
+        ivec2 size = level_size(i)
+        start += size.x * size.y * COARSE
+    return Level(start, level_size(l), l == 0 ? FINEST : COARSE)
+
+
+def cell(Level lv, ivec2 q, int channel) -> int:
+    ivec2 at = clamp(q, ivec2(0, 0), lv.size - 1)
+    return lv.start + (at.y * lv.size.x + at.x) * lv.stride + channel
+
+
+def load(Level lv, ivec2 q, int channel) -> float:
+    int at = cell(lv, q, channel)
+    return at < pyramid.cells.length() ? pyramid.cells[at] : 0.0
+
+
+def store(Level lv, ivec2 q, int channel, float value):
+    int at = cell(lv, q, channel)
+    if at < pyramid.cells.length():
+        pyramid.cells[at] = value
+
+# A weighted sum divided by its weight, nothing where no paint was.
+
+
+def share(float sum, float weight) -> float:
+    return abs(weight) > NO_WEIGHT ? sum / weight : 0.0
+
+# One tap of the spline [1, 4, 6, 4, 1] / 16 at *d* from its centre.
+
+
+def tap(int d) -> float:
+    if d == 0:
+        return 0.375
+    if d == 1 or d == -1:
+        return 0.25
+    if d == 2 or d == -2:
+        return 0.0625
+    return 0.0
+
+# Remap *k* at the texel *q* of *lv*, which is level *l*.
+
+
+def remapped(Level lv, int l, ivec2 q, int k) -> float:
+    if l == 0:
+        return curve(load(lv, q, VALUE), reference(k))
+    return load(lv, q, REMAPS + k)
+
+# The texel of the level a reduce or a collapse step writes that this thread
+# takes, counting from the one the region's corner falls in.
+
+
+def level_texel(ivec2 thread) -> ivec2:
+    ivec2 corner = ivec2(origin) + ivec2(halo, halo)
+    return (corner >> level) + thread
+
+# The output of level *l* at its texel *p*: the level above expanded, plus the
+# detail of the two remaps that bracket the texel's lightness, blended. The
+# expansion is the spline's, a texel at an even place taking 1, 6, 1 of the
+# three coarse texels round it and one at an odd place half of each of two,
+# weighted by alpha as the reduce weighted it.
+
+
+def collapsed(int l, ivec2 p) -> float:
+    Level fine = level_of(l)
+    Level coarse = level_of(l + 1)
+    float own = load(fine, p, VALUE)
+    ivec2 pair = bracket(own)
+    float a = clamp((own - reference(pair.x)) / (reference(pair.y) - reference(pair.x)), 0.0, 1.0)
+    float weight = 0.0
+    float above = 0.0
+    float lo = 0.0
+    float hi = 0.0
+    ivec2 centre = p >> 1
+    for jy in range(-1, 2):
+        for jx in range(-1, 2):
+            ivec2 q = centre + ivec2(jx, jy)
+            ivec2 d = p - 2 * q
+            float w = tap(d.x) * tap(d.y)
+            if w == 0.0:
+                continue
+            w *= load(coarse, q, ALPHA)
+            weight += w
+            above += w * load(coarse, q, VALUE)
+            lo += w * load(coarse, q, REMAPS + pair.x)
+            hi += w * load(coarse, q, REMAPS + pair.y)
+    float lo_detail = remapped(fine, l, p, pair.x) - share(lo, weight)
+    float hi_detail = remapped(fine, l, p, pair.y) - share(hi, weight)
+    return share(above, weight) + mix(lo_detail, hi_detail, a)
+
+# --- The steps --------------------------------------------------------------
+
+# The first: level 0's alpha and lightness at every texel of the grown region.
+
+
+def local_contrast_lightness():
+    ivec2 at = pixel + ivec2(origin) + ivec2(halo, halo)
+    ivec2 frame = image_size(src)
+    if at.x < 0 or at.y < 0 or at.x >= frame.x or at.y >= frame.y:
+        return
+    Level lv = level_of(0)
+    vec4 texel = src[at]
+    store(lv, at, ALPHA, texel.a)
+    store(lv, at, VALUE, to_lab(texel.rgb).x)
+
+# Level `level` from the one below it: the alpha, the lightness and the six
+# remaps, each the spline's 5 by 5 round twice the texel's place, weighted by
+# alpha. From level 0 the remaps are taken of each tap's lightness here.
+
+
+def local_contrast_reduce():
+    ivec2 q = level_texel(pixel)
+    Level lv = level_of(level)
+    if q.x >= lv.size.x or q.y >= lv.size.y:
+        return
+    Level finer = level_of(level - 1)
+    float alpha = 0.0
+    float value = 0.0
+    float remaps[GAMMAS]
+    for k in range(GAMMAS):
+        remaps[k] = 0.0
+    for dy in range(-2, 3):
+        for dx in range(-2, 3):
+            ivec2 p = 2 * q + ivec2(dx, dy)
+            float w = tap(dx) * tap(dy) * load(finer, p, ALPHA)
+            float v = load(finer, p, VALUE)
+            alpha += w
+            value += w * v
+            for k in range(GAMMAS):
+                remaps[k] += w * (level == 1 ? curve(v, reference(k)) : load(finer, p, REMAPS + k))
+    store(lv, q, ALPHA, alpha)
+    store(lv, q, VALUE, share(value, alpha))
+    for k in range(GAMMAS):
+        store(lv, q, REMAPS + k, share(remaps[k], alpha))
+
+# Level `level`'s output from the one above, written over its lightness, which
+# no other texel of this step reads. The coarsest level's output is its own
+# lightness, so the first collapse reads it as it stands.
+
+
+def local_contrast_collapse():
+    ivec2 p = level_texel(pixel)
+    Level lv = level_of(level)
+    if p.x >= lv.size.x or p.y >= lv.size.y:
+        return
+    float made = collapsed(level, p)
+    store(lv, p, VALUE, made)
+
+# The last: level 0's output at the chunk-local pixel, written with the texel's
+# own a and b and alpha, through the mask. A texel with no alpha took no part
+# and keeps what it stored.
+
+
+def local_contrast_last():
+    ivec2 local = pixel + ivec2(origin)
+    if local.x >= image_size(dst).x or local.y >= image_size(dst).y:
+        return
+    vec4 kept = sa_kept(local)
+    if kept.a <= 0.0:
+        dst[local] = kept
+        return
+    vec3 lab = to_lab(kept.rgb)
+    lab.x = collapsed(0, local + ivec2(halo, halo))
+    sa_finish(local, kept, vec4(from_lab(lab), kept.a))

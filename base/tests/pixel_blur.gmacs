@@ -1,0 +1,13 @@
+# Soften the picture with a flat average of each pixel's neighbours in a square
+# whose reach is the radius, in pixels.
+
+uniform int radius: hint_range(1, 20), hint_reach(200) = 3
+
+
+def pixel(ivec2 at) -> vec4:
+    vec4 sum = vec4(0.0)
+    for dy in range_inclusive(-radius, radius):
+        for dx in range_inclusive(-radius, radius):
+            sum += premultiplied(src[at + ivec2(dx, dy)])
+    int n = 2 * radius + 1
+    return straight(sum / (n * n))

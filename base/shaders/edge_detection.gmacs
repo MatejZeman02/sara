@@ -1,0 +1,124 @@
+# Kernels: edge_detection
+# The Sobel of the usual set. An output texel reads its eight
+# neighbours, so this is a neighbourhood kernel and keeps the contract on
+# SaNeighbourhoodPass: the chunk padded by the halo at binding 0, the selection
+# mask at binding 1 read per pixel and mixed by, and the chunk-sized target at
+# binding 2.
+#
+# Two three by three convolutions over the luminance of the document's RGB view,
+# gx over the columns and gy over the rows, with the magnitude sqrt(gx*gx +
+# gy*gy) scaled by the strength. Below is positive for gy because the canvas's y
+# grows downwards, and the sign of neither gradient reaches the output: this is
+# a magnitude map, so the axis convention costs a painter nothing here. The
+# magnitude is a grey in that RGB view and goes back through rgb_to_document,
+# since a raw vec3 of it in an Oklab document shows orange.
+#
+# Nine reads and no separation. The Sobel separates into a 1, 2, 1 smooth and a
+# -1, 0, 1 difference, which is two passes and two textures against nine reads in
+# one, and a radius of one texel makes the second dispatch the expensive half.
+#
+# The helpers are adjust.gmacs's, repeated because a .gmacs block cannot be
+# shared between files without sharing the push constant that names it.
+
+kernel edge_detection
+
+import linear_srgb_color_space
+import transfer_curve
+
+image src: readonly
+image mask: r32f, readonly
+image dst
+
+# origin and halo are written per dispatch by the pass's Runner, and the two
+# fields are named here so that it finds them.
+params:
+    float strength  # how far the magnitude is scaled, 0 to 4
+    int halo  # how far the source is padded, one chunk at the most
+    vec2 origin  # the dispatched region's origin in the chunk, in pixels
+    float doc_to_linear_srgb[9]
+    float linear_srgb_to_doc[9]
+    float transfer_slope
+    float transfer_threshold
+    float transfer_gain
+    float transfer_exponent
+    float coordinates
+
+# The mask's blend and the texel as it was, imported after
+# the params because the library reads `halo` and the three images by name.
+import neighbourhood
+
+
+def to_linear_srgb_matrix() -> mat3:
+    return mat3(
+        doc_to_linear_srgb[0], doc_to_linear_srgb[1], doc_to_linear_srgb[2],
+        doc_to_linear_srgb[3], doc_to_linear_srgb[4], doc_to_linear_srgb[5],
+        doc_to_linear_srgb[6], doc_to_linear_srgb[7], doc_to_linear_srgb[8])
+
+
+def from_linear_srgb_matrix() -> mat3:
+    return mat3(
+        linear_srgb_to_doc[0], linear_srgb_to_doc[1], linear_srgb_to_doc[2],
+        linear_srgb_to_doc[3], linear_srgb_to_doc[4], linear_srgb_to_doc[5],
+        linear_srgb_to_doc[6], linear_srgb_to_doc[7], linear_srgb_to_doc[8])
+
+
+def document_to_linear(vec3 c) -> vec3:
+    return sa_transfer_decode(c, transfer_slope, transfer_threshold, transfer_gain, transfer_exponent)
+
+
+def linear_to_document(vec3 c) -> vec3:
+    return sa_transfer_encode(c, transfer_slope, transfer_threshold, transfer_gain, transfer_exponent)
+
+const int SA_COORDS_OKLAB = 1
+
+
+def document_is_oklab() -> bool: return int(coordinates + 0.5) == SA_COORDS_OKLAB
+
+
+def document_to_rgb(vec3 c) -> vec3:
+    if not document_is_oklab(): return c
+    return linear_to_document(from_linear_srgb_matrix() * oklab_to_linear_srgb(c))
+
+
+def rgb_to_document(vec3 c) -> vec3:
+    if not document_is_oklab(): return c
+    return linear_srgb_to_oklab(to_linear_srgb_matrix() * document_to_linear(c))
+
+# The pixel dialect's own luminance, which a raw kernel has to write for itself.
+# Above the read below, because the dialect has no forward declaration and a
+# function has to be defined before the one that calls it. On an RGB document
+# the view is the identity, so this is the coefficient dot product over the
+# stored value, and on an Oklab one it is the same dot product over the RGB the
+# stored value stands for.
+
+
+def luminance(vec3 rgb) -> float:
+    return dot(rgb, vec3(0.2126, 0.7152, 0.0722))
+
+# The luminance of the source at *at* offset by *dx* and *dy*, through the
+# padding: a position no chunk holds reads as transparent, which the Runner
+# cleared, and a transparent texel has no luminance to contribute.
+#
+# *at* is already in chunk-local pixels, so the halo is added here and at the
+# centre read below rather than at the call site.
+
+
+def lum_at(ivec2 at, int dx, int dy) -> float:
+    return luminance(document_to_rgb(src[at + ivec2(halo + dx, halo + dy)].rgb))
+
+
+def edge_detection():
+    ivec2 at = pixel + ivec2(origin)
+    float top_left = lum_at(at, -1, -1)
+    float top = lum_at(at, 0, -1)
+    float top_right = lum_at(at, 1, -1)
+    float mid_left = lum_at(at, -1, 0)
+    float mid_right = lum_at(at, 1, 0)
+    float bottom_left = lum_at(at, -1, 1)
+    float bottom = lum_at(at, 0, 1)
+    float bottom_right = lum_at(at, 1, 1)
+    float gx = (top_right + 2.0 * mid_right + bottom_right) - (top_left + 2.0 * mid_left + bottom_left)
+    float gy = (bottom_left + 2.0 * bottom + bottom_right) - (top_left + 2.0 * top + top_right)
+    float magnitude = sqrt(gx * gx + gy * gy) * strength
+    vec4 c = sa_kept(at)
+    sa_finish(at, c, vec4(rgb_to_document(vec3(magnitude)), c.a))

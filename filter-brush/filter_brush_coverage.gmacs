@@ -1,0 +1,69 @@
+# The filter brush's coverage: how much of the filter's result each texel of a
+# chunk takes, raised by one segment of the stroke.
+#
+# The segment is a capsule, every texel within the radius of the line from one
+# sample to the next, so a stroke is continuous at any speed with no spacing to
+# set. Its weight is flat inside the radius less the softness's share of it and
+# a smoothstep to nought across that share, at least one texel wide so a hard
+# edge is still smooth, times the strength and the selection's coverage.
+#
+# **The strength runs along the segment**, from its first end's to its last's,
+# each the opacity times the pen's pressure at that sample, so a stroke whose
+# pressure changes fades along its length rather than in steps.
+#
+# **Two fades.** A brush saved at settings format nought fades by the smoothstep
+# alone, which reaches half strength halfway across the fade. A brush of the
+# current format raises the smoothstep to the power one plus twice the softness,
+# so the softest edge fades from the centre as a soft tip does and lays an
+# eighth at half the radius. A hard edge is the same in both.
+#
+# **The coverage only rises.** A texel keeps the most any segment laid over it,
+# never the sum, so a stroke crossing itself takes the result no further than
+# one pass at the opacity does.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel filter_brush_coverage
+
+image coverage: r32f
+# The document-wide selection at the chunk's density: a 1 by 1 mask reads as 1.0
+# everywhere through the clamped read.
+image selection: r32f, readonly
+
+params:
+    # Where the dispatch starts inside the chunk, and how big it is, in the
+    # chunk's own texels.
+    vec4 dest
+    # The segment's two ends in the chunk's own texels.
+    vec4 segment
+    # The radius in texels, the softness, and the strength at the segment's
+    # first end and at its last.
+    vec4 brush
+    # The fade, nought for the smoothstep alone and one for the soft tip's,
+    # and three spare.
+    vec4 shape
+
+
+def filter_brush_coverage():
+    ivec2 local = ivec2(global_id.xy) + ivec2(dest.xy)
+    if local.x >= int(dest.x + dest.z) or local.y >= int(dest.y + dest.w):
+        return
+    ivec2 size = image_size(coverage)
+    if local.x >= size.x or local.y >= size.y:
+        return
+    vec2 at = vec2(local) + vec2(0.5)
+    vec2 along = segment.zw - segment.xy
+    float span = dot(along, along)
+    float t = 0.0
+    if span > 0.0:
+        t = clamp(dot(at - segment.xy, along) / span, 0.0, 1.0)
+    float apart = length(at - (segment.xy + along * t))
+    float edge = max(brush.x * brush.y, 1.0)
+    float inside = clamp((brush.x - apart) / edge, 0.0, 1.0)
+    float fade = inside * inside * (3.0 - 2.0 * inside)
+    if shape.x > 0.5:
+        fade = pow(fade, 1.0 + 2.0 * brush.y)
+    float laid = fade * mix(brush.z, brush.w, t)
+    laid *= selection[min(local, image_size(selection) - 1)].r
+    float held = coverage[local].r
+    coverage[local] = vec4(max(held, laid), 0.0, 0.0, 0.0)

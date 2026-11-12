@@ -1,0 +1,66 @@
+# Kernels: denoise
+# Filter > Denoise, Gaussian and mean. A neighbourhood kernel
+# under SaNeighbourhoodPass's contract: the source is the chunk padded by the
+# halo at binding 0, the selection mask at binding 1, the target at binding 2.
+#
+# Every sum here is over premultiplied colour, because a sum of straight
+# colours pulls a stroke's edge towards whatever colour the transparent texels
+# beside it happen to store. The threshold is what makes it a denoise rather
+# than a blur, and it is read per tap: a neighbour whose luminance is within
+# half the threshold of the centre's counts in full, one further than the
+# threshold is across an edge and counts for nothing, and between the two the
+# weight falls smoothly so no contour appears. So grain is averaged away and an
+# edge is never read across. Nothing clamps, hard rule 5, except those weights.
+
+kernel denoise
+
+image src: readonly
+image mask: r32f, readonly
+image dst
+
+params:
+    int radius
+    int halo
+    int kind  # 0 Gaussian, 1 mean, as SaDenoiseFilter.KINDS lists them
+    float threshold  # the band in luminance, 0 smooths nothing
+    vec2 origin
+
+# The premultiplied colour, the texel as it was and the mask's blend taken
+# premultiplied, imported after the params because the library
+# reads `halo` and the three images by name.
+import neighbourhood
+
+
+def luminance(vec4 p) -> float:
+    return dot(p.rgb, vec3(0.2126, 0.7152, 0.0722))
+
+
+def denoise():
+    ivec2 at = pixel + ivec2(origin)
+    if at.x >= image_size(dst).x or at.y >= image_size(dst).y:
+        return
+    vec4 original = sa_kept(at)
+    # An untouched texel is written back as it was read, so a transparent
+    # texel keeps the colour it stored rather than the black a division by
+    # its zero alpha would give it.
+    if threshold <= 0.0 or sa_chosen(at) == 0.0:
+        dst[at] = original
+        return
+    vec4 kept = sa_premultiplied(original)
+    float centre = luminance(kept)
+    int reach = min(radius, halo)
+    float sigma = max(radius * 0.5, 1e-3)
+    float spread = 2.0 * sigma * sigma
+    vec4 sum = vec4(0.0)
+    float weights = 0.0
+    for dy in range_inclusive(-reach, reach):
+        for dx in range_inclusive(-reach, reach):
+            vec4 tap = sa_premultiplied(src[at + ivec2(halo + dx, halo + dy)])
+            float w = 1.0 - smoothstep(0.5 * threshold, threshold, abs(luminance(tap) - centre))
+            if kind == 0:
+                w *= exp(-float(dx * dx + dy * dy) / spread)
+            sum += w * tap
+            weights += w
+    # The centre always weighs one, so the sum is never empty.
+    vec4 smoothed = sum / weights
+    sa_finish_premultiplied(at, kept, smoothed)

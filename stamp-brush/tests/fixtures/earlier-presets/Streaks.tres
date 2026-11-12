@@ -1,0 +1,532 @@
+[gd_resource type="Resource" script_class="SaStampBrushSettings" format=3]
+
+[ext_resource type="Script" uid="uid://b151gxntkwagy" path="res://core/api/dynamics/sa_curve_option.gd" id="1"]
+[ext_resource type="Script" uid="uid://d11nxrb3phkdo" path="res://modules/sara-base-modules/stamp-brush/tools/gamma_float.gd" id="2"]
+[ext_resource type="Script" uid="uid://f17s5fy862wf" path="res://modules/sara-base-modules/stamp-brush/sa_masking_brush.gd" id="3"]
+[ext_resource type="Script" uid="uid://bw8gy7vixj4uo" path="res://core/api/tip/sa_brush_tip.gd" id="4"]
+[ext_resource type="Script" uid="uid://cld65h3400otq" path="res://core/api/dynamics/sa_sensor.gd" id="5"]
+[ext_resource type="Script" uid="uid://du6p5dvw08wxg" path="res://modules/sara-base-modules/stamp-brush/stamp_brush_settings.gd" id="6"]
+
+[sub_resource type="Resource" id="Resource_fj70h"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {}
+
+[sub_resource type="Resource" id="Resource_w14rl"]
+script = ExtResource("2")
+value = 0.7
+gamma_val = 2.4
+
+[sub_resource type="Resource" id="Resource_c8y3s"]
+script = ExtResource("1")
+enabled = true
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {}
+
+[sub_resource type="Resource" id="Resource_0umo4"]
+script = ExtResource("2")
+value = 0.54
+gamma_val = 1.0
+
+[sub_resource type="Resource" id="Resource_w23j2"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {}
+
+[sub_resource type="Resource" id="Resource_bvkcs"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {}
+
+[sub_resource type="Resource" id="Resource_a4lx3"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {}
+
+[sub_resource type="Resource" id="Resource_o4dt4"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {}
+
+[sub_resource type="Resource" id="Resource_fyijd"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {}
+
+[sub_resource type="Resource" id="Resource_82sxf"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 5.0
+sensors = {}
+
+[sub_resource type="Resource" id="Resource_lrpjs"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {}
+
+[sub_resource type="Resource" id="Resource_pef3b"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {}
+
+[sub_resource type="Curve" id="Curve_3j116"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Resource" id="Resource_7txer"]
+script = ExtResource("4")
+kind = 0
+generator = 0
+shape = 0
+diameter = 42.0
+ratio = 1.0
+horizontal_fade = 1.0
+vertical_fade = 1.0
+softness = 1.0
+spikes = 2
+antialias_edges = true
+density = 1.0
+randomness = 0.0
+softness_curve = SubResource("Curve_3j116")
+spacing = 0.1
+auto_spacing = false
+auto_spacing_coeff = 1.0
+angle = 0.0
+mirror_horizontal = false
+mirror_vertical = false
+image_path = ""
+lightness_strength = 0.0
+
+[sub_resource type="Resource" id="Resource_2srds"]
+script = ExtResource("3")
+enabled = false
+tip = SubResource("Resource_7txer")
+size = 1.0
+spacing = 0.1
+size_option = SubResource("Resource_lrpjs")
+strength_option = SubResource("Resource_pef3b")
+flow_option = SubResource("Resource_a4lx3")
+rotation_option = SubResource("Resource_fyijd")
+scatter_option = SubResource("Resource_82sxf")
+scatter_axis_x = true
+scatter_axis_y = true
+mirror_option = SubResource("Resource_o4dt4")
+mirror_axis_x = true
+mirror_axis_y = false
+op = 0
+
+[sub_resource type="Resource" id="Resource_t6xew"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {}
+
+[sub_resource type="Resource" id="Resource_0jd2t"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {}
+
+[sub_resource type="Resource" id="Resource_n58fo"]
+script = ExtResource("5")
+id = 0
+active = true
+curve = PackedVector2Array(0, 0, 1, 1)
+length = 0
+periodic = true
+lock_angle = false
+angle_offset = 0.0
+fan_corners = false
+fan_step = 30.0
+
+[sub_resource type="Resource" id="Resource_rnsd1"]
+script = ExtResource("1")
+enabled = true
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 0.125, 0.08246925, 0.25, 0.18946457, 0.375, 0.30820346, 0.5, 0.4352753, 0.625, 0.56892633, 0.75, 0.7080656, 0.875, 0.8519413, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {
+0: SubResource("Resource_n58fo")
+}
+
+[sub_resource type="Resource" id="Resource_2xqwo"]
+script = ExtResource("2")
+value = 0.0
+gamma_val = 0.5
+
+[sub_resource type="Resource" id="Resource_cg27q"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {}
+
+[sub_resource type="Resource" id="Resource_jftns"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {}
+
+[sub_resource type="Resource" id="Resource_v3qj0"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {}
+
+[sub_resource type="Resource" id="Resource_7tb2s"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {}
+
+[sub_resource type="Resource" id="Resource_qe26h"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 5.0
+sensors = {}
+
+[sub_resource type="Resource" id="Resource_tl0ig"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {}
+
+[sub_resource type="Resource" id="Resource_yw0bj"]
+script = ExtResource("5")
+id = 0
+active = true
+curve = PackedVector2Array(0, 0, 1, 1)
+length = 0
+periodic = true
+lock_angle = false
+angle_offset = 0.0
+fan_corners = false
+fan_step = 30.0
+
+[sub_resource type="Resource" id="Resource_rjxjw"]
+script = ExtResource("1")
+enabled = true
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0.7, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {
+0: SubResource("Resource_yw0bj")
+}
+
+[sub_resource type="Resource" id="Resource_74f1n"]
+script = ExtResource("2")
+value = 0.0
+gamma_val = 2.0
+
+[sub_resource type="Resource" id="Resource_omiwl"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 0.19999999999999996
+strength_min = 0.0
+strength_max = 1.0
+sensors = {}
+
+[sub_resource type="Resource" id="Resource_msy6s"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 0.9
+strength_min = 0.0
+strength_max = 1.0
+sensors = {}
+
+[sub_resource type="Resource" id="Resource_4tnqy"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 0.3
+strength_min = 0.0
+strength_max = 1.0
+sensors = {}
+
+[sub_resource type="Resource" id="Resource_ke7jf"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.1
+strength_max = 1.0
+sensors = {}
+
+[sub_resource type="Resource" id="Resource_bnhs1"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {}
+
+[sub_resource type="Resource" id="Resource_ua1d8"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {}
+
+[sub_resource type="Curve" id="Curve_tua5h"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Resource" id="Resource_t04mq"]
+script = ExtResource("4")
+kind = 1
+generator = 3
+shape = 0
+diameter = 42.0
+ratio = 1.0
+horizontal_fade = 1.0
+vertical_fade = 1.0
+softness = 1.0
+spikes = 2
+antialias_edges = true
+density = 1.0
+randomness = 0.0
+softness_curve = SubResource("Curve_tua5h")
+spacing = 0.1
+auto_spacing = true
+auto_spacing_coeff = 0.45
+angle = 0.0
+mirror_horizontal = false
+mirror_vertical = false
+image_path = "res://tips/streaks.png"
+lightness_strength = 0.0
+
+[sub_resource type="Resource" id="Resource_vnxow"]
+script = ExtResource("1")
+enabled = false
+use_curve = true
+use_same_curve = true
+common_curve = PackedVector2Array(0, 0, 1, 1)
+combine = 0
+strength = 1.0
+strength_min = 0.0
+strength_max = 1.0
+sensors = {}
+
+[resource]
+resource_name = "Streaks"
+script = ExtResource("6")
+format_version = 15
+maker_pressure_curve = PackedFloat32Array(0, 1)
+radius = 0.02778
+hardness = SubResource("Resource_0umo4")
+opacity = 1.0
+flow = SubResource("Resource_w14rl")
+spacing = 0.15
+stabilizer_mode = 0
+stabilizer_amount = 0.5
+size_by_pressure = false
+size_pressure_gamma = SubResource("Resource_74f1n")
+opacity_by_pressure = true
+opacity_pressure_gamma = SubResource("Resource_2xqwo")
+color = Color(1, 1, 1, 1)
+blend_mode = &"pigment_mix"
+pattern_name = ""
+texture_scale = 1.0
+texture_offset_x = 0
+texture_offset_y = 0
+texture_invert = false
+texture_random_per_stroke = false
+texture_random_offset_x = 0
+texture_random_offset_y = 0
+texture_brightness = 0.0
+texture_contrast = 0.0
+texture_neutral = 0.5
+texture_neutral_from_pattern = true
+texture_mode = 0
+texture_cutoff_left = 0.0
+texture_cutoff_right = 1.0
+texture_cutoff_policy = 0
+tip = SubResource("Resource_t04mq")
+masking = SubResource("Resource_2srds")
+sharpness = 0.0
+sharpness_softness = 0.0
+pixel_mode_when_small = true
+painting_mode = 0
+airbrush_enabled = false
+airbrush_rate = 50.0
+airbrush_ignore_spacing = false
+size_option = SubResource("Resource_rjxjw")
+opacity_option = SubResource("Resource_rnsd1")
+flow_option = SubResource("Resource_c8y3s")
+rotation_option = SubResource("Resource_v3qj0")
+ratio_option = SubResource("Resource_jftns")
+softness_option = SubResource("Resource_ke7jf")
+hardness_option = SubResource("Resource_w23j2")
+color_source = 0
+gradient = []
+tip_mode = 0
+hue_option = SubResource("Resource_bvkcs")
+saturation_option = SubResource("Resource_7tb2s")
+value_option = SubResource("Resource_vnxow")
+darken_option = SubResource("Resource_fj70h")
+mix_option = SubResource("Resource_0jd2t")
+spacing_option = SubResource("Resource_bnhs1")
+scatter_option = SubResource("Resource_qe26h")
+scatter_axis_x = true
+scatter_axis_y = true
+rate_option = SubResource("Resource_cg27q")
+sharpness_option = SubResource("Resource_tl0ig")
+texture_option = SubResource("Resource_ua1d8")
+mirror_option = SubResource("Resource_t6xew")
+smudge_pickup_option = SubResource("Resource_4tnqy")
+smudge_color_rate_option = SubResource("Resource_omiwl")
+smudge_length_option = SubResource("Resource_msy6s")
+smudge_radius = 1.0
+smudge_mode = 0
+smudge_sample_merged = true
+smudge_move_height = true
+mirror_axis_x = true
+mirror_axis_y = false
+metadata/tags = PackedStringArray("drawn", "lines")
+metadata/engine = &"stamp"

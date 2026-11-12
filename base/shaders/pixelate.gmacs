@@ -1,0 +1,51 @@
+# The pixelate, one neighbourhood kernel under the contract SaNeighbourhoodPass
+# writes: the padded source at binding 0, the selection mask at binding 1, the
+# chunk-sized target at binding 2.
+#
+# The canvas is cut into square blocks from the document's corner, and every
+# texel of a block takes the texel at the block's centre, colour and alpha
+# together. The block a texel belongs to is found from its place on the
+# canvas, the chunk's corner plus its place in the chunk, and never from its
+# place in the chunk alone, so a block that straddles a chunk border is one
+# block on both sides of it, whatever the size.
+#
+# The centre is never more than half a block from any texel of the block, so
+# the halo the filter asks for, the whole block, holds every read. A
+# centre past the document's edge reads the nearest texel inside it, which the
+# gather has already written there.
+#
+# The block is in document pixels and the places the runner writes are in the
+# chunk's texels, so on a layer at twice the document's resolution a block is
+# twice as many texels across and covers the same part of the canvas. Nothing
+# is averaged and nothing clamps but the coordinates.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel pixelate
+
+image src: readonly
+image mask: r32f, readonly
+image dst
+
+params:
+    float block  # a block's side, in document pixels
+    vec2 origin  # the dispatched region's corner in the chunk
+    int halo  # how far the source is padded, written by the runner
+    vec2 chunk  # the chunk's corner in its texels, written by the runner
+    float scale  # the chunk's texels per document pixel, written by the runner
+
+# The kept texel and the mask's blend, imported after the params because the
+# library reads `halo` and the three images by name.
+import neighbourhood
+
+
+def pixelate():
+    ivec2 at = pixel + ivec2(origin)
+    if at.x >= image_size(dst).x or at.y >= image_size(dst).y:
+        return
+    int side = max(int(round(block * scale)), 1)
+    vec2 placed = chunk + vec2(at)
+    ivec2 start = ivec2(floor(placed / side)) * side
+    ivec2 centre = start + ivec2(side / 2, side / 2) - ivec2(chunk)
+    ivec2 tap = clamp(centre + ivec2(halo, halo), ivec2(0, 0), image_size(src) - 1)
+    sa_finish(at, sa_kept(at), src[tap])

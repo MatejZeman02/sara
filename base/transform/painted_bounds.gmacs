@@ -1,0 +1,70 @@
+# The transform's tight box: the document pixels a layer's paint covers,
+# reduced on the graphics card into four ints.
+#
+# A box round the paint itself rather than the union of the layer's chunks,
+# 256-aligned, and no read of every chunk back to do it. Every texel that
+# holds paint takes the minimum and the maximum of its document position into
+# four atomics, and what crosses the bus is those four, which is the shape of
+# read the selection's `bounds` kernel already makes for its tight box. It
+# runs once when the box is asked for again after the layer changed, never
+# during a stroke.
+#
+# A colour texel holds paint when it is not fully transparent, the threshold
+# the selection's `bounds` and the `measure` step read coverage at. A height
+# texel holds paint when it is not zero, because a height can stand under a
+# colour of no alpha (Apply Mask multiplies the colour alone) and the lift
+# carries it, so a box that left it out would leave the relief behind.
+#
+# The caller seeds the buffer wide, `min` at a number no pixel reaches and
+# `max` below zero, so a layer with no paint comes back as the empty box.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel painted_bounds
+
+image field: readonly
+
+# Min x, min y, max x and max y, in document pixels.
+buffer tight: int box[4]
+
+params:
+    # Where the dispatch starts, in the chunk's own texels, since the walk
+    # aligns the start down to the workgroup grid.
+    float offset_x
+    float offset_y
+    # The chunk's share of the reach, exclusive, in its own texels.
+    float end_x
+    float end_y
+    # The document position of the chunk's own (0, 0).
+    float origin_x
+    float origin_y
+    # Texels per document pixel, the chunk's resolution scale, so a chunk
+    # stored at twice the resolution answers in document pixels and not in
+    # its own texels.
+    float scale
+    # Which field this dispatch reads: 0 the colour, whose alpha says paint,
+    # and 1 the height, whose own value does.
+    float channel
+
+
+def painted_bounds():
+    ivec2 px = ivec2(global_id.xy) + ivec2(int(offset_x), int(offset_y))
+    ivec2 size = image_size(field)
+    if px.x >= size.x or px.y >= size.y:
+        return
+    if px.x >= int(end_x) or px.y >= int(end_y):
+        return
+    vec4 texel = field[px]
+    if channel < 0.5 and texel.a <= 0.0:
+        return
+    if channel >= 0.5 and texel.r == 0.0:
+        return
+    # The document pixels this texel covers: one at a scale of one, part of
+    # one above it, and two or more below it.
+    ivec2 first = ivec2(floor(vec2(px) / scale))
+    ivec2 last = ivec2(ceil((vec2(px) + vec2(1.0)) / scale)) - ivec2(1)
+    ivec2 origin = ivec2(int(origin_x), int(origin_y))
+    atomic_min(tight.box[ 0 ], origin.x + first.x)
+    atomic_min(tight.box[ 1 ], origin.y + first.y)
+    atomic_max(tight.box[ 2 ], origin.x + last.x)
+    atomic_max(tight.box[ 3 ], origin.y + last.y)

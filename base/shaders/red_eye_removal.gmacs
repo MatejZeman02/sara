@@ -1,0 +1,119 @@
+# Kernels: red_eye_removal
+# Red-eye Removal of the Colour list. A point kernel under the SaPointPass
+# contract: the colour field at binding 0, the selection mask at binding 1, the
+# dispatched region's origin in the push constant. The selection is how the
+# painter says where the eyes are.
+#
+# It works in linear light on sRGB's primaries whatever the document stores, and
+# goes back the same way. Red stands out when it is at least `threshold` times
+# the larger of green and blue, so an orange is not taken for an eye. The weight
+# rises from nothing at the threshold to all of it at FEATHER times the
+# threshold, so a pupil's rim fades rather than ringing, and red is moved toward
+# the mean of green and blue by `strength` of that weight. Skin and greys sit
+# under the default threshold and are left as they were.
+#
+# A texel the weight leaves alone is stored as read, without the round trip
+# through linear light. Nothing clamps: a red above one is brought down to its
+# other channels as one below is. Alpha is kept.
+#
+# The helpers are posterise.gmacs's, repeated because a .gmacs block cannot be
+# shared between files without sharing the push constant that names it.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel red_eye_removal
+
+import linear_srgb_color_space
+import transfer_curve
+
+image canvas
+# The document-wide selection, as in adjust.gmacs: a 1 by 1 mask reads as 1.0
+# everywhere through the clamped read (core/api/selection/sa_selection.gd).
+image mask: r32f, readonly
+
+# 112 bytes: the region's origin, the threshold and the strength, then the
+# colour space tail exactly as SaColorSpacePushConstant writes it.
+params:
+    float origin_x  # the dispatched region's origin in the chunk, in pixels
+    float origin_y  # zero for the destructive pass, which covers the chunk
+    float threshold  # how many times the larger of green and blue red must be
+    float strength  # how much of the red over the neutral goes, 0 to 1
+    float doc_to_linear_srgb[9]
+    float linear_srgb_to_doc[9]
+    float transfer_slope
+    float transfer_threshold
+    float transfer_gain
+    float transfer_exponent
+    float coordinates
+
+# Where the weight reaches one, as a multiple of the threshold.
+const float FEATHER = 1.5
+# The smallest green or blue the ratio divides by, so a red over a black or a
+# negative green and blue reads as far past any threshold.
+const float SMALLEST_OTHER = 0.000001
+
+
+def to_linear_srgb_matrix() -> mat3:
+    return mat3(
+        doc_to_linear_srgb[0], doc_to_linear_srgb[1], doc_to_linear_srgb[2],
+        doc_to_linear_srgb[3], doc_to_linear_srgb[4], doc_to_linear_srgb[5],
+        doc_to_linear_srgb[6], doc_to_linear_srgb[7], doc_to_linear_srgb[8])
+
+
+def from_linear_srgb_matrix() -> mat3:
+    return mat3(
+        linear_srgb_to_doc[0], linear_srgb_to_doc[1], linear_srgb_to_doc[2],
+        linear_srgb_to_doc[3], linear_srgb_to_doc[4], linear_srgb_to_doc[5],
+        linear_srgb_to_doc[6], linear_srgb_to_doc[7], linear_srgb_to_doc[8])
+
+
+def document_to_linear(vec3 c) -> vec3:
+    return sa_transfer_decode(c, transfer_slope, transfer_threshold, transfer_gain, transfer_exponent)
+
+
+def linear_to_document(vec3 c) -> vec3:
+    return sa_transfer_encode(c, transfer_slope, transfer_threshold, transfer_gain, transfer_exponent)
+
+const int SA_COORDS_OKLAB = 1
+
+
+def document_is_oklab() -> bool: return int(coordinates + 0.5) == SA_COORDS_OKLAB
+
+
+def document_to_light(vec3 c) -> vec3:
+    if document_is_oklab(): return oklab_to_linear_srgb(c)
+    return to_linear_srgb_matrix() * document_to_linear(c)
+
+
+def light_to_document(vec3 c) -> vec3:
+    if document_is_oklab(): return linear_srgb_to_oklab(c)
+    return linear_to_document(from_linear_srgb_matrix() * c)
+
+
+def coverage_at(ivec2 px) -> float:
+    return mask[min(px, image_size(mask) - 1)].r
+
+# How much of the way to neutral the texel of light *c* goes: nothing while red
+#   is under the threshold times the larger of green and blue, all of it from
+#   FEATHER times that, and the strength of it.
+
+
+def red_weight(vec3 c) -> float:
+    if c.r <= 0.0: return 0.0
+    float ratio = c.r / max(max(c.g, c.b), SMALLEST_OTHER)
+    return strength * smoothstep(threshold, threshold * FEATHER, ratio)
+
+
+def red_eye_removal():
+    ivec2 px = ivec2(global_id.xy) + ivec2(int(origin_x), int(origin_y))
+    ivec2 size = image_size(canvas)
+    if px.x >= size.x or px.y >= size.y:
+        return
+    vec4 c = canvas[px]
+    vec3 light = document_to_light(c.rgb)
+    float weight = red_weight(light) * coverage_at(px)
+    if weight <= 0.0:
+        return
+    float neutral = 0.5 * (light.g + light.b)
+    vec3 taken = light_to_document(vec3(mix(light.r, neutral, weight), light.g, light.b))
+    canvas[px] = vec4(taken, c.a)

@@ -1,0 +1,202 @@
+# Kernel: dab
+#
+# One stamp of the brush tip, evaluated analytically at the size and rotation
+# the dab asks for. No dab cache and no tip atlas: a cached mask is rasterised at
+# one size and resampled to every other.
+#
+# Every function returns coverage, 1 for opaque and 0 for clear, the sense a
+# painter states a mask in and the sense the alpha rules want. The other way
+# round would put a subtraction at nine call sites.
+# The falloffs and the sharpness cut live in the `brush_tip` library, the
+# uniforms and the push constant here, and the per-texel steps in `dab_texel`,
+# which `dabs.gmacs` runs with the same lines.
+#
+# Written from what the mechanisms do, so this file carries no copyright line but
+# Sara's own. The one port, the alpha arithmetic of three texture modes, is in
+# `pattern_modes.gmacs` with its lines in `PROVENANCE.md`.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel dab
+
+import noise
+# How the dab's paint lands on the texel in each of the three paint modes, the
+# door's library.
+import brush_paint_modes
+# The deposition rule, which the eraser lowers the paint's height by.
+import height_deposit
+# For the tip's lightness map: the dab's colour is decoded out
+# of its sRGB curve, moved in Oklab's lightness and encoded back, which is the
+# maths `SaColorDynamics` already does on the CPU for Hue, Saturation and Value
+# and the same pair of libraries it does it with. Imported from here rather than
+# from `brush_tip`, the falloffs' library, because that file is text pasted
+# after these uniforms and would carry the import past them, and because a
+# falloff has no colour in it.
+import linear_srgb_color_space
+# For the four numbers an RGB-storing document's values were encoded through.
+# The curve is the document's own rather than the sRGB one: a gamma 2.2 document
+# would otherwise have its lightness shifted under the wrong curve, which is a
+# near miss on a mid grey and a long way off on a shadow.
+import transfer_curve
+
+image canvas
+# The document-wide selection, r32f whatever the canvas is, on the same chunk
+# grid, bound for every target by `SaPaintContext.dispatch_batch`. A 1 by 1
+# mask is the no-selection stand-in and the clamped read is what makes it 1.0
+# everywhere without a flag (core/api/selection/sa_selection.gd).
+image mask: r32f, readonly
+# The SOFT generator's falloff, `SaBrushTip.SOFTNESS_SAMPLES` floats of
+# coverage against the squared normalised radius. Bound for every dispatch,
+# whichever generator is running, because a uniform set has to cover every
+# binding the kernel declares and a table nothing reads costs one bind.
+#
+# Binding 2, with the image tip on 3. A declared binding with nothing in it is a
+# broken uniform set rather than a spare slot, so a table holds the number it
+# was given and no slot is kept free for a table to come.
+buffer softness: float curve[]
+# The image tip's coverage, at the file's own resolution, sampled bilinearly at
+# the dab's own inverse transform. **One texture serves every size**, so
+# there is no mipmap pyramid and no per-size cache: the kernel asks for a
+# normalised coordinate and the sampler does the rest.
+#
+# Binding 3, the softness table holding 2, because a binding arrives with the
+# code that reads it and no number is kept free for a reader to come. A one by
+# one white texel is bound when the tip is procedural, which is the pattern
+# `SaSelection.everything()` established and which the rule about a uniform set
+# covering every declared binding makes necessary rather than tidy.
+sampler tip_image
+# The tiled mask the paper is painted through, read by `sa_pattern_applied`
+# below whenever `pattern_strength` is above zero. Still bound to the same one
+# by one stand-in when it is not, because a declared binding with no uniform is
+# a set that refuses to build, and the stand-in is clear rather than white,
+# which is why nothing must read it at strength zero.
+sampler pattern
+# The masking brush's second tip: its own numbers first and its
+# own softness table behind them, in one storage buffer.
+#
+# **Not the push constant, because there is none left.** The pattern filled that
+# block to its 128 bytes exactly, and a second tip needs eleven numbers rather
+# than the one a pattern needed, and a storage buffer is where side data goes
+# once the block is closed.
+#
+# **Not a second dispatch either.** A dab is one pass over its own rectangle and
+# a mask is a multiply on the coverage that pass computes, so a second dispatch
+# would have to keep the first one's coverage somewhere to multiply it by, which
+# is a full-size scratch texture per target and a read of it, for arithmetic
+# that costs eleven reads out of a buffer here.
+#
+# **Bound on every dispatch, whether or not there is a mask**, because a uniform
+# set has to cover every binding the kernel declares. The stand-in is the same
+# array with its first float at nought, which `sa_mask_applied` answers on
+# before it reads anything else.
+#
+# **The painted tip's lightness row rides here too**, at
+# `SA_MASK_TIP_LIGHTNESS`, for the reason the block above is full: the number
+# belongs to the painted tip rather than to the mask, and this is the only
+# buffer the kernel has that is not the push constant. Its header is twenty
+# floats rather than thirteen, the mask's own numbers plus the painted tip's
+# lightness row, its mode, the four transfer numbers and
+# the mask's composite op at 19, and the softness table behind it moves with
+# it. A slot added here is a header one longer and nothing else, because the
+# table is found at `SA_MASK_HEADER` and not at a number of its own.
+#
+# **The mask's scatter makes it twenty-two**, as two numbers behind
+# the op. The slots go on the end and the softness table moves behind them, so
+# no slot anything already read changes its index. The mask's rotation needs
+# no slot, because it turns the cosine and sine the mask already carries.
+# The document's two gamut matrices behind it, at 22 and 31, make it forty.
+buffer masking: float second_tip[]
+# The smudge stage's carry, written once per dab by `smudge_pickup` before this
+# kernel runs. Texel 0 is the carried colour and, in alpha, how much of it
+# replaces the brush's own colour on this dab. The stage off binds
+# `SaSmudgeReservoir.stand_in()`, one texel of nothing, and an alpha of nought
+# mixes nothing in, so a dab with the stage off paints exactly the texels it
+# would with no stage at all. Binding 6, and bound on every dispatch for the
+# reason the two buffers above give.
+image smudge: rgba32f, readonly
+# The paint's height under the dab, which only the erase mode
+# writes: erasing lowers the paint rather than taking its colour alone. The
+# layer's own chunk height where the stroke erases straight into a layer that
+# carries one, and `SaStrokeHeights.held`'s one texel stand-in everywhere else,
+# which the kernel knows by its size and never writes. Binding 7, bound on
+# every dispatch for the reason the buffers above give. A smudge stroke that
+# moves height writes it too, which binds the layer's height
+# through `SaStrokeHeights.reach` rather than `held`.
+image height: r16f
+# What a smudging dab found under itself, for the pickup of the next dab to
+# carry: the sum of the coverage and of the coverage times the
+# height read before the write, in fixed point, which `smudge_pickup.gmacs`
+# reads and clears. `SaSmudgeReservoir.bind` puts the carry's own buffer here
+# or a stand-in, since only a stroke that moves height adds to it. Binding 8.
+buffer exchange: uint sums[]
+
+# The preset's ramp a gradient-map tip paints through, as the document's own
+# values at the centre of each texel, which `SaStampBindings.Ramp` uploads
+# before a stroke opens and never inside one. Its own binding, because the block
+# below is full, and the one by one stand-in when the mode is off, which is what
+# `sa_ramp_color` tests. Binding 9.
+sampler ramp
+
+# The full 128 bytes a push constant may carry, so what comes later adds a field
+# rather than a layout. Everything past `randomness` is written at the value
+# that means "not asked for", and each is named here so the next reader knows
+# the slot is taken rather than free.
+params:
+    vec2 dab_center  # chunk-local document pixels, sub-pixel
+    vec2 render_offset  # the dispatch origin in the chunk's own texels
+    vec4 color  # the document's encoding, alpha is the dab opacity
+    vec2 half_extent  # major and minor radii in pixels
+    vec2 rotation  # cos and sin of the dab angle, computed on the CPU
+    vec2 fade  # horizontal and vertical, already multiplied by softness
+    float flow
+    float spikes  # 2 is the plain ellipse and the only value that skips the fold.
+    float generator  # 0 default, 1 gauss, 2 soft curve, 3 image.
+    float shape  # 0 circle, 1 rectangle.
+    float antialias
+    float density
+    float randomness
+    float seed  # Per dab, from the dab sequence number.
+    float sharpness
+    float sharpness_soft
+    float paint_mode  # 0 over, 1 alpha darken, 2 erase.
+    float alpha_lock
+    float mirror  # Bit 0 horizontal, bit 1 vertical.
+    # The hardness ellipse an image tip is softened along, in pixels, computed
+    # on the CPU by `SaDabGeometry.falloff_radius`. Two floats
+    # rather than a `vec2`, because std430 would align a vec2 to eight bytes
+    # and this pair sits at offset 108.
+    float falloff_x
+    float falloff_y
+    # The pattern hook beside binding 4, filled in by the pattern.
+    # `pattern_strength` is how much of the tiled mask the dab's coverage is
+    # given over to, and zero is the dab with no pattern at all, arithmetically
+    # as well as by the early return below. Its sign is the invert toggle and
+    # its band is the texturing mode, both read in `sa_pattern_applied`: a
+    # magnitude at or under one is multiply and one above is subtract, with the
+    # strength one less. Two things ride one float because the block below is
+    # full and no unit widens it.
+    #
+    # `pattern_offset` is the document texel the tile grid starts at, and it
+    # carries the chunk's own document origin as well as whatever the painter
+    # asked for: `document_pixel` below is chunk-local, so a grid stated in
+    # chunk coordinates would break at every chunk edge a tile size does not
+    # divide. Two floats rather than a `vec2` for the reason the pair above
+    # gives, and the three of them fill the block to its 128 bytes exactly, so
+    # there is no pad at the tail and nothing spare.
+    float pattern_strength
+    float pattern_offset_x
+    float pattern_offset_y
+
+# One texel of the dab, the lines `dabs.gmacs` runs for each dab of a walk as
+# well, which is why they are a file of their own.
+import dab_texel
+
+
+def dab():
+    # `pixel_coords` is the texel this invocation writes, and `render_offset`
+    # is in the canvas's texels, so the dispatch covers the dab's own box.
+    ivec2 pixel_coords = ivec2(global_id.xy) + ivec2(render_offset)
+    ivec2 size = image_size(canvas)
+    if pixel_coords.x >= size.x or pixel_coords.y >= size.y:
+        return
+    sa_dab_texel(pixel_coords)
