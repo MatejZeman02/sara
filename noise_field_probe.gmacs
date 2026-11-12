@@ -1,0 +1,48 @@
+# Kernel: noise_field_probe
+#
+# The noise brush's field read without painting: both readings of every texel
+# of a region, the pressure map into red and the lightness into green. The
+# stroke's kernel reads the same `noise_field` from the same library, so what
+# this writes is what a stroke cuts against.
+#
+# **In a straight stroke's coordinates.** A texel of the region is a document
+# pixel, and it is read at the stroke coordinates a straight path through
+# `start` along `direction` gives it: along is `along` plus how far past
+# `start` it lies, across its signed distance from the path over
+# `half_width`. That is what the stroke's kernel reads anywhere along the body
+# of a straight stroke, so a suite compares a painted stroke with this texel
+# for texel.
+#
+# Here because a suite that proves a field has two channels has to read the
+# second somewhere, and one that proves the height follows the
+# lightness has to read what it follows. It is the one place the field
+# leaves VRAM, and only for a suite, never in a stroke.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel noise_field_probe
+
+image readings: rgba32f
+buffer field: float values[]
+sampler field_image
+
+params:
+    vec2 origin  # the document pixel texel (0, 0) of `readings` stands for
+    vec2 start  # a point of the path, in document pixels
+    vec2 direction  # the path's direction of travel, unit length
+    float along  # along at `start`, the travelled length less the drift
+    float half_width  # the tip's half-width across the path, in pixels
+
+import noise_fields
+
+
+def noise_field_probe():
+    ivec2 at = ivec2(global_id.xy)
+    ivec2 size = image_size(readings)
+    if at.x >= size.x or at.y >= size.y:
+        return
+    vec2 offset = vec2(at) + origin - start
+    float here = along + dot(offset, direction)
+    float across = dot(offset, vec2(-direction.y, direction.x)) / half_width
+    vec2 reading = noise_field(here, across, half_width)
+    readings[at] = vec4(reading, 0.0, 1.0)

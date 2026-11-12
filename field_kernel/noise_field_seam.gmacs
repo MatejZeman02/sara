@@ -1,0 +1,23 @@
+# Library: noise_field_seam
+#
+# Where the noise brush's field pass reads its field: the one function
+# `noise_dab` calls for both readings at a texel's stroke coordinates, here over
+# the three shipped fields of `noise_fields.gmacs`, which the kernel imports
+# first.
+#
+# **The seam a field's own kernel goes in at.** `noise_dab` imports this on a
+# line of its own, and `noise_own_field.gd` beside this file builds the kernel
+# again for a field a module brings with its own GLSL, with that line swapped
+# for an import of the module's function and a `noise_field_read` that calls
+# it. So the shipped kernel is the shipped fields' and nothing else, and a
+# module's kernel is a pass of its own that runs nothing of theirs.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# The field's two readings at stroke coordinates *along* and *across*, where the
+# tip is *half_width* pixels either side of the path: x is the pressure map the
+# cut reads, y the lightness.
+
+
+def noise_field_read(float along, float across, float half_width) -> vec2:
+    return noise_field(along, across, half_width)

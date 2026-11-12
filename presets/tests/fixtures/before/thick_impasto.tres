@@ -1,0 +1,179 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://core/api/dynamics/sa_curve_option.gd" id="1_dlex5"]
+[ext_resource type="Script" path="res://core/api/dynamics/sa_sensor.gd" id="2_ox60k"]
+[ext_resource type="Script" path="res://modules/sara-noise-brush-engine/noise_brush_settings.gd" id="3_jg02y"]
+[ext_resource type="Script" path="res://core/api/tip/sa_brush_tip.gd" id="4_ir58x"]
+
+[sub_resource type="Resource" id="Resource_u0ld8"]
+script = ExtResource("2_ox60k")
+id = 6
+active = true
+curve = PackedVector2Array(0, 0.5, 0.3, 1, 1, 1)
+length = 0
+
+[sub_resource type="Resource" id="Resource_hqg8i"]
+script = ExtResource("1_dlex5")
+use_same_curve = false
+common_curve = PackedVector2Array(0, 0, 1, 1)
+strength = 2.0
+strength_max = 2.0
+sensors = {
+6: SubResource("Resource_u0ld8")
+}
+
+[sub_resource type="Resource" id="Resource_duem5"]
+script = ExtResource("1_dlex5")
+enabled = false
+common_curve = PackedVector2Array(0, 0, 1, 1)
+
+[sub_resource type="Resource" id="Resource_jbxi7"]
+script = ExtResource("1_dlex5")
+common_curve = PackedVector2Array(0, 0, 1, 1)
+
+[sub_resource type="Resource" id="Resource_jp8vo"]
+script = ExtResource("1_dlex5")
+enabled = false
+common_curve = PackedVector2Array(0, 0, 1, 1)
+
+[sub_resource type="Resource" id="Resource_lubeb"]
+script = ExtResource("1_dlex5")
+enabled = false
+common_curve = PackedVector2Array(0, 0, 1, 1)
+
+[sub_resource type="Resource" id="Resource_jqmae"]
+script = ExtResource("1_dlex5")
+common_curve = PackedVector2Array(0, 0, 1, 1)
+
+[sub_resource type="Resource" id="Resource_mhnx2"]
+script = ExtResource("1_dlex5")
+enabled = false
+common_curve = PackedVector2Array(0, 0, 1, 1)
+
+[sub_resource type="Resource" id="Resource_aduju"]
+script = ExtResource("1_dlex5")
+common_curve = PackedVector2Array(0, 0, 1, 1)
+strength = 0.5
+
+[sub_resource type="Resource" id="Resource_ah3s8"]
+script = ExtResource("1_dlex5")
+enabled = false
+common_curve = PackedVector2Array(0, 0, 1, 1)
+strength = 0.9
+
+[sub_resource type="Resource" id="Resource_vdb5v"]
+script = ExtResource("1_dlex5")
+enabled = false
+common_curve = PackedVector2Array(0, 0, 1, 1)
+strength = 0.3
+
+[sub_resource type="Resource" id="Resource_2c5qe"]
+script = ExtResource("2_ox60k")
+active = true
+curve = PackedVector2Array(0, 1, 1, 0)
+length = 0
+
+[sub_resource type="Resource" id="Resource_xqmc3"]
+script = ExtResource("1_dlex5")
+common_curve = PackedVector2Array(0, 1, 1, 0)
+sensors = {
+0: SubResource("Resource_2c5qe")
+}
+
+[sub_resource type="Resource" id="Resource_mevnk"]
+script = ExtResource("2_ox60k")
+id = 5
+active = true
+curve = PackedVector2Array(0, 1, 1, 0)
+length = 0
+
+[sub_resource type="Resource" id="Resource_8k8d5"]
+script = ExtResource("1_dlex5")
+use_same_curve = false
+common_curve = PackedVector2Array(0, 0, 1, 1)
+sensors = {
+5: SubResource("Resource_mevnk")
+}
+
+[sub_resource type="Resource" id="Resource_stgj5"]
+script = ExtResource("2_ox60k")
+id = 5
+active = true
+curve = PackedVector2Array(0, 1, 1, 0)
+length = 0
+
+[sub_resource type="Resource" id="Resource_5hyk5"]
+script = ExtResource("1_dlex5")
+use_same_curve = false
+common_curve = PackedVector2Array(0, 0, 1, 1)
+sensors = {
+5: SubResource("Resource_stgj5")
+}
+
+[sub_resource type="Resource" id="Resource_ril7q"]
+script = ExtResource("2_ox60k")
+active = true
+curve = PackedVector2Array(0, 0, 1, 1)
+length = 0
+
+[sub_resource type="Resource" id="Resource_11khy"]
+script = ExtResource("2_ox60k")
+id = 5
+active = true
+curve = PackedVector2Array(0, 0.5, 1, 1)
+length = 0
+
+[sub_resource type="Resource" id="Resource_a2fv0"]
+script = ExtResource("2_ox60k")
+id = 6
+active = true
+curve = PackedVector2Array(0, 1, 0.3, 0.5, 1, 0.5)
+length = 0
+
+[sub_resource type="Resource" id="Resource_32js8"]
+script = ExtResource("1_dlex5")
+use_same_curve = false
+common_curve = PackedVector2Array(0, 0, 1, 1)
+sensors = {
+0: SubResource("Resource_ril7q"),
+5: SubResource("Resource_11khy"),
+6: SubResource("Resource_a2fv0")
+}
+
+[sub_resource type="Curve" id="Curve_ghf2e"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Resource" id="Resource_aqk4g"]
+script = ExtResource("4_ir58x")
+softness_curve = SubResource("Curve_ghf2e")
+
+[resource]
+script = ExtResource("3_jg02y")
+format_version = 4
+radius = 0.03
+hardness = 1.0
+strength = -0.4
+tip = SubResource("Resource_aqk4g")
+texture_field = "bristle"
+texture_channels = 2
+texture_relief = 1.5
+texture_drift = 1.0
+bristle_count = 20
+bristle_spread = 0.4
+bristle_length = 6.0
+thickness = 2.0
+size_option = SubResource("Resource_mhnx2")
+opacity_option = SubResource("Resource_jp8vo")
+hardness_option = SubResource("Resource_duem5")
+strength_option = SubResource("Resource_xqmc3")
+thickness_option = SubResource("Resource_32js8")
+stretch_option = SubResource("Resource_8k8d5")
+rotation_option = SubResource("Resource_lubeb")
+thickness_lean_option = SubResource("Resource_5hyk5")
+drift_option = SubResource("Resource_hqg8i")
+saturation_option = SubResource("Resource_jqmae")
+hue_option = SubResource("Resource_jbxi7")
+smudge_pickup_option = SubResource("Resource_vdb5v")
+smudge_color_rate_option = SubResource("Resource_aduju")
+smudge_length_option = SubResource("Resource_ah3s8")
