@@ -1,0 +1,66 @@
+# Kernel: subject_spread
+#
+# The network's 320 by 320 mask laid over the canvas as a selection chunk's
+# coverage. The mask stands for the region the tensor it came from stood for,
+# the whole canvas or Object Selection's grown box, so a document pixel's
+# centre, taken from the region's corner, maps to the mask at the region's
+# size over 320 along each side and is read bilinearly with the corners unaligned, the
+# arithmetic of `../network/subject_resample.gmacs`, which is how the
+# reference's mask is resized to its photograph. The value is the sigmoid as
+# the network gives it: no threshold, and nothing outside the clip, which is
+# the canvas for Select Subject and the box as dragged for Object Selection.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel subject_spread
+
+image mask
+buffer subject: float values[]
+
+params:
+    # The chunk's corner in document pixels.
+    int origin_x
+    int origin_y
+    # The rectangle outside which nothing is selected, in document pixels.
+    int clip_x
+    int clip_y
+    int clip_width
+    int clip_height
+    # The region of the canvas the mask stands for, in document pixels.
+    float region_x
+    float region_y
+    float region_width
+    float region_height
+
+const int SIDE = 320
+
+
+def along(float centre, float region_size) -> vec2:
+    """The first mask texel a document pixel reads along one axis, its centre
+    taken from the region's corner, and the fraction of the next one it mixes
+    in."""
+    float scale = SIDE / region_size
+    float real = max(scale * centre - 0.5, 0.0)
+    float low = min(floor(real), float(SIDE - 1))
+    return vec2(low, min(real - low, 1.0))
+
+
+def subject_spread():
+    ivec2 px = ivec2(global_id.xy)
+    ivec2 size = image_size(mask)
+    if px.x >= size.x or px.y >= size.y:
+        return
+    int x = origin_x + px.x
+    int y = origin_y + px.y
+    if x < clip_x or y < clip_y or x >= clip_x + clip_width or y >= clip_y + clip_height:
+        image_store(mask, px, vec4(0.0))
+        return
+    vec2 row = along(y + 0.5 - region_y, region_height)
+    vec2 column = along(x + 0.5 - region_x, region_width)
+    int y0 = int(row.x)
+    int x0 = int(column.x)
+    int y1 = y0 < SIDE - 1 ? y0 + 1 : y0
+    int x1 = x0 < SIDE - 1 ? x0 + 1 : x0
+    float top = (1.0 - column.y) * subject.values[y0 * SIDE + x0] + column.y * subject.values[y0 * SIDE + x1]
+    float bottom = (1.0 - column.y) * subject.values[y1 * SIDE + x0] + column.y * subject.values[y1 * SIDE + x1]
+    image_store(mask, px, vec4((1.0 - row.y) * top + row.y * bottom))

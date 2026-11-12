@@ -1,0 +1,25 @@
+# Kernel: subject_sigmoid
+#
+# The network's last step, `F.sigmoid` of the fused output, kept as it is: no
+# stretch to the full range as the reference test's `normPRED` does, so a
+# picture with no subject comes out near nought and not with one made up.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel subject_sigmoid
+
+buffer source: float values[]
+buffer target: float values[]
+
+params:
+    int source_at
+    int target_at
+    int count
+
+
+@workgroup_size(64, 1)
+def subject_sigmoid():
+    int at = int(global_id.x)
+    if at >= count:
+        return
+    target.values[target_at + at] = 1.0 / (1.0 + exp(-source.values[source_at + at]))
