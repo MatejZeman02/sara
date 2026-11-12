@@ -189,7 +189,7 @@ otherwise.
 | `uninstall.sh` | Removes what `install.sh` created, the client modules with the rest of the lib folder |
 | `client-modules.txt` | The eight Python client files of `sara-godot/scripts`, the one list `build.sh`, `install.sh` and `draft-release.sh` read, so the Linux build, the Windows zip and the client download cannot drift |
 | `client-readme.txt` | The `README.txt` of the separate client download, what it is, what Python it needs and how to attach |
-| `appimage.sh` | Wraps `build/l/` into `build/a/Sara-<version>-x86_64.AppImage`, the Linux half of a release |
+| `appimage.sh` | Wraps `build/l/` into `build/a/sara-linux-x86_64-v<version>.AppImage`, the Linux half of a release |
 | `sara.sh` | Launch wrapper, installed next to the binary. A start with files while your Sara runs hands them to it as tabs, from a windowless run, and exits |
 | `sara-console.sh` | Backs the desktop file's console action: `sara.sh` in a terminal that stays open after Sara exits |
 | `sara-with-door.cmd` | The Windows zip's launcher that starts `sara.exe` with its door |
@@ -293,7 +293,7 @@ A release hands a Linux painter one file beside the Windows zip, an AppImage.
 `./packaging/build.sh linux release public` makes with
 `./packaging/appimage.sh release public`, which is the one a release hands a
 stranger, since it leaves out the folders `packaging/not-public.txt` names, into
-`build/a/Sara-<version>-x86_64.AppImage`, the native modules' libraries
+`build/a/sara-linux-x86_64-v<version>.AppImage`, the native modules' libraries
 included. It never builds, so run `build.sh`
 first, and it refuses a build stamped with uncommitted changes unless
 `--allow-dirty` is given. It fetches `appimagetool` once into `build/a/`, or
