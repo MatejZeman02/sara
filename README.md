@@ -47,7 +47,7 @@ Sara to paint with, they are for building it.
 | ---------------------------- | ------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
 | **Windows** 10 or 11, 64-bit | [`sara-windows-x86_64-v1.0.0-alpha.1-7d35bab-release.zip`](https://github.com/MatejZeman02/sara/releases/download/v1.0.0-alpha.1/sara-windows-x86_64-v1.0.0-alpha.1-7d35bab-release.zip) | Unpack the whole zip into a folder of its own (right-click, **Extract All**) and double-click `sara.exe` inside it.   |
 | **Android** tablet           | [`sara-android-v1.0.0-alpha.1-7d35bab-debug.apk`](https://github.com/MatejZeman02/sara/releases/download/v1.0.0-alpha.1/sara-android-v1.0.0-alpha.1-7d35bab-debug.apk)          | Copy it to the tablet and tap it. Android asks to allow installs from that source once.                               |
-| **Linux**, x86_64            | [`Sara-1.0.0-alpha.1-x86_64.AppImage`](https://github.com/MatejZeman02/sara/releases/download/v1.0.0-alpha.1/Sara-1.0.0-alpha.1-x86_64.AppImage)            | Make it executable (`chmod +x` and its name, or tick **Allow executing** in its file properties) and double-click it. |
+| **Linux**, x86_64            | [`sara-linux-x86_64-v1.0.0-alpha.1.AppImage`](https://github.com/MatejZeman02/sara/releases/download/v1.0.0-alpha.1/sara-linux-x86_64-v1.0.0-alpha.1.AppImage)| Make it executable (`chmod +x` and its name, or tick **Allow executing** in its file properties) and double-click it. |
 
 > [!NOTE]
 > - **The first start** is slower while Sara prepares its brushes for your

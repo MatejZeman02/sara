@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Wraps a Linux build into one AppImage, build/a/Sara-<version>-x86_64.AppImage,
+# Wraps a Linux build into one AppImage, build/a/sara-linux-x86_64-v<version>.AppImage,
 # the file a release hands a Linux painter beside the Windows zip. The words
 # release and public pick the build the way build.sh names its folder, build/l,
 # build/l-release or build/l-release-public, and a release asset is the public
@@ -113,7 +113,7 @@ exec "$HERE/usr/lib/sara/sara.sh" "$@"
 APPRUN
 chmod 755 "$APPDIR/AppRun"
 
-OUT="$OUT_DIR/Sara-$VERSION-x86_64.AppImage"
+OUT="$OUT_DIR/sara-linux-x86_64-v$VERSION.AppImage"
 rm -f "$OUT"
 ARCH=x86_64 APPIMAGE_EXTRACT_AND_RUN=1 "$TOOL" --no-appstream "$APPDIR" "$OUT" >"$OUT_DIR/appimagetool.log" 2>&1 \
     || { tail -20 "$OUT_DIR/appimagetool.log" >&2; die "appimagetool failed."; }
