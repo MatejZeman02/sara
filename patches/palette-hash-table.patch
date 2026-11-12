@@ -1,0 +1,220 @@
+diff --git a/lib/jxl/modular/transform/enc_palette.cc b/lib/jxl/modular/transform/enc_palette.cc
+index 8f2b212..7b9724f 100644
+--- a/lib/jxl/modular/transform/enc_palette.cc
++++ b/lib/jxl/modular/transform/enc_palette.cc
+@@ -174,6 +174,93 @@ struct PaletteIterationData {
+   }
+ };
+ 
++// A hash table of colours, each of `nb` channel values, with a count and an
++// index kept beside each. The palette search kept its colours in a std::set
++// and a std::map of vectors, so every texel walked down a tree comparing
++// vectors, and a channel palette too wide for a lookup table found each
++// texel's index by a linear search. This finds a colour by its hash and
++// leaves what the search does with the colours as it was.
++class ColorTable {
++ public:
++  ColorTable(size_t nb, size_t expected) : nb_(nb) {
++    colors_.reserve(expected * nb);
++    count.reserve(expected);
++    index.reserve(expected);
++    Resize(expected);
++  }
++
++  size_t size() const { return count.size(); }
++  const pixel_type *Color(size_t i) const { return &colors_[i * nb_]; }
++
++  // The entry of `color`, added with a count of zero if it was not there.
++  size_t Insert(const pixel_type *color, bool *is_new) {
++    size_t slot = Slot(color);
++    for (; slots_[slot] >= 0; slot = (slot + 1) & mask_) {
++      if (Same(slots_[slot], color)) {
++        *is_new = false;
++        return slots_[slot];
++      }
++    }
++    *is_new = true;
++    const size_t entry = size();
++    slots_[slot] = static_cast<int32_t>(entry);
++    colors_.insert(colors_.end(), color, color + nb_);
++    count.push_back(0);
++    index.push_back(0);
++    if (2 * size() > slots_.size()) Resize(size());
++    return entry;
++  }
++
++  // The entry of `color`, or -1 if it is not there.
++  int64_t Find(const pixel_type *color) const {
++    for (size_t slot = Slot(color); slots_[slot] >= 0;
++         slot = (slot + 1) & mask_) {
++      if (Same(slots_[slot], color)) return slots_[slot];
++    }
++    return -1;
++  }
++
++  std::vector<size_t> count;
++  std::vector<size_t> index;
++
++ private:
++  size_t Slot(const pixel_type *color) const {
++    uint64_t hash = 0;
++    for (size_t c = 0; c < nb_; c++) {
++      hash = (hash + static_cast<uint32_t>(color[c])) * 0x9E3779B97F4A7C15ull;
++    }
++    return static_cast<size_t>(hash >> shift_);
++  }
++
++  bool Same(size_t entry, const pixel_type *color) const {
++    const pixel_type *stored = Color(entry);
++    for (size_t c = 0; c < nb_; c++) {
++      if (stored[c] != color[c]) return false;
++    }
++    return true;
++  }
++
++  // At most half the slots are taken, so a probe ends at an empty one.
++  void Resize(size_t entries) {
++    size_t bits = 4;
++    while ((size_t{1} << bits) < 4 * entries) bits++;
++    shift_ = 64 - bits;
++    mask_ = (size_t{1} << bits) - 1;
++    slots_.assign(size_t{1} << bits, -1);
++    for (size_t entry = 0; entry < size(); entry++) {
++      size_t slot = Slot(Color(entry));
++      while (slots_[slot] >= 0) slot = (slot + 1) & mask_;
++      slots_[slot] = static_cast<int32_t>(entry);
++    }
++  }
++
++  size_t nb_;
++  size_t shift_ = 0;
++  size_t mask_ = 0;
++  std::vector<int32_t> slots_;
++  std::vector<pixel_type> colors_;
++};
++
+ Status FwdPaletteIteration(Image &input, uint32_t begin_c, uint32_t end_c,
+                            uint32_t &nb_colors, uint32_t &nb_deltas,
+                            bool ordered, bool lossy, Predictor &predictor,
+@@ -199,14 +286,15 @@ Status FwdPaletteIteration(Image &input, uint32_t begin_c, uint32_t end_c,
+     size_t lookup_table_size =
+         static_cast<int64_t>(maxval) - static_cast<int64_t>(minval) + 1;
+     if (lookup_table_size > palette_internal::kMaxPaletteLookupTableSize) {
+-      // a lookup table would use too much memory, instead use a slower approach
+-      // with std::set
+-      std::set<pixel_type> chpalette;
++      // A lookup table would use too much memory, so the values go in a hash
++      // table instead, and the palette holds them in ascending order.
++      ColorTable chpalette(1, nb_colors + 1);
+       pixel_type idx = 0;
+       for (size_t y = 0; y < h; y++) {
+         const pixel_type *p = input.channel[begin_c].Row(y);
+         for (size_t x = 0; x < w; x++) {
+-          const bool new_color = chpalette.insert(p[x]).second;
++          bool new_color;
++          chpalette.Insert(&p[x], &new_color);
+           if (new_color) {
+             idx++;
+             if (idx > static_cast<int>(nb_colors)) return false;
+@@ -219,21 +307,21 @@ Status FwdPaletteIteration(Image &input, uint32_t begin_c, uint32_t end_c,
+       pch.hshift = -1;
+       pch.vshift = -1;
+       nb_colors = idx;
+-      idx = 0;
+       pixel_type *JXL_RESTRICT p_palette = pch.Row(0);
+-      for (pixel_type p : chpalette) {
+-        p_palette[idx++] = p;
++      std::vector<pixel_type> sorted;
++      sorted.reserve(chpalette.size());
++      for (size_t entry = 0; entry < chpalette.size(); entry++) {
++        sorted.push_back(*chpalette.Color(entry));
++      }
++      std::sort(sorted.begin(), sorted.end());
++      for (idx = 0; idx < static_cast<int>(nb_colors); idx++) {
++        p_palette[idx] = sorted[idx];
++        chpalette.index[chpalette.Find(&sorted[idx])] = idx;
+       }
+       for (size_t y = 0; y < h; y++) {
+         pixel_type *p = input.channel[begin_c].Row(y);
+         for (size_t x = 0; x < w; x++) {
+-          for (idx = 0;
+-               p[x] != p_palette[idx] && idx < static_cast<int>(nb_colors);
+-               idx++) {
+-            // no-op
+-          }
+-          JXL_DASSERT(idx < static_cast<int>(nb_colors));
+-          p[x] = idx;
++          p[x] = chpalette.index[chpalette.Find(&p[x])];
+         }
+       }
+       predictor = Predictor::Zero;
+@@ -353,6 +441,10 @@ Status FwdPaletteIteration(Image &input, uint32_t begin_c, uint32_t end_c,
+ 
+   std::map<std::vector<pixel_type>, size_t> color_freq_map;
+   uint32_t implicit_colors_used = 0;
++  // Lossless, the colours are counted in a hash table, and the counts go to
++  // `color_freq_map` once at the end.
++  ColorTable table(
++      nb, lossy ? 0 : nb_colors + palette_internal::kImplicitPaletteSize + 1);
+   for (size_t y = 0; y < h; y++) {
+     for (uint32_t c = 0; c < nb; c++) {
+       p_in[c] = input.channel[begin_c + c].Row(y);
+@@ -362,7 +454,13 @@ Status FwdPaletteIteration(Image &input, uint32_t begin_c, uint32_t end_c,
+       for (uint32_t c = 0; c < nb; c++) {
+         color[c] = p_in[c][x];
+       }
+-      const bool new_color = candidate_palette.insert(color).second;
++      size_t entry = 0;
++      bool new_color;
++      if (lossy) {
++        new_color = candidate_palette.insert(color).second;
++      } else {
++        entry = table.Insert(color.data(), &new_color);
++      }
+       if (new_color) {
+         if (implicit_color[color]) {
+           implicit_colors_used++;
+@@ -373,7 +471,18 @@ Status FwdPaletteIteration(Image &input, uint32_t begin_c, uint32_t end_c,
+           }
+         }
+       }
+-      color_freq_map[color] += 1;
++      if (lossy) {
++        color_freq_map[color] += 1;
++      } else {
++        table.count[entry]++;
++      }
++    }
++  }
++  if (!lossy) {
++    for (size_t entry = 0; entry < table.size(); entry++) {
++      color_freq_map.emplace(
++          std::vector<pixel_type>(table.Color(entry), table.Color(entry) + nb),
++          table.count[entry]);
+     }
+   }
+ 
+@@ -453,6 +562,13 @@ Status FwdPaletteIteration(Image &input, uint32_t begin_c, uint32_t end_c,
+     inv_palette[pcol] = clr;
+     clr++;
+   }
++  if (!lossy) {
++    for (size_t entry = 0; entry < table.size(); entry++) {
++      const auto it = inv_palette.find(
++          std::vector<pixel_type>(table.Color(entry), table.Color(entry) + nb));
++      table.index[entry] = it == inv_palette.end() ? 0 : it->second;
++    }
++  }
+   std::vector<weighted::State> wp_states;
+   for (size_t c = 0; c < nb; c++) {
+     wp_states.emplace_back(wp_header, w, h);
+@@ -480,7 +596,8 @@ Status FwdPaletteIteration(Image &input, uint32_t begin_c, uint32_t end_c,
+       int index;
+       if (!lossy) {
+         for (size_t c = 0; c < nb; c++) color[c] = p_in[c][x];
+-        index = inv_palette[color];
++        const int64_t entry = table.Find(color.data());
++        index = entry < 0 ? 0 : table.index[entry];
+       } else {
+         int best_index = 0;
+         bool best_is_delta = false;

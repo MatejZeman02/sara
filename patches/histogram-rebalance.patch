@@ -1,0 +1,131 @@
+diff --git a/lib/jxl/enc_ans.cc b/lib/jxl/enc_ans.cc
+index c94630b..5d7ef52 100644
+--- a/lib/jxl/enc_ans.cc
++++ b/lib/jxl/enc_ans.cc
+@@ -419,6 +419,13 @@ class ANSEncodingHistogram {
+     uint32_t shift = method_ - 1;
+ 
+     struct EntropyDelta {
++      // `freq` times the `delta_lg2` and the `step_log` of a step up from the
++      // current count and of a step down, kept so that the search for the
++      // best step reads them instead of `allowed_counts`.
++      int64_t inc_gain;
++      int64_t dec_gain;
++      uint32_t inc_log;
++      uint32_t dec_log;
+       ANSHistBin freq;   // initial count
+       size_t count_ind;  // index of current bin value in `allowed_counts`
+       size_t bin_ind;    // index of current bin in `counts`
+@@ -434,23 +441,24 @@ class ANSEncodingHistogram {
+     // Total entropy change by a step: increase/decrease in current bin
+     // together with corresponding decrease/increase in the balancing bin.
+     // Inc steps increase current bin, dec steps decrease
+-    const auto delta_entropy_inc = [&](const EntropyDelta& a) {
+-      return a.freq * int64_t{ac[a.count_ind].delta_lg2} -
+-             balance_inc[ac[a.count_ind].step_log];
+-    };
+-    const auto delta_entropy_dec = [&](const EntropyDelta& a) {
+-      return a.freq * int64_t{ac[a.count_ind + 1].delta_lg2} -
+-             balance_dec[ac[a.count_ind + 1].step_log];
+-    };
+-    // Compare steps by entropy increase per unit of histogram bin change.
+-    // Truncation is OK here, accuracy is anyway better than float
+-    const auto IncLess = [&](const EntropyDelta& a, const EntropyDelta& b) {
+-      return delta_entropy_inc(a) >> ac[a.count_ind].step_log <
+-             delta_entropy_inc(b) >> ac[b.count_ind].step_log;
+-    };
+-    const auto DecLess = [&](const EntropyDelta& a, const EntropyDelta& b) {
+-      return delta_entropy_dec(a) >> ac[a.count_ind + 1].step_log <
+-             delta_entropy_dec(b) >> ac[b.count_ind + 1].step_log;
++    // A step's total entropy change is `inc_gain - balance_inc[inc_log]` up
++    // and `dec_gain - balance_dec[dec_log]` down, and steps are compared by
++    // that change shifted right by the step's log, its change per unit of
++    // histogram bin change. Truncation is OK here, accuracy is anyway better
++    // than float.
++    //
++    // Fills the cached steps of `a` from its `count_ind`. A count with no
++    // step down past it leaves the step down zero, as nothing reads it.
++    const auto set_steps = [&](EntropyDelta& a) {
++      a.inc_gain = a.freq * int64_t{ac[a.count_ind].delta_lg2};
++      a.inc_log = ac[a.count_ind].step_log;
++      if (a.count_ind + 1 < ac.size()) {
++        a.dec_gain = a.freq * int64_t{ac[a.count_ind + 1].delta_lg2};
++        a.dec_log = ac[a.count_ind + 1].step_log;
++      } else {
++        a.dec_gain = 0;
++        a.dec_log = 0;
++      }
+     };
+     // Vector of adjustable bins from `allowed_counts`
+     std::vector<EntropyDelta> bins;
+@@ -479,7 +487,7 @@ class ANSEncodingHistogram {
+       counts_[n] = count;
+       rest -= count;
+       if (target > 1.0) {
+-        bins.push_back({freq, ai[count], n});
++        bins.push_back({0, 0, 0, 0, freq, ai[count], n});
+       }
+     }
+ 
+@@ -492,6 +500,7 @@ class ANSEncodingHistogram {
+     rest += counts_[remainder_pos];
+ 
+     if (!bins.empty()) {
++      for (auto& a : bins) set_steps(a);
+       const uint32_t max_log = ac[1].step_log;
+       while (true) {
+         // Update balancing bin penalties setting guards and tractors
+@@ -519,21 +528,46 @@ class ANSEncodingHistogram {
+             balance_dec[log] = std::numeric_limits<int64_t>::max();
+           }
+         }
+-        // Try to increase entropy
+-        auto best_bin_inc = std::max_element(bins.begin(), bins.end(), IncLess);
+-        if (delta_entropy_inc(*best_bin_inc) > 0) {
++        // Try to increase entropy, with the first bin of the largest increase
++        // per unit, the one `std::max_element` over the bins found.
++        EntropyDelta* best_bin_inc = bins.data();
++        int64_t best_inc = (best_bin_inc->inc_gain -
++                            balance_inc[best_bin_inc->inc_log]) >>
++                           best_bin_inc->inc_log;
++        for (auto& a : bins) {
++          int64_t inc = (a.inc_gain - balance_inc[a.inc_log]) >> a.inc_log;
++          if (best_inc < inc) {
++            best_inc = inc;
++            best_bin_inc = &a;
++          }
++        }
++        if (best_bin_inc->inc_gain - balance_inc[best_bin_inc->inc_log] > 0) {
+           // Grow the bin with the best histogram entropy increase
+           rest -= 1 << ac[best_bin_inc->count_ind--].step_log;
++          set_steps(*best_bin_inc);
+         } else {
+           // This still implies that entropy is strictly increasing each step
+           // (or `rest` is tracted into positive domain), so we cannot loop
+-          // infinitely
+-          auto best_bin_dec =
+-              std::min_element(bins.begin(), bins.end(), DecLess);
++          // infinitely. The first bin of the smallest change per unit, the
++          // one `std::min_element` over the bins found.
++          EntropyDelta* best_bin_dec = bins.data();
++          int64_t best_dec = (best_bin_dec->dec_gain -
++                              balance_dec[best_bin_dec->dec_log]) >>
++                             best_bin_dec->dec_log;
++          for (auto& a : bins) {
++            int64_t dec = (a.dec_gain - balance_dec[a.dec_log]) >> a.dec_log;
++            if (dec < best_dec) {
++              best_dec = dec;
++              best_bin_dec = &a;
++            }
++          }
+           // Break if no reverse steps can grow entropy (or valid)
+-          if (delta_entropy_dec(*best_bin_dec) >= 0) break;
++          if (best_bin_dec->dec_gain - balance_dec[best_bin_dec->dec_log] >= 0) {
++            break;
++          }
+           // Decrease the bin with the best histogram entropy increase
+           rest += 1 << ac[++best_bin_dec->count_ind].step_log;
++          set_steps(*best_bin_dec);
+         }
+       }
+       // Set counts besides the balancing bin
