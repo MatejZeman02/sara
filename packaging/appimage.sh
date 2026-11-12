@@ -10,8 +10,9 @@
 # files, the pen's udev rule and the document type, and nothing the host
 # supplies. Vulkan, Mesa and the display libraries stay the host's, because a
 # bundled driver would not match the GPU it runs on. The binary needs glibc
-# 2.28 or newer and opens its other libraries at run time, so one file runs
-# on a distro of 2019 or later.
+# 2.28 or newer and opens its other libraries at run time. The native modules'
+# libraries need 2.34 when build.sh made them with GODOT_LINUX_SDK, so one file
+# runs on a distro of 2021 or later, Debian 12 and Ubuntu 22.04 among them.
 #
 # An AppImage cannot install the udev rule the pen module needs, so the rule
 # rides inside it at usr/share/sara/ for a distro package to install and for

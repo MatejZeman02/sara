@@ -194,7 +194,13 @@ done < <(sed -e 's/#.*//' -e 's/[[:space:]]*$//' "$CLIENT_LIST")
 # and libjxl with the JPEG XL module's patches, and the builds, are kept in
 # ~/.cache/sara/native, or SARA_NATIVE_DIR, outside the tree, whose checks
 # would otherwise read libjxl's own pages as Sara's. LLVM_MINGW names the
-# unpacked llvm-mingw, or else the one on PATH is used. A platform whose
+# unpacked llvm-mingw, or else the one on PATH is used. GODOT_LINUX_SDK names
+# the unpacked buildroot SDK Godot builds its own Linux releases with
+# (x86_64-godot-linux-gnu_sdk-buildroot from godotengine/buildroot, after its
+# relocate-sdk.sh). A Linux library built by the machine's own compiler asks
+# for the machine's glibc, and the alpha's asked for 2.43, which no Debian had,
+# so a build for strangers names the SDK. Without it the Linux libraries are
+# built as before and a note says they need this machine's glibc. A platform whose
 # library fails to build still exports, as a Sara without that module, and
 # says so.
 JXL_DIR="$PROJECT_DIR/modules/sara-jxl"
@@ -249,6 +255,8 @@ native_build_dir() {
     local stem="$1" path
     [ "$1" = lzw ] && stem=tiff-lzw
     path="$(cd "$3" 2>/dev/null && pwd -P || printf '%s' "$3")"
+    # A cache remembers its compiler too, so the SDK's builds stand apart.
+    [ "$2" = linux ] && [ -n "${GODOT_LINUX_SDK:-}" ] && path="$path sdk"
     printf '%s/%s-%s-%s' "$NATIVE_DIR" "$stem" "$2" "$(printf '%s' "$path" | sha1sum | cut -c1-8)"
 }
 # Builds module $1 for platform $2, and when it fails names the log of the
@@ -269,6 +277,15 @@ build_native() {
             return 1
         fi
         toolchain=(-DCMAKE_TOOLCHAIN_FILE="$dir/cmake/llvm-mingw.cmake")
+    elif [ -n "${GODOT_LINUX_SDK:-}" ]; then
+        if [ ! -x "$GODOT_LINUX_SDK/bin/x86_64-godot-linux-gnu-g++" ]; then
+            printf '%s  note: GODOT_LINUX_SDK names no x86_64-godot-linux-gnu-g++ in its bin%s\n' "$C_DIM" "$C_OFF"
+            return 1
+        fi
+        toolchain=(-DCMAKE_C_COMPILER="$GODOT_LINUX_SDK/bin/x86_64-godot-linux-gnu-gcc"
+            -DCMAKE_CXX_COMPILER="$GODOT_LINUX_SDK/bin/x86_64-godot-linux-gnu-g++")
+    else
+        printf '%s  note: no GODOT_LINUX_SDK, so the Linux %s library needs this machine'"'"'s glibc or newer%s\n' "$C_DIM" "$name" "$C_OFF"
     fi
     [ "$module" = jxl ] && extra=(-DLIBJXL="$NATIVE_DIR/libjxl")
     printf '  %s%s%s %s library…\n' "$C_DIM" "$name" "$C_OFF" "$platform"

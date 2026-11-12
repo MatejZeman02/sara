@@ -10,6 +10,25 @@
 set -euo pipefail
 HERE="$(cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")" && pwd)"
 
+# A terminal inside a snap, VS Code's above all, hands every program it starts
+# the snap's own GTK, GIO and schema folders. Godot's window decorations load
+# GTK, which then read the snap's libraries against the system's schemas, and
+# on a Debian of 2026 that stopped Sara at its first frame with "Settings
+# schema ... does not contain a key named 'antialiasing'". VS Code keeps each
+# value it replaced in <name>_VSCODE_SNAP_ORIG, so those are put back first,
+# and any of the variables still pointing into a snap is dropped.
+for orig in $(compgen -e | grep '_VSCODE_SNAP_ORIG$' || true); do
+    name="${orig%_VSCODE_SNAP_ORIG}"
+    if [ -n "${!orig}" ]; then export "$name=${!orig}"; else unset "$name"; fi
+    unset "$orig"
+done
+for name in GIO_MODULE_DIR GSETTINGS_SCHEMA_DIR GTK_PATH GTK_EXE_PREFIX GTK_IM_MODULE_FILE \
+    GDK_PIXBUF_MODULE_FILE GDK_PIXBUF_MODULEDIR LOCPATH LD_LIBRARY_PATH; do
+    case "${!name:-}" in
+        */snap/*) unset "$name" ;;
+    esac
+done
+
 # --no-header suppresses Godot's own two startup lines (engine version, then
 # rendering driver and device). Nothing is lost: the boot banner reports the
 # driver, API version, rendering method, adapter and engine build hash itself,
