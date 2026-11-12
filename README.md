@@ -77,11 +77,16 @@ Both read the same settings, brushes and paintings.
 | **release** | Painting. It starts sooner and paints a little faster. |
 | **debug**   | Bug reports. Its log names the line that failed.       |
 
+The debug builds are [`sara-windows-x86_64-v1.0.0-alpha.1-7d35bab-debug.zip`](https://github.com/MatejZeman02/sara/releases/download/v1.0.0-alpha.1/sara-windows-x86_64-v1.0.0-alpha.1-7d35bab-debug.zip)
+and [`sara-linux-x86_64-v1.0.0-alpha.1-6d240e4-debug.tar.gz`](https://github.com/MatejZeman02/sara/releases/download/v1.0.0-alpha.1/sara-linux-x86_64-v1.0.0-alpha.1-6d240e4-debug.tar.gz).
+
 - **Android** is an early test build, and its layout is not made for a tablet yet.
-- **Linux** also comes as `sara-linux-x86_64-...-release.tar.gz`, for a system
-  where the AppImage does not run. Unpack it and start `sara.sh` inside.
-- `sara-python-...zip` is the Python client, `sara.py`, for notebooks and
-  scripts. Every download above carries it beside Sara as well. Python itself
+- **Linux** also comes as
+  [`sara-linux-x86_64-v1.0.0-alpha.1-6d240e4-release.tar.gz`](https://github.com/MatejZeman02/sara/releases/download/v1.0.0-alpha.1/sara-linux-x86_64-v1.0.0-alpha.1-6d240e4-release.tar.gz),
+  for a system where the AppImage does not run. Unpack it and start `sara.sh`
+  inside.
+- [`sara-python-v1.0.0-alpha.1-7d35bab.zip`](https://github.com/MatejZeman02/sara/releases/download/v1.0.0-alpha.1/sara-python-v1.0.0-alpha.1-7d35bab.zip) is the Python client,
+  `sara.py`, for notebooks and scripts. Every download above carries it beside Sara as well. Python itself
   is not included.
 - Every download carries `README.txt`, a one-page guide to the first start,
   where Sara keeps your files and how to send a bug. Here it is
