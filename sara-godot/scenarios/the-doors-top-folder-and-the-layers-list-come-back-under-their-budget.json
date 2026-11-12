@@ -1,0 +1,130 @@
+[
+ {
+  "wait": 25
+ },
+ {
+  "docker": "park"
+ },
+ {
+  "docker": {
+   "id": "LayersDocker",
+   "at": [
+    1150,
+    690
+   ],
+   "size": [
+    500,
+    300
+   ]
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "document": "oklab"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "colour": "#cc2619"
+ },
+ {
+  "stroke": {
+   "from": [
+    320,
+    300
+   ],
+   "to": [
+    900,
+    300
+   ],
+   "pressure": 1.0,
+   "steps": 24
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "colour": "#26b33a"
+ },
+ {
+  "stroke": {
+   "from": [
+    320,
+    480
+   ],
+   "to": [
+    900,
+    480
+   ],
+   "pressure": 1.0,
+   "steps": 24
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "colour": "#3355dd"
+ },
+ {
+  "stroke": {
+   "from": [
+    320,
+    660
+   ],
+   "to": [
+    900,
+    660
+   ],
+   "pressure": 1.0,
+   "steps": 24
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "shot": "oklab-document"
+ },
+ {
+  "state": "oklab-document"
+ },
+ {
+  "layer": {
+   "add": "Yellow"
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "colour": "#e0c020"
+ },
+ {
+  "stroke": {
+   "from": [
+    400,
+    390
+   ],
+   "to": [
+    820,
+    570
+   ],
+   "pressure": 1.0,
+   "steps": 24
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "shot": "thumbnails-from-their-own-package"
+ },
+ {
+  "state": "thumbnails-from-their-own-package"
+ }
+]

@@ -1,0 +1,129 @@
+[
+  {
+    "wait": 35
+  },
+  {
+    "docker": "park"
+  },
+  {
+    "docker": {
+      "id": "ColorDocker",
+      "at": [
+        1450,
+        60
+      ],
+      "size": [
+        400,
+        720
+      ]
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "prefs": {
+      "color_picker_shape": "hsv_square"
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "state": "0-hsv-square"
+  },
+  {
+    "shot": "0-hsv-square"
+  },
+  {
+    "key": {
+      "key": "k",
+      "ctrl": true,
+      "shift": true
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "state": "1-hsv-triangle"
+  },
+  {
+    "shot": "1-hsv-triangle"
+  },
+  {
+    "key": {
+      "key": "k",
+      "ctrl": true,
+      "shift": true
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "state": "2-hsl-square-the-last-one"
+  },
+  {
+    "shot": "2-hsl-square-the-last-one"
+  },
+  {
+    "key": {
+      "key": "k",
+      "ctrl": true,
+      "shift": true
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "state": "3-wheel-past-the-last"
+  },
+  {
+    "shot": "3-wheel-past-the-last"
+  },
+  {
+    "key": {
+      "key": "k",
+      "ctrl": true,
+      "shift": true
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "state": "4-okhsl"
+  },
+  {
+    "shot": "4-okhsl"
+  },
+  {
+    "open": "preferences"
+  },
+  {
+    "wait": 25
+  },
+  {
+    "page": "Keyboard Shortcuts"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "shortcut": {
+      "search": "picker shape",
+      "show": "color_picker_shape_next"
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "state": "5-the-row-on-the-shortcuts-page"
+  },
+  {
+    "shot": "5-the-row-on-the-shortcuts-page"
+  }
+]

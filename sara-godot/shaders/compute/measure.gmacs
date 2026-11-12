@@ -1,0 +1,205 @@
+# The `measure` step's reduction: Oklab statistics over a rectangle of a layer,
+# reduced on the graphics card into a small buffer.
+#
+# Two kernels over the same buffer. `measure_sum` counts the texels of the
+# rectangle, counts the ones that hold paint, and sums L, a and b over those.
+# `measure_spread` is told the three means the first pass produced and sums the
+# squared deviations from them. The caller reads the buffer once per pass, and no
+# texel is read back.
+#
+# Two passes rather than one, because the sums are atomics on uint (GLSL has no
+# float atomic), so every value is a fixed-point integer. A one-pass variance
+# subtracts the square of the mean from the sum of squares, and the two quantised
+# numbers disagree by about a quantisation step, which on a flat fill reports a
+# spread where there is none. Subtracting the mean first makes a flat fill's
+# deviation smaller than one step, so it quantises to exactly zero.
+#
+# A slot per chunk, not one for the rectangle. A slot accumulates at most one
+# chunk's texels, `pixel_size()` squared and at most 65536, so a value scaled by
+# QUANT cannot overflow a uint. One slot for a rectangle of a million texels would,
+# and the caller sums the slots in double precision on its own side.
+#
+# The dispatch is the chunk's own share of the rectangle, through SaChunkWalk.
+
+kernel measure_sum
+kernel measure_spread
+
+# linear_srgb_color_space brings oklab_color_space with it.
+import linear_srgb_color_space
+import transfer_curve
+
+image field
+
+# Eight uints per chunk slot, in the order SaMeasure reads them: the texels of
+# the chunk's share of the rectangle, the ones holding paint, the three sums of
+# L, a and b, and the three sums of their squared deviations.
+buffer tally: uint cells[]
+
+# 96 bytes, packed by SaMeasure._push in the order written here. Every field is
+# a float so that the packing is the sequence it reads as, which is what
+# selection.gmacs does for the same reason: the walk hands over a float array
+# and the order here is matched to the order there by hand.
+params:
+    # Where the dispatch starts, in chunk-local pixels, since the walk aligns
+    # the start down to the workgroup grid.
+    float offset_x
+    float offset_y
+    # The rectangle's share of this chunk, in chunk-local pixels. The begin is
+    # not the dispatch start for the same reason: a dispatch covers whole
+    # workgroups and the rectangle's edge falls inside one.
+    float begin_x
+    float begin_y
+    float end_x
+    float end_y
+    # Which eight cells of the buffer this chunk adds into.
+    float slot
+    # See SaColorSpace.Coordinates. An Oklab document needs no conversion.
+    float coordinates
+    # The document's transfer curve, for the decode into light.
+    float transfer_slope
+    float transfer_threshold
+    float transfer_gain
+    float transfer_exponent
+    # The means the first pass produced, which the second subtracts. Zero for
+    # the first pass, which never reads them.
+    float mean_l
+    float mean_a
+    float mean_b
+    # The document's linear RGB into linear sRGB, white point adapted, which is
+    # what makes these numbers Oklab rather than Oklab of whatever the chunks
+    # happen to hold. A float[9] and not a mat3 for the reason
+    # composite.gmacs records: std430 pads every mat3 column out to 16 bytes.
+    float to_linear_srgb[9]
+
+# Must match SaColorSpace.Coordinates.
+const int SA_COORDS_OKLAB = 1
+
+# Eight cells per chunk slot, and which is which. The same names SaMeasure uses.
+const uint CELLS = 8u
+const uint CELL_TEXELS = 0u
+const uint CELL_COVERED = 1u
+const uint CELL_SUM_L = 2u
+const uint CELL_SUM_A = 3u
+const uint CELL_SUM_B = 4u
+const uint CELL_DEV_L = 5u
+const uint CELL_DEV_A = 6u
+const uint CELL_DEV_B = 7u
+
+# The fixed point every value crosses the bus in. A cell holds at most 65536
+# texels, one chunk's worth, each contributing at most QUANT, so a sum reaches
+# 2^31 at the very most and a uint holds 2^32.
+const float QUANT = 32768.0
+
+# Where a and b are folded into the unit interval, so that one quantisation
+# serves every cell. Oklab chroma reaches about 0.32 at the sRGB cusp and 0.4
+# for a wide-gamut primary, so half a unit either way is room and the clamp
+# below is a guard rather than a limit anything in gamut meets.
+const float AB_RANGE = 0.5
+
+# A texel is painted when it is not fully transparent, which is the threshold
+# SaSelection reads coverage at and the one `bounds` uses.
+const float PAINT_EPSILON = 0.0
+
+
+def to_linear_srgb_matrix() -> mat3:
+    return mat3(
+        to_linear_srgb[0], to_linear_srgb[1], to_linear_srgb[2],
+        to_linear_srgb[3], to_linear_srgb[4], to_linear_srgb[5],
+        to_linear_srgb[6], to_linear_srgb[7], to_linear_srgb[8]
+    )
+
+# One stored triple as Oklab. An Oklab document already holds it, and an RGB one
+# is decoded out of its own curve and rotated into linear sRGB first, because
+# Oklab is defined against linear sRGB and carries no gamut of its own. The same
+# branch thumbnail.gmacs and graph.gmacs take, for the same reason.
+
+
+def stored_to_oklab(vec3 stored) -> vec3:
+    if int(coordinates + 0.5) == SA_COORDS_OKLAB:
+        return stored
+    vec3 linear = sa_transfer_decode(
+        stored, transfer_slope, transfer_threshold, transfer_gain, transfer_exponent
+    )
+    return linear_srgb_to_oklab(to_linear_srgb_matrix() * linear)
+
+# The pixel this invocation answers for, which is the dispatch start plus the
+# invocation, because the walk starts a dispatch on the workgroup grid.
+
+
+def dispatch_pixel() -> ivec2:
+    return ivec2(global_id.xy) + ivec2(int(offset_x), int(offset_y))
+
+# Whether *px* is outside the chunk's share of the rectangle, the whole-workgroup
+# slack included, so an edge is exact whatever the alignment of the dispatch.
+
+
+def outside(ivec2 px) -> bool:
+    ivec2 size = image_size(field)
+    if px.x >= size.x or px.y >= size.y:
+        return true
+    if px.x < int(begin_x) or px.y < int(begin_y):
+        return true
+    return px.x >= int(end_x) or px.y >= int(end_y)
+
+
+def cell_of(uint which) -> uint:
+    return uint(slot) * CELLS + which
+
+# A unit value into the fixed point, rounded to nearest and clamped, so that a
+# value outside the range costs a bounded bias rather than a wrapped uint.
+
+
+def quantised(float unit) -> uint:
+    return uint(clamp(unit, 0.0, 1.0) * QUANT + 0.5)
+
+
+def fold_ab(float value) -> float:
+    return clamp(value, -AB_RANGE, AB_RANGE)
+
+# Pass one: the counts and the three sums.
+
+
+def measure_sum():
+    ivec2 px = dispatch_pixel()
+    if outside(px):
+        return
+    atomic_add(tally.cells[ cell_of(CELL_TEXELS) ], 1u)
+    vec4 texel = field[px]
+    if texel.a <= PAINT_EPSILON:
+        return
+    atomic_add(tally.cells[ cell_of(CELL_COVERED) ], 1u)
+    vec3 lab = stored_to_oklab(texel.rgb)
+    # a and b are centred on zero and the fixed point is not, so they are
+    # folded into the unit interval here and unfolded by the caller, which
+    # knows how many texels it is unfolding.
+    atomic_add(tally.cells[ cell_of(CELL_SUM_L) ], quantised(lab.x))
+    atomic_add(tally.cells[ cell_of(CELL_SUM_A) ], quantised(fold_ab(lab.y) / (2.0 * AB_RANGE) + 0.5))
+    atomic_add(tally.cells[ cell_of(CELL_SUM_B) ], quantised(fold_ab(lab.z) / (2.0 * AB_RANGE) + 0.5))
+
+# Pass two: the squared deviations from the means pass one produced.
+#
+# A deviation is at most one unit either way on every axis, L being clamped to
+# the unit interval and a and b folded into it, so its square is already a unit
+# value and needs no scale of its own.
+
+
+def measure_spread():
+    ivec2 px = dispatch_pixel()
+    if outside(px):
+        return
+    vec4 texel = field[px]
+    if texel.a <= PAINT_EPSILON:
+        return
+    # The same count as pass one, so that the tally a caller folds says how many
+    # texels it is the sum over whichever pass filled it. Without it the caller
+    # would have to carry the first pass's count into the second by hand, and a
+    # variance divided by one instead of by the count is a spread 362 times too
+    # large on a rectangle of two chunks, which is how this line was found.
+    atomic_add(tally.cells[ cell_of(CELL_COVERED) ], 1u)
+    vec3 lab = stored_to_oklab(texel.rgb)
+    float dev_l = clamp(lab.x, 0.0, 1.0) - mean_l
+    float dev_a = fold_ab(lab.y) - mean_a
+    float dev_b = fold_ab(lab.z) - mean_b
+    atomic_add(tally.cells[ cell_of(CELL_DEV_L) ], quantised(dev_l * dev_l))
+    atomic_add(tally.cells[ cell_of(CELL_DEV_A) ], quantised(dev_a * dev_a))
+    atomic_add(tally.cells[ cell_of(CELL_DEV_B) ], quantised(dev_b * dev_b))

@@ -1,0 +1,7 @@
+[
+    {"comment": "The Welcome picture lays stars and flocks of birds over itself by chance. Run with SARA_WELCOME_PICTURES=res://ui/welcome/overlays/tests/pictures/, the suite's dawn at 6 and night at 23 with stars of the night and two flocks of the dawn, SARA_WELCOME_HOUR=23 or 6, and SARA_WELCOME_ROLL=0, which draws every overlay, or 1, which draws none. At 23 with 0 the stars are out at the lowest of their range and the flocks are not, the night not being theirs. At 6 with 0 both flocks are there and no star. With 1 neither picture carries anything over its light."},
+    {"wait": 11},
+    {"open": "welcome"},
+    {"wait": 20},
+    {"shot": "0-the-band"}
+]

@@ -1,0 +1,224 @@
+[
+  {
+    "wait": 35
+  },
+  {
+    "docker": "park"
+  },
+  {
+    "document": "srgb"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "state": "0-a-fresh-document"
+  },
+  {
+    "tool": {
+      "id": "gradient",
+      "options": {
+        "gradient_shape": 0,
+        "gradient_replace": true
+      }
+    }
+  },
+  {
+    "stroke": {
+      "from": [
+        520,
+        540
+      ],
+      "to": [
+        1400,
+        540
+      ],
+      "steps": 12
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "texel": [
+      [
+        930,
+        540
+      ],
+      [
+        960,
+        540
+      ],
+      [
+        990,
+        540
+      ],
+      [
+        860,
+        540
+      ],
+      [
+        1060,
+        540
+      ]
+    ]
+  },
+  {
+    "shot": "1-the-gradient"
+  },
+  {
+    "state": "1-the-gradient"
+  },
+  {
+    "select": {
+      "ellipse": [
+        920,
+        500,
+        80,
+        80
+      ]
+    }
+  },
+  {
+    "fill": [
+      0.02,
+      0.02,
+      0.03
+    ]
+  },
+  {
+    "wait": 10
+  },
+  {
+    "texel": [
+      [
+        930,
+        540
+      ],
+      [
+        960,
+        540
+      ],
+      [
+        990,
+        540
+      ],
+      [
+        860,
+        540
+      ],
+      [
+        1060,
+        540
+      ]
+    ]
+  },
+  {
+    "shot": "2-the-spot"
+  },
+  {
+    "state": "2-the-spot"
+  },
+  {
+    "select": {
+      "ellipse": [
+        910,
+        490,
+        100,
+        100
+      ]
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "tool": "patch"
+  },
+  {
+    "wait": 5
+  },
+  {
+    "shot": "3-the-tool-and-the-selection"
+  },
+  {
+    "state": "3-the-tool-and-the-selection"
+  },
+  {
+    "click": {
+      "at": [
+        960,
+        540
+      ]
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "texel": [
+      [
+        930,
+        540
+      ],
+      [
+        960,
+        540
+      ],
+      [
+        990,
+        540
+      ],
+      [
+        860,
+        540
+      ],
+      [
+        1060,
+        540
+      ]
+    ]
+  },
+  {
+    "shot": "4-the-spot-gone"
+  },
+  {
+    "state": "4-the-spot-gone"
+  },
+  {
+    "undo": 1
+  },
+  {
+    "wait": 10
+  },
+  {
+    "texel": [
+      [
+        930,
+        540
+      ],
+      [
+        960,
+        540
+      ],
+      [
+        990,
+        540
+      ],
+      [
+        860,
+        540
+      ],
+      [
+        1060,
+        540
+      ]
+    ]
+  },
+  {
+    "shot": "5-undone"
+  },
+  {
+    "state": "5-undone"
+  }
+]

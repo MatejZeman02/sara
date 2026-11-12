@@ -1,0 +1,230 @@
+# The document colour space, as the composite kernels see it.
+#
+# Split out of composite.gmacs, which was past the length where a file takes
+# new behaviour. Included from there, after the push constant block, because
+# every function here reads `p`. Nothing moved but the functions: the #kernel
+# directives and their bodies stayed where they were, because the compositor
+# registers a blend mode by the index of its directive.
+#
+# A file with no #kernel line is registered as a library rather than as a
+# shader, which is how libs/linear_srgb_color_space.gmacs works beside it.
+
+
+def to_linear_srgb_matrix() -> mat3:
+    return mat3(
+        doc_to_linear_srgb[0], doc_to_linear_srgb[1], doc_to_linear_srgb[2],
+        doc_to_linear_srgb[3], doc_to_linear_srgb[4], doc_to_linear_srgb[5],
+        doc_to_linear_srgb[6], doc_to_linear_srgb[7], doc_to_linear_srgb[8]
+    )
+
+
+def from_linear_srgb_matrix() -> mat3:
+    return mat3(
+        linear_srgb_to_doc[0], linear_srgb_to_doc[1], linear_srgb_to_doc[2],
+        linear_srgb_to_doc[3], linear_srgb_to_doc[4], linear_srgb_to_doc[5],
+        linear_srgb_to_doc[6], linear_srgb_to_doc[7], linear_srgb_to_doc[8]
+    )
+
+const float DIVIDE_EPSILON = 1e-6
+const float CHROMA_EPSILON = 1e-6
+# Slack on the gamut test, so a colour already on the sRGB cube face is not
+# rejected by float rounding and needlessly stripped of chroma.
+const float GAMUT_EPSILON = 1e-5
+# 12 bisection steps resolve chroma to ~1/4096 of the source chroma, which is
+# far below an 8-bit display step while staying a fixed, branch-uniform cost.
+const int GAMUT_SEARCH_STEPS = 12
+
+# The document's own transfer pair, whichever curve it declared. This kernel
+# never learns which one that is, which is what lets a document use a curve the
+# shader has never heard of.
+
+
+def document_to_linear(vec3 c) -> vec3:
+    return sa_transfer_decode(c, transfer_slope, transfer_threshold, transfer_gain, transfer_exponent)
+
+
+def linear_to_document(vec3 c) -> vec3:
+    return sa_transfer_encode(c, transfer_slope, transfer_threshold, transfer_gain, transfer_exponent)
+
+# --- What the stored numbers are ---------------------------------------------
+#
+# Must match SaColorSpace.Coordinates. A document declares one coordinate system
+# for its chunks and every blend mode is defined in one, and where the two agree
+# this kernel converts nothing. That is the whole point of storing Oklab: Normal
+# mixes along the perceptual axis directly, and the four non-separable modes stop
+# paying for a transform into coordinates the chunks are already in.
+#
+# The value arrives as a float because the block is packed from a
+# PackedFloat32Array. Small integers are exact in float32, so this costs nothing
+# but the rounding written out below.
+const int SA_COORDS_RGB = 0
+const int SA_COORDS_OKLAB = 1
+
+
+def document_is_oklab() -> bool: return int(coordinates + 0.5) == SA_COORDS_OKLAB
+
+# The document's own encoded RGB, which is what every separable blend formula is
+# arithmetic on. Exactly the identity for an RGB document, which is every
+# document that has not asked to be something else.
+#
+# For an Oklab document this is the round trip out to the RGB *view* its gamut
+# and curve describe. Multiply on an Oklab document therefore does what Multiply
+# on the equivalent sRGB document does, rather than multiplying two signed
+# numbers centred on zero, which is not a darker colour but nothing at all.
+
+
+def document_to_rgb(vec3 c) -> vec3:
+    if not document_is_oklab(): return c
+    return linear_to_document(from_linear_srgb_matrix() * oklab_to_linear_srgb(c))
+
+
+def rgb_to_document(vec3 c) -> vec3:
+    if not document_is_oklab(): return c
+    return linear_srgb_to_oklab(to_linear_srgb_matrix() * document_to_linear(c))
+
+# The document's light-linear RGB, its own primaries, no curve on it.
+
+
+def document_to_linear_view(vec3 c) -> vec3:
+    if document_is_oklab():
+        return from_linear_srgb_matrix() * oklab_to_linear_srgb(c)
+    return document_to_linear(c)
+
+
+def linear_view_to_document(vec3 c) -> vec3:
+    if document_is_oklab():
+        return linear_srgb_to_oklab(to_linear_srgb_matrix() * c)
+    return linear_to_document(c)
+
+# Oklab in cartesian form, which is what a mix wants. The polar pair above is for
+# the modes that swap components, and going through an angle to interpolate would
+# take the long way round the hue circle.
+
+
+def document_to_oklab_cartesian(vec3 c) -> vec3:
+    if document_is_oklab(): return c
+    return linear_srgb_to_oklab(to_linear_srgb_matrix() * document_to_linear(c))
+
+
+def oklab_cartesian_to_document(vec3 c) -> vec3:
+    if document_is_oklab(): return c
+    return linear_to_document(from_linear_srgb_matrix() * oklab_to_linear_srgb(c))
+
+# --- Naming a blending space rather than inheriting one -----------------------
+#
+# The three kernels at the end of this file are Normal done in a space the user
+# picked instead of the one the document happens to store. Everything else here
+# either works in the document's own numbers or in the space its own formula is
+# defined in, which is the right default and is not always the right answer: an
+# artist may want a gradient that mixes perceptually in an sRGB document, or one
+# that mixes in light in an Oklab document.
+#
+# Must match SaBlendModeDescriptor's own ids. Passed as a literal from each
+# kernel, so every branch below folds away at compile time.
+const int SA_BLEND_IN_RGB = 0
+const int SA_BLEND_IN_LINEAR = 1
+const int SA_BLEND_IN_OKLAB = 2
+
+
+def into_blend_space(vec3 c, int space) -> vec3:
+    if space == SA_BLEND_IN_LINEAR: return document_to_linear_view(c)
+    if space == SA_BLEND_IN_OKLAB: return document_to_oklab_cartesian(c)
+    return document_to_rgb(c)
+
+
+def out_of_blend_space(vec3 c, int space) -> vec3:
+    if space == SA_BLEND_IN_LINEAR: return linear_view_to_document(c)
+    if space == SA_BLEND_IN_OKLAB: return oklab_cartesian_to_document(c)
+    return rgb_to_document(c)
+
+# Stored values -> Oklab in polar form (L, chroma, hue).
+# Oklab is defined against linear sRGB, so a wide-gamut RGB document goes through
+# its own matrix first. For an sRGB document that matrix is exactly the
+# identity and this is the same arithmetic it always was, and for an Oklab
+# document there is no conversion left to do.
+
+
+def document_to_oklch(vec3 c) -> vec3:
+    vec3 lab = document_is_oklab() ? c : linear_srgb_to_oklab(to_linear_srgb_matrix() * document_to_linear(c))
+    float chroma = length(lab.yz)
+    # atan(0, 0) is undefined in GLSL, so an achromatic colour gets hue 0.
+    float hue = chroma > CHROMA_EPSILON ? atan(lab.z, lab.y) : 0.0
+    return vec3(lab.x, chroma, hue)
+
+# Whether linear *document* RGB sits inside the document's own gamut, a cube
+# whose top is *ceiling* in linear light. The slack above is scaled with the
+# top, and the slack below zero with *white*, the white of the window the
+# colour is read against, so a black keeps the same sliver of chroma whatever
+# W it is read at. A P3 or ACEScg document has a wider cube than sRGB, and
+# mapping its colours into the sRGB one would strip chroma the document is
+# entitled to hold. Both are 1 for every caller but the four component modes,
+# which pass W in linear light and the brightest light their two inputs hold,
+# see composite_blend_ops.gmacs.
+
+
+def in_document_gamut_under(vec3 linear, float white, float ceiling) -> bool:
+    return all(greater_than_equal(linear, vec3(-GAMUT_EPSILON * white))) and all(less_than_equal(linear, vec3(ceiling * (1.0 + GAMUT_EPSILON))))
+
+# The cube up to white. At 1 and 1 the test above is this one to the bit.
+
+
+def in_document_gamut(vec3 linear) -> bool: return in_document_gamut_under(linear, 1.0, 1.0)
+
+
+def oklch_to_lab(vec3 lch) -> vec3:
+    return vec3(lch.x, lch.y * cos(lch.z), lch.y * sin(lch.z))
+
+
+def oklch_to_linear_document(vec3 lch) -> vec3:
+    return from_linear_srgb_matrix() * oklab_to_linear_srgb(oklch_to_lab(lch))
+
+# Oklab polar form -> gamma-encoded sRGB.
+# Swapping components between two in-gamut colours can land outside the sRGB
+# cube. Clamping RGB there would drag hue and lightness with it, so chroma is
+# bisected away instead while L and hue are held fixed (the CSS Color 4
+# gamut-mapping compromise).
+#
+# Gamut mapping touches chroma and nothing else, rather than finishing with a
+# clamp into [0, 1], which would cost an HDR backdrop its whole magnitude in any
+# of the non-separable modes. Reducing chroma is a colour decision the mode is
+# entitled to make. Capping lightness is a storage decision it is not.
+#
+# An achromatic colour therefore round-trips at whatever lightness it had,
+# however far outside the display range that is, because there is no chroma to
+# map and the search never runs.
+#
+# The cube's top is *ceiling* in linear light, and its slack below zero is
+# scaled by *white*, see in_document_gamut_under. So a colour above white keeps
+# the chroma a cube that tall holds. A lightness above the cube's own white still
+# keeps its lightness and gives up all its chroma, and nothing
+# here ever lowers L.
+
+
+def oklch_to_document_under(vec3 lch, float white, float ceiling) -> vec3:
+    # An Oklab document stores gamut-independent coordinates, so there is nothing
+    # to map into and no chroma to give up. Its declared gamut still says what the
+    # document is for on export and where a later gamut map should aim, it just
+    # does not bound what a blend is allowed to store.
+    if document_is_oklab():
+        return oklch_to_lab(lch)
+    vec3 linear = oklch_to_linear_document(lch)
+    if not in_document_gamut_under(linear, white, ceiling):
+        float lo = 0.0
+        float hi = lch.y
+        # Chroma 0 is the achromatic axis, which is always in gamut for a
+        # lightness taken from a real colour: a safe floor for the search.
+        linear = oklch_to_linear_document(vec3(lch.x, 0.0, lch.z))
+        for i in range(GAMUT_SEARCH_STEPS):
+            float mid = 0.5 * (lo + hi)
+            vec3 probe = oklch_to_linear_document(vec3(lch.x, mid, lch.z))
+            if in_document_gamut_under(probe, white, ceiling):
+                lo = mid
+                linear = probe
+            else:
+                hi = mid
+    return linear_to_document(linear)
+
+# The search into the cube up to white.
+
+
+def oklch_to_document(vec3 lch) -> vec3: return oklch_to_document_under(lch, 1.0, 1.0)

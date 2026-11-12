@@ -1,0 +1,35 @@
+[Desktop Entry]
+Type=Application
+Version=1.5
+Name=Sara
+GenericName=Digital Painting
+Comment=GPU-first digital painting
+Exec=@LIB_DIR@/sara.sh %F
+TryExec=@LIB_DIR@/sara.sh
+Icon=sara
+Terminal=false
+Categories=Graphics;2DGraphics;RasterGraphics;
+Keywords=paint;draw;art;canvas;brush;
+MimeType=application/x-sara-document;image/png;image/jpeg;image/webp;
+# Wayland binds a window to its .desktop file by app_id, which Godot sets from
+# application/config/name. It must match "Sara" exactly or the taskbar shows a
+# generic icon - which is also why the missing xdg-toplevel-icon protocol does
+# not matter once this file is installed.
+StartupWMClass=Sara
+StartupNotify=true
+Actions=Console;Rebuild;
+
+# Sara in a terminal, so what it prints is on screen. The window stays open
+# after Sara exits, so the last lines of a crash can still be read.
+[Desktop Action Console]
+Name=Launch with console
+Exec=@TERMINAL@ @LIB_DIR@/sara-console.sh
+Icon=sara
+
+# The one line that still points into the checkout, because a rebuild needs the
+# source. Move the repository and only this action breaks, until install.sh is
+# run again.
+[Desktop Action Rebuild]
+Name=Rebuild from source and launch
+Exec=@TERMINAL@ @REPO_ROOT@/packaging/rebuild-and-launch.sh @PREFIX@
+Icon=sara

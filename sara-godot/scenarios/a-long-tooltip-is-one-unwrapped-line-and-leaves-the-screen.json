@@ -1,0 +1,75 @@
+[
+ {
+  "wait": 35
+ },
+ {
+  "window": [
+   960,
+   800
+  ]
+ },
+ {
+  "wait": 12
+ },
+ {
+  "open": "levels"
+ },
+ {
+  "wait": 25
+ },
+ {
+  "shot": "1-levels-in-a-narrow-window"
+ },
+ {
+  "tooltip": {
+   "control": "ApplyButton",
+   "text": "Which channel the handles move. Master moves red, green and blue together, a single channel shifts the colour of the picture as well as its lightness, and Lightness (Oklab) moves the lightness alone and leaves every hue exactly where the painter put it, which is the one to reach for when only the tone is wrong."
+  }
+ },
+ {
+  "tooltip": {
+   "control": "CancelButton",
+   "text": "Close without changing the picture."
+  }
+ },
+ {
+  "move": [
+   738,
+   567
+  ]
+ },
+ {
+  "wait": 70
+ },
+ {
+  "tooltip": {
+   "report": true
+  }
+ },
+ {
+  "shot": "2-a-three-hundred-character-tooltip-wraps"
+ },
+ {
+  "state": "2-a-three-hundred-character-tooltip-wraps"
+ },
+ {
+  "move": [
+   640,
+   567
+  ]
+ },
+ {
+  "wait": 70
+ },
+ {
+  "tooltip": {
+   "report": true
+  }
+ },
+ {
+  "shot": "3-a-short-tooltip-is-still-one-line"
+ },
+ {
+  "state": "3-a-short-tooltip-is-still-one-line"
+ }
+]

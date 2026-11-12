@@ -1,0 +1,128 @@
+[
+  {
+    "wait": 30
+  },
+  {
+    "open": "preferences"
+  },
+  {
+    "wait": 14
+  },
+  {
+    "shot": "01-preferences-open"
+  },
+  {
+    "state": "01-preferences-open"
+  },
+  {
+    "prefs_search": "apple"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "02-search-apple"
+  },
+  {
+    "state": "02-search-apple"
+  },
+  {
+    "prefs_search": "mac"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "03-search-mac"
+  },
+  {
+    "state": "03-search-mac"
+  },
+  {
+    "prefs_search": "window"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "04-search-window"
+  },
+  {
+    "state": "04-search-window"
+  },
+  {
+    "prefs_search": "close"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "state": "05-search-close"
+  },
+  {
+    "prefs_search": "traffic"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "state": "06-search-traffic"
+  },
+  {
+    "prefs_search": ""
+  },
+  {
+    "wait": 8
+  },
+  {
+    "page": "Top Menu Bar"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "shot": "07-top-menu-bar-page"
+  },
+  {
+    "state": "07-top-menu-bar-page"
+  },
+  {
+    "prefs_search": "apple"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "shot": "08-apple-marks-the-row"
+  },
+  {
+    "state": "08-apple-marks-the-row"
+  },
+  {
+    "prefs_search": "mac"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "state": "09-mac-marks-the-row"
+  },
+  {
+    "prefs_search": "window"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "state": "10-window-marks-the-row"
+  },
+  {
+    "prefs_search": ""
+  },
+  {
+    "wait": 10
+  },
+  {
+    "wait": 6
+  }
+]

@@ -1,0 +1,92 @@
+[
+ {
+  "wait": 30
+ },
+ {
+  "docker": "park"
+ },
+ {
+  "wait": 12
+ },
+ {
+  "prefs": {
+   "ui_scale": 1.0
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "curve_option": {
+   "page": "Rotation"
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "curve_option": {
+   "select": "rotation"
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "state": "1-the-rotation-row-is-greyed"
+ },
+ {
+  "shot": "1-the-rotation-row-is-greyed"
+ },
+ {
+  "curve_option": {
+   "sensor": {
+    "rotation": true
+   }
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "state": "2-the-tick-is-refused"
+ },
+ {
+  "curve_option": {
+   "sensor": {
+    "tilt_direction": true
+   }
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "state": "3-an-available-sensor-still-ticks"
+ },
+ {
+  "shot": "3-an-available-sensor-still-ticks"
+ },
+ {
+  "prefs": {
+   "ui_scale": 1.5
+  }
+ },
+ {
+  "wait": 25
+ },
+ {
+  "shot": "4-the-greying-at-scale-1-5"
+ },
+ {
+  "state": "4-the-greying-at-scale-1-5"
+ },
+ {
+  "prefs": {
+   "ui_scale": 1.0
+  }
+ },
+ {
+  "wait": 20
+ }
+]

@@ -1,0 +1,24 @@
+# A selection chunk's coverage at the density of the layer chunk it masks. The
+# selection stores 256 by 256 per chunk and a layer at twice the document's
+# resolution stores 512, and every filter kernel reads its mask at its own texel,
+# so the filter door hands such a kernel the coverage enlarged, each texel the
+# one of the document pixel it lies in. Nearest and not linear, because a layer
+# at 1.0 reads the same coverage one texel to one pixel and the two runs have to
+# agree.
+
+kernel mask_at_density
+
+image target: r32f
+image source: r32f, readonly
+
+params:
+    vec2 spare
+
+
+def mask_at_density():
+    ivec2 at = ivec2(global_id.xy)
+    ivec2 size = image_size(target)
+    if at.x >= size.x or at.y >= size.y:
+        return
+    ivec2 from = min(at * image_size(source) / size, image_size(source) - 1)
+    target[at] = source[from]

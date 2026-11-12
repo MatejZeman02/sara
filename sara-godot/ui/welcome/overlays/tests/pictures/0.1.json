@@ -1,0 +1,13 @@
+{
+    "title": "Overlays",
+    "credit": "A suite's picture",
+    "variants": [
+        {"file": "dawn.png", "hour": 6},
+        {"file": "night.png", "hour": 23}
+    ],
+    "overlays": [
+        {"file": "stars.png", "kind": "stars", "opacity": [0.6, 1.0]},
+        {"file": "birds-1.png", "kind": "birds", "variants": ["dawn.png"]},
+        {"file": "birds-2.png", "kind": "birds", "hours": [5, 9]}
+    ]
+}

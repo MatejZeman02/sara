@@ -1,0 +1,49 @@
+[
+  {"comment": "Runs after the-stats-docker-turns-the-quantizer-on-and-sets-its-levels-switch-on, on the profile it leaves with Stats switched on, because Stats ships switched off on a fresh profile."},
+  {"settings": "keep"},
+  {"comment": "The stats docker turns the quantizer on and sets its levels. A black to white ramp is dragged across the whole canvas, the Shape check row is set to Levels and the count to the default five. The Stats docker opens with its compute switch off and stays so, and its Shape Check switch is pressed: shot 1 is the canvas in five bands and the switch pressed. The slider is moved to 4 with the control step: shot 2 is four bands and the canvas's shape_check block reads level_count 4. Ctrl+Shift+Q puts the ordinary view back: shot 3 is the ramp, and the pages block reads the switch off."},
+  {"wait": 25},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 10},
+  {"document": "srgb", "size": [1920, 1080]},
+  {"docker": "park"},
+  {"wait": 10},
+
+  {"prefs": {"shape_check_level_count": 5, "shape_check": "levels"}},
+  {"wait": 5},
+
+  {"colour": "#ffffff"},
+  {"key": "x"},
+  {"wait": 3},
+  {"colour": "#000000"},
+  {"wait": 3},
+  {"tool": {"id": "gradient", "options": {"gradient_shape": 0, "gradient_repeat": 0, "gradient_replace": true}}},
+  {"wait": 5},
+  {"gradient": {"from": [0, 540], "to": [1920, 540], "steps": 10}},
+  {"wait": 10},
+
+  {"comment": "The docker opens with the compute switch off. Its Shape Check switch is pressed, and the canvas goes to bands."},
+  {"docker": {"id": "StatsDocker", "at": [1500, 80], "size": [300, 940]}},
+  {"wait": 60},
+  {"state": "0-the-docker-open-the-switch-off"},
+  {"page_row": {"row": "quantizer", "value": true, "page": "StatsPage"}},
+  {"wait": 20},
+  {"shot": "1-the-switch-pressed-the-canvas-in-bands"},
+  {"state": "1-the-switch-pressed"},
+
+  {"comment": "The Levels slider moved to 4 as a drag moves it, the compute switch still off."},
+  {"control": {"name": "QuantizerLevels", "value": 4}},
+  {"wait": 20},
+  {"shot": "2-the-slider-at-four-four-bands"},
+  {"state": "2-the-slider-at-four"},
+
+  {"comment": "Ctrl+Shift+Q, the other door, puts the ordinary view back and the docker's switch goes off."},
+  {"key": {"key": "q", "ctrl": true, "shift": true}},
+  {"wait": 20},
+  {"shot": "3-ctrl-shift-q-the-switch-off"},
+  {"state": "3-ctrl-shift-q"},
+
+  {"prefs": {"shape_check_level_count": 5, "shape_check": "both"}},
+  {"view": ""},
+  {"wait": 10}
+]

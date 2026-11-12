@@ -1,0 +1,14 @@
+[
+  {"comment": "The restart half. Opens on the profile the s44 scenario left, which is what a painter's next start is, and reads the strip it saved: the middle chip's tooltip still says 'Skin shadow, #78463c'. Run straight after scripts/sara_shot.py on swatches-carry-names-and-removing-one-can-be-undone.json."},
+  {"settings": "keep"},
+  {"wait": 45},
+  {"window": [1920, 1080]},
+  {"wait": 20},
+  {"docker": {"id": "ColorDocker", "at": [900, 160], "size": [320, 620]}},
+  {"wait": 20},
+  {"state": "01-after-the-restart"},
+  {"move": {"control": "SwatchChip1"}},
+  {"wait": 90},
+  {"tooltip": {"report": true}},
+  {"shot": "01-after-the-restart"}
+]

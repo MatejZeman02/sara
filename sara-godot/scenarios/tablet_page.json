@@ -1,0 +1,8 @@
+[
+  {"wait": 30},
+  {"open": "preferences"},
+  {"wait": 20},
+  {"page": "Tablet"},
+  {"wait": 20},
+  {"shot": "tablet-page"}
+]

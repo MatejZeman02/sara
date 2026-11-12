@@ -1,0 +1,25 @@
+[
+  {"wait": 40},
+
+  {"docker_page": {"id": "TopMenuBar", "on": "File", "alt": false}},
+  {"wait": 25},
+  {"shot": "plain-double-click-on-file"},
+  {"state": "plain-double-click-on-file"},
+
+  {"docker_page": {"id": "TopMenuBar"}},
+  {"wait": 25},
+  {"shot": "bar-empty-part"},
+  {"state": "bar-empty-part"},
+
+  {"docker_page": {"id": "TopMenuBar", "on": "File"}},
+  {"wait": 25},
+  {"shot": "bar-file-title"},
+  {"state": "bar-file-title"},
+
+  {"docker": {"id": "LayersDocker", "at": [1180, 120], "size": [300, 380]}},
+  {"wait": 15},
+  {"docker_page": {"id": "LayersDocker"}},
+  {"wait": 25},
+  {"shot": "layers-docker"},
+  {"state": "layers-docker"}
+]

@@ -1,0 +1,199 @@
+[
+ {
+  "comment": "Bristle Flat lays a stroke of strands that differ and paints at a light press. A white 1200 by 900 document, Bristle Flat as it ships in a dark brown with randomness at nought, three level strokes from x 100 to 1100 at y 150, 450 and 750, sent at 0.02956, 0.078826 and 0.36146, the presses the harness pen's table turns into 0.15, 0.4 and 0.8 at the brush. Each stroke's middle 800 pixels are measured over a band of 15 pixels either side of the path and a look is kept for review."
+ },
+ {
+  "wait": 60
+ },
+ {
+  "prefs": {
+   "ui_scale": 1.0,
+   "autosave_interval_minutes": 0
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "layout_preset": {
+   "load": "minimalistic"
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "document": "srgb",
+  "size": [
+   1200,
+   900
+  ]
+ },
+ {
+  "wait": 10
+ },
+ {
+  "fit": true
+ },
+ {
+  "wait": 5
+ },
+ {
+  "fill": [
+   1.0,
+   1.0,
+   1.0
+  ]
+ },
+ {
+  "layer": {
+   "add": "Bristle Flat"
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "colour": [
+   0.3,
+   0.17,
+   0.08
+  ]
+ },
+ {
+  "preset": {
+   "load": "Bristle Flat"
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "tool": {
+   "id": "noise_brush",
+   "options": {
+    "randomness": 0.0
+   }
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "stroke": {
+   "from": [
+    100,
+    150
+   ],
+   "to": [
+    1100,
+    150
+   ],
+   "pressure": 0.02956,
+   "steps": 80,
+   "space": "document",
+   "route": "tool",
+   "smoothing": false
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "stroke": {
+   "from": [
+    100,
+    450
+   ],
+   "to": [
+    1100,
+    450
+   ],
+   "pressure": 0.078826,
+   "steps": 80,
+   "space": "document",
+   "route": "tool",
+   "smoothing": false
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "stroke": {
+   "from": [
+    100,
+    750
+   ],
+   "to": [
+    1100,
+    750
+   ],
+   "pressure": 0.36146,
+   "steps": 80,
+   "space": "document",
+   "route": "tool",
+   "smoothing": false
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "wait": 20
+ },
+ {
+  "measure": {
+   "rect": [
+    200,
+    135,
+    800,
+    31
+   ]
+  }
+ },
+ {
+  "measure": {
+   "rect": [
+    200,
+    435,
+    800,
+    31
+   ]
+  }
+ },
+ {
+  "measure": {
+   "rect": [
+    200,
+    735,
+    800,
+    31
+   ]
+  }
+ },
+ {
+  "look": {
+   "path": "bristle-flat.png",
+   "rect": [
+    0,
+    0,
+    1200,
+    900
+   ],
+   "scale": 1.0
+  }
+ },
+ {
+  "look": {
+   "path": "bristle-flat-close.png",
+   "rect": [
+    400,
+    100,
+    300,
+    700
+   ],
+   "scale": 2.0
+  }
+ }
+]

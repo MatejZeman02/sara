@@ -1,0 +1,15 @@
+[
+  {"wait": 30},
+  {"curve_option": {"page": "Size"}},
+  {"wait": 10},
+
+  {"docker": {"id": "CurveOptionHost", "at": [500, 120], "size": [280, 500]}},
+  {"wait": 15},
+  {"state": "01-narrow"},
+  {"shot": "01-narrow"},
+
+  {"docker": {"id": "CurveOptionHost", "at": [500, 120], "size": [640, 500]}},
+  {"wait": 15},
+  {"state": "02-wide"},
+  {"shot": "02-wide"}
+]

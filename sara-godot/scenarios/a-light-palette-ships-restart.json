@@ -1,0 +1,14 @@
+[
+  {"settings": "keep"},
+  {"wait": 40},
+  {"wait": 15},
+  {"shot": "05-remembered-after-a-restart"},
+  {"state": "05-remembered-after-a-restart"},
+  {"open": "preferences"},
+  {"wait": 18},
+  {"page": "Colour Themes"},
+  {"wait": 12},
+  {"theme_rows": {}},
+  {"shot": "06-and-the-page-still-names-it"},
+  {"state": "06-and-the-page-still-names-it"}
+]

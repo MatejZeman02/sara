@@ -1,0 +1,21 @@
+[
+  {"comment": "The first stroke of a fresh door session and the same stroke laid second, each the first wet stroke, Fill at a radius of 55 px in wash, its size on the pressure, pressed from no pressure through two points at 0 to 0.999 and back to 0, moved 100 px right and 40 and 240 px down so its press is not clipped at the sheet's edge. The first once opened with a pale lobe at full width, because the stamp brush took a pointer that had not yet reported a pressure for a mouse at its first pressed motion. The suite of the same name reads the layer back and measures each stroke's length and height, and a run under sara_shot.py exports it into a scratch folder."},
+  {"window": [1920, 1080]},
+  {"wait": 45},
+  {"key": "Tab"},
+  {"wait": 15},
+  {"document": "srgb", "size": [800, 500], "background": {"kind": "colour", "color": "#f2eee6"}},
+  {"wait": 15},
+  {"zoom": 1.0},
+  {"wait": 10},
+  {"layer": {"add": "Wet"}},
+  {"wait": 5},
+  {"brush": {"preset": "Fill", "colour": "#c9c4ba", "radius_px": 55.0, "painting_mode": "wash", "opacity": 0.8, "size_by_pressure": true, "spacing": 0.04, "hardness:value": 1.0}},
+  {"wait": 10},
+  {"stroke": {"space": "document", "points": [{"at": [135.7, 149.6], "pressure": 0.0}, {"at": [140.0, 150.0], "pressure": 0.0}, {"at": [148.7, 150.8], "pressure": 0.215}, {"at": [157.4, 151.7], "pressure": 0.42}, {"at": [166.0, 152.5], "pressure": 0.605}, {"at": [174.7, 153.2], "pressure": 0.762}, {"at": [183.4, 153.9], "pressure": 0.883}, {"at": [192.0, 154.5], "pressure": 0.964}, {"at": [200.7, 155.1], "pressure": 0.999}, {"at": [209.3, 155.5], "pressure": 0.972}, {"at": [218.0, 155.9], "pressure": 0.935}, {"at": [226.6, 156.1], "pressure": 0.897}, {"at": [235.3, 156.2], "pressure": 0.86}, {"at": [243.9, 156.1], "pressure": 0.821}, {"at": [252.5, 156.0], "pressure": 0.782}, {"at": [261.2, 155.6], "pressure": 0.743}, {"at": [269.8, 155.2], "pressure": 0.703}, {"at": [278.4, 154.6], "pressure": 0.662}, {"at": [287.0, 153.9], "pressure": 0.621}, {"at": [295.5, 153.0], "pressure": 0.58}, {"at": [304.1, 152.0], "pressure": 0.537}, {"at": [312.7, 150.9], "pressure": 0.494}, {"at": [321.3, 149.7], "pressure": 0.449}, {"at": [329.8, 148.3], "pressure": 0.404}, {"at": [338.4, 146.9], "pressure": 0.357}, {"at": [346.9, 145.4], "pressure": 0.308}, {"at": [355.5, 143.8], "pressure": 0.258}, {"at": [364.0, 142.1], "pressure": 0.205}, {"at": [372.6, 140.4], "pressure": 0.148}, {"at": [381.1, 138.7], "pressure": 0.085}, {"at": [389.7, 136.9], "pressure": 0.0}], "smoothing": false}},
+  {"wait": 15},
+  {"stroke": {"space": "document", "points": [{"at": [135.7, 349.6], "pressure": 0.0}, {"at": [140.0, 350.0], "pressure": 0.0}, {"at": [148.7, 350.8], "pressure": 0.215}, {"at": [157.4, 351.7], "pressure": 0.42}, {"at": [166.0, 352.5], "pressure": 0.605}, {"at": [174.7, 353.2], "pressure": 0.762}, {"at": [183.4, 353.9], "pressure": 0.883}, {"at": [192.0, 354.5], "pressure": 0.964}, {"at": [200.7, 355.1], "pressure": 0.999}, {"at": [209.3, 355.5], "pressure": 0.972}, {"at": [218.0, 355.9], "pressure": 0.935}, {"at": [226.6, 356.1], "pressure": 0.897}, {"at": [235.3, 356.2], "pressure": 0.86}, {"at": [243.9, 356.1], "pressure": 0.821}, {"at": [252.5, 356.0], "pressure": 0.782}, {"at": [261.2, 355.6], "pressure": 0.743}, {"at": [269.8, 355.2], "pressure": 0.703}, {"at": [278.4, 354.6], "pressure": 0.662}, {"at": [287.0, 353.9], "pressure": 0.621}, {"at": [295.5, 353.0], "pressure": 0.58}, {"at": [304.1, 352.0], "pressure": 0.537}, {"at": [312.7, 350.9], "pressure": 0.494}, {"at": [321.3, 349.7], "pressure": 0.449}, {"at": [329.8, 348.3], "pressure": 0.404}, {"at": [338.4, 346.9], "pressure": 0.357}, {"at": [346.9, 345.4], "pressure": 0.308}, {"at": [355.5, 343.8], "pressure": 0.258}, {"at": [364.0, 342.1], "pressure": 0.205}, {"at": [372.6, 340.4], "pressure": 0.148}, {"at": [381.1, 338.7], "pressure": 0.085}, {"at": [389.7, 336.9], "pressure": 0.0}], "smoothing": false}},
+  {"wait": 15},
+  {"read_pixels": {"layer": "Wet", "rect": "canvas", "file": "wet.npy"}},
+  {"shot": "0-two-strokes"}
+]

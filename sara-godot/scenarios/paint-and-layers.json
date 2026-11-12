@@ -1,0 +1,539 @@
+[
+ {
+  "wait": 35
+ },
+ {
+  "docker": "park"
+ },
+ {
+  "docker": {
+   "id": "ToolBoxDocker",
+   "at": [
+    1560,
+    40
+   ],
+   "size": [
+    340,
+    200
+   ]
+  }
+ },
+ {
+  "docker": {
+   "id": "LayersDocker",
+   "at": [
+    1560,
+    40
+   ],
+   "size": [
+    340,
+    200
+   ]
+  }
+ },
+ {
+  "docker": {
+   "id": "ColorDocker",
+   "at": [
+    1560,
+    40
+   ],
+   "size": [
+    340,
+    200
+   ]
+  }
+ },
+ {
+  "docker": {
+   "id": "InfoDocker",
+   "at": [
+    1560,
+    40
+   ],
+   "size": [
+    340,
+    200
+   ]
+  }
+ },
+ {
+  "docker": {
+   "id": "RecorderDocker",
+   "at": [
+    1560,
+    40
+   ],
+   "size": [
+    340,
+    200
+   ]
+  }
+ },
+ {
+  "docker": {
+   "id": "MinimapDocker",
+   "at": [
+    1560,
+    40
+   ],
+   "size": [
+    340,
+    200
+   ]
+  }
+ },
+ {
+  "docker": {
+   "id": "ToolOptionsDocker",
+   "at": [
+    1560,
+    40
+   ],
+   "size": [
+    340,
+    200
+   ]
+  }
+ },
+ {
+  "docker": {
+   "id": "GraphDocker",
+   "at": [
+    1560,
+    40
+   ],
+   "size": [
+    340,
+    200
+   ]
+  }
+ },
+ {
+  "docker": {
+   "id": "HistoryDocker",
+   "at": [
+    1560,
+    40
+   ],
+   "size": [
+    340,
+    200
+   ]
+  }
+ },
+ {
+  "docker": {
+   "id": "ReferenceDocker",
+   "at": [
+    1560,
+    40
+   ],
+   "size": [
+    340,
+    200
+   ]
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "colour": "#101010"
+ },
+ {
+  "tool": {
+   "id": "brush",
+   "options": {
+    "radius": 0.03,
+    "hardness": 1.0,
+    "opacity": 1.0,
+    "flow": 1.0,
+    "spacing": 0.25,
+    "painting_mode": 0
+   }
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "stroke": {
+   "from": [
+    200,
+    200
+   ],
+   "to": [
+    1000,
+    200
+   ],
+   "pressure": 1.0,
+   "steps": 12
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "state": "1-f50-first-stroke"
+ },
+ {
+  "undo": 5
+ },
+ {
+  "wait": 15
+ },
+ {
+  "state": "2-f50-after-undo"
+ },
+ {
+  "stroke": {
+   "from": [
+    200,
+    200
+   ],
+   "to": [
+    1000,
+    200
+   ],
+   "pressure": 1.0,
+   "steps": 12
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "state": "3-f50-first-after-undo"
+ },
+ {
+  "layer": {
+   "add": "Hidden"
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "layer": {
+   "visible": false
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "stroke": {
+   "from": [
+    200,
+    320
+   ],
+   "to": [
+    1000,
+    320
+   ],
+   "pressure": 1.0,
+   "steps": 12
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "state": "4-f15-hidden-layer"
+ },
+ {
+  "layer": {
+   "visible": true,
+   "lock": true
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "stroke": {
+   "from": [
+    200,
+    400
+   ],
+   "to": [
+    1000,
+    400
+   ],
+   "pressure": 1.0,
+   "steps": 12
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "state": "5-f15-locked-layer"
+ },
+ {
+  "layer": {
+   "lock": false
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "layer": {
+   "add": "Empty"
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "tool": {
+   "id": "eraser",
+   "options": {
+    "radius": 0.03,
+    "opacity": 1.0
+   }
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "stroke": {
+   "from": [
+    200,
+    480
+   ],
+   "to": [
+    1000,
+    480
+   ],
+   "pressure": 1.0,
+   "steps": 12
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "state": "6-f10-eraser-on-empty"
+ },
+ {
+  "shot": "6-f10-eraser-on-empty"
+ },
+ {
+  "state": "7-f11-before-delete"
+ },
+ {
+  "layer_action": "delete"
+ },
+ {
+  "wait": 15
+ },
+ {
+  "state": "8-f11-after-delete"
+ },
+ {
+  "tool": {
+   "id": "brush",
+   "options": {
+    "radius": 0.03,
+    "hardness": 1.0,
+    "opacity": 1.0,
+    "flow": 1.0,
+    "spacing": 0.25,
+    "painting_mode": 0
+   }
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "stroke": {
+   "from": [
+    200,
+    560
+   ],
+   "to": [
+    1000,
+    560
+   ],
+   "pressure": 1.0,
+   "steps": 12
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "wait": 20
+ },
+ {
+  "wait": 20
+ },
+ {
+  "select": [
+   200,
+   200,
+   400,
+   300
+  ]
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "12-f45-before-document"
+ },
+ {
+  "document": "srgb"
+ },
+ {
+  "wait": 25
+ },
+ {
+  "state": "13-f45-after-document"
+ },
+ {
+  "layer": {
+   "add": "After"
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "14-f45-layer-after-document"
+ },
+ {
+  "undo": 3
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "15-f14-history-after-new"
+ },
+ {
+  "shot": "15-f14-history-after-new"
+ },
+ {
+  "state": "16-f13-before-save"
+ },
+ {
+  "save": "user://s9-fix-sweep.sad"
+ },
+ {
+  "wait": 25
+ },
+ {
+  "state": "17-f13-after-save"
+ },
+ {
+  "tool": {
+   "id": "brush",
+   "options": {
+    "radius": 0.03,
+    "hardness": 1.0,
+    "opacity": 1.0,
+    "flow": 1.0,
+    "spacing": 0.25,
+    "painting_mode": 0
+   }
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "stroke": {
+   "from": [
+    200,
+    700
+   ],
+   "to": [
+    1000,
+    700
+   ],
+   "pressure": 1.0,
+   "steps": 12
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "state": "18-f13-edited-after-save"
+ },
+ {
+  "save": "user://s9-fix-sweep.sad"
+ },
+ {
+  "wait": 25
+ },
+ {
+  "state": "19-f13-saved-again"
+ },
+ {
+  "state": "20-f73-before-editor"
+ },
+ {
+  "brush_editor": {
+   "open": true,
+   "page": "Size",
+   "check": true
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "curve_option": {
+   "sensor": {
+    "pressure": true
+   },
+   "preset": "linear",
+   "strength": 1.0,
+   "use_curve": true
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "state": "21-f73-option-on"
+ },
+ {
+  "brush_editor": {
+   "close": true
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "stroke": {
+   "from": [
+    200,
+    820
+   ],
+   "to": [
+    1000,
+    820
+   ],
+   "pressure": 0.5,
+   "steps": 12
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "state": "22-f73-dab-follows-pressure"
+ },
+ {
+  "shot": "22-f73-dab-follows-pressure"
+ }
+]

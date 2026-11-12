@@ -1,0 +1,6 @@
+[
+  {"wait": 40},
+  {"state": "offer"},
+  {"shot": "offer"},
+  {"prefs": {"autosave_interval_minutes": 2.0}}
+]

@@ -1,0 +1,64 @@
+[
+  {
+    "wait": 30
+  },
+  {
+    "docker": "park"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "comment": "The file was saved by the integration tip before the move, 9aa382742e, whose Hard Mix was the base modules' hard_mix module: a 512 by 256 document, the backdrop grey 0.2 on the left chunk and 0.6 on the right, Layer 1 filled (0.5, 0.9, 2.5) and set to Hard Mix. That build read (0, 1, 2.5) composited at (128, 128) and (1, 1, 2.5) at (384, 128)."
+  },
+  {
+    "load": "res://scenarios/fixtures/hard-mix-saved-before-the-move.sad"
+  },
+  {
+    "wait": 30
+  },
+  {
+    "fit": true
+  },
+  {
+    "wait": 10
+  },
+  {
+    "layer": {
+      "activate": "Layer 1"
+    }
+  },
+  {
+    "wait": 15
+  },
+  {
+    "comment": "The layers step reads each layer's blend id off the document, so Layer 1 has to answer hard_mix, the id the old build wrote, now the skeleton's mode, and the modules block of the state dump has no hard_mix module loaded."
+  },
+  {
+    "layers": true
+  },
+  {
+    "wait": 4
+  },
+  {
+    "texel": [
+      [
+        128,
+        128
+      ],
+      [
+        384,
+        128
+      ]
+    ]
+  },
+  {
+    "wait": 8
+  },
+  {
+    "shot": "0-the-file-saved-before-the-move-opens-as-hard-mix"
+  },
+  {
+    "state": "0-the-file-saved-before-the-move-opens-as-hard-mix"
+  }
+]

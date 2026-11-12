@@ -1,0 +1,26 @@
+[
+  {"wait": 45},
+  {"colour": "#1c6ad2"},
+  {"tool": "brush"},
+  {"wait": 6},
+
+  {"bar_option": {"key": "radius", "value": 0.01}},
+  {"bar_option": {"key": "opacity", "value": 1.0}},
+  {"wait": 4},
+  {"state": "01-the-bar-set-small"},
+  {"stroke": {"from": [400, 400], "to": [1400, 400], "pressure": 0.9, "steps": 26}},
+  {"wait": 12},
+  {"shot": "02-a-thin-band"},
+
+  {"bar_option": {"key": "radius", "value": 0.08}},
+  {"bar_option": {"key": "opacity", "value": 0.35}},
+  {"wait": 4},
+  {"state": "03-the-bar-set-large-and-faint"},
+  {"stroke": {"from": [400, 700], "to": [1400, 700], "pressure": 0.9, "steps": 26}},
+  {"wait": 12},
+  {"shot": "04-a-thick-faint-band"},
+
+  {"bar_option": {"key": "stabilizer_mode", "value": 2}},
+  {"wait": 4},
+  {"state": "05-the-dropdown-too"}
+]

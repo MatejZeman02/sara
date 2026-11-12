@@ -1,0 +1,16 @@
+[
+    {"comment": "Preferences > Files with Location, Place and the box to write them into exports under Author. Location reads Automatic with the country guessed from the time zone in brackets, which the control step prints. Then Location is moved to Australia's western clock, Perth, and read back as Australia (Perth)."},
+    {"timeout": 300},
+    {"wait": 30},
+    {"open": "preferences"},
+    {"wait": 20},
+    {"page": "Files"},
+    {"wait": 15},
+    {"shot": "0-location-place-and-the-box-under-author"},
+    {"state": "0-location-place-and-the-box-under-author"},
+    {"control": {"name": "LocationOpt"}},
+    {"control": {"name": "LocationOpt", "value": "AU Australia/Perth"}},
+    {"wait": 10},
+    {"shot": "2-australia-perth"},
+    {"state": "2-australia-perth"}
+]

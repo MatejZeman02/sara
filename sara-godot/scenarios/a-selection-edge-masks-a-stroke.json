@@ -1,0 +1,19 @@
+[
+  {"wait": 30},
+  {"select": [700, 300, 500, 400]},
+  {"stroke": {"from": [500, 400], "to": [1400, 400], "pressure": 0.9, "steps": 24}},
+  {"wait": 5},
+  {"state": "edge-at-fit"},
+  {"shot": "edge-at-fit"},
+  {"wheel": {"at": [700, 500], "notches": 3}},
+  {"wait": 5},
+  {"stroke": {"from": [500, 520], "to": [1400, 520], "pressure": 0.9, "steps": 24}},
+  {"wait": 5},
+  {"shot": "edge-zoomed-in"},
+  {"wheel": {"at": [700, 500], "notches": -6}},
+  {"wait": 5},
+  {"stroke": {"from": [500, 470], "to": [1400, 470], "pressure": 0.9, "steps": 24}},
+  {"wait": 5},
+  {"state": "edge-zoomed-out"},
+  {"shot": "edge-zoomed-out"}
+]

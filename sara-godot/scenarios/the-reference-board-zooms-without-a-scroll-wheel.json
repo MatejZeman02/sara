@@ -1,0 +1,243 @@
+[
+ {
+  "comment": "The reference board zooms without a scroll wheel. Two pictures are dropped on the Reference docker and fitted (shot 0). The docker is clicked so it holds the focus, the way a pen that has just used it leaves it, and Ctrl+Space, the quick zoom chord the profile ships and the docker maximise's too, is held over the board while the pen, its motions carrying pressure and tilt, drags 100 pixels to the right: the board zooms in about the press and the docker is not maximised (shot 1, taken with the button still held, and shot 2 after the lift). Ctrl+Equal, the zoom in chord, with the pointer still over the board steps the board by ZOOM_STEP and leaves the canvas's zoom where it was (shot 3). Each state's ReferenceDocker zoom and the canvas's view zoom read it."
+ },
+ {
+  "wait": 40
+ },
+ {
+  "document": "srgb"
+ },
+ {
+  "docker": "park"
+ },
+ {
+  "docker": {
+   "id": "ReferenceDocker",
+   "at": [
+    760,
+    100
+   ],
+   "size": [
+    520,
+    420
+   ]
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "move": [
+   1000,
+   300
+  ]
+ },
+ {
+  "wait": 5
+ },
+ {
+  "drop": "res://ui/dialogs/builders/astrid.png"
+ },
+ {
+  "wait": 15
+ },
+ {
+  "move": [
+   1000,
+   300
+  ]
+ },
+ {
+  "wait": 5
+ },
+ {
+  "drop": "res://ui/dialogs/builders/mads.png"
+ },
+ {
+  "wait": 15
+ },
+ {
+  "click": {
+   "control": "FitButton"
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "move": [
+   1020,
+   300
+  ]
+ },
+ {
+  "wait": 5
+ },
+ {
+  "press": "left"
+ },
+ {
+  "release": "left"
+ },
+ {
+  "wait": 5
+ },
+ {
+  "hide": ""
+ },
+ {
+  "shot": "0-two-pictures-fitted"
+ },
+ {
+  "state": "0-two-pictures-fitted"
+ },
+ {
+  "move": {
+   "at": [
+    960,
+    300
+   ],
+   "pressure": 0.0,
+   "tilt": [
+    0.2,
+    -0.1
+   ]
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "key": {
+   "key": "space",
+   "ctrl": true,
+   "pressed": true
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "press": {
+   "button": "left",
+   "ctrl": true
+  }
+ },
+ {
+  "move": {
+   "at": [
+    985,
+    300
+   ],
+   "pressure": 0.6,
+   "tilt": [
+    0.2,
+    -0.1
+   ]
+  }
+ },
+ {
+  "wait": 2
+ },
+ {
+  "move": {
+   "at": [
+    1010,
+    300
+   ],
+   "pressure": 0.6,
+   "tilt": [
+    0.2,
+    -0.1
+   ]
+  }
+ },
+ {
+  "wait": 2
+ },
+ {
+  "move": {
+   "at": [
+    1035,
+    300
+   ],
+   "pressure": 0.6,
+   "tilt": [
+    0.2,
+    -0.1
+   ]
+  }
+ },
+ {
+  "wait": 2
+ },
+ {
+  "move": {
+   "at": [
+    1060,
+    300
+   ],
+   "pressure": 0.6,
+   "tilt": [
+    0.2,
+    -0.1
+   ]
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "hide": ""
+ },
+ {
+  "shot": "1-held-and-dragged-right-the-board-zooms-in"
+ },
+ {
+  "state": "1-held-and-dragged-right-the-board-zooms-in"
+ },
+ {
+  "release": {
+   "button": "left",
+   "ctrl": true
+  }
+ },
+ {
+  "key": {
+   "key": "space",
+   "ctrl": true,
+   "pressed": false
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "hide": ""
+ },
+ {
+  "shot": "2-let-go-the-docker-is-not-maximised"
+ },
+ {
+  "state": "2-let-go-the-docker-is-not-maximised"
+ },
+ {
+  "key": {
+   "key": "equal",
+   "ctrl": true
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "hide": ""
+ },
+ {
+  "shot": "3-ctrl-equal-over-the-board-steps-the-board"
+ },
+ {
+  "state": "3-ctrl-equal-over-the-board-steps-the-board"
+ }
+]

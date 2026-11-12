@@ -1,0 +1,22 @@
+[
+  {"comment": "Select Subject on the teapot photograph the module's suites use. The weights are put by hand into this checkout's shot profile, scratch/xdg/config/sara/data/module-data/background_removal/u2netp.pth, and the run keeps the profile so the click opens no dialog. One click of the tool on the canvas runs the network on the GPU and merges its mask into the selection, and the marching ants go round the teapot."},
+  {"settings": "keep"},
+  {"wait": 35},
+  {"document": "srgb", "size": [1600, 1067]},
+  {"wait": 10},
+  {"import": "res://modules/sara-background-removal/tests/teapot.jpg"},
+  {"wait": 20},
+  {"fit": true},
+  {"wait": 10},
+  {"shot": "0-the-teapot"},
+  {"tool": "select_subject"},
+  {"wait": 5},
+  {"click": {"at": [960, 560]}},
+  {"wait": 60},
+  {"shot": "1-the-ants-round-the-teapot"},
+  {"state": "1-selected"},
+  {"undo": 1},
+  {"wait": 15},
+  {"shot": "2-undone"},
+  {"state": "2-undone"}
+]

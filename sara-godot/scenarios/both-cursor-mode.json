@@ -1,0 +1,34 @@
+[
+  {"wait": 35},
+  {"answer": 2},
+  {"wait": 6},
+  {"tool": "brush"},
+  {"brush": {"radius": 0.06}},
+  {"fill": [0.6, 0.0, 0.0]},
+  {"wait": 8},
+
+  {"prefs": {"software_cursor": "always"}},
+  {"wait": 5},
+  {"probe": [[900, 560]]},
+  {"shot": "1-always"},
+
+  {"prefs": {"software_cursor": "both"}},
+  {"wait": 5},
+  {"probe": [[900, 560]]},
+  {"shot": "2-both"},
+
+  {"open": "preferences"},
+  {"wait": 20},
+  {"page": "Tablet"},
+  {"wait": 10},
+  {"workspace": {"pointer": true}},
+  {"state": "3-the-four-rows"},
+
+  {"prefs": {"software_cursor": "never"}},
+  {"wait": 5},
+  {"probe": [[900, 560]]},
+
+  {"prefs": {"software_cursor": "auto"}},
+  {"wait": 5},
+  {"probe": [[900, 560]]}
+]

@@ -1,0 +1,37 @@
+# Kernel: shift
+# The shortest kernel that reads the whole node, for the suite. Each texel
+# copies the source *offset* document pixels up and to the left of it, however
+# far that is, so a texel two chunks from the paint reads the paint. With
+# *mode* 1 it writes the `chunk` and `source` params instead, so the suite can
+# read back what the runner told it. Nothing here is worth copying but that
+# shape: the source at binding 0 read in document pixels through `chunk` and
+# `source`, the mask at 1, the target at 2.
+
+kernel shift
+
+image src: readonly
+image mask: r32f, readonly
+image dst
+
+params:
+    vec2 origin
+    int halo
+    vec2 chunk
+    vec2 source
+    vec2 offset
+    int mode
+
+
+def shift():
+    ivec2 at = pixel + ivec2(origin)
+    if at.x >= image_size(dst).x or at.y >= image_size(dst).y:
+        return
+    float chosen = image_load(mask, min(at, image_size(mask) - 1)).r
+    if mode == 1:
+        image_store(dst, at, vec4(chunk.x, chunk.y, source.x, source.y) * chosen)
+        return
+    ivec2 from = ivec2(chunk) + at - ivec2(offset) - ivec2(source) + ivec2(halo, halo)
+    vec4 read = vec4(0.0)
+    if from.x >= 0 and from.y >= 0 and from.x < image_size(src).x and from.y < image_size(src).y:
+        read = image_load(src, from)
+    image_store(dst, at, read * chosen)

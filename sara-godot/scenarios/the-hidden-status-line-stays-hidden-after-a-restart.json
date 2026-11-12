@@ -1,0 +1,15 @@
+[
+ {"comment": "Run with --keep-settings after the-status-line-can-be-hidden-from-the-view-menu.json, which ends with the line hidden. The line opens hidden and the boot's fit reaches the window's bottom edge, then the row shows it again."},
+ {"wait": 60},
+ {"window": [1920, 1080]},
+ {"wait": 30},
+ {"state": "1-opens-hidden-1920"},
+ {"shot": "1-opens-hidden-1920"},
+ {"control": {"list": "StatusLine"}},
+ {"menu_item": {"menu": "View", "id": 72}},
+ {"wait": 10},
+ {"menu_item": {"menu": "View", "id": 13}},
+ {"wait": 15},
+ {"state": "2-shown-again-1920"},
+ {"shot": "2-shown-again-1920"}
+]

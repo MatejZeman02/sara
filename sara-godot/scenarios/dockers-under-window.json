@@ -1,0 +1,18 @@
+[
+  {"wait": 30},
+  {"state": "0-what-the-layout-opened-with"},
+  {"menu": "Window"},
+  {"wait": 10},
+  {"shot": "1-the-window-menu-holds-the-dockers-and-the-layouts"},
+  {"state": "1-the-window-menu-is-open"},
+  {"menu_item": {"menu": "Window", "id": 0}},
+  {"wait": 10},
+  {"state": "2-the-first-docker-row-toggled-the-toolbox-off"},
+  {"menu_item": {"menu": "Window", "id": 0}},
+  {"wait": 10},
+  {"state": "3-and-the-second-press-put-it-back"},
+  {"key": "escape"},
+  {"wait": 8},
+  {"shot": "4-every-menu-closed"},
+  {"state": "4-every-menu-closed"}
+]

@@ -1,0 +1,739 @@
+[
+ {
+  "comment": "The pear photograph opened by File > Open, the Magnetic Lasso started on its left edge low down and the pointer led along it to the shoulder, held eight screen pixels off the edge. The shot shows the trace on the skin's edge rather than under the pointer, with the anchors it laid on its own as small squares. Backspace then takes the last anchor away and leaves the picture whole, since the trace keeps the key from the layer's Clear, and Escape abandons the trace."
+ },
+ {
+  "wait": 30
+ },
+ {
+  "menu_item": {
+   "menu": "File",
+   "id": 200
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "file_picker": {
+   "choose": "res://modules/sara-base-modules/base/magnetic/tests/fixtures/pear.jpg"
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "key": "enter"
+ },
+ {
+  "wait": 25
+ },
+ {
+  "tool": "magnetic_lasso"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "move": [
+   744,
+   770
+  ]
+ },
+ {
+  "wait": 3
+ },
+ {
+  "press": {
+   "button": "left",
+   "at": [
+    744,
+    770
+   ]
+  }
+ },
+ {
+  "release": "left"
+ },
+ {
+  "wait": 3
+ },
+ {
+  "move": [
+   735,
+   760
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   735,
+   750
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   734,
+   740
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   733,
+   730
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   733,
+   720
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   732,
+   710
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   731,
+   700
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   731,
+   690
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   730,
+   680
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   729,
+   670
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   729,
+   660
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   728,
+   650
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   729,
+   642
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   730,
+   635
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   730,
+   628
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   731,
+   620
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   732,
+   612
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   732,
+   605
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   733,
+   598
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   734,
+   590
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   735,
+   582
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   736,
+   575
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   736,
+   568
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   737,
+   560
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   739,
+   553
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   741,
+   547
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   743,
+   540
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   745,
+   533
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   747,
+   527
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   750,
+   520
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   752,
+   513
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   754,
+   507
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   756,
+   500
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   758,
+   493
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   760,
+   487
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   762,
+   480
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   765,
+   474
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   769,
+   468
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   772,
+   462
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   775,
+   457
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   779,
+   451
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   782,
+   445
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   785,
+   439
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   789,
+   433
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   792,
+   428
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   795,
+   422
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   799,
+   416
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   802,
+   410
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   806,
+   404
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   810,
+   398
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   814,
+   392
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   819,
+   387
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   823,
+   381
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   827,
+   375
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   831,
+   369
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   835,
+   363
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   840,
+   358
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   844,
+   352
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   848,
+   346
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   852,
+   340
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   857,
+   336
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   862,
+   332
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   867,
+   328
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   872,
+   323
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   877,
+   319
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   882,
+   315
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   887,
+   311
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   892,
+   307
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   897,
+   302
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   902,
+   298
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   907,
+   294
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "move": [
+   912,
+   290
+  ]
+ },
+ {
+  "wait": 1
+ },
+ {
+  "wait": 10
+ },
+ {
+  "shot": "traced-halfway"
+ },
+ {
+  "state": "traced-halfway"
+ },
+ {
+  "key": "backspace"
+ },
+ {
+  "wait": 5
+ },
+ {
+  "shot": "backspace-took-an-anchor"
+ },
+ {
+  "state": "backspace-took-an-anchor"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 5
+ },
+ {
+  "shot": "escape-abandoned"
+ }
+]

@@ -1,0 +1,33 @@
+[
+  {"wait": 40},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 20},
+  {"tool": "brush"},
+  {"wait": 6},
+
+  {"brush_editor": {"open": true, "page": "Brush Tip"}},
+  {"wait": 30},
+  {"shot": "01-the-editor-open-its-previews-drawn"},
+
+  {"brush_editor": {"close": true}},
+  {"wait": 10},
+  {"bar_option": {"key": "radius", "value": 0.06}},
+  {"wait": 20},
+  {"brush_editor": {"open": true, "page": "Brush Tip"}},
+  {"wait": 30},
+  {"shot": "02-opened-again-after-a-change-while-hidden"},
+  {"brush_editor": {"close": true}},
+  {"wait": 10},
+
+  {"menu": "Tools"},
+  {"wait": 16},
+  {"shot": "03-the-tools-menu"},
+  {"key": "escape"},
+  {"wait": 8},
+
+  {"preset": {"thumb": "tip", "finish": true}},
+  {"wait": 20},
+  {"preset": {"thumb": "neither", "finish": true}},
+  {"wait": 20},
+  {"shot": "04-the-preset-chooser-by-tip"}
+]

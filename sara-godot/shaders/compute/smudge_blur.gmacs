@@ -1,0 +1,112 @@
+# Kernel: smudge_blur
+#
+# The smudge stage's third rate: the paint under a blurring dab, softened by a
+# Gaussian and laid out on a small lattice the dab reads texel by texel, so one
+# stroke along an edge leaves a gradient across it rather than the band of one
+# colour a pickup's mean lays.
+#
+# The lattice is anchored on the document, not on the dab. Its cells are squares of
+# whole document pixels at multiples of the cell's side, so two dabs that both
+# reach a cell average the same texels in the same order and find the same number
+# in it. A lattice laid out from each dab's own centre would sample the snapshot at
+# a new phase every dab and ripple across a ramp. The dab interpolates the lattice
+# bilinearly, so the blur is continuous wherever it falls.
+#
+# Three stages of one kernel, dispatched in turn with a barrier between them,
+# because a blur that reads its neighbours' results cannot run in the pass that
+# writes them. Stage 0 averages each cell's texels of the snapshot into `cells`,
+# alpha weighted, so a cell half over bare canvas holds the paint it is over rather
+# than a colour diluted towards black. Stage 1 blurs the cells along x into `rows`,
+# and stage 2 blurs those along y into the carry's rows from 1 down. The averaging
+# in stage 0 keeps the taps few at any radius: the cell grows with the dab, so the
+# Gaussian always spans the same handful of cells.
+#
+# It reads the snapshot rather than the layer, for the reason `smudge_pickup.gmacs`
+# gives. The lattice is small and fixed, never the canvas.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel smudge_blur
+
+# The stroke's copy of what the pickup reads, at the composite's own format.
+image snapshot: readonly
+# Stage 0's averages, the lattice with the Gaussian's reach on each side.
+image cells: rgba32f
+# Stage 1's blur along x: the lattice's columns, and its rows with the reach.
+image rows: rgba32f
+# The carry. Row 0 holds the pickup's two texels and, at 2 and 3, where the
+# dab finds itself on the lattice. The rows from 1 are the lattice, alpha
+# weighted, which stage 2 writes and `dab_texel.gmacs` reads.
+image reservoir: rgba32f
+params:
+    vec2 corner  # the first cell of `cells`, in the snapshot's texels
+    float cell  # a cell's side, in the snapshot's texels
+    float samples  # how many texels a cell's average reads along each axis
+    float spread  # the Gaussian's deviation, in cells
+    float taps  # how many cells the Gaussian reads on each side of its own
+    vec2 count  # the cells of the lattice the dab reads, along x and y
+    vec2 centre  # the dab's centre on that lattice, in cells
+    float inverse  # cells to one document pixel
+    float stage  # 0 averages, 1 blurs along x, 2 blurs along y
+
+# Where the carry's row 0 says where the dab sits on the lattice, after the
+# pickup's two texels. The count's third channel is one, which tells the dab
+# the lattice is a blur's, moving paint in place, and not a smear's dragging
+# field, which leaves it at nought.
+const int SA_BLUR_FRAME = 2
+const int SA_BLUR_COUNT = 3
+
+# The weight of the cell *k* cells from the one being blurred, unnormalised.
+
+
+def sa_blur_weight(int k) -> float:
+    return exp(-0.5 * (k * k) / (spread * spread))
+
+# The mean of the paint under cell *at* of `cells`, its colour times its alpha
+# and the alpha beside it. The texels read are spread evenly over the cell, all
+# of them while a cell is at most `samples` across.
+
+
+def sa_blur_average(ivec2 at) -> vec4:
+    ivec2 size = image_size(snapshot)
+    int side = int(samples)
+    vec4 total = vec4(0.0)
+    for sy in range(side):
+        for sx in range(side):
+            vec2 offset = floor((vec2(sx, sy) + 0.5) * cell / samples)
+            ivec2 texel = clamp(ivec2(floor(corner + vec2(at) * cell + offset)), ivec2(0), size - 1)
+            vec4 paint = snapshot[texel]
+            total += vec4(paint.rgb * paint.a, paint.a)
+    return total / (side * side)
+
+
+def smudge_blur():
+    ivec2 at = ivec2(global_id.xy)
+    int reach = int(taps)
+    ivec2 inner = ivec2(count)
+    if stage < 0.5:
+        if at.x >= inner.x + 2 * reach or at.y >= inner.y + 2 * reach:
+            return
+        cells[at] = sa_blur_average(at)
+        return
+    vec4 total = vec4(0.0)
+    float weights = 0.0
+    if stage < 1.5:
+        if at.x >= inner.x or at.y >= inner.y + 2 * reach:
+            return
+        for k in range_inclusive(-reach, reach):
+            float weight = sa_blur_weight(k)
+            total += weight * cells[ivec2(at.x + reach + k, at.y)]
+            weights += weight
+        rows[at] = total / weights
+        return
+    if at.x >= inner.x or at.y >= inner.y:
+        return
+    for k in range_inclusive(-reach, reach):
+        float weight = sa_blur_weight(k)
+        total += weight * rows[ivec2(at.x, at.y + reach + k)]
+        weights += weight
+    reservoir[ivec2(at.x, at.y + 1)] = total / weights
+    if at.x == 0 and at.y == 0:
+        reservoir[ivec2(SA_BLUR_FRAME, 0)] = vec4(centre, inverse, 1.0)
+        reservoir[ivec2(SA_BLUR_COUNT, 0)] = vec4(count, 1.0, 0.0)

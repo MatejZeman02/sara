@@ -1,0 +1,20 @@
+[
+  {"wait": 30},
+  {"stroke": {"from": [500, 400], "to": [1400, 400], "pressure": 0.9, "steps": 24}},
+  {"stroke": {"from": [500, 600], "to": [1400, 600], "pressure": 0.9, "steps": 24}},
+  {"wait": 5},
+  {"shot": "before"},
+  {"select": [700, 300, 500, 500]},
+  {"adjust": {"kind": "brightness_contrast", "brightness": 0.0, "contrast": 0.2}},
+  {"wait": 5},
+  {"shot": "contrast-in-selection"},
+  {"select": "none"},
+  {"adjust": {"kind": "hue_saturation_lightness", "hue": 0, "saturation": 1.0, "lightness": 0.4}},
+  {"wait": 5},
+  {"state": "after-adjust"},
+  {"shot": "lightness-everywhere"},
+  {"docker": {"id": "MinimapDocker", "at": [1330, 400]}},
+  {"wheel": {"at": [700, 500], "notches": 4}},
+  {"wait": 10},
+  {"shot": "minimap-zoomed"}
+]

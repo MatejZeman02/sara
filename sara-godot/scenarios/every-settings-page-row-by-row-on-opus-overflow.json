@@ -1,0 +1,14 @@
+[
+ {"comment": "The ninth run: the Top Menu Bar page's Overflow switch turned off on a fresh profile and nothing else, because the eighth run hung and then crashed within a second of that one row moving, after two theme changes and a shortcut rebind that could have been the cause instead."},
+ {"timeout": 600},
+ {"wait": 40},
+ {"open": "preferences"},
+ {"wait": 20},
+ {"page": "Top Menu Bar"},
+ {"wait": 10},
+ {"shot": "i01-top-bar-page-overflow-on"},
+ {"page_row": {"row": "overflow", "value": false}},
+ {"wait": 30},
+ {"shot": "i02-top-bar-page-overflow-off"},
+ {"state": "i02-top-bar-page-overflow-off"}
+]

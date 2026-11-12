@@ -1,0 +1,11 @@
+# Multiplies the layer by a picked colour and adds an untagged offset, which
+# keeps the value its line declared because the source hints.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+uniform vec3 tint: source_color = vec3(1.0, 1.0, 1.0)
+uniform vec3 offset = vec3(0.0, 0.0, 0.0)
+
+def pixel(ivec2 at) -> vec4:
+    vec4 c = src(at)
+    return vec4(c.rgb * tint + offset, c.a)

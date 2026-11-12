@@ -1,0 +1,102 @@
+[
+ {
+  "wait": 35
+ },
+ {
+  "docker": "park"
+ },
+ {
+  "wait": 12
+ },
+ {
+  "docker": {
+   "id": "ColorDocker",
+   "at": [
+    640,
+    300
+   ],
+   "size": [
+    300,
+    380
+   ]
+  }
+ },
+ {
+  "docker": {
+   "id": "LayersDocker",
+   "at": [
+    1200,
+    300
+   ],
+   "size": [
+    280,
+    380
+   ]
+  }
+ },
+ {
+  "wait": 25
+ },
+ {
+  "shot": "1-two-dockers"
+ },
+ {
+  "state": "1-two-dockers"
+ },
+ {
+  "docker_corners": "Colour Picker"
+ },
+ {
+  "docker_corners": "Layers"
+ },
+ {
+  "prefs": {
+   "ui_scale": 2.0
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "docker": "park"
+ },
+ {
+  "wait": 30
+ },
+ {
+  "docker": {
+   "id": "ColorDocker",
+   "at": [
+    60,
+    160
+   ],
+   "size": [
+    300,
+    280
+   ]
+  }
+ },
+ {
+  "wait": 25
+ },
+ {
+  "shot": "2-zoomed"
+ },
+ {
+  "docker_corners": "Colour Picker"
+ },
+ {
+  "prefs": {
+   "ui_scale": 1.0
+  }
+ },
+ {
+  "wait": 25
+ },
+ {
+  "shot": "3-back-to-one"
+ },
+ {
+  "state": "3-back-to-one"
+ }
+]

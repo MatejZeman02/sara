@@ -1,0 +1,74 @@
+# Kernel: vector_fill
+#
+# One closed outline's paint composited into one chunk, a workgroup for each
+# of the chunk's 16 by 16 tiles the outline reaches and none for the rest.
+# `SaVectorFill` bins the outline on the CPU: each tile carries the edges that
+# cross it, cut to it and chunk relative, and its backdrop, the winding the
+# outline makes at its left top corner. Each pixel sums its tile's edges'
+# signed areas onto the backdrop through `vector_coverage.gmacs`, which is its
+# coverage, exact, since the outline was resolved to wind once round what is
+# filled (`sa_vector_outline.gd`).
+#
+# The paint is composited over the chunk at that coverage with the colours
+# premultiplied, in float, and put back straight, as the chunk stores it, the
+# way `fill.gmacs` does and for its reason: a straight colour interpolated
+# channel by channel darkens an edge. The store is rounded stochastically into
+# a half precision chunk as every paint kernel's is, and a pixel the outline
+# leaves untouched is not stored at all, so its bits stay as they were.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel vector_fill
+
+image canvas
+
+# Five ints a tile: its column and row in the chunk, the first of its edges,
+# how many it has, and its backdrop.
+buffer tiles: int cells[]
+
+# Four floats an edge, x and y of its start and of its end, in the chunk's own
+# texels.
+buffer edges: float coords[]
+
+params:
+    # The straight colour in the document's space, and its opacity.
+    vec4 paint
+    # The draw's seed, folded into the stochastic rounding's hash.
+    int seed
+    int tile_count
+
+import stochastic_half
+import vector_coverage
+
+const int SA_VECTOR_TILE = 16
+const int SA_VECTOR_TILE_INTS = 5
+
+
+@workgroup_size(16, 16)
+def vector_fill():
+    int tile = int(group_id.x)
+    if tile >= tile_count:
+        return
+    int base = tile * SA_VECTOR_TILE_INTS
+    ivec2 at = ivec2(tiles.cells[base], tiles.cells[base + 1]) * SA_VECTOR_TILE + ivec2(local_id.xy)
+    ivec2 size = image_size(canvas)
+    if at.x >= size.x or at.y >= size.y:
+        return
+    int first = tiles.cells[base + 2]
+    int count = tiles.cells[base + 3]
+    float winding = float(tiles.cells[base + 4])
+    vec2 corner = vec2(at)
+    for k in range(count):
+        int e = (first + k) * 4
+        vec2 a = vec2(edges.coords[e], edges.coords[e + 1])
+        vec2 b = vec2(edges.coords[e + 2], edges.coords[e + 3])
+        winding += sa_vector_edge_area(a, b, corner)
+    float coverage = clamp(abs(winding), 0.0, 1.0)
+    if coverage <= 0.0:
+        return
+    vec4 under = canvas[at]
+    float laid = paint.a * coverage
+    float out_a = laid + under.a * (1.0 - laid)
+    vec3 premultiplied = paint.rgb * laid + under.rgb * under.a * (1.0 - laid)
+    vec3 out_rgb = out_a > 0.0 ? premultiplied / out_a : vec3(0.0)
+    sa_store_rounded(at, vec4(out_rgb, out_a), uint(seed), 0u)

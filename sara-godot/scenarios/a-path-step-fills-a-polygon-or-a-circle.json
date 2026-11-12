@@ -1,0 +1,21 @@
+[
+  {"wait": 30},
+  {"canvas": [1024, 768]},
+  {"fit": true},
+  {"wait": 5},
+  {"select": [620, 80, 320, 280]},
+  {"state": "before"},
+  {"colour": "#2060d0"},
+  {"path": {"polygon": [[80, 660], [300, 120], [520, 660]]}},
+  {"colour": "#d04020"},
+  {"path": {"circle": [712, 384, 200]}},
+  {"colour": "#20a040"},
+  {"path": {"circle": [712, 384, 60], "antialias": false}},
+  {"wait": 5},
+  {"texel": [[300, 400], [60, 400], [190, 391], [712, 300], [712, 384], [911, 384], [913, 384], [1000, 700]]},
+  {"state": "after"},
+  {"shot": "triangle-and-circles"},
+  {"zoom": 8.0},
+  {"wait": 5},
+  {"shot": "edge-zoomed"}
+]

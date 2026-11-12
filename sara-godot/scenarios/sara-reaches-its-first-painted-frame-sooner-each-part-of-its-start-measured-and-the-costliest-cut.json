@@ -1,0 +1,13 @@
+[
+  {"comment": "The first start on a fresh profile. The dump's modules block lists midi and sara-stats under off, switched off in Preferences, and neither under loaded. Preferences > Modules shows both with their switches off, and MIDI is switched on there for the second start, the restart scenario."},
+  {"window": [1920, 1080]},
+  {"wait": 40},
+  {"state": "1-midi-and-stats-are-off-on-a-fresh-profile"},
+  {"open": "preferences"},
+  {"page": "Modules"},
+  {"wait": 10},
+  {"shot": "2-the-modules-page-on-a-fresh-profile"},
+  {"page_row": {"row": "module_midi", "value": true}},
+  {"wait": 10},
+  {"state": "3-midi-switched-on"}
+]

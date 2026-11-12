@@ -1,0 +1,18 @@
+[
+  {"wait": 30},
+  {"docker": "park"},
+  {"docker": {"id": "GraphDocker", "at": [1180, 120], "size": [700, 480]}},
+  {"wait": 10},
+  {"import": "res://ui/icon.png"},
+  {"wait": 15},
+  {"zoom": 0.9},
+  {"wait": 10},
+  {"graph": {"mode": "vectorscope", "scale": "log"}},
+  {"wait": 10},
+  {"shot": "1-vectorscope-log"},
+  {"state": "1-vectorscope-log"},
+  {"graph": {"scale": "linear"}},
+  {"wait": 10},
+  {"shot": "2-vectorscope-linear"},
+  {"state": "2-vectorscope-linear"}
+]

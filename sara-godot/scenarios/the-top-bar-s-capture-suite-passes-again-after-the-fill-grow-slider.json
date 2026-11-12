@@ -1,0 +1,48 @@
+[
+  {"comment": "The fill's Grow row is off a fresh bar, as every row that follows one tool is, and once a tick in Preferences > Top Menu Bar puts it there it shows only while the fill is in hand. Each state dump's top_bar_rows.row_2.options names the tool options the bar carries, the shipped profile putting them on the second row, and tool_options names the rows the Tool Options docker draws."},
+  {"window": [1600, 1200]},
+  {"wait": 60},
+  {"document": "srgb"},
+  {"wait": 20},
+
+  {"state": "01-a-fresh-bar-with-the-brush"},
+  {"shot": "01-a-fresh-bar-with-the-brush"},
+
+  {"tool": "bucket_fill"},
+  {"wait": 15},
+  {"state": "02-the-fill-on-a-fresh-bar-keeps-grow-in-the-docker"},
+  {"shot": "02-the-fill-on-a-fresh-bar-keeps-grow-in-the-docker"},
+
+  {"tool": "brush"},
+  {"wait": 15},
+
+  {"open": "preferences"},
+  {"wait": 15},
+  {"page": "Top Menu Bar"}, {"layout_gesture": {"elements": "Top Bar"}},
+  {"wait": 12},
+  {"wheel": {"at": [914, 900], "notches": -30}},
+  {"wait": 10},
+  {"layout_rows": true},
+  {"layout_gesture": {"switch": "fill_grow"}},
+  {"wait": 12},
+  {"layout_rows": true},
+  {"state": "03-the-row-ticked-on"},
+  {"shot": "03-the-row-ticked-on"},
+
+  {"key": "escape"},
+  {"wait": 15},
+  {"tool": "brush"},
+  {"wait": 15},
+  {"state": "04-the-brush-has-no-grow"},
+  {"shot": "04-the-brush-has-no-grow"},
+
+  {"tool": "bucket_fill"},
+  {"wait": 15},
+  {"state": "05-the-fill-brings-its-grow"},
+  {"shot": "05-the-fill-brings-its-grow"},
+
+  {"tool": "brush"},
+  {"wait": 15},
+  {"state": "06-the-brush-takes-it-away-again"},
+  {"shot": "06-the-brush-takes-it-away-again"}
+]

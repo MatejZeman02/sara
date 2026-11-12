@@ -1,0 +1,167 @@
+[
+ {
+  "wait": 40
+ },
+ {
+  "prefs": {
+   "theme_name": "default",
+   "ui_scale": 1.0
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "menu": "File"
+ },
+ {
+  "wait": 18
+ },
+ {
+  "state": "01-file-menu"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "menu": "Edit"
+ },
+ {
+  "wait": 18
+ },
+ {
+  "state": "02-edit-menu"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "menu": "Image"
+ },
+ {
+  "wait": 18
+ },
+ {
+  "state": "03-image-menu"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "menu": "Layer"
+ },
+ {
+  "wait": 18
+ },
+ {
+  "state": "04-layer-menu"
+ },
+ {
+  "shot": "04-layer-menu"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "menu": "Select"
+ },
+ {
+  "wait": 18
+ },
+ {
+  "state": "05-select-menu"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "menu": "Filter"
+ },
+ {
+  "wait": 18
+ },
+ {
+  "state": "06-filter-menu"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "menu": "Modules"
+ },
+ {
+  "wait": 18
+ },
+ {
+  "state": "07-modules-menu"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "menu": "Window"
+ },
+ {
+  "wait": 18
+ },
+ {
+  "state": "08-window-menu"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "menu": "Help"
+ },
+ {
+  "wait": 18
+ },
+ {
+  "state": "09-help-menu"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "menu": "View"
+ },
+ {
+  "wait": 18
+ },
+ {
+  "state": "10-view-menu"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 10
+ }
+]

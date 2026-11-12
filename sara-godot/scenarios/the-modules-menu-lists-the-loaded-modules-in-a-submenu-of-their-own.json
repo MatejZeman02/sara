@@ -1,0 +1,25 @@
+[
+  {"comment": "The Modules menu lists the loaded modules in a submenu of their own. The menu opens on one row, Active Modules, with the module actions and Develop under it and no module's row. The pointer rests on that row and the list opens beside the menu, every module and Turn Modules On or Off… at its foot. A press on a module's row closes both and opens Preferences on the Modules page, as it did when the rows stood in the menu."},
+  {"wait": 45},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 20},
+  {"docker": "park"},
+  {"wait": 15},
+
+  {"menu": "Modules"},
+  {"wait": 15},
+  {"shot": "1-the-menu-holds-the-active-modules-row-and-no-module-row"},
+  {"state": "1-the-menu-holds-the-active-modules-row-and-no-module-row"},
+
+  {"move": {"control": "Row_item_808", "in": "ModulesMenu"}},
+  {"wait": 30},
+  {"shot": "2-the-list-opens-beside-the-menu-with-every-module"},
+  {"state": "2-the-list-opens-beside-the-menu-with-every-module"},
+
+  {"click": {"control": "Row_item_700", "in": "ModulesList"}},
+  {"wait": 30},
+  {"shot": "3-a-module-row-opens-preferences-on-modules"},
+  {"state": "3-a-module-row-opens-preferences-on-modules"},
+  {"key": "escape"},
+  {"wait": 15}
+]

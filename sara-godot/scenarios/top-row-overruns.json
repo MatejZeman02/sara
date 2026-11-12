@@ -1,0 +1,79 @@
+[
+ {
+  "wait": 40
+ },
+ {
+  "window": [
+   2560,
+   1440
+  ]
+ },
+ {
+  "wait": 20
+ },
+ {
+  "prefs": {
+   "second_row": true
+  }
+ },
+ {
+  "wait": 14
+ },
+ {
+  "shot": "f39-03-second-row-on-2560"
+ },
+ {
+  "state": "f39-03-second-row-on-2560"
+ },
+ {
+  "prefs": {
+   "second_row": false
+  }
+ },
+ {
+  "wait": 16
+ },
+ {
+  "shot": "f39-04-second-row-off-2560"
+ },
+ {
+  "state": "f39-04-second-row-off-2560"
+ },
+ {
+  "window": [
+   1920,
+   1080
+  ]
+ },
+ {
+  "wait": 20
+ },
+ {
+  "prefs": {
+   "second_row": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "shot": "f39-01-second-row-on-1920"
+ },
+ {
+  "state": "f39-01-second-row-on-1920"
+ },
+ {
+  "prefs": {
+   "second_row": false
+  }
+ },
+ {
+  "wait": 14
+ },
+ {
+  "shot": "f39-02-second-row-off-1920"
+ },
+ {
+  "state": "f39-02-second-row-off-1920"
+ }
+]

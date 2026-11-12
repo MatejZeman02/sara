@@ -1,0 +1,23 @@
+[
+  {"comment": "Every module of the tree and of the submodules extends SaModule now. Sara starts with all of them loaded and none refused, which the Modules menu and its list of active modules show."},
+  {"window": [1920, 1080]},
+  {"wait": 45},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 20},
+  {"docker": "park"},
+  {"wait": 15},
+  {"menu": "Modules"},
+  {"wait": 15},
+  {"shot": "1-the-modules-menu"},
+  {"state": "1-the-modules-menu"},
+  {"key": "down"},
+  {"wait": 5},
+  {"key": "right"},
+  {"wait": 15},
+  {"shot": "2-the-active-modules"},
+  {"state": "2-the-active-modules"},
+  {"key": "escape"},
+  {"wait": 5},
+  {"key": "escape"},
+  {"wait": 10}
+]

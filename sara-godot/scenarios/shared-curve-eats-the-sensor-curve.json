@@ -1,0 +1,296 @@
+[
+  {
+    "wait": 50
+  },
+  {
+    "prefs": {
+      "ui_scale": 1.0
+    }
+  },
+  {
+    "wait": 15
+  },
+  {
+    "docker": {
+      "id": "ToolBoxDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "LayersDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "ColorDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "InfoDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "RecorderDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "MinimapDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "ToolOptionsDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "GraphDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "HistoryDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "ReferenceDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "BrushPresetsDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "document": "srgb"
+  },
+  {
+    "tool": "brush"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "brush_editor": {
+      "page": "Opacity"
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "curve_option": {
+      "select": "pressure",
+      "share": false,
+      "points": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.25,
+          0.9
+        ],
+        [
+          1.0,
+          1.0
+        ]
+      ]
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "curve_option": {}
+  },
+  {
+    "state": "1-drawn-with-sharing-off"
+  },
+  {
+    "shot": "1-drawn-with-sharing-off"
+  },
+  {
+    "curve_option": {
+      "share": true,
+      "points": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.75,
+          0.1
+        ],
+        [
+          1.0,
+          1.0
+        ]
+      ]
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "curve_option": {}
+  },
+  {
+    "state": "2-shared-curve-on"
+  },
+  {
+    "shot": "2-shared-curve-on"
+  },
+  {
+    "brush_editor": {
+      "close": true
+    }
+  },
+  {
+    "wait": 15
+  },
+  {
+    "stroke": {
+      "from": [
+        300,
+        900
+      ],
+      "to": [
+        900,
+        900
+      ],
+      "pressure": 1.0,
+      "steps": 12
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "shot": "3-one-stroke-under-the-shared-curve"
+  },
+  {
+    "state": "3-one-stroke-under-the-shared-curve"
+  },
+  {
+    "brush_editor": {
+      "page": "Opacity"
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "curve_option": {
+      "select": "pressure",
+      "share": false
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "curve_option": {}
+  },
+  {
+    "state": "4-sharing-off-again"
+  },
+  {
+    "shot": "4-sharing-off-again"
+  }
+]

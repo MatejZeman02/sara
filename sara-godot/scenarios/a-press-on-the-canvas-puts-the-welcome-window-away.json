@@ -1,0 +1,28 @@
+[
+  {"comment": "A press outside the Welcome window puts it away, as Blender's splash does. A capture run refuses the boot's window, so Help opens it, id 505 being help_menu.gd's own constant. A press on the window's own pane keeps it, a press on the canvas closes it, once with subwindows embedded and once with each window its own. The dump's windows array carries 'Welcome to Sara' and whether it is visible."},
+  {"wait": 11},
+  {"menu_item": {"menu": "Help", "id": 505}},
+  {"wait": 15},
+  {"state": "0-embedded-the-window-is-up"},
+  {"click": {"control": "Panes"}},
+  {"wait": 11},
+  {"state": "1-embedded-a-press-on-its-pane-keeps-it"},
+  {"shot": "1-embedded-a-press-on-its-pane-keeps-it"},
+  {"click": {"at": [960, 1000]}},
+  {"wait": 11},
+  {"state": "2-embedded-a-press-on-the-canvas-puts-it-away"},
+  {"shot": "2-embedded-a-press-on-the-canvas-puts-it-away"},
+
+  {"prefs": {"embed_subwindows": false}},
+  {"wait": 40},
+  {"menu_item": {"menu": "Help", "id": 505}},
+  {"wait": 20},
+  {"state": "3-its-own-window-the-window-is-up"},
+  {"click": {"control": "Panes"}},
+  {"wait": 11},
+  {"state": "4-its-own-window-a-press-on-its-pane-keeps-it"},
+  {"click": {"at": [960, 1000]}},
+  {"wait": 11},
+  {"state": "5-its-own-window-a-press-on-the-canvas-puts-it-away"},
+  {"shot": "5-its-own-window-a-press-on-the-canvas-puts-it-away"}
+]

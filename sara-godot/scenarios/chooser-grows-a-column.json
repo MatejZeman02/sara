@@ -1,0 +1,416 @@
+[
+  {
+    "wait": 60
+  },
+  {
+    "prefs": {
+      "ui_scale": 1.0
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "layout_preset": {
+      "load": "minimalistic"
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "document": "srgb"
+  },
+  {
+    "tool": "brush"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "preset": {
+      "save": "Liner"
+    }
+  },
+  {
+    "wait": 3
+  },
+  {
+    "preset": {
+      "save": "Wash A"
+    }
+  },
+  {
+    "wait": 3
+  },
+  {
+    "preset": {
+      "save": "Wash B"
+    }
+  },
+  {
+    "wait": 3
+  },
+  {
+    "preset": {
+      "save": "Dry"
+    }
+  },
+  {
+    "wait": 3
+  },
+  {
+    "preset": {
+      "save": "Wet"
+    }
+  },
+  {
+    "wait": 3
+  },
+  {
+    "preset": {
+      "save": "Rough"
+    }
+  },
+  {
+    "wait": 3
+  },
+  {
+    "preset": {
+      "save": "Smooth"
+    }
+  },
+  {
+    "wait": 3
+  },
+  {
+    "preset": {
+      "save": "Speckle"
+    }
+  },
+  {
+    "wait": 3
+  },
+  {
+    "preset": {
+      "save": "Chalk"
+    }
+  },
+  {
+    "wait": 3
+  },
+  {
+    "preset": {
+      "open": true,
+      "icon_size": 48
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "preset": {
+      "icon_size": 48
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "preset": {}
+  },
+  {
+    "preset": {
+      "icon_size": 48
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "preset": {}
+  },
+  {
+    "preset": {
+      "icon_size": 48
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "preset": {}
+  },
+  {
+    "preset": {
+      "icon_size": 48
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "preset": {}
+  },
+  {
+    "preset": {
+      "icon_size": 48
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "preset": {}
+  },
+  {
+    "preset": {
+      "icon_size": 48
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "preset": {}
+  },
+  {
+    "state": "1-forty-eight-six-times"
+  },
+  {
+    "shot": "1-forty-eight-six-times"
+  },
+  {
+    "preset": {
+      "icon_size": 30
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "preset": {}
+  },
+  {
+    "preset": {
+      "icon_size": 30
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "preset": {}
+  },
+  {
+    "preset": {
+      "icon_size": 30
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "preset": {}
+  },
+  {
+    "preset": {
+      "icon_size": 30
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "preset": {}
+  },
+  {
+    "preset": {
+      "icon_size": 30
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "preset": {}
+  },
+  {
+    "preset": {
+      "icon_size": 30
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "preset": {}
+  },
+  {
+    "state": "2-thirty-six-times"
+  },
+  {
+    "shot": "2-thirty-six-times"
+  },
+  {
+    "preset": {
+      "icon_size": 80
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "preset": {}
+  },
+  {
+    "preset": {
+      "icon_size": 80
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "preset": {}
+  },
+  {
+    "preset": {
+      "icon_size": 80
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "preset": {}
+  },
+  {
+    "preset": {
+      "icon_size": 80
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "preset": {}
+  },
+  {
+    "preset": {
+      "icon_size": 80
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "preset": {}
+  },
+  {
+    "preset": {
+      "icon_size": 80
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "preset": {}
+  },
+  {
+    "state": "3-eighty-six-times"
+  },
+  {
+    "shot": "3-eighty-six-times"
+  },
+  {
+    "preset": {
+      "icon_size": 80
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "preset": {}
+  },
+  {
+    "preset": {
+      "icon_size": 70
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "preset": {}
+  },
+  {
+    "preset": {
+      "icon_size": 60
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "preset": {}
+  },
+  {
+    "preset": {
+      "icon_size": 50
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "preset": {}
+  },
+  {
+    "preset": {
+      "icon_size": 40
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "preset": {}
+  },
+  {
+    "preset": {
+      "icon_size": 30
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "preset": {}
+  },
+  {
+    "state": "4-dragged-from-eighty-to-thirty"
+  },
+  {
+    "shot": "4-dragged-from-eighty-to-thirty"
+  },
+  {
+    "preset": {
+      "icon_size": 48
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "preset": {}
+  },
+  {
+    "state": "5-back-at-forty-eight"
+  },
+  {
+    "shot": "5-back-at-forty-eight"
+  }
+]

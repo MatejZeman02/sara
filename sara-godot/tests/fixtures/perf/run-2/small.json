@@ -1,0 +1,207 @@
+{
+ "build": {
+  "built": "",
+  "commit": "030601b",
+  "commit_full": "030601bff8a9ce12cb66f41b87ce7c6b813a96cc",
+  "dirty": false,
+  "source": "working tree",
+  "version": "0.12.0"
+ },
+ "perf": {
+  "commit": {
+   "cpu_usec": 910,
+   "gpu": 67584,
+   "gpu_max": 61440,
+   "load": {
+    "chunks": 6
+   },
+   "pairs": 1,
+   "skipped": 0
+  },
+  "composite": {
+   "count": 26,
+   "cpu_usec": 19938,
+   "gpu": 661126,
+   "gpu_max": 64544,
+   "issue_usec": 18143,
+   "load": {
+    "dirty_chunks": 48,
+    "dirty_texels": 547200,
+    "full": 0
+   },
+   "pairs": 26,
+   "skipped": 0
+  },
+  "copies": {
+   "bytes": 0,
+   "copies": 0
+  },
+  "counters": {
+   "dispatches": 450,
+   "lists": 276,
+   "uniform_sets": 126,
+   "workgroups": 43114
+  },
+  "device": {
+   "api": "vulkan 1.4.351",
+   "local": false,
+   "name": "NVIDIA GeForce RTX 3070 Laptop GPU"
+  },
+  "frames": {
+   "dab_frame_interval": {
+    "max": 16937,
+    "mean": 16673,
+    "min": 16415,
+    "n": 24,
+    "sum": 400167
+   },
+   "drawn": 36,
+   "process_usec_max": 365667
+  },
+  "gpu_time": {
+   "frame_delay": 2,
+   "frames_collected": 28,
+   "pairs": 303,
+   "readable_after_max": 1,
+   "readable_after_min": 1,
+   "skipped": 0,
+   "ticks_per_usec": 1000
+  },
+  "kernels": {
+   "clear/clear_chunk": {
+    "dispatches": 90,
+    "gpu": 201660,
+    "gpu_max": 17952,
+    "lists": 68,
+    "pairs": 68,
+    "skipped": 0,
+    "workgroups": 10956
+   },
+   "composite/composite": {
+    "dispatches": 144,
+    "gpu": 476467,
+    "gpu_max": 30412,
+    "lists": 117,
+    "pairs": 117,
+    "skipped": 0,
+    "workgroups": 25650
+   },
+   "dab/dab": {
+    "dispatches": 127,
+    "gpu": 475340,
+    "gpu_max": 11264,
+    "lists": 85,
+    "pairs": 85,
+    "skipped": 0,
+    "workgroups": 5440
+   },
+   "thumbnail/thumb_chunk": {
+    "dispatches": 86,
+    "gpu": 34918,
+    "gpu_max": 16896,
+    "lists": 3,
+    "pairs": 3,
+    "skipped": 0,
+    "workgroups": 1032
+   },
+   "thumbnail/thumb_clear": {
+    "dispatches": 3,
+    "gpu": 11264,
+    "gpu_max": 5632,
+    "lists": 3,
+    "pairs": 3,
+    "skipped": 0,
+    "workgroups": 36
+   }
+  },
+  "startup": {
+   "cache_hits": 123,
+   "compiles": 0,
+   "engine_to_ready_ms": 2009.915,
+   "first_frame_ms": 499.129,
+   "kernels_ms": 467.143,
+   "marks": {
+    "bootstrap_begin": 4079.58,
+    "first_frame_after_ready": 6588.624,
+    "kernels_begin": 896.447,
+    "kernels_end": 1363.59,
+    "layout_restored": 6089.443,
+    "main_init": 4064.297,
+    "modules_registered": 4937.121,
+    "ready": 6089.495,
+    "settings_loaded": 4079.348,
+    "ui_built": 4383.786
+   },
+   "modules": {
+    "box_blur": 2.817,
+    "pga_hard_mix": 0.032,
+    "sara-base-modules": 0.895,
+    "sara-stamp-brush": 3.772
+   }
+  },
+  "stroke": {
+   "dabs": 85,
+   "dabs_per_frame_max": 4,
+   "events": 27,
+   "frames_with_dabs": 25,
+   "input_to_composite": {
+    "max": 74709,
+    "mean": 17191,
+    "min": 8530,
+    "n": 25,
+    "sum": 429800
+   },
+   "input_to_dispatch": {
+    "max": 71503,
+    "mean": 1866,
+    "min": 500,
+    "n": 85,
+    "sum": 158759
+   },
+   "input_to_post_draw": {
+    "max": 86197,
+    "mean": 34801,
+    "min": 26483,
+    "n": 25,
+    "sum": 870068
+   },
+   "input_to_redraw": {
+    "max": 79789,
+    "mean": 22477,
+    "min": 13667,
+    "n": 25,
+    "sum": 561955
+   },
+   "motions": 25,
+   "motions_per_frame_max": 1,
+   "targets": 127
+  },
+  "vram": {
+   "chunk_edge": 256,
+   "chunks": {
+    "layers": {
+     "Background": 40,
+     "Layer 1": 6
+    },
+    "selection": 0,
+    "stroke": 0,
+    "total": 46
+   },
+   "device": "NVIDIA GeForce RTX 3070 Laptop GPU",
+   "device_buffers": 7764608,
+   "device_textures": 57819648,
+   "device_total": 97833728,
+   "history_bytes": 0,
+   "sara_buffers": 2124,
+   "sara_textures": 41239576,
+   "unaccounted_textures": 16580072
+  },
+  "window": {
+   "forced_draws": 2,
+   "frames_drawn": 35,
+   "open": false,
+   "process_frames": 36,
+   "usec": 654000
+  }
+ }
+}

@@ -1,0 +1,260 @@
+[
+ {
+  "comment": "At 1920 by 1080. The painter's 1800 by 1200 document, its last chunk column 8 texels wide and its last chunk row 176 tall, fitted. A rectangle 50 pixels past every edge of the canvas is selected, feathered by 20 through Select > Feather and filled blue: the texels in the middle of the top and bottom rows and of the left and right columns, and the four corners, read the fill whole in the layer, where the top and bottom read half of it before. Then a rectangle wholly inside, from 300 by 300 to 1500 by 900, feathered by 20 and filled: the layer is half covered at each of its four edges, clear a feather outside and full a feather inside, so the fix leaves a feather inside the canvas as it was."
+ },
+ {
+  "window": [
+   1920,
+   1080
+  ]
+ },
+ {
+  "wait": 45
+ },
+ {
+  "docker": "park"
+ },
+ {
+  "wait": 12
+ },
+ {
+  "prefs": {
+   "ui_scale": 1.0,
+   "autosave_interval_minutes": 0
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "document": "srgb"
+ },
+ {
+  "wait": 25
+ },
+ {
+  "canvas": [
+   1800,
+   1200
+  ]
+ },
+ {
+  "wait": 10
+ },
+ {
+  "fit": true
+ },
+ {
+  "wait": 10
+ },
+ {
+  "select": {
+   "rect": [
+    -50,
+    -50,
+    1900,
+    1300
+   ]
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "menu_item": {
+   "menu": "Select",
+   "id": 300
+  }
+ },
+ {
+  "wait": 25
+ },
+ {
+  "slider_edit": {
+   "name": "RadiusSlider",
+   "window": "RadiusDialog",
+   "type": "20"
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "key": {
+   "key": "enter"
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "1-past-every-edge-feathered-by-20"
+ },
+ {
+  "fill": [
+   0.1,
+   0.4,
+   0.9
+  ]
+ },
+ {
+  "wait": 14
+ },
+ {
+  "texel": [
+   [
+    900,
+    0
+   ],
+   [
+    900,
+    1199
+   ],
+   [
+    0,
+    600
+   ],
+   [
+    1799,
+    600
+   ],
+   [
+    0,
+    0
+   ],
+   [
+    1799,
+    0
+   ],
+   [
+    0,
+    1199
+   ],
+   [
+    1799,
+    1199
+   ],
+   [
+    900,
+    600
+   ]
+  ]
+ },
+ {
+  "shot": "1-past-every-edge-filled-to-every-edge"
+ },
+ {
+  "undo": 1
+ },
+ {
+  "wait": 12
+ },
+ {
+  "select": {
+   "rect": [
+    300,
+    300,
+    1200,
+    600
+   ]
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "menu_item": {
+   "menu": "Select",
+   "id": 300
+  }
+ },
+ {
+  "wait": 25
+ },
+ {
+  "slider_edit": {
+   "name": "RadiusSlider",
+   "window": "RadiusDialog",
+   "type": "20"
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "key": {
+   "key": "enter"
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "2-inside-feathered-by-20"
+ },
+ {
+  "fill": [
+   0.1,
+   0.4,
+   0.9
+  ]
+ },
+ {
+  "wait": 14
+ },
+ {
+  "texel": [
+   [
+    900,
+    300
+   ],
+   [
+    900,
+    279
+   ],
+   [
+    900,
+    320
+   ],
+   [
+    900,
+    899
+   ],
+   [
+    900,
+    920
+   ],
+   [
+    900,
+    879
+   ],
+   [
+    300,
+    600
+   ],
+   [
+    279,
+    600
+   ],
+   [
+    320,
+    600
+   ],
+   [
+    1499,
+    600
+   ],
+   [
+    1520,
+    600
+   ],
+   [
+    1479,
+    600
+   ]
+  ]
+ },
+ {
+  "shot": "2-inside-fades-on-every-side"
+ }
+]

@@ -1,0 +1,23 @@
+[
+  {"comment": "Later leaves the recovery row's copy off until the welcome window opens again, and the file untouched, proved by opening the window twice rather than by reading the code. A recent file is saved and a copy planted beside it, written after it so find_recoveries offers it. The recent list is emptied at the end, because a scenario's prefs outlive the capture that set them."},
+  {"wait": 11},
+  {"prefs": {"recent_file_paths": ["user://o6-recent.sad"]}},
+  {"save": "user://o6-recent.sad"},
+  {"save": "user://o6-recent.autosave.sad"},
+  {"open": "welcome"},
+  {"wait": 15},
+  {"shot": "0-the-row-before-later"},
+  {"state": "0-the-row-before-later"},
+  {"click": {"control": "RecoveryLater0"}},
+  {"wait": 11},
+  {"state": "1-put-off-and-the-file-still-on-disk"},
+  {"click": {"control": "WelcomeClose"}},
+  {"wait": 11},
+  {"open": "welcome"},
+  {"wait": 15},
+  {"shot": "2-the-reopen-brings-it-back"},
+  {"state": "2-the-reopen-brings-it-back"},
+  {"click": {"control": "WelcomeClose"}},
+  {"wait": 11},
+  {"prefs": {"recent_file_paths": []}}
+]

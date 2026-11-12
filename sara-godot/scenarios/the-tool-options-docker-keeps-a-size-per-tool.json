@@ -1,0 +1,33 @@
+[
+  {"wait": 35},
+  {"docker": "park"},
+  {"wait": 10},
+  {"tool": "brush"},
+  {"wait": 12},
+  {"docker": {"id": "ToolOptionsDocker", "at": [1480, 90]}},
+  {"wait": 12},
+  {"state": "0-at-launch-on-the-brush"},
+  {"shot": "0-at-launch-on-the-brush"},
+
+  {"docker": {"id": "ToolOptionsDocker", "at": [1480, 90], "size": [340, 560]}},
+  {"wait": 10},
+  {"state": "1-the-brush-sized-tall"},
+  {"shot": "1-the-brush-sized-tall"},
+
+  {"tool": "crop"},
+  {"wait": 12},
+  {"docker": {"id": "ToolOptionsDocker", "at": [1480, 90], "size": [300, 200]}},
+  {"wait": 10},
+  {"state": "2-the-crop-tool-sized-short"},
+  {"shot": "2-the-crop-tool-sized-short"},
+
+  {"tool": "brush"},
+  {"wait": 12},
+  {"state": "3-the-brush-gets-its-own-back"},
+  {"shot": "3-the-brush-gets-its-own-back"},
+
+  {"tool": "crop"},
+  {"wait": 12},
+  {"state": "4-and-the-crop-tool-gets-its-own"},
+  {"shot": "4-and-the-crop-tool-gets-its-own"}
+]

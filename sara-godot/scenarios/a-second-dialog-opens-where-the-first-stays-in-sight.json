@@ -1,0 +1,134 @@
+[
+  {
+    "comment": "A dialog shown while another on screen sits at its position opens down and right of it by the height of its title strip, and on top. A 600 by 400 selection is made, Feather is opened, and Border is opened over it without closing Feather, which is the pair the session found opening at one rectangle. The state after each lists the dialogs on screen bottom to top with where each sits. Then Border is closed by its cross and Feather is shown where it was, and closed by its own. Nothing is saved."
+  },
+  {
+    "wait": 45
+  },
+  {
+    "window": [
+      1920,
+      1080
+    ]
+  },
+  {
+    "prefs": {
+      "ui_scale": 1.0
+    }
+  },
+  {
+    "wait": 25
+  },
+  {
+    "layer": {
+      "add": "Sky"
+    }
+  },
+  {
+    "colour": "#2050d0"
+  },
+  {
+    "path": {
+      "circle": [
+        960,
+        540,
+        300
+      ]
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "select": {
+      "rect": [
+        600,
+        400,
+        600,
+        400
+      ]
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "state": "00-before-any-dialog"
+  },
+  {
+    "comment": "01, Feather alone, where the window centres it."
+  },
+  {
+    "menu_item": {
+      "menu": "Select",
+      "id": 300
+    }
+  },
+  {
+    "wait": 25
+  },
+  {
+    "state": "01-feather-open"
+  },
+  {
+    "shot": "01-feather-open"
+  },
+  {
+    "comment": "02, Border over Feather: a title strip down and right of it, and on top."
+  },
+  {
+    "menu_item": {
+      "menu": "Select",
+      "id": 400
+    }
+  },
+  {
+    "wait": 25
+  },
+  {
+    "state": "02-border-opens-down-and-right-of-feather"
+  },
+  {
+    "shot": "02-border-opens-down-and-right-of-feather"
+  },
+  {
+    "comment": "03, Border closed by its cross at the right of its title strip: Feather is where it was and is on screen."
+  },
+  {
+    "comment": "Feather is 213 high and Border, with its longer hint, 241, so the two crosses moved with the dialogs. Border's stands at its corner, (841, 465), plus (284, 15), and Feather's at (810, 434) plus the same, read off the dump of 02 at the tip."
+  },
+  {
+    "click": {
+      "at": [
+        1125,
+        480
+      ]
+    }
+  },
+  {
+    "wait": 15
+  },
+  {
+    "state": "03-border-closed-feather-where-it-was"
+  },
+  {
+    "shot": "03-border-closed-feather-where-it-was"
+  },
+  {
+    "comment": "04, Feather closed by its own cross, and nothing is left on screen."
+  },
+  {
+    "click": {
+      "at": [
+        1094,
+        449
+      ]
+    }
+  },
+  {
+    "wait": 15
+  },
+  {
+    "state": "04-both-closed"
+  }
+]

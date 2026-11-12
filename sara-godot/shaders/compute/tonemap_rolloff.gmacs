@@ -1,0 +1,244 @@
+# Kernel: tonemap_rolloff
+#
+# The highlight rolloff `shaders/canvas/tonemap.gdshader` runs on the view, ported
+# for an export that cannot hold the range, so HDR colour rolls off rather than
+# clipping. It runs on the scratch cell an export already reads back, after the
+# colour-space conversion and before the byte rounding, so it decodes the same
+# sRGB-curve numbers the view does and writes the same shape back.
+#
+# The maths is `highlight_rolloff` in that shader, unchanged (its header describes
+# the fold blue and yellow must not jump across). The peak channel is brought to
+# white and no further, chroma is lost on the Oklab axis with hue held, and the
+# result is gamut-mapped back. White stays white, so a stored value at or below the
+# knee decodes and re-encodes losslessly. Under a knee above white the colour is
+# blended from the channel-by-channel clip to the held ratios by a smoothstep of
+# the peak from 1.0 to the knee.
+#
+# Not done here, because earlier and later stages do them: the document's gamut
+# rotation (convert_color_space.gmacs, ahead of this in the cell walk) and the
+# narrowing to bytes (round_to_bytes.gmacs, after it). Nothing clamps beyond what
+# gamut_map already does.
+
+kernel tonemap_rolloff
+
+# Brings in oklab_color_space itself, the way convert_color_space.gmacs takes
+# it: a second import of the same library here printed "Multiple include".
+import linear_srgb_color_space
+
+# The view's two slacks on the gamut test, float's own and an F16 Oklab
+# texel's as a share of its largest channel. Why 0.002, and what it was
+# measured over, is said beside them in shaders/canvas/tonemap.gdshader.
+const float GAMUT_EPSILON = 1e-5
+const float GAMUT_ROUNDING = 2e-3
+
+# The width of Khronos PBR Neutral's shoulder, one minus its startCompression
+# of 0.76, the view's KHRONOS_SHOULDER and said beside it there.
+const float KHRONOS_SHOULDER = 0.24
+
+image field
+
+params:
+    # Where the identity region ends. See SaSettingsValues.tonemap_knee.
+    float knee
+    # How hard a compressed highlight loses chroma. See
+    # SaSettingsValues.tonemap_desaturation.
+    float desaturation
+    # The document's own reference white, fixed per document, the level its
+    # display-referred blend modes take for white. 1.0
+    # makes the division below the identity.
+    float blend_white
+    # The packer pads to a multiple of four floats.
+    float pad0
+
+
+def in_display_gamut(vec3 linear) -> bool:
+    float slack = max(GAMUT_EPSILON, GAMUT_ROUNDING * max(abs(linear.x), max(abs(linear.y), abs(linear.z))))
+    return all(greater_than_equal(linear, vec3(-slack))) and all(less_than_equal(linear, vec3(1.0 + slack)))
+
+# Scales Oklab's a and b together, which is a chroma change at constant hue:
+# the (a, b) angle is what hue is, and scaling both leaves the angle alone.
+
+
+def with_chroma_scale(vec3 lab, float factor) -> vec3:
+    return vec3(lab.x, lab.yz * factor)
+
+# The real cube root with the sign carried, since pow() of a negative base is
+# undefined.
+
+
+def signed_cbrt(float x) -> float:
+    return sign(x) * pow(abs(x), 1.0 / 3.0)
+
+# The largest real root of d3 u^3 + d2 u^2 + d1 u + d0, in closed form:
+# Cardano's formula when there is one real root and the trigonometric form
+# when there are three, whose first is the largest.
+
+
+def largest_cubic_root(float d3, float d2, float d1, float d0) -> float:
+    float a = d2 / d3
+    float b = d1 / d3
+    float c = d0 / d3
+    float p = b - a * a / 3.0
+    float q = 2.0 * a * a * a / 27.0 - a * b / 3.0 + c
+    float disc = 0.25 * q * q + p * p * p / 27.0
+    if disc > 0.0:
+        float root = sqrt(disc)
+        return signed_cbrt(-0.5 * q + root) + signed_cbrt(-0.5 * q - root) - a / 3.0
+    # Three real roots need p below zero, and p at zero here is a triple root.
+    if p >= 0.0:
+        return -a / 3.0
+    float r = sqrt(-p / 3.0)
+    float angle = acos(clamp(1.5 * q / (p * r), -1.0, 1.0))
+    return 2.0 * r * cos(angle / 3.0) - a / 3.0
+
+# Ottosson's analytic gamut intersection, solved exactly, as the view's
+# `channel_exit` in shaders/canvas/tonemap.gdshader explains: the first
+# saturation s = C / L at which the channel of row `w` leaves the cube, past
+# black on the straight lower edge or past one on the curved upper edge.
+
+
+def channel_exit(vec3 w, vec3 k, float to_white) -> float:
+    float d2 = 3.0 * dot(w, k)
+    float d1 = 3.0 * dot(w, k * k)
+    float d0 = dot(w, k * k * k)
+    float s = 1e30
+    float to_black = largest_cubic_root(1.0, d2, d1, d0)
+    if to_black > 0.0:
+        s = 1.0 / to_black
+    float to_one = largest_cubic_root(to_white, d2, d1, d0)
+    if to_one > 0.0:
+        s = min(s, 1.0 / to_one)
+    return s
+
+# Reduces chroma until the colour fits the cube, holding L and hue, to where
+# it first meets the cube's surface on its way out from the neutral axis.
+
+
+def gamut_map(vec3 lab) -> vec3:
+    vec3 linear = oklab_to_linear_srgb(lab)
+    if in_display_gamut(linear):
+        return linear
+    # A lightness at or below black has no chroma that fits, because even its
+    # neutral is negative, and the file would clip that neutral anyway.
+    if lab.x <= 0.0:
+        return vec3(0.0)
+    # A lightness at or above white holds no chroma either, and its neutral
+    # is the answer the narrowing clips.
+    float chroma = length(lab.yz)
+    if lab.x >= 1.0 or chroma <= 0.0:
+        return oklab_to_linear_srgb(with_chroma_scale(lab, 0.0))
+    vec2 hue = lab.yz / chroma
+    vec3 k = vec3(0.3963377774 * hue.x + 0.2158037573 * hue.y, -0.1055613458 * hue.x - 0.0638541728 * hue.y, -0.0894841775 * hue.x - 1.2914855480 * hue.y)
+    # Held below zero, so a lightness a float step under white is not divided
+    # by zero. The chroma it allows there is far below a display step.
+    float to_white = min(1.0 - 1.0 / (lab.x * lab.x * lab.x), -1e-6)
+    float s = chroma / lab.x
+    s = min(s, channel_exit(vec3(4.0767416621, -3.3077115913, 0.2309699292), k, to_white))
+    s = min(s, channel_exit(vec3(-1.2684380046, 2.6097574011, -0.3413193965), k, to_white))
+    s = min(s, channel_exit(vec3(-0.0041960863, -0.7034186147, 1.7076147010), k, to_white))
+    return oklab_to_linear_srgb(with_chroma_scale(lab, s * lab.x / chroma))
+
+# The first saturation at which the channel of row `w` leaves the cube widened
+# by `slack` on both sides, the view's `widened_exit`.
+
+
+def widened_exit(vec3 w, vec3 k, float l3, float slack) -> float:
+    float d2 = 3.0 * dot(w, k)
+    float d1 = 3.0 * dot(w, k * k)
+    float d0 = dot(w, k * k * k)
+    float s = 1e30
+    float to_below = largest_cubic_root(1.0 + slack / l3, d2, d1, d0)
+    if to_below > 0.0:
+        s = 1.0 / to_below
+    float to_above = largest_cubic_root(min(1.0 - (1.0 + slack) / l3, -1e-6), d2, d1, d0)
+    if to_above > 0.0:
+        s = min(s, 1.0 / to_above)
+    return s
+
+# A colour outside half the gamut test's slack has its chroma brought down to
+# where it first leaves the cube widened by half the slack, so the rolloff's
+# step to white never carries a colour from the cube's face across blue's or
+# yellow's fold. The view's `within_half_the_slack` says why.
+
+
+def within_half_the_slack(vec3 lab) -> vec3:
+    float chroma = length(lab.yz)
+    if lab.x <= 0.0 or lab.x >= 1.0 or chroma <= 0.0:
+        return lab
+    vec3 linear = oklab_to_linear_srgb(lab)
+    float slack = 0.5 * max(GAMUT_EPSILON, GAMUT_ROUNDING * max(abs(linear.x), max(abs(linear.y), abs(linear.z))))
+    if all(greater_than_equal(linear, vec3(-slack))) and all(less_than_equal(linear, vec3(1.0 + slack))):
+        return lab
+    vec2 hue = lab.yz / chroma
+    vec3 k = vec3(0.3963377774 * hue.x + 0.2158037573 * hue.y, -0.1055613458 * hue.x - 0.0638541728 * hue.y, -0.0894841775 * hue.x - 1.2914855480 * hue.y)
+    float l3 = lab.x * lab.x * lab.x
+    float s = chroma / lab.x
+    s = min(s, widened_exit(vec3(4.0767416621, -3.3077115913, 0.2309699292), k, l3, slack))
+    s = min(s, widened_exit(vec3(-1.2684380046, 2.6097574011, -0.3413193965), k, l3, slack))
+    s = min(s, widened_exit(vec3(-0.0041960863, -0.7034186147, 1.7076147010), k, l3, slack))
+    return with_chroma_scale(lab, s * lab.x / chroma)
+
+
+def held_ratios(vec3 c, float peak, float low) -> vec3:
+    # The rolloff past white with the channels' ratios held, the peak brought
+    # to white and chroma given up past the knee.
+    # White is the ceiling, and a stored white is already on it.
+    float new_peak = min(peak, 1.0)
+    c *= new_peak / peak
+    vec3 lab = linear_srgb_to_oklab(c)
+    # Lose chroma with how far Khronos's shoulder, started at the knee, would
+    # have pulled the peak down, on the perceptual axis, so equal reductions
+    # look equal. The distance starts from nothing as the square of how far
+    # past the knee the peak stands.
+    float past = max(peak - knee, 0.0)
+    float pulled = past * past / (past + KHRONOS_SHOULDER)
+    float g = 1.0 - 1.0 / (desaturation * pulled + 1.0)
+    # Lightness travels to the neutral at the compressed peak, so full
+    # desaturation lands on white rather than on a grey of the original
+    # lightness.
+    float neutral_l = linear_srgb_to_oklab(vec3(new_peak)).x
+    lab = vec3(mix(lab.x, neutral_l, g), lab.yz * (1.0 - g))
+    # A colour that started inside the cube is not carried across a fold by
+    # that step, and one with a channel below zero keeps the map it had.
+    if low >= -GAMUT_EPSILON:
+        lab = within_half_the_slack(lab)
+    return gamut_map(lab)
+
+
+def highlight_rolloff(vec3 c) -> vec3:
+    float peak = max(c.r, max(c.g, c.b))
+    float low = min(c.r, min(c.g, c.b))
+    # The identity region. An ordinary value leaves here untouched, and at the
+    # default knee of 1.0 so does every colour the file can hold.
+    # A knee above 1.0 ends this region at white all the same.
+    float flat_to = min(knee, 1.0)
+    if peak <= flat_to and low >= -GAMUT_EPSILON:
+        return c
+    # Under the knee with a channel below zero: nothing to give up to white,
+    # only a colour the file would clip per channel and turn the hue of, so
+    # it keeps its lightness and hue and loses the chroma that does not fit.
+    if peak <= flat_to:
+        return gamut_map(linear_srgb_to_oklab(c))
+    vec3 held = held_ratios(c, peak, low)
+    # Under a knee above white the colour starts at the clip a file with the
+    # rolloff off holds and reaches the held ratios at the knee. A channel
+    # below zero takes the map it has under white, so the two meet at white.
+    if knee <= 1.0 or peak >= knee:
+        return held
+    vec3 clipped = min(c, vec3(1.0))
+    if low < -GAMUT_EPSILON:
+        clipped = gamut_map(linear_srgb_to_oklab(clipped))
+    return mix(clipped, held, smoothstep(1.0, knee, peak))
+
+
+def tonemap_rolloff():
+    ivec2 pixel_coords = ivec2(global_id.xy)
+    ivec2 size = image_size(field)
+
+    if pixel_coords.x >= size.x or pixel_coords.y >= size.y:
+        return
+
+    vec4 texel = field[pixel_coords]
+    vec3 linear = srgb_to_linear_srgb(texel.rgb) / max(blend_white, 1e-6)
+    vec3 rolled = highlight_rolloff(linear)
+    field[pixel_coords] = vec4(linear_srgb_to_srgb(rolled), texel.a)

@@ -1,0 +1,72 @@
+[
+  {
+    "wait": 30
+  },
+  {
+    "prefs": {
+      "canvas_proof_mode": "soft_proof",
+      "minimap_proof_mode": "lightness_check"
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "docker": {
+      "id": "MinimapDocker",
+      "at": [
+        520,
+        240
+      ],
+      "size": [
+        420,
+        320
+      ]
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "prefs": {
+      "canvas_proof_mode": "a_module_that_stopped_loading",
+      "minimap_proof_mode": "a_module_that_stopped_loading"
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "shot": "01-canvas-asked-first"
+  },
+  {
+    "state": "01-canvas-asked-first"
+  },
+  {
+    "open": "preferences"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "page": "Display"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "shot": "02-the-display-page-with-both-dropdowns"
+  },
+  {
+    "state": "02-the-display-page-with-both-dropdowns"
+  },
+  {
+    "prefs": {
+      "canvas_proof_mode": "soft_proof",
+      "minimap_proof_mode": "lightness_check"
+    }
+  },
+  {
+    "wait": 10
+  }
+]

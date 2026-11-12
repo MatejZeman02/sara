@@ -1,0 +1,36 @@
+[
+  {"wait": 30},
+  {"open": "preferences"},
+  {"wait": 20},
+  {"page": "Workspace"},
+  {"wait": 10},
+  {"workspace": {"slider": "ui_scale", "value": 1.0}},
+  {"wait": 10},
+  {"workspace": {"slider": "font_size", "value": 1.0}},
+  {"wait": 15},
+  {"shot": "1-prefs-at-100"},
+  {"state": "1-prefs-at-100"},
+
+  {"workspace": {"slider": "font_size", "value": 0.55}},
+  {"wait": 15},
+  {"shot": "2-prefs-at-55"},
+  {"state": "2-prefs-at-55"},
+
+  {"workspace": {"slider": "font_size", "value": 1.0}},
+  {"wait": 15},
+  {"shot": "3-prefs-back-at-100"},
+  {"state": "3-prefs-back-at-100"},
+
+  {"open": "new_document"},
+  {"wait": 20},
+  {"shot": "4-new-document-at-100"},
+  {"state": "4-new-document-at-100"},
+  {"open": "preferences"},
+  {"wait": 15},
+  {"workspace": {"slider": "font_size", "value": 0.55}},
+  {"wait": 15},
+  {"shot": "5-new-document-at-55"},
+  {"state": "5-new-document-at-55"},
+  {"workspace": {"slider": "font_size", "value": 1.0}},
+  {"wait": 15}
+]

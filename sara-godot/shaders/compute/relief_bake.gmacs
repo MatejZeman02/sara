@@ -1,0 +1,122 @@
+# The relief a flat export bakes: the light the view shines on thick paint,
+# written into the colour of one chunk cell of the picture on its way to the file,
+# so a PNG of a painting with relief looks like the painting.
+#
+# It runs first on the scratch cell the export already walks, on the stored
+# numbers, before the conversion into the file's space, the rolloff and the
+# rounding, which is the view's order too. The cell is decoded out of the space it
+# holds into linear light, lit, and encoded back. An RGB space is lit in its own
+# linear RGB and an Oklab one in linear sRGB. The view lights in linear sRGB after
+# the display matrix, and the two agree because the shade is a scale and the gloss
+# is white.
+#
+# Layer > Rasterize Impasto runs it too, on a copy of each chunk of a layer. A
+# chunk at another resolution holds *density* texels a canvas pixel, and a texel
+# reads the relief at the canvas pixel it lies on. The export's cell is the
+# picture's own, at one.
+#
+# A texel whose normal stands straight up is not read, decoded or written, so every
+# texel with no slope under it leaves exactly as it came.
+#
+# The shading is `sa_relief_shade` in shaders/canvas/relief_light.gdshaderinc, and
+# the constants below are its RELIEF_* constants. A .gdshader cannot import a
+# .gmacs, so this is duplication on purpose: change one and change the other. The
+# gloss is a parameter here as it is a uniform there, both `SaSettings.relief_gloss`.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel bake_relief
+
+import linear_srgb_color_space
+import transfer_curve
+
+# Must match SaColorSpace.Coordinates.
+const int SA_COORDS_OKLAB = 1
+
+const float RELIEF_STEEPEST = 1.5
+const float RELIEF_LIFT = 0.35
+const float RELIEF_SHADE = 0.8
+const float RELIEF_SHININESS = 20.0
+
+image field
+# `SaRelief.texture`: the normal in rgb and the summed height in a, canvas
+# sized, so a texel of the cell is found at the cell's corner plus its own.
+# Always half float, which `SaExportRelief` names with a binding format.
+image relief: readonly
+
+params:
+    # The cell's corner in canvas pixels.
+    vec2 cell_origin
+    # Preferences' Relief strength, the scale on the slope the light sees.
+    float strength
+    # Which coordinate system the cell holds. See SaColorSpace.Coordinates.
+    float coordinates
+    # The transfer curve of the space the cell holds, read only for RGB. See
+    # libs/transfer_curve.gmacs.
+    float slope
+    float threshold
+    float gain
+    float exponent
+    # From the surface towards the light, in the canvas's axes, which
+    # `SaRelief.light_toward` builds.
+    float light_x
+    float light_y
+    float light_z
+    # Texels of the cell a canvas pixel, one for the export and for a layer at
+    # the document's resolution, two for one at double resolution.
+    float density
+    # Preferences' Gloss, the peak of the white highlight a ridge facing the
+    # light catches.
+    float gloss
+
+
+def is_oklab() -> bool:
+    return int(coordinates + 0.5) == SA_COORDS_OKLAB
+
+
+def decode(vec3 c) -> vec3:
+    if is_oklab():
+        return oklab_to_linear_srgb(c)
+    return sa_transfer_decode(c, slope, threshold, gain, exponent)
+
+
+def encode(vec3 c) -> vec3:
+    if is_oklab():
+        return linear_srgb_to_oklab(c)
+    return sa_transfer_encode(c, slope, threshold, gain, exponent)
+
+
+def relief_shade(vec3 lin, vec3 normal) -> vec3:
+    # Lights *lin*, linear light, by the stored *normal*. The flat surface
+    # answers *lin* unchanged.
+    vec2 tilt = normal.xy / max(normal.z, 1e-3) * strength
+    float steep = length(tilt) / RELIEF_STEEPEST
+    tilt /= sqrt(1.0 + steep * steep)
+    vec3 n = normalize(vec3(tilt, 1.0))
+    vec3 l = normalize(vec3(light_x, light_y, light_z))
+    float gained = dot(n, l) - l.z
+    float lift = RELIEF_SHADE
+    if gained > 0.0:
+        lift = RELIEF_LIFT
+    float shade = 1.0 + gained * lift
+    vec3 h = normalize(l + vec3(0.0, 0.0, 1.0))
+    float shine = pow(max(dot(n, h), 0.0), RELIEF_SHININESS) - pow(h.z, RELIEF_SHININESS)
+    return lin * max(shade, 0.0) + vec3(max(shine, 0.0) * gloss)
+
+
+def bake_relief():
+    ivec2 local = ivec2(global_id.xy)
+    ivec2 size = image_size(field)
+    if local.x >= size.x or local.y >= size.y:
+        return
+    float across = max(density, 0.0625)
+    ivec2 pixel = ivec2(floor((vec2(local) + 0.5) / across)) + ivec2(cell_origin)
+    ivec2 relief_size = image_size(relief)
+    if pixel.x >= relief_size.x or pixel.y >= relief_size.y:
+        return
+    vec3 normal = relief[pixel].rgb
+    if normal.x == 0.0 and normal.y == 0.0:
+        return
+    vec4 texel = field[local]
+    vec3 lit = relief_shade(decode(texel.rgb), normal)
+    field[local] = vec4(encode(lit), texel.a)

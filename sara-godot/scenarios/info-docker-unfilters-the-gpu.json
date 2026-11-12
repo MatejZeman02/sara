@@ -1,0 +1,212 @@
+[
+  {
+    "wait": 35
+  },
+  {
+    "docker": {
+      "id": "BrushPresetsDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "ToolBoxDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "LayersDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "ColorDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "InfoDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "RecorderDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "MinimapDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "ToolOptionsDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "HistoryDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "GraphDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "ReferenceDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "wait": 14
+  },
+  {
+    "colour": "#101010"
+  },
+  {
+    "tool": {
+      "id": "brush",
+      "options": {
+        "radius": 0.03,
+        "opacity": 1.0
+      }
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "stroke": {
+      "from": [
+        400,
+        500
+      ],
+      "to": [
+        900,
+        500
+      ],
+      "pressure": 1.0,
+      "steps": 12
+    }
+  },
+  {
+    "wait": 14
+  },
+  {
+    "stroke": {
+      "from": [
+        400,
+        540
+      ],
+      "to": [
+        900,
+        540
+      ],
+      "pressure": 1.0,
+      "steps": 12
+    }
+  },
+  {
+    "wait": 14
+  },
+  {
+    "state": "1-two-strokes"
+  },
+  {
+    "undo": 1
+  },
+  {
+    "wait": 14
+  },
+  {
+    "state": "2-after-an-undo"
+  }
+]

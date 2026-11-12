@@ -1,0 +1,12 @@
+[
+  {"comment": "The grip's dots keep a gap from a docker's title in every title bar. A floating docker titled Recent Presets shows the six grip dots and the title's first letter apart."},
+  {"window": [1920, 1080]},
+  {"wait": 30},
+  {"document": "srgb"},
+  {"docker": "park"},
+  {"docker": {"id": "HistoryDocker", "at": [700, 300], "size": [260, 300]}},
+  {"wait": 20},
+  {"prefs": {"embed_subwindows": false}},
+  {"wait": 40},
+  {"shot": "01-floating-recent-presets-title-bar-dots-and-title-apart"}
+]

@@ -1,0 +1,826 @@
+# The Graph docker: a scope over what the painter is looking at.
+#
+# `graph_clear` zeroes the counts, `graph_bin` adds one to a bin per sample of
+# the composited output, and `graph_draw` turns the counts into a picture the
+# docker shows through a Texture2DRD. Nothing is read back on the painting path.
+#
+# One sample per pixel the view shows, so the cost grows with the view and never
+# with the canvas (a fixed grid would put about one sample in each bin of a
+# waveform column and draw speckle). A sample off the canvas is dropped, not
+# counted as black, and the samples lie on the document's own grid, so turning
+# or mirroring the view leaves the graph alone.
+#
+# The picture is whatever size the docker asks for, so `plot_size` is read. The
+# waveform, the parade and the cloud bin into a live grid that follows it, the
+# histogram and the vectorscope keep fixed grids. What a scenario reads must not
+# change when the panel is resized, so a capture bins the same samples a second
+# time into the fixed COLUMNS by BINS grid (and the cloud into 96 cells) under
+# FLAG_FIXED_GRID and reads that.
+#
+# The largest bin is found during binning: `atomicAdd` answers with the count
+# before the add, so the thread that makes a bin its final size also offers it
+# to `atomicMax`, and the maximum after the pass is exact.
+#
+# The five modes share one buffer, each with its own layout. The histogram is a
+# by-product of the parade's pass, and the waveform bins into the parade's own
+# three planes. How a count becomes a brightness is the draw kernel's alone.
+
+kernel graph_clear
+kernel graph_frame
+kernel graph_bin
+kernel graph_draw
+
+# linear_srgb_color_space brings oklab_color_space with it.
+import linear_srgb_color_space
+import transfer_curve
+
+image plot
+sampler source
+buffer counts: uint values[]
+# The view's parallelogram, which libs/graph_sampling.gmacs reads.
+buffer shown: float edges[6]
+
+params:
+    # The composited output's size in texels, which turns a document point
+    # into the normalised coordinate the sampler wants.
+    vec2 source_size
+    # How many samples the binning grid is, both ways: the pixels the view
+    # shows, so one sample stands for one pixel.
+    vec2 samples
+    # The document point the top left of the grid sits on, and the two edge
+    # vectors of the box it covers. The box runs along the
+    # document's axes, and `shown` holds the view's parallelogram.
+    vec2 doc_origin
+    vec2 doc_x
+    vec2 doc_y
+    # Which coordinate system the composited output holds. See
+    # SaColorSpace.Coordinates and stored_to_display() below.
+    float coordinates
+    # Two bits in one word, because the block is the 128 bytes Vulkan
+    # guarantees and there is no room for a second. FLAG_PASSTHROUGH says
+    # the stored triple is already what a screen wants, an sRGB-gamut document
+    # with the sRGB curve on it: a branch rather than a decode and an encode
+    # that only round to the identity, so the common case bins the stored
+    # numbers exactly. FLAG_LINEAR is the scale toggle, a linear count
+    # axis on the histogram and a linear radius on the vectorscope, where the
+    # default is darktable's logarithmic.
+    #
+    # The picture's size is not in the block: the draw kernel asks the image it
+    # writes how large it is, which leaves these two words free.
+    float flags
+    float mode
+    # How bright a bin at the maximum is drawn. One is the plain ratio.
+    float gain
+    # The document's transfer curve, for the modes that need light-linear
+    # values. See libs/transfer_curve.gmacs.
+    float transfer_slope
+    float transfer_threshold
+    float transfer_gain
+    float transfer_exponent
+    # Where the cloud is looked at from, in radians, in two words that would
+    # otherwise be padding at the end of the block's 80 bytes.
+    float yaw
+    float pitch
+    # Where the cloud is looked at, and from how far. The pan is in unit
+    # coordinates of the square the cloud is drawn in, so half a pan moves the
+    # picture by half its own width whatever the docker's size.
+    vec2 cloud_pan
+    float cloud_zoom
+    # The document's linear RGB into linear sRGB, white point adapted, which is
+    # what makes the wireframe this document's gamut rather than sRGB's. A
+    # float[9] and not a mat3 for the reason composite.gmacs gives: std430 pads
+    # every mat3 column out to 16 bytes.
+    float doc_to_linear_srgb[9]
+
+# The picture the draw kernel writes, asked of the image rather than sent in the
+# push constant, so the two cannot disagree and the bound the draw kernel tests
+# itself against is the bound by construction.
+
+
+def plot_size() -> vec2:
+    return vec2(image_size(plot))
+
+const uint BINS = 256u
+const uint COLUMNS = 256u
+# One plane of the buffer, which every mode indexes its own way.
+const uint PLANE = COLUMNS * BINS
+# Four planes. Three are the parade's red, green and blue, which the waveform
+#   shares. The cloud uses all four: a count and the three sums that average
+#   back into the colour a cell holds. The vectorscope and the histogram each
+#   fit inside the first.
+const uint COUNT_SIZE = 4u * PLANE
+# One past the counts, where the pass leaves the largest bin it wrote.
+const uint MAX_SLOT = COUNT_SIZE
+# The largest bin of each histogram row on its own, four of the sixty-four
+#   spare slots between `MAX_SLOT` and `FRAME_SLOT`. `MAX_SLOT` is the
+#   maximum over every row together, which is what every other mode normalises
+#   against and what the docker's histogram still does. These four are what a
+#   histogram drawing a subset of the rows divides by, so a curve is scaled by
+#   a bin the painter can see.
+const uint ROW_MAX_SLOT = MAX_SLOT + 1u
+
+# The gamut wireframe, computed once per pass and read per pixel.
+#
+# The frame is the document's RGB cube taken into Oklab, which bows: a wide
+# gamut bows further out and that bowing is the whole picture. Every vertex
+# therefore costs a transfer decode, a matrix multiply and an Oklab conversion,
+# which is three cube roots, and a pixel that worked them out for itself would
+# pay ninety-six of them per edge test. So `graph_frame` computes the hundred
+# and eight vertices into the spare end of the counts buffer and `graph_draw`
+# reads them back, which is a hundred and eight conversions a pass rather than
+# six and a half million.
+#
+# Eight segments an edge. The bow is gentle enough that eight is smooth at any
+# docker size worth having, and the count is what the buffer is sized from.
+const uint FRAME_EDGES = 12u
+const uint FRAME_SEGMENTS = 8u
+const uint FRAME_VERTICES = FRAME_EDGES * (FRAME_SEGMENTS + 1u)
+# Five per vertex: the projected point, then the colour it stands for.
+const uint FRAME_STRIDE = 5u
+const uint FRAME_SLOT = MAX_SLOT + 64u
+const uint BUFFER_SIZE = FRAME_SLOT + FRAME_VERTICES * FRAME_STRIDE
+# Where the live grid of the waveform and the parade starts, after everything
+#   of a fixed size. Three planes of `live_columns` by `live_levels`, which the
+#   picture's size decides, so the buffer is as long as the picture needs and
+#   `SaGraphPlot` sizes it with the same arithmetic.
+const uint LIVE_SLOT = BUFFER_SIZE
+
+const int MODE_HISTOGRAM = 0
+const int MODE_PARADE = 1
+const int MODE_VECTORSCOPE = 2
+const int MODE_WAVEFORM = 3
+const int MODE_CLOUD = 4
+# The waveform's other reading: one white trace instead of three coloured ones,
+#   the W of an RGBW waveform. A mode number rather than a flag in the push
+#   constant, because that block is exactly the size the SPIR-V declares and
+#   growing it breaks every pipeline built against it. The trace is Oklab L, one
+#   channel, a lightness rather than the coloured lines drawn white.
+const int MODE_WAVEFORM_WHITE = 5
+
+const int FLAG_PASSTHROUGH = 1
+const int FLAG_LINEAR = 2
+# Bin the waveform and the parade into the fixed COLUMNS by BINS planes rather
+#   than into the live grid, which is what a capture asks for so that the
+#   numbers it reports are the same at every panel size. Above the four
+#   histogram row bits `SaGraphPlot.HISTOGRAM_ROW_FLAGS` names.
+const int FLAG_FIXED_GRID = 64
+# The histogram's fourth row counts Oklab L rather than Rec. 709 luma, for the
+#   Levels dialog's Lightness channel. Beside FLAG_ROW_LUMA, which still says
+#   the row is drawn, so the three colour rows are counted as they are without
+#   it.
+const int FLAG_ROW_OKLAB_L = 128
+
+# Where 1.0 sits on a waveform or a parade: eight ninths of the height, with
+#   the ninth above it for the headroom darktable's waveform leaves, and the
+#   nine lines of `value_lines` are the same ninths.
+const float VALUE_TOP = 8.0 / 9.0
+# A vectorscope bin holding this share of every sample draws white.
+const float SCOPE_BRIGHTNESS = 256.0
+# The base of the vectorscope's log radius, darktable's VECTORSCOPE_BASE_LOG.
+const float SCOPE_LOG_BASE = 30.0
+# The chroma between two ring markers, in Oklab a and b.
+const float RING_STEP = 0.1
+# Where the skin tone line points, as an Oklab hue in radians: 0.896, which is
+#   51.3 degrees, drawn from neutral to the rim. darktable's vectorscope draws
+#   no skin tone line, its furniture in src/libs/scopes/vectorscope.c being the
+#   grid, the hue ring, the six nodes and the colour harmony guides, so the
+#   number is read from the one place darktable says where skin is: the table
+#   of measured skin colours in src/common/color_vocabulary.c, sixteen CIE Lab
+#   means under D65 from Xiao et al. 2017 and de Rigal et al. 2010. Taken into
+#   Oklab, their mean a and b point at 51.3 degrees, and the sixteen spread
+#   from 45.6 to 63.2. Read, never copied.
+const float SKIN_HUE = 0.896
+# The six edges of the RGB cube that run primary to secondary, as indices into
+#   CUBE_EDGES below: red to yellow, red to magenta, green to yellow, green to
+#   cyan, blue to magenta and blue to cyan, which together are the gamut's hue
+#   ring on the a and b plane.
+const uint HUE_RING_FIRST_EDGE = 3u
+const uint HUE_RING_EDGES = 6u
+
+# How a sample reads the pixel it stands for, after the view's own shader,
+#   `shaders/canvas/tonemap.gdshader`. Below a hundred per cent a pixel covers
+#   more than a texel, the sampler is linear so one tap is a two texel tent, and
+#   tents one texel apart spread over the footprint minus the two a tap covers
+#   make a flat kernel as wide as the pixel. Up to a hundred per cent and above,
+#   the sampler is nearest and one tap is the texel the pixel shows. The same
+#   ceiling as the view's, so the scope never averages wider than the screen.
+const int MAX_TAPS = 6
+const float TENT_WIDTH = 2.0
+
+# How far out the vectorscope's edge sits in Oklab a and b. The sRGB gamut at
+#   a mid lightness reaches about 0.3, so 0.4 leaves the saturated corners of a
+#   wider gamut somewhere to land. The cloud's a and b axes use the same reach,
+#   so a colour sits at the same distance from neutral in both.
+const float SCOPE_RANGE = 0.4
+
+# How many texels of the picture a cloud cell is across, which sets how many
+#   cells the cloud's grid has: the picture's smaller side over this.
+#
+# The other five modes draw a column or a row per bin, so a bin narrower than
+# a texel is only ever averaged into one. The cloud draws a *point* per cell,
+# and how many texels a cell is decides whether a stroke reads as dust or as
+# blobs. At 256 cells a cell was one texel on the shipped docker, and the
+# paint drew as single texels beside a continuous anti-aliased wireframe.
+# A fixed 96 cells then put three texels across a cell at UI scale 1 and six
+# at scale 2, the same three logical pixels, so a higher scale added smoother
+# edges and no finer points, which read too coarse. So the
+# cell follows the picture, which the docker already asks for
+# in physical pixels: two texels a cell at any scale, two logical pixels at
+# scale 1 and one at scale 2. A lone sample's mark is still 0.9 cells round,
+# almost four texels across, which reads as a point and not as a texel.
+const float CLOUD_CELL_TEXELS = 2.0
+
+# The cells a capture bins into, whatever the picture. A scenario compares the
+#   counts it reads across panel sizes, so the counts it reads must not follow
+#   the panel: `SaGraphPlot.read_counts` bins the last pass again under
+#   FLAG_FIXED_GRID, as it does for the waveform, and the cloud then takes the
+#   96 cells it always took, so every number a capture reads is as it was.
+const uint CLOUD_FIXED_CELLS = 96u
+
+# The most cells either way, which is the plane's own side: a cell is an
+#   index into a plane of COLUMNS by BINS, so 256 is the most it can hold.
+#   A picture past 512 texels square draws cells a little over two texels.
+const uint CLOUD_MAX_CELLS = COLUMNS
+
+# The cloud's sums are fixed point, because a buffer of counts has no floats
+#   and `atomicAdd` has no float form here. 255 steps over the axis is finer
+#   than the 256 cells the point lands in at the most. The worst case sum is every sample in
+#   one cell, and a pass takes one sample per shown pixel, at most the 4096 by
+#   4096 of `SaGraphPlot.MAX_SAMPLES`: 255 times that is 4,278 million, under
+#   the 4,295 million a uint holds. A thousand steps would overflow past a view
+#   of two million pixels.
+const float CLOUD_QUANT = 255.0
+
+# How much of the picture the cloud's cube fills. The cube's lightness axis
+#   is two units tall and its a and b reach three quarters either way at the
+#   sRGB gamut's widest, so 0.4 puts the wireframe across most of the square
+#   at the angle the docker opens on, which is what the reference scope
+#   does, and the wheel is there for the corner an angle pushes out.
+const float CLOUD_ZOOM = 0.4
+
+# Rec. 709 luma, on display values rather than on light-linear ones, because a
+#   graph is a picture of what a screen shows. Which is not what the file holds:
+#   Rec. 709 weights over an Oklab document's stored (L, a, b) answer 0.2126 for
+#   white.
+
+
+def luma_of(vec3 c) -> float:
+    return dot(c, vec3(0.2126, 0.7152, 0.0722))
+
+
+def bin_of(float value) -> uint:
+    return uint(clamp(value, 0.0, 1.0) * (BINS - 1u) + 0.5)
+
+# The running maximum is offered only a count above the one this thread last
+#   saw there. The maximum only grows, so a stale read is a smaller number and
+#   costs an atomic that was not needed, never a maximum that is wrong. Without
+#   the test every sample of a pass offered its count to one address, which at
+#   a sample per shown pixel was most of the histogram's time.
+
+
+def offer_max(uint slot, uint written):
+    if written > counts.values[slot]:
+        atomic_max(counts.values[slot], written)
+
+
+def add_to(uint index):
+    uint written = atomic_add(counts.values[index], 1u) + 1u
+    offer_max(MAX_SLOT, written)
+
+# `add_to` and the row's own running maximum beside it, for the four rows the
+#   histogram fills. Only the histogram calls it: the parade and the
+#   waveforms bin per column, so their rows have no single largest bin worth
+#   keeping, and the vectorscope and the cloud are one plane each.
+
+
+def add_to_row(uint index, uint row):
+    uint written = atomic_add(counts.values[index], 1u) + 1u
+    offer_max(MAX_SLOT, written)
+    offer_max(ROW_MAX_SLOT + row, written)
+
+
+def flag_set(int bit) -> bool:
+    return (int(flags + 0.5) & bit) != 0
+
+# Oklab L of a displayed colour, taken from the colour decoded back to light,
+#   so it is the same whether the document stores RGB, Oklab or a passthrough.
+#   The histogram's Lightness row and the white waveform both count it.
+
+
+def lightness_of(vec3 colour) -> float:
+    return linear_srgb_to_oklab(srgb_to_linear_srgb(colour)).x
+
+# What the histogram's fourth row counts: Rec. 709 luma for Master and the
+#   docker, or Oklab L when Levels' Lightness channel asks for it, as other
+#   painting programs' histograms read it, because a Lightness channel drawing
+#   the composite luma is a Master drawn twice.
+
+
+def grey_of(vec3 colour) -> float:
+    if flag_set(FLAG_ROW_OKLAB_L):
+        return lightness_of(colour)
+    return luma_of(colour)
+
+# The hybrid log-gamma curve darktable puts every waveform and vectorscope
+#   count through, which is what lets a lone sample show beside a bin that
+#   holds thousands without either being a lie: a square root below a twelfth
+#   and a log above it.
+
+
+def hlg(float x) -> float:
+    float v = clamp(x, 0.0, 1.0)
+    if v <= 1.0 / 12.0:
+        return sqrt(3.0 * v)
+    return 0.17883277 * log(12.0 * v - 0.28466892) + 0.55991073
+
+import graph_waveform
+
+# The vectorscope's log radius, darktable's baselog: a chroma of *x* against
+#   the rim at *bound* is spread so the small chromas near neutral, where
+#   most of a painting sits, take most of the picture.
+
+
+def baselog(float x, float bound) -> float:
+    return log(1.0 + (SCOPE_LOG_BASE - 1.0) * x / bound) / log(SCOPE_LOG_BASE) * bound
+
+
+def baselog_inverse(float y, float bound) -> float:
+    return (exp(y / bound * log(SCOPE_LOG_BASE)) - 1.0) * bound / (SCOPE_LOG_BASE - 1.0)
+
+# A point on the a and b plane, centred, as it is drawn: the same point on a
+#   linear scale, and pulled outwards by the log on the other.
+
+
+def scope_warp(vec2 centred) -> vec2:
+    if flag_set(FLAG_LINEAR):
+        return centred
+    float h = length(centred)
+    if h <= 1e-6:
+        return centred
+    return centred * (baselog(h, 0.5) / h)
+
+
+def scope_unwarp(vec2 drawn) -> vec2:
+    if flag_set(FLAG_LINEAR):
+        return drawn
+    float h = length(drawn)
+    if h <= 1e-6:
+        return drawn
+    return drawn * (baselog_inverse(h, 0.5) / h)
+
+# Where an Oklab colour lands on the vectorscope's square, as a unit
+#   coordinate with up being more b, after the scale's warp.
+
+
+def scope_unit(vec3 lab) -> vec2:
+    vec2 centred = vec2(lab.y, -lab.z) / (2.0 * SCOPE_RANGE)
+    return scope_warp(centred) + 0.5
+
+# The cloud's cube, as the unit box the three Oklab axes are mapped onto:
+#   x is a, y is lightness and z is b. Turned by yaw about the lightness axis
+#   and then tipped by pitch, which is the whole of the projection. Binning and
+#   drawing both call it, so a cell is where the point that filled it appears
+#   by construction rather than by two formulas agreeing.
+
+
+def project_point(vec3 pt) -> vec2:
+    float cos_yaw = cos(yaw)
+    float sin_yaw = sin(yaw)
+    vec3 turned = vec3(pt.x * cos_yaw + pt.z * sin_yaw, pt.y, pt.z * cos_yaw - pt.x * sin_yaw)
+    float cos_pitch = cos(pitch)
+    float sin_pitch = sin(pitch)
+    # Not called `flat`: that is an interpolation qualifier in GLSL and the
+    #       compiler reads a variable of that name as a syntax error.
+    vec2 screen_at = vec2(turned.x, turned.y * cos_pitch - turned.z * sin_pitch)
+    # Lightness up, so the picture reads the way a lightness axis is drawn.
+    #       The zoom and the pan are applied here rather than in the draw kernel, so
+    #       the binning grid follows the view: a cell is still where the point that
+    #       filled it appears, and a point the pan pushed off the square is dropped
+    #       by `bin_cloud` rather than piling up on the edge.
+    float scale = CLOUD_ZOOM * max(cloud_zoom, 0.01)
+    return vec2(0.5 + screen_at.x * scale, 0.5 - screen_at.y * scale) + cloud_pan
+
+
+def project_lab(vec3 lab) -> vec2:
+    return project_point(vec3(lab.y / SCOPE_RANGE, lab.x * 2.0 - 1.0, lab.z / SCOPE_RANGE))
+
+
+def doc_to_linear_srgb_matrix() -> mat3:
+    return mat3(
+    doc_to_linear_srgb[0], doc_to_linear_srgb[1], doc_to_linear_srgb[2],
+    doc_to_linear_srgb[3], doc_to_linear_srgb[4], doc_to_linear_srgb[5],
+    doc_to_linear_srgb[6], doc_to_linear_srgb[7], doc_to_linear_srgb[8])
+
+# One of the document's own RGB triples as light, in linear sRGB.
+#
+# The matrix is not optional and is the whole reason two documents draw
+# different shapes: a P3 document's (1, 0, 0) is a redder red than an sRGB
+# one's, and a wireframe that skipped this would draw both as the same cube,
+# which is the one plot guaranteed to say nothing. The same reasoning
+# `ui/color_space/color_space_browser.gd` gives for the browser's solid, which is where
+# this is copied from rather than reinvented.
+
+
+def doc_rgb_to_light(vec3 rgb) -> vec3:
+    vec3 linear = sa_transfer_decode(rgb, transfer_slope, transfer_threshold, transfer_gain, transfer_exponent)
+    return doc_to_linear_srgb_matrix() * linear
+
+const int SA_COORDS_OKLAB = 1
+
+# One texel of the composited output as light, in linear sRGB.
+#
+# Not the same question as doc_rgb_to_light above, which is about the corners
+# of the document's RGB cube. This one is about what a chunk holds, and a
+# document may hold Oklab there, in which case the matrix and the curve
+# describe the document's RGB view rather than its pixels and are not
+# consulted. The same branch thumbnail.gmacs takes, for the same reason.
+
+
+def stored_to_light(vec3 stored) -> vec3:
+    if int(coordinates + 0.5) == SA_COORDS_OKLAB:
+        return oklab_to_linear_srgb(stored)
+    return doc_rgb_to_light(stored)
+
+# The same texel as a screen would show it, which is what the value modes bin.
+#
+# A histogram, a parade and a waveform are pictures of levels, and a level is
+# only a level against something. Binned as stored, white reads 1.0 on an
+# sRGB document and 0.21 on the Oklab one a fresh profile makes, where white is
+# stored (1, 0, 0), and a parade's three "channels" are L, a and b.
+#
+# So the answer is display-referred, as the vectorscope's and the cloud's are:
+# every mode reports about the picture the painter is
+# looking at rather than about the file's storage. The cost is a decode, a
+# matrix and an encode per sample on a document that needs them, and nothing at
+# all on the sRGB document that is most of them.
+
+
+def stored_to_display(vec3 stored) -> vec3:
+    if flag_set(FLAG_PASSTHROUGH):
+        return stored
+    return linear_srgb_to_srgb(stored_to_light(stored))
+
+
+@workgroup_size(64)
+def graph_clear():
+    uint index = global_id.x
+    if index >= LIVE_SLOT + live_size(int(mode + 0.5)):
+        return
+    counts.values[index] = 0u
+
+# How many cells across the cloud's grid is for this pass. Always even, which
+#   `cloud_cell` needs, and rounded up to it, so a cell is never wider than
+#   CLOUD_CELL_TEXELS. `SaGraphPlot.cloud_cells_for` answers the same.
+
+
+def cloud_cells() -> uint:
+    if flag_set(FLAG_FIXED_GRID):
+        return CLOUD_FIXED_CELLS
+    vec2 picture = plot_size()
+    uint across = (uint(ceil(min(picture.x, picture.y) / CLOUD_CELL_TEXELS)) + 1u) & ~1u
+    return clamp(across, 2u, CLOUD_MAX_CELLS)
+
+# Which cloud column a horizontal unit coordinate falls in.
+#
+#   The grid is offset by half a cell, so a cell's centre is at k / COLUMNS and
+#   its edges are at ( k +- 0.5 ) / COLUMNS. That matters for exactly one value:
+#   a neutral grey projects to unit.x of 0.5, and with the plain
+#   uint( unit.x * ( COLUMNS - 1 ) + 0.5 ) it lands on the truncation boundary
+#   between columns 127 and 128. Float noise in the Oklab conversion then
+#   decides the side, and two GPUs decide differently.
+#
+#   COLUMNS is even, so no uniform grid of that many cells can put 0.5 anywhere
+#   but on a seam. Half a cell of offset puts it at the centre of column 128
+#   instead, and 0.5 has to move by a two-hundred-and-fifty-sixth before the
+#   answer changes rather than by one float ulp. The price is that the outermost
+#   two columns cover half the range the others do, which is what an offset grid
+#   costs and is invisible at 256 columns.
+# Which cloud cell a unit coordinate falls in, offset by half a cell on both
+#   axes so a cell's centre is at k / cells.
+#
+# The offset is not optional: a grey projects to a horizontal unit coordinate
+# of exactly 0.5, `cloud_cells` is even, and without it 0.5 is the seam between
+# two cells rather than the middle of one, so which one a grey lands in is
+# decided by float noise and two GPUs answer differently. It is here rather
+# than in `cloud_column`, which the cloud does not call.
+
+
+def cloud_cell(vec2 unit) -> uint:
+    uint cells = cloud_cells()
+    uint cx = min(uint(unit.x * cells + 0.5), cells - 1u)
+    uint cy = min(uint(unit.y * cells + 0.5), cells - 1u)
+    return cy * cells + cx
+
+
+def cloud_column(float unit_x) -> uint:
+    return min(uint(unit_x * COLUMNS + 0.5), COLUMNS - 1u)
+
+# The cloud counts the cell and sums the colour that landed in it, so the draw
+#   can answer with the average rather than with a colour it guessed from the
+#   cell's position. Two points that project onto one cell are different colours
+#   at different depths, and the average of the two is the honest answer.
+
+
+def bin_cloud(vec3 lab):
+    vec2 unit = project_lab(lab)
+    if unit.x < 0.0 or unit.y < 0.0 or unit.x >= 1.0 or unit.y >= 1.0:
+        return
+    uint cell = cloud_cell(unit)
+    add_to(cell)
+    atomic_add(counts.values[PLANE + cell], uint(clamp(lab.x, 0.0, 1.0) * CLOUD_QUANT + 0.5))
+    atomic_add(counts.values[2u * PLANE + cell], uint(clamp(lab.y / SCOPE_RANGE * 0.5 + 0.5, 0.0, 1.0) * CLOUD_QUANT + 0.5))
+    atomic_add(counts.values[3u * PLANE + cell], uint(clamp(lab.z / SCOPE_RANGE * 0.5 + 0.5, 0.0, 1.0) * CLOUD_QUANT + 0.5))
+
+import graph_sampling
+
+
+def graph_bin():
+    vec2 cell = vec2(global_id.xy)
+    if cell.x >= samples.x or cell.y >= samples.y:
+        return
+
+    vec2 unit = (cell + 0.5) / samples
+    vec2 at = doc_origin + doc_x * unit.x + doc_y * unit.y
+    vec2 uv = at / source_size
+    if not shown_by_view(at):
+        return
+    # Off the canvas is not black. A view zoomed out shows the desktop-grey
+    #       surround, and counting that as paint would put a spike at zero.
+    if uv.x < 0.0 or uv.y < 0.0 or uv.x >= 1.0 or uv.y >= 1.0:
+        return
+    vec4 texel = pixel_of(uv)
+    # Nothing is counted where nothing is painted, for the same reason, and a
+    #       texel the canvas shows nearly clear counts as nearly nothing: a
+    #       sample counts with the chance of its alpha, against a threshold
+    #       spread evenly over the samples, so a fringe or a ghost of paint at a
+    #       hundredth adds a hundredth of its samples and an opaque one all.
+    if texel.a <= 0.0 or (texel.a < 1.0 and fract(52.9829189 * fract(dot(cell, vec2(0.06711056, 0.00583715)))) >= texel.a):
+        return
+    vec3 stored = texel.rgb
+
+    int mode = int(mode + 0.5)
+    if mode == MODE_VECTORSCOPE or mode == MODE_CLOUD:
+        vec3 lab = linear_srgb_to_oklab(stored_to_light(stored))
+        if mode == MODE_CLOUD:
+            bin_cloud(lab)
+            return
+        uint a_bin = bin_of(lab.y / SCOPE_RANGE * 0.5 + 0.5)
+        uint b_bin = bin_of(lab.z / SCOPE_RANGE * 0.5 + 0.5)
+        add_to(b_bin * BINS + a_bin)
+        return
+
+    vec3 colour = stored_to_display(stored)
+    bool per_column = mode == MODE_PARADE or mode == MODE_WAVEFORM or mode == MODE_WAVEFORM_WHITE
+    # The white waveform is one channel, Oklab L, binned into the first of
+    #       the three planes alone, and the other two stay empty. A grid of its
+    #       own would grow the buffer `SaGraphPlot` sizes for nothing, and a
+    #       fourth plane of the shared grid would cost the clear a plane more.
+    #       So it pays one atomic a sample where the colour waveform pays three.
+    int channels = 3
+    if mode == MODE_WAVEFORM_WHITE:
+        colour = vec3(lightness_of(colour))
+        channels = 1
+    # The live grid, with no running maximum: the waveform and the parade
+    #       draw a bin by its share of its column and never read MAX_SLOT, and
+    #       a maximum every sample offers to one address is the busiest atomic
+    #       of the pass.
+    if per_column and not flag_set(FLAG_FIXED_GRID):
+        uint live = min(uint(unit.x * live_columns(mode)), live_columns(mode) - 1u)
+        for c in range(channels):
+            atomic_add(counts.values[live_index(uint(c), live, live_level_of(colour[c]), mode)], 1u)
+        return
+    uint column = uint(unit.x * (COLUMNS - 1u) + 0.5)
+    # The histogram is the parade summed along its columns, so one pass fills
+    #       both: the parade's three planes here, and the histogram's four in the
+    #       first plane's spare room, which the parade layout never reaches at
+    #       column zero because it is indexed the other way round. The waveform is
+    #       the parade read a third arrangement, so it shares those three planes
+    #       outright, and the white waveform the first of them.
+    for c in range(channels):
+        uint value = bin_of(colour[c])
+        if per_column:
+            add_to((uint(c) * COLUMNS + column) * BINS + value)
+        else:
+            add_to_row(uint(c) * BINS + value, uint(c))
+    if mode == MODE_HISTOGRAM:
+        add_to_row(3u * BINS + bin_of(grey_of(colour)), 3u)
+
+# Encoded, because the plot is drawn straight to the screen with no view
+#   transform over it, unlike the painting beside it.
+
+
+def to_screen(vec3 linear) -> vec3:
+    return clamp(sa_transfer_encode(linear, 12.92, 0.04045, 1.055, 2.4), vec3(0.0), vec3(1.0))
+
+# The largest square the picture holds, centred, as a coordinate in it. The
+#   round modes are drawn in this rather than in the whole rectangle, so a
+#   docker dragged wide leaves the vectorscope a circle and the cloud's cube a
+#   cube instead of stretching either. Outside it the answer is off the graph.
+
+
+def square_unit(vec2 texel) -> vec2:
+    float side = min(plot_size().x, plot_size().y)
+    vec2 corner = (plot_size() - vec2(side)) * 0.5
+    return (texel + 0.5 - corner) / side
+
+
+def off_graph(vec2 unit) -> bool:
+    return unit.x < 0.0 or unit.y < 0.0 or unit.x >= 1.0 or unit.y >= 1.0
+
+import graph_histogram
+
+# How far *at* is from the segment between *from* and *to*, all in the square
+#   the cloud is drawn in.
+
+
+def segment_away(vec2 from, vec2 to, vec2 at) -> float:
+    vec2 along = to - from
+    float t = clamp(dot(at - from, along) / max(dot(along, along), 1e-6), 0.0, 1.0)
+    return length(at - (from + along * t))
+
+# A vertex of the gamut wireframe as `graph_frame` wrote it, its place on
+#   the plane and the colour it stands for, read by the vectorscope and the
+#   cloud alike.
+
+
+def frame_point(uint index) -> vec2:
+    uint slot = FRAME_SLOT + index * FRAME_STRIDE
+    return vec2(uint_bits_to_float(counts.values[slot]), uint_bits_to_float(counts.values[slot + 1u]))
+
+
+def frame_colour(uint index) -> vec3:
+    uint slot = FRAME_SLOT + index * FRAME_STRIDE + 2u
+    return vec3(
+    uint_bits_to_float(counts.values[slot]),
+    uint_bits_to_float(counts.values[slot + 1u]),
+    uint_bits_to_float(counts.values[slot + 2u]))
+
+# The a and b plane with the hue ring round it: the ring is what the plane
+#   would look like if every colour were present, drawn dim, and the counts are
+#   drawn full strength on top of it. Without it a scope of two colours is two
+#   dots on black and says nothing about which hues they are.
+
+# darktable's vectorscope furniture, drawn in the square's unit coordinates
+#   after the scale's warp: concentric rings every RING_STEP of chroma, the
+#   document's gamut as a hue ring traced along the six primary to secondary
+#   edges of its RGB cube, a node at each of the six, and the skin tone line.
+#   The edges come from `graph_frame`, projected once a pass onto this plane.
+
+
+def scope_furniture(vec2 drawn, float side) -> vec3:
+    float texel = 1.0 / side
+    vec3 colour = vec3(0.0)
+    # Rings.
+    float radius = length(drawn)
+    for k in range(1, 5):
+        float chroma = RING_STEP * k
+        float ring = chroma / (2.0 * SCOPE_RANGE)
+        if not flag_set(FLAG_LINEAR):
+            ring = baselog(ring, 0.5)
+        float away = abs(radius - ring) * side
+        colour = max(colour, vec3(0.16) * (1.0 - smoothstep(0.3, 1.3, away)))
+    # The skin tone line, from neutral out to the rim.
+    vec2 skin = vec2(cos(SKIN_HUE), -sin(SKIN_HUE))
+    float along = dot(drawn, skin)
+    if along > 0.0 and along < 0.5:
+        float off = abs(drawn.x * skin.y - drawn.y * skin.x) * side
+        colour = max(colour, vec3(0.30, 0.22, 0.16) * (1.0 - smoothstep(0.3, 1.3, off)))
+    # The gamut's hue ring and its nodes.
+    vec2 unit = drawn + 0.5
+    vec3 edge = vec3(0.0)
+    float nearest = 1e6
+    for uint e in range(HUE_RING_FIRST_EDGE, HUE_RING_FIRST_EDGE + HUE_RING_EDGES):
+        uint base = e * (FRAME_SEGMENTS + 1u)
+        for uint sgm in range(0u, FRAME_SEGMENTS):
+            float away = segment_away(frame_point(base + sgm), frame_point(base + sgm + 1u), unit)
+            if away < nearest:
+                nearest = away
+                edge = frame_colour(base + sgm)
+        float node = min(length(unit - frame_point(base)), length(unit - frame_point(base + FRAME_SEGMENTS)))
+        colour = max(colour, frame_colour(base) * 0.9 * (1.0 - smoothstep(2.0 * texel, 3.0 * texel, node)))
+    float on_edge = 1.0 - smoothstep(0.6 * texel, 1.6 * texel, nearest)
+    return max(colour, edge * 0.55 * on_edge)
+
+
+def draw_vectorscope(vec2 texel, float largest) -> vec3:
+    vec2 unit = square_unit(texel)
+    if off_graph(unit):
+        return vec3(0.0)
+    float side = min(plot_size().x, plot_size().y)
+    vec2 drawn = unit - 0.5
+    if length(drawn) > 0.5:
+        return vec3(0.0)
+    # The bin this texel reads is where its point sits before the warp, so
+    #       the grid is untouched and the log is a reading of it.
+    vec2 centred = scope_unwarp(drawn)
+    # Up is more b, which is yellow, the way a vectorscope is drawn.
+    vec2 ab = vec2(centred.x, -centred.y) * 2.0 * SCOPE_RANGE
+    vec3 hue = to_screen(oklab_to_linear_srgb(vec3(0.78, ab.x, ab.y)))
+    # The hue disc behind everything, brightest at the rim so it reads as a
+    #       ring and the middle stays dark enough for a count to show.
+    vec3 colour = hue * (0.05 + 0.10 * length(drawn) * 2.0)
+    colour = max(colour, scope_furniture(drawn, side))
+
+    vec2 bin_unit = centred + 0.5
+    uint a_bin = uint(clamp(bin_unit.x, 0.0, 1.0) * (BINS - 1u) + 0.5)
+    uint b_bin = uint(clamp(1.0 - bin_unit.y, 0.0, 1.0) * (BINS - 1u) + 0.5)
+    # A bin by its share of every sample, through the hybrid log-gamma, the
+    #       way darktable brightens one, so the picture's busiest colour does
+    #       not push every other into the floor.
+    float share = float(counts.values[b_bin * BINS + a_bin]) / max(samples.x * samples.y, 1.0)
+    float level = hlg(share * SCOPE_BRIGHTNESS * gain)
+    return colour + hue * level
+
+# The document's RGB cube, projected into the cloud's own picture once a pass.
+#
+# One thread a vertex, so the eight corners are subdivided into a hundred and
+# eight points and each is written as its projected position and the colour it
+# stands for. `graph_draw` reads them back and never converts a colour itself.
+#
+# Its own dispatch after the clear, because the clear writes over this end of
+# the buffer.
+
+
+@workgroup_size(64)
+def graph_frame():
+    uint index = global_id.x
+    if index >= FRAME_VERTICES:
+        return
+    const vec3 CUBE[8] = vec3[8](
+    vec3(0.0, 0.0, 0.0),
+    vec3(1.0, 0.0, 0.0),
+    vec3(0.0, 1.0, 0.0),
+    vec3(0.0, 0.0, 1.0),
+    vec3(1.0, 1.0, 0.0),
+    vec3(1.0, 0.0, 1.0),
+    vec3(0.0, 1.0, 1.0),
+    vec3(1.0, 1.0, 1.0))
+    const ivec2 CUBE_EDGES[12] = ivec2[12](
+    ivec2(0, 1),
+    ivec2(0, 2),
+    ivec2(0, 3),
+    ivec2(1, 4),
+    ivec2(1, 5),
+    ivec2(2, 4),
+    ivec2(2, 6),
+    ivec2(3, 5),
+    ivec2(3, 6),
+    ivec2(4, 7),
+    ivec2(5, 7),
+    ivec2(6, 7))
+
+    uint edge = index / (FRAME_SEGMENTS + 1u)
+    uint step_index = index % (FRAME_SEGMENTS + 1u)
+    vec3 from = CUBE[CUBE_EDGES[edge].x]
+    vec3 to = CUBE[CUBE_EDGES[edge].y]
+    vec3 rgb = mix(from, to, float(step_index) / float(FRAME_SEGMENTS))
+
+    vec3 light = doc_rgb_to_light(rgb)
+    vec3 lab = linear_srgb_to_oklab(light)
+    # Onto the plane the mode draws in: the a and b plane for the vectorscope,
+    #       where the six primary to secondary edges are the hue ring, and the
+    #       cloud's projection otherwise.
+    vec2 at = (int(mode + 0.5) == MODE_VECTORSCOPE) ? scope_unit(lab) : project_lab(lab)
+    vec3 shown = to_screen(light)
+
+    uint slot = FRAME_SLOT + index * FRAME_STRIDE
+    counts.values[slot] = float_bits_to_uint(at.x)
+    counts.values[slot + 1u] = float_bits_to_uint(at.y)
+    counts.values[slot + 2u] = float_bits_to_uint(shown.r)
+    counts.values[slot + 3u] = float_bits_to_uint(shown.g)
+    counts.values[slot + 4u] = float_bits_to_uint(shown.b)
+
+# The grey every graph is drawn over, a bit lighter than the page, one number for every mode so switching does not flicker. A lift
+#   rather than a floor under max(), so a trace dimmer than it still shows.
+#   The cloud is the exception, `graph_cloud.gmacs` says why.
+
+const float BACKGROUND = 0.1
+
+import graph_cloud
+
+
+def graph_draw():
+    vec2 texel = vec2(global_id.xy)
+    if texel.x >= plot_size().x or texel.y >= plot_size().y:
+        return
+    # One, not zero: an empty picture divides by this too.
+    float largest = max(float(counts.values[MAX_SLOT]), 1.0)
+
+    int mode = int(mode + 0.5)
+    vec3 colour = vec3(0.0)
+    if mode == MODE_PARADE:
+        colour = draw_parade(texel, largest)
+    elif mode == MODE_VECTORSCOPE:
+        colour = draw_vectorscope(texel, largest)
+    elif mode == MODE_WAVEFORM:
+        colour = draw_waveform(texel, largest)
+    elif mode == MODE_WAVEFORM_WHITE:
+        colour = draw_waveform_white(texel, largest)
+    elif mode == MODE_CLOUD:
+        # Already laid over the background, because a mark covers it.
+        plot[ivec2(global_id.xy)] = vec4(draw_cloud(texel, largest), 1.0)
+        return
+    else:
+        colour = draw_histogram(texel, largest)
+    colour = vec3(BACKGROUND) + colour * (1.0 - BACKGROUND)
+    plot[ivec2(global_id.xy)] = vec4(colour, 1.0)

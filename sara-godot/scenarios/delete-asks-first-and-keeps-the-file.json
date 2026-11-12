@@ -1,0 +1,35 @@
+[
+ {"wait": 40},
+ {"prefs": {"ui_scale": 1.0}},
+ {"wait": 15},
+ {"open": "preferences"},
+ {"wait": 18},
+ {"page": "Colour Themes"},
+ {"wait": 12},
+
+ {"theme_rows": {"save_as": "O6 Doomed"}},
+ {"wait": 15},
+ {"theme_rows": {}},
+ {"shot": "1-the-fork-is-selected"},
+ {"state": "1-the-fork-is-selected"},
+
+ {"theme_rows": {"delete": true}},
+ {"wait": 20},
+ {"theme_rows": {}},
+ {"shot": "2-delete-asks-first"},
+ {"state": "2-delete-asks-first"},
+
+ {"answer": 0},
+ {"wait": 20},
+ {"theme_rows": {}},
+ {"shot": "3-cancel-leaves-it-on-the-dropdown"},
+ {"state": "3-cancel-leaves-it-on-the-dropdown"},
+
+ {"theme_rows": {"delete": true}},
+ {"wait": 20},
+ {"answer": 1},
+ {"wait": 25},
+ {"theme_rows": {}},
+ {"shot": "4-delete-takes-it-off-the-dropdown"},
+ {"state": "4-delete-takes-it-off-the-dropdown"}
+]

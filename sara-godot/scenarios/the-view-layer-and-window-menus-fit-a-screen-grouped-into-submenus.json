@@ -1,0 +1,23 @@
+[
+  {"comment": "The View, Layer and Window menus at UI scale 1 in a 1920 by 1080 window, each shot shut and then with one of its submenus open beside its row. View's Zoom is 81 and Display 84, Layer's Mask is 560, Smart Layer 563 and Other Layers 568, Window's Painting is 610 and Picture 612. The dump of each says the rows the top list holds."},
+  {"wait": 45},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 20},
+  {"window": [1920, 1080]},
+  {"wait": 20},
+  {"document": "srgb"},
+  {"wait": 10},
+  {"menu": "View"}, {"wait": 16}, {"state": "view"}, {"shot": "view"},
+  {"menu_item": {"menu": "View", "id": 81}}, {"wait": 12}, {"shot": "view-zoom"},
+  {"menu_item": {"menu": "View", "id": 84}}, {"wait": 12}, {"shot": "view-display"},
+  {"key": "escape"}, {"wait": 8}, {"key": "escape"}, {"wait": 8},
+  {"menu": "Layer"}, {"wait": 16}, {"state": "layer"}, {"shot": "layer"},
+  {"menu_item": {"menu": "Layer", "id": 560}}, {"wait": 12}, {"shot": "layer-mask"},
+  {"menu_item": {"menu": "Layer", "id": 563}}, {"wait": 12}, {"shot": "layer-smart"},
+  {"menu_item": {"menu": "Layer", "id": 568}}, {"wait": 12}, {"shot": "layer-other"},
+  {"key": "escape"}, {"wait": 8}, {"key": "escape"}, {"wait": 8},
+  {"menu": "Window"}, {"wait": 16}, {"state": "window"}, {"shot": "window"},
+  {"menu_item": {"menu": "Window", "id": 610}}, {"wait": 12}, {"shot": "window-painting"},
+  {"menu_item": {"menu": "Window", "id": 612}}, {"wait": 12}, {"shot": "window-picture"},
+  {"key": "escape"}, {"wait": 8}, {"key": "escape"}, {"wait": 8}
+]

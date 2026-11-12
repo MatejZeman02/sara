@@ -1,0 +1,18 @@
+# Conway's Game of Life as a pixel function, a simulation's rule of reach one:
+# a cell lives where its alpha is at least `alive`, lives on with two or three
+# living neighbours, and is born black with three.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+uniform float alive: hint_range(0.05, 1.0, 0.05) = 0.5
+
+def pixel(ivec2 at) -> vec4:
+    vec4 own = src(at)
+    float lives = step(alive, own.a)
+    float living = -lives
+    for dy in range(-1, 2):
+        for dx in range(-1, 2):
+            living += step(alive, src(at + ivec2(dx, dy)).a)
+    if living == 3.0 or (living == 2.0 and lives == 1.0):
+        return mix(vec4(0.0, 0.0, 0.0, 1.0), own, lives)
+    return vec4(0.0)

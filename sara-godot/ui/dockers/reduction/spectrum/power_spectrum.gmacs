@@ -1,0 +1,270 @@
+# The Fourier spectrogram's transform: the composite's Oklab lightness,
+# downsampled to a square N texels a side, N a power of two, transformed into
+# its half spectrum and reduced to the power spectrum and its radial average,
+# which is all the CPU reads back.
+#
+# The storage is the complex coefficients in one `rg32f` texture, the real part
+# in red and the imaginary in green, and half the spectrum, the layout NumPy's
+# `rfft2` answers. Every texture of the transform is N / 2 + 1 texels wide and
+# N tall, and every pass reads one of the two and writes the other.
+#
+# The kernels, in the order a run dispatches them.
+#
+# - `spectrum_gather` reads the composite and writes a row of N lightnesses as
+#   N / 2 complex numbers, the even texel in the real part and the odd in the
+#   imaginary, which is how a real transform of N points becomes a complex one
+#   of N / 2.
+# - `spectrum_butterflies` is one radix-2 Stockham pass, along the rows or down
+#   the columns. log2(N / 2) of them along the rows transform each packed row.
+# - `spectrum_untangle` turns each row's N / 2 packed coefficients into the
+#   N / 2 + 1 of the real row's transform, the standard split of an even and an
+#   odd half.
+# - log2(N) more `spectrum_butterflies` down the N / 2 + 1 columns finish it.
+# - `spectrum_power` writes each coefficient's power into the result buffer.
+# - `spectrum_radial` averages the power over each ring of one frequency.
+#
+# **The twiddles come from a table** the CPU fills in doubles and rounds once,
+# `exp(-2 pi i k / N)` for k from 0 to N / 2. Vulkan lets `sin` and `cos` be off
+# by 2^-11 over a half turn, which is half of the part in a thousand the suite
+# holds the spectrum to, and the table costs a buffer of N / 2 + 1 pairs.
+#
+# **No pass reads the canvas but the first**, and that one reads it through a
+# box over each texel of the square rather than the dirty rectangles hard rule
+# 2 asks for everywhere else. This is the one exception, because the spectrum
+# is of the whole picture, run on demand while the painter has stopped, over a
+# downsampled copy.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel spectrum_gather
+kernel spectrum_butterflies
+kernel spectrum_untangle
+kernel spectrum_power
+kernel spectrum_radial
+
+# linear_srgb_color_space brings oklab_color_space with it.
+import linear_srgb_color_space
+import transfer_curve
+
+# The composite, at the document's depth.
+image composite: readonly
+# The two textures of the transform, the pass's input and its output.
+image source: rg32f, readonly
+image target: rg32f, writeonly
+# exp(-2 pi i k / N) for k from 0 to N / 2, as (cos, sin).
+buffer twiddles: vec2 values[]
+# The power spectrum, N rows of N / 2 + 1, then the radial average, N / 2 + 1
+# rings from the zero frequency outwards.
+buffer result: float values[]
+
+# Every field a float, packed by SaPowerSpectrum in the order written here, for
+# the reason measure.gmacs gives.
+params:
+    # The square the composite is read over, in document pixels: its corner,
+    # which lies off the canvas on its shorter side, and its side.
+    float square_x
+    float square_y
+    float square_side
+    # See SaColorSpace.Coordinates. An Oklab document needs no conversion.
+    float coordinates
+    # The document's transfer curve, for the decode into light.
+    float transfer_slope
+    float transfer_threshold
+    float transfer_gain
+    float transfer_exponent
+    # The document's linear RGB into linear sRGB, a float[9] for the reason
+    # composite.gmacs gives.
+    float to_linear_srgb[9]
+    # N, the side of the square in texels.
+    float size
+    # A butterfly pass: how far apart the two halves of a butterfly sit in its
+    # output, how many points its axis holds, and the axis, 0 along the rows
+    # and 1 down the columns.
+    float span
+    float points
+    float along
+
+# Must match SaColorSpace.Coordinates.
+const int SA_COORDS_OKLAB = 1
+
+# The radial kernel's workgroup.
+const uint LANES = 64u
+
+
+def to_linear_srgb_matrix() -> mat3:
+    return mat3(
+        to_linear_srgb[0], to_linear_srgb[1], to_linear_srgb[2],
+        to_linear_srgb[3], to_linear_srgb[4], to_linear_srgb[5],
+        to_linear_srgb[6], to_linear_srgb[7], to_linear_srgb[8]
+    )
+
+
+def stored_to_oklab(vec3 stored) -> vec3:
+    """One stored triple as Oklab, by the branch measure.gmacs takes."""
+    if int(coordinates + 0.5) == SA_COORDS_OKLAB:
+        return stored
+    vec3 linear = sa_transfer_decode(
+        stored, transfer_slope, transfer_threshold, transfer_gain, transfer_exponent
+    )
+    return linear_srgb_to_oklab(to_linear_srgb_matrix() * linear)
+
+
+def n() -> int:
+    return int(size + 0.5)
+
+
+def columns() -> int:
+    """The width of every texture of the transform, N / 2 + 1."""
+    return n() / 2 + 1
+
+
+def mirrored(int at, int extent) -> int:
+    """*at* reflected into the canvas, edge texel repeated, as often as it takes:
+    the square is wider than the canvas on its shorter side, and a reflection
+    keeps a flat picture flat where a pad of black would put an edge in it."""
+    int period = 2 * extent
+    int folded = at - period * int(floor(float(at) / float(period)))
+    return folded < extent ? folded : period - 1 - folded
+
+
+def lightness_at(ivec2 px) -> float:
+    """Oklab L of one composite texel, by its alpha, so an empty canvas reads
+    nothing and a half-transparent stroke counts half. Nothing is clamped."""
+    vec4 texel = composite[px]
+    return stored_to_oklab(texel.rgb).x * texel.a
+
+
+def box_lightness(int column, int row) -> float:
+    """The mean lightness of the composite texels whose centres fall in the
+    square's texel at *column* and *row*. A texel of the square spans at least
+    one of the canvas, because N is never above the square's side, so the box
+    always holds one centre."""
+    float step = square_side / size
+    vec2 low = vec2(square_x, square_y) + vec2(float(column), float(row)) * step
+    ivec2 first = ivec2(ceil(low - 0.5))
+    ivec2 last = max(ivec2(ceil(low + step - 0.5)) - 1, first)
+    ivec2 canvas = image_size(composite)
+    float sum = 0.0
+    for y in range_inclusive(first.y, last.y):
+        int at_y = mirrored(y, canvas.y)
+        for x in range_inclusive(first.x, last.x):
+            sum += lightness_at(ivec2(mirrored(x, canvas.x), at_y))
+    ivec2 count = last - first + 1
+    return sum / float(count.x * count.y)
+
+
+def times(vec2 a, vec2 b) -> vec2:
+    return vec2(a.x * b.x - a.y * b.y, a.x * b.y + a.y * b.x)
+
+
+def conjugate(vec2 a) -> vec2:
+    return vec2(a.x, -a.y)
+
+
+def spectrum_gather():
+    if pixel.x >= n() / 2 or pixel.y >= n():
+        return
+    float even = box_lightness(2 * pixel.x, pixel.y)
+    float odd = box_lightness(2 * pixel.x + 1, pixel.y)
+    target[pixel] = vec4(even, odd, 0.0, 0.0)
+
+
+def along_axis(int index, int line) -> ivec2:
+    return int(along + 0.5) == 0 ? ivec2(index, line) : ivec2(line, index)
+
+
+def spectrum_butterflies():
+    """One radix-2 pass of the Stockham transform, a butterfly an invocation:
+    the two inputs half the axis apart, the second turned by its twiddle, and
+    the sum and the difference written *span* apart, so the output is in
+    order after the last pass and no pass reorders bits."""
+    int half_points = int(points + 0.5) / 2
+    int lines = int(along + 0.5) == 0 ? n() : columns()
+    int butterfly = int(global_id.x)
+    int line = int(global_id.y)
+    if butterfly >= half_points or line >= lines:
+        return
+    int width = int(span + 0.5)
+    int within = butterfly % width
+    vec2 turn = twiddles.values[within * (n() / (2 * width))]
+    vec2 first = source[along_axis(butterfly, line)].xy
+    vec2 second = times(source[along_axis(butterfly + half_points, line)].xy, turn)
+    int out_at = (butterfly / width) * width * 2 + within
+    target[along_axis(out_at, line)] = vec4(first + second, 0.0, 0.0)
+    target[along_axis(out_at + width, line)] = vec4(first - second, 0.0, 0.0)
+
+
+def spectrum_untangle():
+    """Z, the transform of the row packed as even + i odd, into X, the real
+    row's: X[k] = E[k] + w^k O[k], with E[k] = (Z[k] + Z*[N/2 - k]) / 2 and
+    O[k] = (Z[k] - Z*[N/2 - k]) / 2i, Z being N / 2 periodic."""
+    int half_n = n() / 2
+    if pixel.x > half_n or pixel.y >= n():
+        return
+    vec2 here = source[ivec2(pixel.x % half_n, pixel.y)].xy
+    vec2 mirror = conjugate(source[ivec2((half_n - pixel.x) % half_n, pixel.y)].xy)
+    vec2 even = 0.5 * (here + mirror)
+    vec2 difference = 0.5 * (here - mirror)
+    # Divided by i is multiplied by -i.
+    vec2 odd = vec2(difference.y, -difference.x)
+    vec2 coefficient = even + times(twiddles.values[pixel.x], odd)
+    target[pixel] = vec4(coefficient, 0.0, 0.0)
+
+
+def spectrum_power():
+    """|X / N^2|^2, so a flat picture of lightness L reads L^2 at the zero
+    frequency whatever N is. Scaled before it is squared, so nothing nears the
+    top of a float."""
+    if pixel.x >= columns() or pixel.y >= n():
+        return
+    float scale = 1.0 / (size * size)
+    vec2 coefficient = source[pixel].xy * scale
+    result.values[pixel.y * columns() + pixel.x] = dot(coefficient, coefficient)
+
+shared float lane_sum[64]
+shared float lane_weight[64]
+
+
+def spectrum_radial_ring(uint lane, int ring):
+    """Sums the power of the frequencies whose distance from the zero rounds to
+    *ring*, each lane striding over the half spectrum. A column inside the half
+    stands for itself and its mirror, so it weighs two, and the first and the
+    last columns hold their own mirrors, so they weigh one, which makes the
+    average the whole spectrum's."""
+    int width = columns()
+    int total = width * n()
+    float sum = 0.0
+    float weight = 0.0
+    for at in range(int(lane), total, int(LANES)):
+        int column = at % width
+        int row = at / width
+        int vertical = row < n() / 2 ? row : row - n()
+        float radius = sqrt(float(column * column + vertical * vertical))
+        if int(floor(radius + 0.5)) != ring:
+            continue
+        float counts = column == 0 or column == width - 1 ? 1.0 : 2.0
+        sum += counts * result.values[at]
+        weight += counts
+    lane_sum[lane] = sum
+    lane_weight[lane] = weight
+
+
+@workgroup_size(64)
+def spectrum_radial():
+    """The mean power of one ring, a workgroup a ring, folded over its lanes as
+    reduce.gmacs folds. The rings run from the zero frequency to N / 2, the
+    last column's distance, and none past it is asked for, because a ring that
+    wide is cut by the square's corners."""
+    uint lane = local_index
+    int ring = int(group_id.x)
+    spectrum_radial_ring(lane, ring)
+    barrier()
+    for level in range(6):
+        uint width = 32u >> uint(level)
+        if lane < width:
+            lane_sum[lane] += lane_sum[lane + width]
+            lane_weight[lane] += lane_weight[lane + width]
+        barrier()
+    if lane == 0u:
+        float mean = lane_weight[0] > 0.0 ? lane_sum[0] / lane_weight[0] : 0.0
+        result.values[columns() * n() + ring] = mean

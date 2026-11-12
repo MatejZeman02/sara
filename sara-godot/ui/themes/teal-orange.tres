@@ -1,0 +1,6 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://c7c2mqfosssc5"]
+
+[ext_resource type="FontFile" path="res://ui/themes/fonts/inter/Inter-Regular.ttf" id="1_inter"]
+
+[resource]
+default_font = ExtResource("1_inter")

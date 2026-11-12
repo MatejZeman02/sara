@@ -1,0 +1,20 @@
+[
+ {"wait": 35},
+ {"docker": "park"},
+ {"wait": 10},
+ {"docker": {"id": "ColorDocker", "at": [700, 200], "size": [360, 620]}},
+ {"wait": 15},
+ {"state": "1-before-the-list-opens"},
+ {"open": "preferences"},
+ {"wait": 18},
+ {"page": "Colour Picker"},
+ {"wait": 12},
+ {"choice": {"open": "Option_shape"}},
+ {"wait": 12},
+ {"state": "2-the-list-is-open"},
+ {"shot": "2-the-list-is-open"},
+ {"choice": {"pick": 3}},
+ {"wait": 15},
+ {"state": "3-the-row-was-picked"},
+ {"shot": "3-the-row-was-picked"}
+]

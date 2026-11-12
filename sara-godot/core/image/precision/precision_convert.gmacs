@@ -1,0 +1,58 @@
+# Kernel: precision_convert
+#
+# One colour field of one chunk written again at the other float depth, for
+# Image > Depth. SaPrecision, beside this, dispatches it over
+# the chunks a layer has allocated and never over the canvas (hard rules 2 and
+# 3), and `precision_count.gmacs` counts first what a half cannot hold.
+#
+# It reads the old texture and writes a new one, since a texture cannot change
+# its format in place. The two bindings are at two formats, so SaPrecision
+# points the variant at the source's format and the target binding at its own,
+# which is what the storage-format token on each image lets a kernel compiled
+# once per format do.
+#
+# Narrowing to half rounds each channel to the nearest half, ties to even,
+# through `nearest_half`, so the stored number is the same on every card and
+# not whichever rounding the device's own store picks. A finite channel past
+# the largest half is written as that largest half with its sign, never as an
+# infinity, which would poison every blend, blur and sum after it. An infinity
+# and a NaN are kept, since a half holds both. Widening to float writes the
+# value read, which every half is exactly.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel precision_convert
+
+import nearest_half
+
+# The field as it stands.
+image source: readonly
+# The field at the new depth, the same size, written whole.
+image target
+
+params:
+    # One to narrow to half, zero to widen to float.
+    float narrowing
+    float pad_a
+    float pad_b
+    float pad_c
+
+# The largest finite half float.
+const float SA_HALF_MAX = 65504.0
+
+
+def held_by_half(float x) -> float:
+    if not isnan(x) and not isinf(x) and abs(x) > SA_HALF_MAX:
+        return sign(x) * SA_HALF_MAX
+    return sa_nearest_half(x)
+
+
+def precision_convert():
+    ivec2 px = ivec2(global_id.xy)
+    ivec2 size = image_size(source)
+    if px.x >= size.x or px.y >= size.y:
+        return
+    vec4 c = source[px]
+    if narrowing > 0.5:
+        c = vec4(held_by_half(c.r), held_by_half(c.g), held_by_half(c.b), held_by_half(c.a))
+    target[px] = c

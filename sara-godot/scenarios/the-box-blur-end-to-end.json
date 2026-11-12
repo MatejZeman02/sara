@@ -1,0 +1,50 @@
+[
+  {"wait": 45},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 20},
+  {"document": "srgb"},
+  {"wait": 25},
+  {"fill": [0.0, 0.0, 0.0]},
+  {"wait": 10},
+  {"colour": [1.0, 1.0, 1.0]},
+  {"wait": 5},
+  {"stroke": {"from": [700, 300], "to": [700, 800], "pressure": 1.0}},
+  {"wait": 15},
+  {"texel": [[700, 550], [730, 550], [780, 550]]},
+  {"state": "1-a-line-before-the-blur"},
+  {"shot": "1-a-line-before-the-blur"},
+
+  {"menu": "Filter"},
+  {"wait": 15},
+  {"shot": "2-box-blur-in-the-filter-menu"},
+  {"state": "2-box-blur-in-the-filter-menu"},
+
+  {"filter": {"open": "sara-base-modules.box_blur"}},
+  {"wait": 20},
+  {"shot": "3-the-dialog-on-open"},
+  {"state": "3-the-dialog-on-open"},
+
+  {"filter": {"widget": "radius", "value": 40}},
+  {"wait": 15},
+  {"shot": "4-radius-dragged"},
+  {"state": "4-radius-dragged"},
+
+  {"filter": "apply"},
+  {"wait": 20},
+  {"texel": [[700, 550], [730, 550], [780, 550]]},
+  {"shot": "5-applied"},
+  {"state": "5-applied"},
+
+  {"undo": 1},
+  {"wait": 15},
+  {"texel": [[700, 550], [730, 550], [780, 550]]},
+  {"shot": "6-undone"},
+  {"state": "6-undone"},
+
+  {"filter": {"open": "sara-base-modules.box_blur"}},
+  {"wait": 20},
+  {"filter": "cancel"},
+  {"wait": 15},
+  {"texel": [[700, 550], [730, 550], [780, 550]]},
+  {"state": "7-cancelled"}
+]

@@ -1,0 +1,61 @@
+# Paper grain, the first shipped pattern.
+#
+# A pixel function through the scripting spec's shortest door rather than a
+# picture: the brush engine's deferred texture stage waits for "a texture, a
+# tip or a paper grain generated from a few uniforms", and this is the grain.
+# Three octaves of value noise over a lattice that wraps at the tile, so the
+# texture repeats seamlessly in document coordinates however many times the
+# dab tiles it. One is where a dab paints in full and nought is where the
+# paper's tooth takes it away.
+#
+# `tile` is written by the store from the texture's own width, so a grain
+# asked for at another size keeps its cells the same number of texels wide
+# and wraps at the new edge. `zoom` is written beside it, how many of those
+# texels one texel of the pattern's own tile spans, so a brush's texture scale
+# draws the cells that much wider and a chooser's cell, at one, does not.
+# `scale` is the width of one noise cell in the pattern's own texels and
+# `contrast` is how deep the tooth goes.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+uniform float tile: hint_range(1, 4096) = 256.0
+uniform float zoom: hint_range(0.01, 64) = 1.0
+uniform float scale: hint_range(2, 64) = 8.0
+uniform float contrast: hint_range(0, 1) = 0.4
+
+# One number per lattice corner, from the corner's position and nothing else.
+
+
+def sa_grain_hash(vec2 corner) -> float:
+    return fract(sin(dot(corner, vec2(127.1, 311.7))) * 43758.5453)
+
+# Smooth value noise over a lattice `cells` corners wide, the corners taken
+# modulo that width so the right edge meets the left and the bottom the top.
+
+
+def sa_grain_noise(vec2 at, float cells) -> float:
+    vec2 corner = floor(at)
+    vec2 inside = fract(at)
+    vec2 weight = inside * inside * (3.0 - 2.0 * inside)
+    vec2 c00 = mod(corner, cells)
+    vec2 c10 = mod(corner + vec2(1.0, 0.0), cells)
+    vec2 c01 = mod(corner + vec2(0.0, 1.0), cells)
+    vec2 c11 = mod(corner + vec2(1.0, 1.0), cells)
+    float top = mix(sa_grain_hash(c00), sa_grain_hash(c10), weight.x)
+    float bottom = mix(sa_grain_hash(c01), sa_grain_hash(c11), weight.x)
+    return mix(top, bottom, weight.y)
+
+
+# The cells are counted over the tile in the pattern's own texels, which is a
+# whole number, so it is rounded back after the divide rather than floored a
+# hair under the count it was made from.
+
+
+def pixel(ivec2 at) -> vec4:
+    float cells = max(floor(round(tile / zoom) / scale), 1.0)
+    vec2 p = vec2(at) * cells / tile
+    float grain = sa_grain_noise(p, cells) * 0.5
+    grain += sa_grain_noise(p * 2.0, cells * 2.0) * 0.3
+    grain += sa_grain_noise(p * 4.0, cells * 4.0) * 0.2
+    float value = 1.0 - contrast * (1.0 - grain)
+    return vec4(value, value, value, 1.0)

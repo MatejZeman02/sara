@@ -1,0 +1,37 @@
+[
+  {"wait": 35},
+  {"open": "preferences"},
+  {"wait": 20},
+  {"page": "Colour Spaces"},
+  {"wait": 15},
+  {"shot": "1-the-heading-and-the-chooser"},
+  {"state": "1-the-heading-and-the-chooser"},
+
+  {"dropdown": {"name": "GamutOption", "row": "Oklab over sRGB"}},
+  {"wait": 10},
+  {"shot": "2-the-row-that-used-to-read-oklab"},
+  {"state": "2-the-row-that-used-to-read-oklab"},
+
+  {"dropdown": {"name": "GamutOption", "row": "Oklab over Display P3"}},
+  {"wait": 10},
+  {"shot": "3-the-other-oklab-row-unchanged"},
+  {"state": "3-the-other-oklab-row-unchanged"},
+
+  {"dropdown": {"name": "CompareGamutOption", "row": "Compare: sRGB / Rec. 709"}},
+  {"wait": 10},
+  {"shot": "4-the-compare-chooser-still-lists-gamuts"},
+  {"state": "4-the-compare-chooser-still-lists-gamuts"},
+
+  {"dropdown": {"name": "GamutOption", "row": "sRGB"}},
+  {"wait": 10},
+  {"state": "5-back-as-it-was"},
+  {"key": "escape"},
+  {"wait": 15},
+
+  {"open": "new_document"},
+  {"wait": 25},
+  {"shot": "6-the-new-document-dialogs-own-rows"},
+  {"state": "6-the-new-document-dialogs-own-rows"},
+  {"key": "escape"},
+  {"wait": 15}
+]

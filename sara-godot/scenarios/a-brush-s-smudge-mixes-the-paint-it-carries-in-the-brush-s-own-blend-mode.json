@@ -1,0 +1,1113 @@
+[
+  {
+    "comment": "A brush's smudge mixes the paint it carries in the brush's own blend mode. A 1536 by 512 document holds two panels side by side, each a saturated blue chunk beside a saturated yellow one, the left at x 0 to 512 and the right at x 1024 to 1536, with the chunk between left as the grey ground. Oil Smudge at a radius of 40 pixels in the blue itself, its colour rate off so what it lays past the seam is its carry alone, its pickup at 0.15 so the blue lasts into the yellow and its flow at 1, drags the blue over the seam into the yellow three times in each panel, at y 140, 256 and 372: in Normal on the left and in the mixing mode on the right. Normal's smear goes grey in the yellow, Pigment's goes green."
+  },
+  {
+    "wait": 40
+  },
+  {
+    "prefs": {
+      "ui_scale": 1.0,
+      "autosave_interval_minutes": 0
+    }
+  },
+  {
+    "wait": 15
+  },
+  {
+    "layout_preset": {
+      "load": "minimalistic"
+    }
+  },
+  {
+    "wait": 25
+  },
+  {
+    "document": "srgb",
+    "size": [
+      1536,
+      512
+    ],
+    "background": {
+      "kind": "colour",
+      "color": "#8a8f86"
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "fit": true
+  },
+  {
+    "wait": 5
+  },
+  {
+    "layer": {
+      "fill": [
+        0.0,
+        0.05,
+        0.9,
+        1.0
+      ],
+      "chunks": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ]
+      ]
+    }
+  },
+  {
+    "wait": 4
+  },
+  {
+    "layer": {
+      "fill": [
+        1.0,
+        0.85,
+        0.0,
+        1.0
+      ],
+      "chunks": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          5,
+          0
+        ],
+        [
+          5,
+          1
+        ]
+      ]
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "brush": {
+      "preset": "Oil Smudge",
+      "colour": "#000ee6",
+      "radius_px": 40
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "brush": {
+      "smudge_color_rate_option:enabled": false,
+      "smudge_pickup_option:strength": 0.15,
+      "flow:value": 1.0
+    }
+  },
+  {
+    "tool": {
+      "id": "brush",
+      "options": {
+        "blend_mode": "normal"
+      }
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "stroke": {
+      "points": [
+        {
+          "at": [
+            140.0,
+            140.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            155.0,
+            140.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            170.0,
+            140.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            185.0,
+            140.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            200.0,
+            140.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            215.0,
+            140.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            230.0,
+            140.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            245.0,
+            140.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            260.0,
+            140.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            275.0,
+            140.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            290.0,
+            140.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            305.0,
+            140.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            320.0,
+            140.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            335.0,
+            140.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            350.0,
+            140.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            365.0,
+            140.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            380.0,
+            140.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            395.0,
+            140.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            410.0,
+            140.0
+          ],
+          "pressure": 1.0
+        }
+      ],
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "points": [
+        {
+          "at": [
+            140.0,
+            256.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            155.0,
+            256.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            170.0,
+            256.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            185.0,
+            256.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            200.0,
+            256.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            215.0,
+            256.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            230.0,
+            256.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            245.0,
+            256.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            260.0,
+            256.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            275.0,
+            256.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            290.0,
+            256.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            305.0,
+            256.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            320.0,
+            256.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            335.0,
+            256.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            350.0,
+            256.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            365.0,
+            256.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            380.0,
+            256.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            395.0,
+            256.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            410.0,
+            256.0
+          ],
+          "pressure": 1.0
+        }
+      ],
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "points": [
+        {
+          "at": [
+            140.0,
+            372.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            155.0,
+            372.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            170.0,
+            372.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            185.0,
+            372.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            200.0,
+            372.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            215.0,
+            372.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            230.0,
+            372.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            245.0,
+            372.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            260.0,
+            372.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            275.0,
+            372.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            290.0,
+            372.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            305.0,
+            372.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            320.0,
+            372.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            335.0,
+            372.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            350.0,
+            372.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            365.0,
+            372.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            380.0,
+            372.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            395.0,
+            372.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            410.0,
+            372.0
+          ],
+          "pressure": 1.0
+        }
+      ],
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "tool": {
+      "id": "brush",
+      "options": {
+        "blend_mode": "pigment_mix"
+      }
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "state": "1-the-brush-in-pigment"
+  },
+  {
+    "stroke": {
+      "points": [
+        {
+          "at": [
+            1164.0,
+            140.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1179.0,
+            140.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1194.0,
+            140.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1209.0,
+            140.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1224.0,
+            140.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1239.0,
+            140.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1254.0,
+            140.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1269.0,
+            140.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1284.0,
+            140.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1299.0,
+            140.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1314.0,
+            140.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1329.0,
+            140.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1344.0,
+            140.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1359.0,
+            140.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1374.0,
+            140.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1389.0,
+            140.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1404.0,
+            140.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1419.0,
+            140.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1434.0,
+            140.0
+          ],
+          "pressure": 1.0
+        }
+      ],
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "points": [
+        {
+          "at": [
+            1164.0,
+            256.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1179.0,
+            256.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1194.0,
+            256.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1209.0,
+            256.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1224.0,
+            256.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1239.0,
+            256.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1254.0,
+            256.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1269.0,
+            256.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1284.0,
+            256.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1299.0,
+            256.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1314.0,
+            256.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1329.0,
+            256.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1344.0,
+            256.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1359.0,
+            256.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1374.0,
+            256.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1389.0,
+            256.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1404.0,
+            256.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1419.0,
+            256.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1434.0,
+            256.0
+          ],
+          "pressure": 1.0
+        }
+      ],
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "stroke": {
+      "points": [
+        {
+          "at": [
+            1164.0,
+            372.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1179.0,
+            372.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1194.0,
+            372.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1209.0,
+            372.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1224.0,
+            372.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1239.0,
+            372.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1254.0,
+            372.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1269.0,
+            372.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1284.0,
+            372.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1299.0,
+            372.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1314.0,
+            372.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1329.0,
+            372.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1344.0,
+            372.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1359.0,
+            372.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1374.0,
+            372.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1389.0,
+            372.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1404.0,
+            372.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1419.0,
+            372.0
+          ],
+          "pressure": 1.0
+        },
+        {
+          "at": [
+            1434.0,
+            372.0
+          ],
+          "pressure": 1.0
+        }
+      ],
+      "space": "document",
+      "route": "tool",
+      "smoothing": false
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "look": {
+      "path": "2-normal-left-pigment-right-look.png",
+      "rect": [
+        0,
+        0,
+        1536,
+        512
+      ],
+      "scale": 1
+    }
+  },
+  {
+    "texel": [
+      [
+        262,
+        256
+      ],
+      [
+        274,
+        256
+      ],
+      [
+        286,
+        256
+      ],
+      [
+        298,
+        256
+      ],
+      [
+        310,
+        256
+      ],
+      [
+        322,
+        256
+      ],
+      [
+        334,
+        256
+      ],
+      [
+        346,
+        256
+      ],
+      [
+        358,
+        256
+      ],
+      [
+        370,
+        256
+      ]
+    ]
+  },
+  {
+    "texel": [
+      [
+        1286,
+        256
+      ],
+      [
+        1298,
+        256
+      ],
+      [
+        1310,
+        256
+      ],
+      [
+        1322,
+        256
+      ],
+      [
+        1334,
+        256
+      ],
+      [
+        1346,
+        256
+      ],
+      [
+        1358,
+        256
+      ],
+      [
+        1370,
+        256
+      ],
+      [
+        1382,
+        256
+      ],
+      [
+        1394,
+        256
+      ]
+    ]
+  },
+  {
+    "state": "3-after-both-smears"
+  },
+  {
+    "shot": "4-the-window-after-the-smears"
+  }
+]

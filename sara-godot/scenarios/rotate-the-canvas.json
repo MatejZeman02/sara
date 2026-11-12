@@ -1,0 +1,17 @@
+[
+  {"wait": 30},
+  {"state": "before-rotate"},
+  {"press": {"button": "middle", "at": [900, 500], "shift": true}},
+  {"move": [1000, 500]},
+  {"move": [1000, 560]},
+  {"move": [960, 600]},
+  {"wait": 3},
+  {"release": "middle"},
+  {"wait": 5},
+  {"state": "after-rotate"},
+  {"shot": "after-rotate"},
+  {"stroke": {"from": [600, 400], "to": [1200, 400], "pressure": 0.8, "steps": 24}},
+  {"wait": 5},
+  {"state": "after-stroke"},
+  {"shot": "after-stroke"}
+]

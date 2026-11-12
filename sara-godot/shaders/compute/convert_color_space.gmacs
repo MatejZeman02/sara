@@ -1,0 +1,124 @@
+# Kernel: convert_color_space
+#
+# Rewrites one colour field of one chunk from the document's current colour
+# space into a target one, in place. Decode out of the source transfer curve,
+# rotate the gamut with a Bradford-adapted matrix, encode into the target curve.
+#
+# Runs only over fields whose SaFieldSpec.is_color is true, which is decided on
+# the CPU side: a height, thickness or concentration field is not colour and is
+# never dispatched here.
+#
+# The matrix arrives as a push constant rather than as constants generated into
+# the source. A generated include cannot live on disk, because the compiler
+# scans and compiles every .gmacs under res:// at startup, before any document
+# exists to generate one from. Taking it as a parameter keeps this kernel
+# compiled and validated by every launch like all the others, and lets it reuse
+# the one mirrored sRGB curve pair rather than emitting a second copy of it.
+#
+# Nothing here clamps. The transfer pair is mirrored through the origin in the
+# library, so negatives and values above 1.0 pass through the whole conversion.
+
+kernel convert_color_space
+
+import linear_srgb_color_space
+import nearest_half
+import transfer_curve
+
+# Must match SaColorSpace.Coordinates. A side that is not RGB has no transfer
+# curve to decode and no gamut of its own: Oklab is absolute, reached from
+# linear sRGB by two fixed matrices with a cube root between them.
+const int SA_COORDS_RGB = 0
+const int SA_COORDS_OKLAB = 1
+
+image field
+
+params:
+    # Whatever gamut rotation is left once the coordinate systems are accounted
+    # for, white point adapted, column-major and three floats a column. It is
+    # float[9] rather than mat3 because std430 pads every mat3 column out to 16
+    # bytes, and SaColorSpace packs one convention for both kernels.
+    #
+    # For an RGB pair it is source linear RGB -> target linear RGB, exactly the
+    # identity when the two share a gamut, so a transfer-only conversion does not
+    # pick up matrix rounding. Where one side is Oklab it is the half of the trip
+    # that is still a rotation: linear sRGB -> target, or source -> linear sRGB.
+    # Oklab to Oklab is the identity, because both sides mean the same numbers.
+    float to_target[9]
+    # Both curves in full, because a conversion decodes out of one and encodes
+    # into the other and they are frequently different. See
+    # libs/transfer_curve.gmacs.
+    float source_slope
+    float source_threshold
+    float source_gain
+    float source_exponent
+    float target_slope
+    float target_threshold
+    float target_gain
+    float target_exponent
+    # Which coordinate system sits on each side. See SaColorSpace.Coordinates.
+    float source_coordinates
+    float target_coordinates
+    # Explicit, for the reason composite.gmacs spells out on its own pad: the
+    # declared size is what Godot demands, and the packer pads to a multiple of
+    # four floats.
+
+
+def to_target_matrix() -> mat3:
+    return mat3(
+        to_target[0], to_target[1], to_target[2],
+        to_target[3], to_target[4], to_target[5],
+        to_target[6], to_target[7], to_target[8]
+    )
+
+
+def source_is_oklab() -> bool: return int(source_coordinates + 0.5) == SA_COORDS_OKLAB
+
+
+def target_is_oklab() -> bool: return int(target_coordinates + 0.5) == SA_COORDS_OKLAB
+
+# Out of whatever the source stores and into the space the matrix starts in.
+
+
+def decode_source(vec3 c) -> vec3:
+    if source_is_oklab():
+        return oklab_to_linear_srgb(c)
+    return sa_transfer_decode(c, source_slope, source_threshold, source_gain, source_exponent)
+
+
+def encode_target(vec3 c) -> vec3:
+    if target_is_oklab():
+        return linear_srgb_to_oklab(c)
+    return sa_transfer_encode(c, target_slope, target_threshold, target_gain, target_exponent)
+
+
+def convert_color_space():
+    ivec2 pixel_coords = ivec2(global_id.xy)
+    ivec2 size = image_size(field)
+
+    if pixel_coords.x >= size.x or pixel_coords.y >= size.y:
+        return
+
+    vec4 texel = field[pixel_coords]
+
+    # Alpha is coverage, not colour. It is carried through untouched, so a
+    # conversion cannot alter which pixels are painted.
+    # Oklab on both sides means the stored numbers already agree, and the matrix
+    # is the identity, so the only thing a round trip through linear sRGB could
+    # add is float drift. Convert really is defined to leave those pixels alone.
+    vec3 converted = texel.rgb
+    if not (source_is_oklab() and target_is_oklab()):
+        converted = encode_target(to_target_matrix() * decode_source(texel.rgb))
+
+    vec4 result = vec4(converted, texel.a)
+    field[pixel_coords] = result
+
+    # A half field narrows the store, and an NVIDIA GPU narrows by truncating,
+    # which drew pure magenta imported into an F16 Oklab document as
+    # (255, 1, 255). So where the field did not keep the float, it is stored
+    # again rounded to the nearest half, which every narrowing keeps as it is.
+    # The kernel is built once per format and cannot name its own, so it reads
+    # back what the field kept: an invocation sees its own store, and a float32
+    # field keeps every channel but a NaN, which the rounding leaves alone.
+    bvec4 narrowed = not_equal(field[pixel_coords], result)
+    if any(narrowed):
+        field[pixel_coords] = mix(result, sa_nearest_halves(result), narrowed)

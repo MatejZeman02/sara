@@ -1,0 +1,22 @@
+[
+  {"wait": 30},
+  {"state": "a-fresh-document"},
+
+  {"import": "res://tests/data/import_gradient.png"},
+  {"wait": 12},
+  {"shot": "import-adds-a-layer"},
+  {"state": "import-adds-a-layer"},
+
+  {"prefs": {"ask_eight_bit_when_opening": true}},
+  {"menu_item": {"menu": "File", "id": 200}},
+  {"wait": 8},
+  {"file_picker": {"choose": "res://tests/data/import_gradient.png"}},
+  {"wait": 10},
+  {"shot": "an-image-is-asked-about-too"},
+  {"state": "an-image-is-asked-about-too"},
+
+  {"answer": 1},
+  {"wait": 15},
+  {"shot": "open-makes-a-document-of-it"},
+  {"state": "open-makes-a-document-of-it"}
+]

@@ -1,0 +1,17 @@
+[
+  {"comment": "Help opens the welcome window again. A capture run refuses the boot's own copy by the design, so the window this menu asks for is the whole of the proof: Welcome stands first in Help, the press emits the signal MainDialogs answers, and the dump's windows array carries 'Welcome to Sara' visible. The item step presses by id, which is what harness/drivers/menu/sa_menu_driver.gd reads, so 505 here is help_menu.gd's own constant."},
+  {"wait": 11},
+  {"menu": "Help"},
+  {"wait": 11},
+  {"shot": "0-welcome-stands-first-in-help"},
+  {"state": "0-welcome-stands-first-in-help"},
+  {"key": "escape"},
+  {"wait": 11},
+  {"menu_item": {"menu": "Help", "id": 505}},
+  {"wait": 15},
+  {"shot": "1-the-welcome-window-opens"},
+  {"state": "1-the-welcome-window-opens"},
+  {"click": {"control": "WelcomeClose"}},
+  {"wait": 15},
+  {"state": "2-after-the-close"}
+]

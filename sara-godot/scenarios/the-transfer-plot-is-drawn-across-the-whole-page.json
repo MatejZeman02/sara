@@ -1,0 +1,21 @@
+[
+  {"wait": 35},
+  {"open": "preferences"},
+  {"wait": 20},
+  {"page": "Colour Spaces"},
+  {"wait": 15},
+  {"click": {"control": "MaximizeButton"}},
+  {"wait": 25},
+  {"shot": "1-maximised-gamma-three-is-a-curve-again"},
+  {"state": "1-maximised-gamma-three-is-a-curve-again"},
+  {"dropdown": {"name": "GamutOption", "row": "sRGB"}},
+  {"wait": 15},
+  {"shot": "2-srgb-on-the-same-page-draws-another-curve"},
+  {"state": "2-srgb-on-the-same-page-draws-another-curve"},
+  {"click": {"control": "MaximizeButton"}},
+  {"wait": 20},
+  {"shot": "3-at-the-pages-own-size-the-square-still-fits"},
+  {"state": "3-at-the-pages-own-size-the-square-still-fits"},
+  {"key": "escape"},
+  {"wait": 15}
+]

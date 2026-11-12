@@ -1,0 +1,117 @@
+[
+ {
+  "wait": 35
+ },
+ {
+  "answer": 2
+ },
+ {
+  "wait": 5
+ },
+ {
+  "docker": "park"
+ },
+ {
+  "fill": [
+   0.4,
+   0.42,
+   0.45
+  ]
+ },
+ {
+  "wait": 8
+ },
+ {
+  "colour": "#d84a2a"
+ },
+ {
+  "brush": {
+   "radius": 0.05
+  }
+ },
+ {
+  "stroke": {
+   "from": [
+    400,
+    400
+   ],
+   "to": [
+    1500,
+    500
+   ],
+   "pressure": 0.9,
+   "steps": 24
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "answer": 2
+ },
+ {
+  "wait": 5
+ },
+ {
+  "open": "levels"
+ },
+ {
+  "wait": 25
+ },
+ {
+  "levels": {
+   "tooltips": true
+  }
+ },
+ {
+  "shot": "1-levels-open"
+ },
+ {
+  "state": "1-levels-open"
+ },
+ {
+  "move": [
+   687,
+   296
+  ]
+ },
+ {
+  "wait": 70
+ },
+ {
+  "shot": "2-hover-the-channel-label"
+ },
+ {
+  "state": "2-hover-the-channel-label"
+ },
+ {
+  "move": [
+   959,
+   492
+  ]
+ },
+ {
+  "wait": 70
+ },
+ {
+  "shot": "3-hover-the-gamma-field"
+ },
+ {
+  "state": "3-hover-the-gamma-field"
+ },
+ {
+  "move": [
+   1135,
+   695
+  ]
+ },
+ {
+  "wait": 70
+ },
+ {
+  "shot": "4-hover-cancel"
+ },
+ {
+  "state": "4-hover-cancel"
+ }
+]

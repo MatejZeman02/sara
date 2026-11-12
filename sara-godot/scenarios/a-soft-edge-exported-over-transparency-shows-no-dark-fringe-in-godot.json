@@ -1,0 +1,23 @@
+[
+  {"comment": "A soft white stroke on a transparent page, painted past the page's edge on every side, exported as an eight-bit PNG. scripts/check_godot_sprite.py runs this, puts the file into a throwaway Godot project as a sprite over a light and a dark ground, and reads the frames Godot renders for a dark fringe at the soft edge."},
+  {"wait": 45},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 20},
+  {"document": "oklab", "background": {"kind": "transparent"}, "size": [480, 288]},
+  {"wait": 25},
+  {"docker": "park"},
+  {"wait": 20},
+  {"colour": [1.0, 1.0, 1.0]},
+  {"wait": 5},
+  {"brush": {"radius_px": 28, "opacity": 1.0}},
+  {"wait": 5},
+  {"stroke": {"space": "document", "from": [-60, 144], "to": [540, 144], "pressure": 1.0, "steps": 30}},
+  {"wait": 10},
+  {"stroke": {"space": "document", "from": [240, 190], "to": [240, 340], "pressure": 1.0, "steps": 12}},
+  {"wait": 20},
+  {"shot": "01-the-soft-stroke-on-the-transparent-page"},
+  {"state": "01-the-soft-stroke-on-the-transparent-page"},
+  {"export": "user://soft-edge-over-transparency.png"},
+  {"wait": 15},
+  {"state": "02-the-eight-bit-png-written"}
+]

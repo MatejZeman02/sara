@@ -1,0 +1,188 @@
+[
+ {
+  "wait": 60
+ },
+ {
+  "prefs": {
+   "ui_scale": 1.0
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "layout_preset": {
+   "load": "minimalistic"
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "document": "srgb"
+ },
+ {
+  "tool": {
+   "id": "brush",
+   "options": {
+    "radius": 0.04,
+    "opacity": 1.0,
+    "flow": 1.0
+   }
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "colour": "#202020"
+ },
+ {
+  "brush_editor": {
+   "open": true,
+   "page": "General"
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "brush_editor": {
+   "scratch": {
+    "paint": {
+     "from": [
+      40,
+      128
+     ],
+     "to": [
+      216,
+      128
+     ],
+     "pressure": 0.9,
+     "steps": 24
+    }
+   }
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "brush_editor": {}
+ },
+ {
+  "state": "1-the-editor-at-its-own-width"
+ },
+ {
+  "shot": "1-the-editor-at-its-own-width"
+ },
+ {
+  "brush_editor": {
+   "scratch": {
+    "editor_size": [
+     1400,
+     700
+    ]
+   }
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "brush_editor": {}
+ },
+ {
+  "state": "2-the-editor-widened"
+ },
+ {
+  "shot": "2-the-editor-widened"
+ },
+ {
+  "brush_editor": {
+   "scratch": {
+    "editor_size": [
+     660,
+     460
+    ]
+   }
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "brush_editor": {}
+ },
+ {
+  "state": "3-the-editor-narrowed"
+ },
+ {
+  "shot": "3-the-editor-narrowed"
+ },
+ {
+  "brush_editor": {
+   "scratch": {
+    "editor_size": [
+     900,
+     560
+    ]
+   }
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "brush_editor": {
+   "scratch": {
+    "drag": 340
+   }
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "brush_editor": {}
+ },
+ {
+  "state": "4-a-hand-on-the-grabber"
+ },
+ {
+  "shot": "4-a-hand-on-the-grabber"
+ },
+ {
+  "brush_editor": {
+   "scratch": {
+    "editor_size": [
+     1400,
+     700
+    ]
+   }
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "brush_editor": {}
+ },
+ {
+  "state": "5-the-dragged-column-keeps-its-width"
+ },
+ {
+  "shot": "5-the-dragged-column-keeps-its-width"
+ },
+ {
+  "brush_editor": {
+   "close": true
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "6-the-editor-shut"
+ }
+]

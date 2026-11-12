@@ -1,0 +1,8 @@
+[
+  {"load": "sitting-1.sad"},
+  {"stroke": {"from": [10, 170], "to": [200, 170], "pressure": 1.0, "space": "document", "route": "tool"}},
+  {"brush": {"preset": "Bristle Flat", "radius_px": 15.0, "pen_settings": {"size": {"enabled": true, "sensors": ["pressure"]}, "opacity": {"enabled": false}}}},
+  {"stroke": {"from": [10, 190], "to": [200, 190], "pressure": 1.0, "space": "document", "route": "tool"}},
+  {"brush": {"preset": "Bristle Flat", "radius_px": 15.0, "pen_settings": {"opacity": {"enabled": false}, "size": {"sensors": ["pressure"], "enabled": true}}}},
+  {"stroke": {"from": [10, 210], "to": [200, 210], "pressure": 1.0, "space": "document", "route": "tool"}}
+]

@@ -1,0 +1,7 @@
+[
+  {"args": ["--hold-boot-at=ui_built"]},
+  {"wait": 60},
+  {"shot": "cover-at-the-modules-stage"},
+  {"wait": 240},
+  {"shot": "the-stage-still-named-after-four-seconds"}
+]

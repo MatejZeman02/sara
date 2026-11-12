@@ -1,0 +1,14 @@
+[
+  {"wait": 30},
+  {"layout_preset": {"load": "full"}},
+  {"wait": 20},
+  {"dropdown": "StabilizerModeOpt"},
+  {"wait": 10},
+  {"state": "00-list-open"},
+  {"dropdown": "StabilizerModeOpt"},
+  {"wait": 10},
+  {"state": "01-list-closed"},
+  {"dropdown": "StabilizerModeOpt"},
+  {"wait": 10},
+  {"state": "02-list-open-again"}
+]

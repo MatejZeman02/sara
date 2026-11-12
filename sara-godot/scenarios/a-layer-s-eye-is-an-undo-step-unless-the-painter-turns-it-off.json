@@ -1,0 +1,193 @@
+[
+  {
+    "comment": "A layer's eye is an undo step unless the painter turns it off. On a fresh settings folder one click on an eye is one Layer Visibility step that an undo takes back, a sweep across three eyes is one step that one undo takes back, and Preferences > Interface, shows the switch ticked."
+  },
+  {
+    "wait": 25
+  },
+  {
+    "layer": {
+      "fill": [
+        0.85,
+        0.2,
+        0.15,
+        1.0
+      ]
+    }
+  },
+  {
+    "layer": {
+      "add": "Middle",
+      "fill": [
+        0.15,
+        0.45,
+        0.9,
+        1.0
+      ],
+      "chunks": [
+        [
+          0,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    }
+  },
+  {
+    "layer": {
+      "add": "Top",
+      "fill": [
+        0.2,
+        0.8,
+        0.35,
+        1.0
+      ],
+      "chunks": [
+        [
+          1,
+          1
+        ],
+        [
+          3,
+          0
+        ]
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "LayersDocker",
+      "at": [
+        620,
+        180
+      ],
+      "size": [
+        420,
+        400
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "HistoryDocker",
+      "at": [
+        1080,
+        180
+      ],
+      "size": [
+        360,
+        400
+      ]
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "shot": "0-before"
+  },
+  {
+    "state": "0-before"
+  },
+  {
+    "click": {
+      "at": [
+        638,
+        344
+      ]
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "1-one-eye-clicked"
+  },
+  {
+    "state": "1-one-eye-clicked"
+  },
+  {
+    "undo": 1
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "2-the-click-undone"
+  },
+  {
+    "state": "2-the-click-undone"
+  },
+  {
+    "press": {
+      "button": "left",
+      "at": [
+        638,
+        313
+      ]
+    }
+  },
+  {
+    "move": [
+      638,
+      344
+    ]
+  },
+  {
+    "move": [
+      638,
+      375
+    ]
+  },
+  {
+    "release": {
+      "button": "left",
+      "at": [
+        638,
+        375
+      ]
+    }
+  },
+  {
+    "wait": 15
+  },
+  {
+    "shot": "3-a-sweep-across-three-eyes"
+  },
+  {
+    "state": "3-a-sweep-across-three-eyes"
+  },
+  {
+    "undo": 1
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "4-the-sweep-undone"
+  },
+  {
+    "state": "4-the-sweep-undone"
+  },
+  {
+    "open": "preferences"
+  },
+  {
+    "wait": 20
+  },
+  {
+    "page": "Interface"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "shot": "5-preferences-interface"
+  },
+  {
+    "state": "5-preferences-interface"
+  }
+]

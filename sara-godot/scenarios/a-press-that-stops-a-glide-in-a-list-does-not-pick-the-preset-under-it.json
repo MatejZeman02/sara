@@ -1,0 +1,155 @@
+[
+  {
+    "comment": "A mouse flick on the Brush Presets docker's grid sets the list gliding, a press two frames after the release stops it, and its still release picks nothing. Three seconds on the list stands where the press stopped it and the preset in hand is the one before the flick."
+  },
+  {
+    "wait": 40
+  },
+  {
+    "docker": "park"
+  },
+  {
+    "docker": {
+      "id": "BrushPresetsDocker",
+      "at": [
+        420,
+        200
+      ],
+      "size": [
+        310,
+        370
+      ]
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "presets_docker": {}
+  },
+  {
+    "state": "1-before-the-flick"
+  },
+  {
+    "shot": "1-before-the-flick"
+  },
+  {
+    "move": [
+      575,
+      470
+    ]
+  },
+  {
+    "press": {
+      "button": "left",
+      "at": [
+        575,
+        470
+      ]
+    }
+  },
+  {
+    "wait": 1
+  },
+  {
+    "move": {
+      "at": [
+        575,
+        432.5
+      ]
+    }
+  },
+  {
+    "wait": 1
+  },
+  {
+    "move": {
+      "at": [
+        575,
+        395.0
+      ]
+    }
+  },
+  {
+    "wait": 1
+  },
+  {
+    "move": {
+      "at": [
+        575,
+        357.5
+      ]
+    }
+  },
+  {
+    "wait": 1
+  },
+  {
+    "move": {
+      "at": [
+        575,
+        320.0
+      ]
+    }
+  },
+  {
+    "release": {
+      "button": "left",
+      "at": [
+        575,
+        320.0
+      ]
+    }
+  },
+  {
+    "shot": "2-the-release"
+  },
+  {
+    "comment": "two frames after the release, about 40 ms, a press on the middle of the grid"
+  },
+  {
+    "wait": 2
+  },
+  {
+    "move": [
+      575,
+      400
+    ]
+  },
+  {
+    "press": {
+      "button": "left",
+      "at": [
+        575,
+        400
+      ]
+    }
+  },
+  {
+    "presets_docker": {}
+  },
+  {
+    "shot": "3-the-press-stops-the-glide"
+  },
+  {
+    "release": {
+      "button": "left",
+      "at": [
+        575,
+        400
+      ]
+    }
+  },
+  {
+    "wait": 180
+  },
+  {
+    "presets_docker": {}
+  },
+  {
+    "state": "4-three-seconds-on"
+  },
+  {
+    "shot": "4-three-seconds-on"
+  }
+]

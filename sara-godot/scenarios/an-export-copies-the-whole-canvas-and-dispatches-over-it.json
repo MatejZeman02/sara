@@ -1,0 +1,41 @@
+[
+  {"wait": 45},
+  {"docker": "park"},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 10},
+
+  {"canvas": [1400, 900]},
+  {"wait": 15},
+  {"document": "oklab_p3"},
+  {"wait": 15},
+  {"fill": [1.0, 0.0, 0.0]},
+  {"wait": 10},
+  {"export": "user://d26-oklab-p3.png"},
+  {"wait": 20},
+
+  {"reference": {"open": "user://d26-oklab-p3.png"}},
+  {"wait": 30},
+  {"shot": "01-the-oklab-p3-export-of-a-canvas-over-a-chunk"},
+  {"state": "01-the-oklab-p3-export-of-a-canvas-over-a-chunk"},
+
+  {"reference": {"sample": [157, 40]}},
+  {"wait": 5},
+  {"state": "02-the-pngs-red-sampled"},
+  {"reference": {"clear": true}},
+  {"wait": 10},
+
+  {"document": "srgb"},
+  {"wait": 15},
+  {"fill": [0.5, 0.5, 0.5]},
+  {"wait": 10},
+  {"export": "user://d26-srgb-grey.png"},
+  {"wait": 20},
+
+  {"reference": {"open": "user://d26-srgb-grey.png"}},
+  {"wait": 30},
+  {"shot": "03-the-srgb-export-of-the-same-canvas"},
+  {"state": "03-the-srgb-export-of-the-same-canvas"},
+  {"reference": {"sample": [157, 40]}},
+  {"wait": 5},
+  {"state": "04-the-grey-sampled"}
+]

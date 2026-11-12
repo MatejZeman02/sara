@@ -1,0 +1,9 @@
+{
+    "gpu": "NVIDIA GeForce RTX 3090",
+    "display": {
+        "resolution": "1920x1200",
+        "aspect": "16:10"
+    },
+    "taken": "18e93b5f1",
+    "repeats": true
+}

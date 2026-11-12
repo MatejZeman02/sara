@@ -1,0 +1,148 @@
+# Image > Projection's Convert: one chunk of a layer redrawn from the
+# document's projection into another, so the picture stays where it was in the
+# view and the pixels that make it move. `SaProjectionConversion` runs it, and
+# nothing else does.
+#
+# **Where each texel reads is worked out on the CPU and handed over.** A kind
+# of projection is an open list a module registers in GDScript, so no kernel
+# can call its map. The conversion evaluates the map at a lattice of the
+# target chunk's texels, one point every `step` texels, and binds it as
+# `lookup`: each point the source texel the target texel there reads, its x
+# unwrapped so neighbours stay near each other, and a third channel of nought
+# where it reads nothing. A texel between lattice points reads the bilinear
+# blend of the four round it, and the lattice is as fine as the map needs for
+# that blend to stay within an eighth of a texel. What crosses to the GPU is
+# where to read, and no pixel leaves VRAM.
+#
+# **Three kernels over one layout**, the shape `live_transform.gmacs` has: the
+# region is cleared, every source chunk the target chunk's footprint covers
+# adds the taps of each bilinear read that lie inside it, and last a colour
+# field is divided through by its alpha. A read whose taps straddle two source
+# chunks is the sum of two dispatches, so no seam is drawn between them.
+#
+# **Edges are the kind's.** A tap past an edge that wraps reads the far side,
+# one past an edge the kind folds over reads the edge row from the far half,
+# and one past any other edge reads nothing, so the picture fades there over
+# half a texel. Nothing clamps a value, so colour outside 0 to 1 survives.
+#
+# **A field that is not colour** has a rest, what it reads where the layer holds
+# nothing: the clear writes the rest and each tap adds what it reads less the
+# rest, with no divide, so a tap in a chunk the layer does not hold adds
+# nothing and reads the rest there.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel reproject_clear
+kernel reproject_gather
+kernel reproject_settle
+
+image target
+image source: readonly
+image lookup: rgba32f, readonly
+
+params:
+    # The part of the target chunk to write, its origin in `xy` and its size
+    # in `zw`, in chunk-local texels.
+    vec4 region
+    # Where the source chunk starts among the layer's texels, in `xy`, the
+    # lattice's step in texels in `z`, and one in `w` where the source canvas's
+    # top edge meets its bottom.
+    vec4 source_at
+    # The source canvas in the layer's texels, in `xy`, one in `z` where its
+    # left edge meets its right, and one in `w` for a colour field.
+    vec4 canvas
+    # One in `x` where the kind folds its top edge over, and in `y` the texels
+    # across a tap lands from, then the same for the bottom edge in `zw`.
+    vec4 folds
+    # What a field that is not colour reads where the layer holds nothing.
+    vec4 rest
+
+
+def region_texel() -> ivec2:
+    ivec2 local = ivec2(global_id.xy)
+    if local.x >= int(region.z) or local.y >= int(region.w):
+        return ivec2(-1)
+    ivec2 pixel = local + ivec2(region.xy)
+    if pixel.x >= image_size(target).x or pixel.y >= image_size(target).y:
+        return ivec2(-1)
+    return pixel
+
+
+# Where the texel *pixel* reads, in the source's texels, blended out of the
+# lattice, with `z` nought where a lattice point it leans on reads nothing.
+def lattice_read(ivec2 pixel) -> vec3:
+    vec2 at = vec2(pixel) / source_at.z
+    ivec2 cell = ivec2(floor(at))
+    vec2 t = at - vec2(cell)
+    ivec2 last = image_size(lookup) - ivec2(1)
+    vec2 sum = vec2(0.0)
+    for dy in range(2):
+        for dx in range(2):
+            float weight = (dx == 0 ? 1.0 - t.x : t.x) * (dy == 0 ? 1.0 - t.y : t.y)
+            if weight <= 0.0:
+                continue
+            vec4 point = lookup[min(cell + ivec2(dx, dy), last)]
+            if point.z < 0.5:
+                return vec3(0.0)
+            sum += point.xy * weight
+    return vec3(sum, 1.0)
+
+
+# The source canvas's texel *tap* once an edge the kind joins has brought it
+# back, with `z` nought where it lies past an edge that joins nothing.
+def joined(ivec2 tap) -> ivec3:
+    ivec2 size = ivec2(canvas.xy)
+    ivec2 at = tap
+    if at.y < 0 and folds.x > 0.5:
+        at = ivec2(at.x + int(round(folds.y)), -1 - at.y)
+    if at.y >= size.y and folds.z > 0.5:
+        at = ivec2(at.x + int(round(folds.w)), 2 * size.y - 1 - at.y)
+    if canvas.z > 0.5:
+        at.x = int(mod(float(at.x), float(size.x)))
+    if source_at.w > 0.5:
+        at.y = int(mod(float(at.y), float(size.y)))
+    bool inside = at.x >= 0 and at.y >= 0 and at.x < size.x and at.y < size.y
+    return ivec3(at, inside ? 1 : 0)
+
+
+def reproject_clear():
+    ivec2 pixel = region_texel()
+    if pixel.x < 0:
+        return
+    target[pixel] = canvas.w > 0.5 ? vec4(0.0) : rest
+
+
+def reproject_gather():
+    ivec2 pixel = region_texel()
+    if pixel.x < 0:
+        return
+    vec3 read = lattice_read(pixel)
+    if read.z < 0.5:
+        return
+    vec2 base = floor(read.xy)
+    vec2 t = read.xy - base
+    ivec2 corner = ivec2(base)
+    ivec2 origin = ivec2(source_at.xy)
+    ivec2 size = image_size(source)
+    vec4 sum = vec4(0.0)
+    for dy in range(2):
+        for dx in range(2):
+            ivec3 tap = joined(corner + ivec2(dx, dy))
+            ivec2 texel = tap.xy - origin
+            if tap.z == 0 or texel.x < 0 or texel.y < 0 or texel.x >= size.x or texel.y >= size.y:
+                continue
+            float weight = (dx == 0 ? 1.0 - t.x : t.x) * (dy == 0 ? 1.0 - t.y : t.y)
+            vec4 value = source[texel]
+            if canvas.w > 0.5:
+                sum += vec4(value.rgb * value.a, value.a) * weight
+            else:
+                sum += (value - rest) * weight
+    target[pixel] = target[pixel] + sum
+
+
+def reproject_settle():
+    ivec2 pixel = region_texel()
+    if pixel.x < 0:
+        return
+    vec4 sum = target[pixel]
+    target[pixel] = sum.a > 0.0 ? vec4(sum.rgb / sum.a, sum.a) : vec4(0.0)

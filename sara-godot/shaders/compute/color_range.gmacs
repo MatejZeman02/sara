@@ -1,0 +1,118 @@
+# Colour range: every texel of the picture within a distance of one picked colour
+# is chosen, written as coverage into one r32f chunk.
+#
+# Not a flood. Each texel is measured on its own, so one dispatch per chunk covers
+# the canvas and nothing is read back.
+#
+# The distance is Euclidean in Oklab over L, a and b, whatever the document stores,
+# so one fuzziness means one visible spread in an sRGB, a linear and an Oklab
+# document alike. Coverage falls off linearly from one at the picked colour to zero
+# at the threshold, which makes fuzziness a feather rather than a cut. A threshold
+# at SA_UNBOUNDED or above is the top of the slider: the texel is covered at full
+# strength unmeasured, so even a colour that is not a number is chosen. The clamp
+# is on coverage, a mask's own zero to one, and never on a colour: a texel past one
+# or below zero is measured as stored.
+#
+# A texel that is not opaque is measured as seen over the backdrop, the neutral mid
+# grey the magic wand also measures over. The picked colour and the backdrop are in
+# the document's stored numbers, put there by the CPU through
+# SaColorSpace.from_display, and ride a buffer because the push constant is full.
+#
+# The push constant's tail is SaColorSpace.to_push_constant(), and the helpers
+# below are the composite kernel's, repeated for the reason adjust.gmacs gives: a
+# block cannot be shared between files without sharing the push constant that
+# names it.
+
+kernel color_range
+
+import linear_srgb_color_space
+import transfer_curve
+
+# The coverage chunk this dispatch writes, single channel whatever depth the
+# document paints at.
+image mask: r32f
+# The picture measured: the merged output at the chunk's offset, a layer's own
+# chunk at no offset, or a 1 by 1 transparent texel where the layer has none,
+# which the clamped read sees everywhere. The document's depth.
+image colour: readonly
+buffer range_colors: vec4 pick; vec4 backdrop
+
+# 128 bytes, the Vulkan guarantee. Eight floats of parameters, then the colour
+# space tail exactly as SaColorSpace writes it.
+params:
+    # Where the dispatch starts in the mask chunk, and where the region ends,
+    # exclusive, in the same chunk-local pixels.
+    float offset_x
+    float offset_y
+    float end_x
+    float end_y
+    # Where the chunk's texel (0, 0) sits in the colour image.
+    float colour_x
+    float colour_y
+    # Texels of the colour image per texel of the mask: one for the merged
+    # picture, a layer chunk's own resolution scale for one stored smaller.
+    float colour_scale
+    # The Oklab distance at which coverage reaches zero, which the CPU makes
+    # from the fuzziness through SaColorRange.threshold. A curve and not the
+    # fuzziness over a hundred, because on that line the default of forty
+    # reached a mid grey 0.14 from a mid blue and covered it by more than half.
+    # SaColorRange.UNBOUNDED at a fuzziness of a hundred, which covers all.
+    float threshold
+    float doc_to_linear_srgb[9]
+    float linear_srgb_to_doc[9]
+    float transfer_slope
+    float transfer_threshold
+    float transfer_gain
+    float transfer_exponent
+    float coordinates
+    float pad
+
+const int SA_COORDS_OKLAB = 1
+# SaColorRange.UNBOUNDED, the threshold of a fuzziness of a hundred.
+const float SA_UNBOUNDED = 1.0e30
+
+
+def to_linear_srgb_matrix() -> mat3:
+    return mat3(
+        doc_to_linear_srgb[0], doc_to_linear_srgb[1], doc_to_linear_srgb[2],
+        doc_to_linear_srgb[3], doc_to_linear_srgb[4], doc_to_linear_srgb[5],
+        doc_to_linear_srgb[6], doc_to_linear_srgb[7], doc_to_linear_srgb[8])
+
+
+def document_to_linear(vec3 c) -> vec3:
+    return sa_transfer_decode(c, transfer_slope, transfer_threshold, transfer_gain, transfer_exponent)
+
+
+def document_is_oklab() -> bool: return int(coordinates + 0.5) == SA_COORDS_OKLAB
+
+
+def document_to_oklab(vec3 c) -> vec3:
+    if document_is_oklab(): return c
+    return linear_srgb_to_oklab(to_linear_srgb_matrix() * document_to_linear(c))
+
+# *c* as seen, which is over the backdrop when it is not opaque. Straight alpha,
+# so a texel the brush barely touched holds the colour of the stroke's middle
+# and only its alpha says otherwise.
+
+
+def seen(vec4 c) -> vec3:
+    return mix(range_colors.backdrop.rgb, c.rgb, c.a)
+
+
+def color_range():
+    ivec2 px = ivec2(global_id.xy) + ivec2(int(offset_x), int(offset_y))
+    ivec2 size = image_size(mask)
+    if px.x >= size.x or px.y >= size.y:
+        return
+    if px.x >= int(end_x) or px.y >= int(end_y):
+        return
+    if threshold >= SA_UNBOUNDED:
+        mask[px] = vec4(1.0)
+        return
+    ivec2 at = ivec2(vec2(px) * colour_scale) + ivec2(int(colour_x), int(colour_y))
+    vec4 c = colour[min(at, image_size(colour) - 1)]
+    vec3 here = document_to_oklab(seen(c))
+    vec3 wanted = document_to_oklab(seen(range_colors.pick))
+    float d = length(here - wanted)
+    float covered = clamp(1.0 - d / max(threshold, 1e-6), 0.0, 1.0)
+    mask[px] = vec4(covered)

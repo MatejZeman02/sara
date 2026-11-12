@@ -1,0 +1,12 @@
+[
+  {"state": "resize-before"},
+  {"move": [700, 500]},
+  {"press": {"button": "left", "shift": true}},
+  {"move": [740, 500]},
+  {"move": [780, 500]},
+  {"move": [820, 500]},
+  {"wait": 3},
+  {"release": "left"},
+  {"wait": 5},
+  {"state": "resize-after"}
+]

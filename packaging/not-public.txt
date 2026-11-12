@@ -1,0 +1,105 @@
+# The folders no public build and no source copy carries, one path from the
+# repository root on each line. A line starting with # is a comment.
+#
+# `build.sh <platform> [debug|release] public` leaves each folder out of the
+# export, and a source copy always leaves it out, since a source copy only
+# ever goes to the public. A build without the word `public`, and
+# `install.sh`, keep them, so a tester's build still has them. A folder need
+# not exist for its line to stand, and no script reads a line as more than a
+# path. Deleting a line takes the folder back into both.
+#
+# A module that is not ours to publish yet.
+sara-godot/modules/sara-pigment-mixing
+#
+# The live Blender session, until it is stable.
+sara-godot/modules/sara-base-modules/blender-live
+#
+# The lessons, while they are still being recorded.
+sara-godot/modules/sara-tutorials
+#
+# A moving paper, there to try time in a layer rather than for painting yet.
+sara-godot/modules/sara-base-modules/drifting-sky
+#
+# Scenarios that open a file the repository does not hold (a large painting, a
+# Krita bundle, a calibration profile), so they cannot run in a clone.
+sara-godot/scenarios/a-crop-canvas-size-or-image-size-takes-a-text-layer-s-lettering-with-the-picture-and-keeps-it-there-after-an-open.json
+sara-godot/scenarios/a-document-s-need-counts-the-fold-s-cache-once-with-the-canvas-and-a-painted-texel-at-16-bytes.json
+sara-godot/scenarios/a-group-s-colour-effects-export-as-a-cube-lut-that-davinci-reads.json
+sara-godot/scenarios/a-layer-or-group-is-duplicated-into-another-open-document-from-the-layers-menu-and-the-door.json
+sara-godot/scenarios/a-layer-s-chunk-that-holds-no-paint-at-a-pixel-leaves-the-composite-there-as-it-was.json
+sara-godot/scenarios/an-export-of-an-untouched-file-gives-the-same-pixels-however-soon-after-the-load-it-runs-and-twice-in-a-row.json
+sara-godot/scenarios/a-save-with-an-export-target-never-holds-the-window-while-the-picture-is-written.json
+sara-godot/scenarios/every-open-of-a-painting-in-the-running-app-gives-back-its-objects-when-the-next-document-replaces-it.json
+sara-godot/scenarios/exporting-one-layer-and-saving-a-document-keep-the-frames-coming.json
+sara-godot/scenarios/opening-the-seasons-file-holds-no-frame-for-more-than-a-second.json
+sara-godot/scenarios/opening-the-seasons-file-holds-no-frame-over-a-tenth-of-a-second.json
+sara-godot/scenarios/opening-the-seasons-structure-file-holds-no-frame-for-more-than-a-second-again.json
+sara-godot/scenarios/perf-brushes-airbrush-l-seasons.json
+sara-godot/scenarios/perf-brushes-airbrush-s-seasons.json
+sara-godot/scenarios/perf-brushes-basic-l-seasons.json
+sara-godot/scenarios/perf-brushes-basic-s-seasons.json
+sara-godot/scenarios/perf-brushes-drawn-l-seasons.json
+sara-godot/scenarios/perf-brushes-drawn-s-seasons.json
+sara-godot/scenarios/perf-brushes-eraser-l-seasons.json
+sara-godot/scenarios/perf-brushes-eraser-s-seasons.json
+sara-godot/scenarios/perf-brushes-gradmap-l-seasons.json
+sara-godot/scenarios/perf-brushes-gradmap-s-seasons.json
+sara-godot/scenarios/perf-brushes-impasto-l-seasons.json
+sara-godot/scenarios/perf-brushes-impasto-s-seasons.json
+sara-godot/scenarios/perf-brushes-noise-l-seasons.json
+sara-godot/scenarios/perf-brushes-noise-s-seasons.json
+sara-godot/scenarios/perf-brushes-smudge-l-seasons.json
+sara-godot/scenarios/perf-brushes-smudge-s-seasons.json
+sara-godot/scenarios/sara-accepts-windows-own-calibration-profile-for-the-monitor.json
+sara-godot/scenarios/saving-runs-in-the-background-and-the-window-never-stalls-while-a-file-is-written.json
+sara-godot/scenarios/showing-a-group-of-the-seasons-file-holds-no-frame-for-more-than-a-tenth-of-a-second.json
+sara-godot/scenarios/the-door-s-quit-ends-the-process-with-the-seasons-file-open.json
+sara-godot/scenarios/the-first-layer-request-after-opening-the-seasons-file-holds-no-frame-over-a-tenth-of-a-second.json
+sara-godot/scenarios/the-import-carries-the-masking-brush.json
+sara-godot/scenarios/the-kaleidoscope-on-a-phone-photograph-keeps-up-on-a-phone-s-gpu.json
+sara-godot/scenarios/the-layers-docker-shows-the-seasons-file-s-756-rows-with-no-frame-over-a-tenth-of-a-second.json
+sara-godot/scenarios/the-manuals-pictures-show-todays-window.json
+sara-godot/scenarios/the-swatches-load-and-save-a-palette.json
+sara-godot/scenarios/the-transform-tool-moves-a-text-layer.json
+#
+# A scenario that reads a folder of pictures the repository does not hold.
+sara-godot/scenarios/a-door-request-on-the-seasons-file-holds-no-frame-over-a-tenth-of-a-second.py
+#
+# Suites that read pages of documentation the repository does not carry.
+sara-godot/ui/dialogs/tests/test_the_manual_gains_the_residency_s_journal.gd
+sara-godot/ui/dialogs/tests/test_the_manual_gains_the_residency_s_journal.gd.uid
+sara-godot/core/custom-shader/dialect/tests/test_gmacs_page.gd
+sara-godot/core/custom-shader/dialect/tests/test_gmacs_page.gd.uid
+#
+# The records of how the tree was once moved about, which name documentation pages the repository does not carry.
+sara-godot/moves.json
+sara-godot/moves
+#
+# Scenarios that need a particular pen tablet or a journal of painting sessions the repository does not hold.
+sara-godot/scenarios/a-virtual-intuos-holds-the-eraser-across-two-touches-and.json
+sara-godot/scenarios/the-manual-gains-the-residency-s-journal.json
+#
+# Scenarios that drive a module no public build carries (the Blender session,
+# the lessons), so they cannot run in a public copy.
+sara-godot/scenarios/a-blender-add-on-sends-the-camera-view-to-sara.json
+sara-godot/scenarios/a-crop-in-sara-moves-blender-s-camera-and-a-turn-of-the-view-does-not.json
+sara-godot/scenarios/a-finished-render-replaces-the-live-view-in-the-blender-layer-until-the-scene-changes.json
+sara-godot/scenarios/blender-leaves-a-gradient-across-an-edge-in-one-pass.json
+sara-godot/scenarios/blender-s-camera-view-is-a-live-layer-at-the-bottom-of-the-stack.json
+sara-godot/scenarios/each-of-blender-s-view-layers-arrives-as-a-layer-of-its-own.json
+sara-godot/scenarios/paint-over-the-blender-layer-follows-the-camera-when-it-moves.json
+sara-godot/scenarios/the-blender-layer-has-its-own-exposure-tone-mapper-and-look-blender-s-or-sara-s.json
+sara-godot/scenarios/a-lesson-replays-the-recorded-strokes-and-stops-for-the-learner-s-turn.json
+sara-godot/scenarios/a-lesson-s-replay-never-reaches-a-document-that-is-not-the-lesson-s.json
+sara-godot/scenarios/a-lesson-s-ring-follows-its-control-into-a-floating-docker-and-an-open-menu.json
+sara-godot/scenarios/a-lesson-that-ends-hands-the-painter-to-the-next-lesson-or-back-to-the-list-and-escape-closes-the-box-once-it-is-over.json
+sara-godot/scenarios/a-lesson-that-records-is-written-to-its-folder-when-sara-closes.json
+sara-godot/scenarios/a-replayed-airbrush-stroke-lays-the-paint-the-recording-did-so-a-lesson-s-picture-never-jumps.json
+sara-godot/scenarios/sara-opens-the-microphone-only-while-a-lesson-records.json
+sara-godot/scenarios/the-painting-and-voice-are-recorded-as-a-lesson.json
+sara-godot/scenarios/the-gate-plays-every-lesson-and-fails-on-one-the-layout-has-broken.json
+sara-godot/scenarios/the-modules-window-shows-each-module-s-page-its-readme-with-pictures-a-lesson.json
+sara-godot/scenarios/the-recorder-names-a-menu-row-s-press-so-a-lesson-replays-it.json
+#
+# A scenario that plays a virtual keyboard through a desktop's remote-desktop seat, a helper the repository does not carry.
+sara-godot/scenarios/sara-s-main-window-restores-to-a-window-that-can-be-moved-resized-and-taken-to-another-screen.py

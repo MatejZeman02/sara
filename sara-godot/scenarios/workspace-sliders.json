@@ -1,0 +1,224 @@
+[
+  {
+    "wait": 30
+  },
+  {
+    "open": "preferences"
+  },
+  {
+    "wait": 20
+  },
+  {
+    "page": "Workspace"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "workspace"
+  },
+  {
+    "state": "workspace"
+  },
+  {
+    "workspace": {
+      "mark": "ui_scale"
+    }
+  },
+  {
+    "workspace": {
+      "press": "ui_scale"
+    }
+  },
+  {
+    "workspace": {
+      "slider": "ui_scale",
+      "value": 1.1
+    }
+  },
+  {
+    "workspace": {
+      "measure": "ui_scale"
+    }
+  },
+  {
+    "workspace": {
+      "slider": "ui_scale",
+      "value": 1.25
+    }
+  },
+  {
+    "workspace": {
+      "measure": "ui_scale"
+    }
+  },
+  {
+    "workspace": {
+      "slider": "ui_scale",
+      "value": 1.4
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "workspace": {
+      "measure": "ui_scale"
+    }
+  },
+  {
+    "shot": "scale-dragging"
+  },
+  {
+    "state": "scale-dragging"
+  },
+  {
+    "workspace": {
+      "release": "ui_scale"
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "workspace": {
+      "measure": "ui_scale"
+    }
+  },
+  {
+    "shot": "scale-140"
+  },
+  {
+    "state": "scale-140"
+  },
+  {
+    "workspace": {
+      "slider": "ui_scale",
+      "value": 1.0
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "state": "scale-100"
+  },
+  {
+    "workspace": {
+      "mark": "ui_scale"
+    }
+  },
+  {
+    "workspace": {
+      "slider": "ui_scale",
+      "value": 1.1
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "workspace": {
+      "measure": "ui_scale"
+    }
+  },
+  {
+    "shot": "scale-110-no-drag"
+  },
+  {
+    "state": "scale-110-no-drag"
+  },
+  {
+    "workspace": {
+      "slider": "ui_scale",
+      "value": 1.0
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "workspace": {
+      "mark": "font_size"
+    }
+  },
+  {
+    "workspace": {
+      "press": "font_size"
+    }
+  },
+  {
+    "workspace": {
+      "slider": "font_size",
+      "value": 1.2
+    }
+  },
+  {
+    "workspace": {
+      "measure": "font_size"
+    }
+  },
+  {
+    "workspace": {
+      "slider": "font_size",
+      "value": 1.4
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "workspace": {
+      "measure": "font_size"
+    }
+  },
+  {
+    "shot": "font-dragging"
+  },
+  {
+    "workspace": {
+      "release": "font_size"
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "workspace": {
+      "measure": "font_size"
+    }
+  },
+  {
+    "shot": "font-140"
+  },
+  {
+    "state": "font-140"
+  },
+  {
+    "workspace": {
+      "slider": "font_size",
+      "value": 0.8
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "font-080"
+  },
+  {
+    "state": "font-080"
+  },
+  {
+    "workspace": {
+      "slider": "font_size",
+      "value": 1.0
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "state": "font-100"
+  }
+]

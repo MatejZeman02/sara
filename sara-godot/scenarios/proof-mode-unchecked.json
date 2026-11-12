@@ -1,0 +1,28 @@
+[
+ {"wait": 30},
+ {"prefs": {"minimap_proof_mode": "normal", "canvas_proof_mode": "normal"}},
+ {"wait": 15},
+ {"layout_preset": {"delete": "full (custom)"}},
+ {"layout_preset": {"load": "full"}},
+ {"wait": 25},
+ {"state": "01-a-profile-naming-a-mode-no-registry-holds"},
+ {"shot": "01-a-profile-naming-a-mode-no-registry-holds"},
+
+ {"prefs": {"minimap_proof_mode": "encoding_off"}},
+ {"wait": 12},
+ {"state": "02-a-mode-the-registry-does-hold"},
+ {"shot": "02-a-mode-the-registry-does-hold"},
+
+ {"prefs": {"minimap_proof_mode": "a_module_that_stopped_loading"}},
+ {"wait": 12},
+ {"state": "03-a-module-mode-that-is-gone"},
+ {"shot": "03-a-module-mode-that-is-gone"},
+
+ {"minimap": {"proof": "hdr_heatmap"}},
+ {"wait": 12},
+ {"state": "04-chosen-on-the-minimaps-own-control"},
+ {"shot": "04-chosen-on-the-minimaps-own-control"},
+
+ {"prefs": {"minimap_proof_mode": "lightness_check", "canvas_proof_mode": "soft_proof"}},
+ {"wait": 10}
+]

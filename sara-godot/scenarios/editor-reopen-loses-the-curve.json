@@ -1,0 +1,257 @@
+[
+  {
+    "wait": 50
+  },
+  {
+    "prefs": {
+      "ui_scale": 1.0
+    }
+  },
+  {
+    "wait": 15
+  },
+  {
+    "docker": {
+      "id": "ToolBoxDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "LayersDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "ColorDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "InfoDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "RecorderDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "MinimapDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "ToolOptionsDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "GraphDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "HistoryDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "ReferenceDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "BrushPresetsDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "document": "srgb"
+  },
+  {
+    "tool": "brush"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "brush_editor": {
+      "page": "Opacity"
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "curve_option": {
+      "select": "pressure",
+      "share": false,
+      "points": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.25,
+          0.9
+        ],
+        [
+          1.0,
+          1.0
+        ]
+      ]
+    }
+  },
+  {
+    "curve_option": {}
+  },
+  {
+    "state": "1-the-curve-the-painter-drew"
+  },
+  {
+    "shot": "1-the-curve-the-painter-drew"
+  },
+  {
+    "brush_editor": {
+      "close": true
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "brush_editor": {
+      "page": "Opacity"
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "curve_option": {
+      "select": "pressure"
+    }
+  },
+  {
+    "state": "2-reopened-with-a-page-step-alone"
+  },
+  {
+    "shot": "2-reopened-with-a-page-step-alone"
+  },
+  {
+    "brush_editor": {
+      "open": true,
+      "page": "Opacity"
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "curve_option": {
+      "select": "pressure"
+    }
+  },
+  {
+    "state": "3-reopened-with-open-true"
+  },
+  {
+    "shot": "3-reopened-with-open-true"
+  },
+  {
+    "brush_editor": {
+      "close": true
+    }
+  }
+]

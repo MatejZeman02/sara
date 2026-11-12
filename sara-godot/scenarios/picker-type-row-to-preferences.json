@@ -1,0 +1,99 @@
+[
+ {
+  "wait": 35
+ },
+ {
+  "docker": "park"
+ },
+ {
+  "wait": 12
+ },
+ {
+  "docker": {
+   "id": "ColorDocker",
+   "at": [
+    1450,
+    120
+   ],
+   "size": [
+    380,
+    620
+   ]
+  }
+ },
+ {
+  "wait": 22
+ },
+ {
+  "state": "1-no-type-row-on-the-docker"
+ },
+ {
+  "shot": "1-no-type-row-on-the-docker"
+ },
+ {
+  "open": "preferences"
+ },
+ {
+  "wait": 18
+ },
+ {
+  "page": "Colour Picker"
+ },
+ {
+  "wait": 12
+ },
+ {
+  "layout_rows": {}
+ },
+ {
+  "shot": "2-the-row-is-on-the-page"
+ },
+ {
+  "layout_gesture": {
+   "option": "shape",
+   "value": "triangle"
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "layout_rows": {}
+ },
+ {
+  "state": "3-a-triangle-from-the-page"
+ },
+ {
+  "shot": "3-a-triangle-from-the-page"
+ },
+ {
+  "layout_gesture": {
+   "option": "shape",
+   "value": "okhsl"
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "4-a-disc-from-the-page"
+ },
+ {
+  "shot": "4-a-disc-from-the-page"
+ },
+ {
+  "layout_gesture": {
+   "option": "shape",
+   "value": "wheel"
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "5-back-to-the-wheel"
+ },
+ {
+  "shot": "5-back-to-the-wheel"
+ }
+]

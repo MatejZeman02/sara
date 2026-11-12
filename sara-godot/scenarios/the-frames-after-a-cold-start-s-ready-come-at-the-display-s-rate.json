@@ -1,0 +1,13 @@
+[
+  {"comment": "The frames after a cold start's Ready come at the display's rate. A shot run clears the settings directory, so this is the cold start. The Brush Presets docker's grid is bound by the boot's scan in shares, so a change of the icon size lets every cell go and the report straight after it says `building` is every cell listed. A search typed the next frame answers from the cells built by then: `visible` is the matches at once and `building` the matches never built. Thirty frames on, with the search cleared, `building` is nought and every cell is in the grid in order, which the second shot shows."},
+  {"wait": 60},
+  {"preset": {}},
+  {"preset": {"icon_size": 80}},
+  {"preset": {"search": "pen"}},
+  {"shot": "1-a-search-while-the-cells-build"},
+  {"wait": 30},
+  {"preset": {"search": ""}},
+  {"wait": 60},
+  {"preset": {}},
+  {"shot": "2-every-cell-built"}
+]

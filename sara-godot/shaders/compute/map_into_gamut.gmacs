@@ -1,0 +1,140 @@
+# Kernel: map_into_gamut
+#
+# The oklab half of the gamut mapping preference, for an export to a file of
+# integer samples, because a hue held while chroma moves matters most for the
+# negative colours a clip turns. A texel whose colour the file's cube cannot
+# hold keeps its Oklab lightness and hue and gives up chroma until it fits,
+# where the narrowing after it would have cut each channel on its own and turned
+# the hue.
+#
+# Runs on the scratch cell an export already reads back, after the colour-space
+# conversion and the highlight rolloff and before the byte rounding, so it sees
+# the numbers the file is about to hold: the document's gamut through sRGB's
+# curve. A texel already inside the cube is not written at all, which is what
+# keeps every ordinary pixel of an export byte for byte what clip writes.
+#
+# `gamut_map` and the five functions it calls are the view's, in
+# shaders/canvas/tonemap.gdshader, and tonemap_rolloff.gmacs carries the same
+# six. No include reaches across a CanvasItem shader and this dialect, so
+# core/api/color/tests/test_the_gamut_mapping_preference.gd reads all three files and fails
+# the run when one body moves without the others.
+#
+# Never dispatched for EXR or the 32-bit TIFF, which keep every value as it
+# stands (SaGamutMapping.export_maps).
+
+kernel map_into_gamut
+
+# Brings in oklab_color_space itself, the way tonemap_rolloff.gmacs takes it.
+import linear_srgb_color_space
+
+# The view's two slacks on the gamut test, float's own and an F16 Oklab
+# texel's as a share of its largest channel. Why 0.002, and what it was
+# measured over, is said beside them in shaders/canvas/tonemap.gdshader.
+const float GAMUT_EPSILON = 1e-5
+const float GAMUT_ROUNDING = 2e-3
+
+image field
+
+
+def in_display_gamut(vec3 linear) -> bool:
+    float slack = max(GAMUT_EPSILON, GAMUT_ROUNDING * max(abs(linear.x), max(abs(linear.y), abs(linear.z))))
+    return all(greater_than_equal(linear, vec3(-slack))) and all(less_than_equal(linear, vec3(1.0 + slack)))
+
+# Scales Oklab's a and b together, which is a chroma change at constant hue:
+# the (a, b) angle is what hue is, and scaling both leaves the angle alone.
+
+
+def with_chroma_scale(vec3 lab, float factor) -> vec3:
+    return vec3(lab.x, lab.yz * factor)
+
+# The real cube root with the sign carried, since pow() of a negative base is
+# undefined.
+
+
+def signed_cbrt(float x) -> float:
+    return sign(x) * pow(abs(x), 1.0 / 3.0)
+
+# The largest real root of d3 u^3 + d2 u^2 + d1 u + d0, in closed form:
+# Cardano's formula when there is one real root and the trigonometric form
+# when there are three, whose first is the largest.
+
+
+def largest_cubic_root(float d3, float d2, float d1, float d0) -> float:
+    float a = d2 / d3
+    float b = d1 / d3
+    float c = d0 / d3
+    float p = b - a * a / 3.0
+    float q = 2.0 * a * a * a / 27.0 - a * b / 3.0 + c
+    float disc = 0.25 * q * q + p * p * p / 27.0
+    if disc > 0.0:
+        float root = sqrt(disc)
+        return signed_cbrt(-0.5 * q + root) + signed_cbrt(-0.5 * q - root) - a / 3.0
+    # Three real roots need p below zero, and p at zero here is a triple root.
+    if p >= 0.0:
+        return -a / 3.0
+    float r = sqrt(-p / 3.0)
+    float angle = acos(clamp(1.5 * q / (p * r), -1.0, 1.0))
+    return 2.0 * r * cos(angle / 3.0) - a / 3.0
+
+# Ottosson's analytic gamut intersection, solved exactly, as the view's
+# `channel_exit` in shaders/canvas/tonemap.gdshader explains: the first
+# saturation s = C / L at which the channel of row `w` leaves the cube, past
+# black on the straight lower edge or past one on the curved upper edge.
+
+
+def channel_exit(vec3 w, vec3 k, float to_white) -> float:
+    float d2 = 3.0 * dot(w, k)
+    float d1 = 3.0 * dot(w, k * k)
+    float d0 = dot(w, k * k * k)
+    float s = 1e30
+    float to_black = largest_cubic_root(1.0, d2, d1, d0)
+    if to_black > 0.0:
+        s = 1.0 / to_black
+    float to_one = largest_cubic_root(to_white, d2, d1, d0)
+    if to_one > 0.0:
+        s = min(s, 1.0 / to_one)
+    return s
+
+# Reduces chroma until the colour fits the cube, holding L and hue, to where
+# it first meets the cube's surface on its way out from the neutral axis.
+
+
+def gamut_map(vec3 lab) -> vec3:
+    vec3 linear = oklab_to_linear_srgb(lab)
+    if in_display_gamut(linear):
+        return linear
+    # A lightness at or below black has no chroma that fits, because even its
+    # neutral is negative, and the file would clip that neutral anyway.
+    if lab.x <= 0.0:
+        return vec3(0.0)
+    # A lightness at or above white holds no chroma either, and its neutral
+    # is the answer the narrowing clips.
+    float chroma = length(lab.yz)
+    if lab.x >= 1.0 or chroma <= 0.0:
+        return oklab_to_linear_srgb(with_chroma_scale(lab, 0.0))
+    vec2 hue = lab.yz / chroma
+    vec3 k = vec3(0.3963377774 * hue.x + 0.2158037573 * hue.y, -0.1055613458 * hue.x - 0.0638541728 * hue.y, -0.0894841775 * hue.x - 1.2914855480 * hue.y)
+    # Held below zero, so a lightness a float step under white is not divided
+    # by zero. The chroma it allows there is far below a display step.
+    float to_white = min(1.0 - 1.0 / (lab.x * lab.x * lab.x), -1e-6)
+    float s = chroma / lab.x
+    s = min(s, channel_exit(vec3(4.0767416621, -3.3077115913, 0.2309699292), k, to_white))
+    s = min(s, channel_exit(vec3(-1.2684380046, 2.6097574011, -0.3413193965), k, to_white))
+    s = min(s, channel_exit(vec3(-0.0041960863, -0.7034186147, 1.7076147010), k, to_white))
+    return oklab_to_linear_srgb(with_chroma_scale(lab, s * lab.x / chroma))
+
+
+def map_into_gamut():
+    ivec2 pixel_coords = ivec2(global_id.xy)
+    ivec2 size = image_size(field)
+
+    if pixel_coords.x >= size.x or pixel_coords.y >= size.y:
+        return
+
+    vec4 texel = field[pixel_coords]
+    vec3 linear = srgb_to_linear_srgb(texel.rgb)
+    # Inside the cube already, so the texel is left exactly as it was read.
+    if in_display_gamut(linear):
+        return
+    vec3 mapped = gamut_map(linear_srgb_to_oklab(linear))
+    field[pixel_coords] = vec4(linear_srgb_to_srgb(mapped), texel.a)

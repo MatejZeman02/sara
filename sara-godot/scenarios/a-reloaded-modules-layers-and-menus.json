@@ -1,0 +1,21 @@
+[
+  {"args": ["--modules-dir=res://tests/fixtures/r2-reload/modules"]},
+  {"wait": 45},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 20},
+
+  {"layer": {"add": "Tint", "type": "r2_tint", "opacity": 0.7}},
+  {"wait": 20},
+  {"shot": "1-the-tint-layer-before-the-reload"},
+  {"state": "1-the-tint-layer-before-the-reload"},
+
+  {"menu_item": {"menu": "Modules", "id": 802}},
+  {"wait": 40},
+  {"shot": "2-the-tint-layer-after-the-reload"},
+  {"state": "2-the-tint-layer-after-the-reload"},
+
+  {"menu": "Modules"},
+  {"wait": 15},
+  {"shot": "3-the-modules-menu-after-the-reload"},
+  {"state": "3-the-modules-menu-after-the-reload"}
+]

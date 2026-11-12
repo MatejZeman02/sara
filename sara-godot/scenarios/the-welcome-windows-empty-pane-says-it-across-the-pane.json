@@ -1,0 +1,10 @@
+[
+  {"comment": "The welcome window's empty Recent pane says so across the whole pane. A capture run starts on a scratch profile, so nothing is recent and the Recent pane is the empty one a first start meets. The line saying what fills it should run across the pane in one or two lines, centred in it, rather than wrapping a word or two to a row in the top left, and New and Open stay where they were under the tabs."},
+  {"wait": 40},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 20},
+  {"menu_item": {"menu": "Help", "id": 505}},
+  {"wait": 15},
+  {"shot": "01-the-empty-recent-pane"},
+  {"state": "01-the-empty-recent-pane"}
+]

@@ -1,0 +1,137 @@
+# The live transform's resampling kernel: one chunk of a transformed layer's
+# cache, written from the layer's own chunks read through the inverse of its
+# projective map. `SaLiveTransform` runs it, and nothing else does.
+#
+# **Three kernels over one layout.** A region of the cache chunk is cleared,
+# then every source chunk whose moved footprint reaches it adds its share of
+# each bilinear read, the taps that lie inside that source chunk, and last the
+# region is divided through by its alpha. A read straddling two source chunks is
+# the sum of two dispatches, so a seam between chunks is drawn as if the layer
+# were one texture.
+#
+# **Linear light, and every texel under a shrink.** The window and the weights
+# are `transform_read.gmacs`'s, so the live transform blends as the transform
+# tool's resample does. The mask and the height are numbers rather than light
+# and are handed the identity curve.
+#
+# **Premultiplied while it sums.** Each tap is weighted by its own alpha, the
+# layer's mask included, so a transparent texel lends no colour to its
+# neighbour, and the divide at the end gives the straight colour back. Nothing
+# clamps, which is hard rule 5.
+#
+# **The map's horizon.** A texel whose w is nought or negative is behind the
+# horizon of a perspective and reads nothing.
+#
+# **A field with a rest.** The bake runs the clear and the gather over a
+# layer's mask as well, a single channel whose alpha reads one. Where the
+# layer holds no chunk the mask reads its rest rather than nought, so the
+# clear writes the rest and every tap adds what it reads less the rest, and
+# the sum stands for the mask without a divide. The paint's rest is nought.
+#
+# **The height.** The same single channel at a rest of nought, no divide: each
+# tap adds its height times its weight. Never scaled by the map, so a relief
+# scaled up is as tall as before and a flip keeps its sign.
+#
+# **The crop.** A tap at a texel of the layer's own paint outside its crop
+# rectangle adds nothing. No crop is a rectangle far past any canvas.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel live_transform_clear
+kernel live_transform_gather
+kernel live_transform_settle
+
+image target
+image source: readonly
+# The layer's mask at the source chunk, or a 1 by 1 texture of one where it
+# hides nothing, read through the clamped fetch `mask.gmacs` uses.
+image mask: r32f, readonly
+
+params:
+    # The inverse map's three rows, each its two coefficients on the document
+    # position and its constant. The fourth float of `row_x` is the rest, what
+    # the field reads where the layer holds nothing, and the other two close
+    # their vec4.
+    vec4 row_x
+    vec4 row_y
+    vec4 row_w
+    # The part of the target chunk to write, its origin in `xy` and its size
+    # in `zw`, in chunk-local pixels.
+    vec4 region
+    # Where the target chunk starts in the document, in `xy`, and where the
+    # source chunk starts, in `zw`.
+    vec4 origins
+    # The crop in the layer's own document pixels, its first texel in `xy` and
+    # the texel past its last in `zw`.
+    vec4 crop
+    # The document's transfer curve, the four numbers `transfer_curve.gmacs`
+    # takes, and the identity for the mask and the height.
+    vec4 curve
+
+# The window, the weights and the curve, shared with the transform tool's
+# resample. Included after the images because it reads `source`.
+import transform_read
+
+
+def region_texel() -> ivec2:
+    ivec2 local = ivec2(global_id.xy)
+    if local.x >= int(region.z) or local.y >= int(region.w):
+        return ivec2(-1)
+    ivec2 pixel = local + ivec2(region.xy)
+    if pixel.x >= image_size(target).x or pixel.y >= image_size(target).y:
+        return ivec2(-1)
+    return pixel
+
+# Where the map takes the document position `world_pos` in the source chunk's
+# texels, centre to centre. A position at or past the horizon is sent far off,
+# which only widens the box of a texel beside the horizon.
+
+
+def sa_live_at(vec2 world_pos) -> vec2:
+    vec3 world = vec3(world_pos, 1.0)
+    float w = max(dot(row_w.xyz, world), 1.0e-6)
+    return vec2(dot(row_x.xyz, world), dot(row_y.xyz, world)) / w - vec2(0.5) - origins.zw
+
+
+def live_transform_clear():
+    ivec2 pixel = region_texel()
+    if pixel.x < 0:
+        return
+    target[pixel] = vec4(row_x.w)
+
+
+def live_transform_gather():
+    ivec2 pixel = region_texel()
+    if pixel.x < 0:
+        return
+    # The texel's centre, because a map applied at the corner shifts the whole
+    # picture half a texel at every scale but one.
+    vec3 world = vec3(vec2(pixel) + origins.xy + vec2(0.5), 1.0)
+    float w = dot(row_w.xyz, world)
+    if w <= 0.0:
+        return
+    vec2 at = sa_live_at(world.xy)
+    vec2 footprint = sa_footprint(sa_live_at(world.xy + vec2(1.0, 0.0)) - at, sa_live_at(world.xy + vec2(0.0, 1.0)) - at)
+    ivec4 window = sa_window(at, footprint)
+    ivec2 first = max(window.xy, ivec2(0))
+    ivec2 end = min(window.zw, image_size(source) - ivec2(1))
+    ivec2 last = image_size(mask) - ivec2(1)
+    vec4 sum = vec4(0.0)
+    for y in range_inclusive(first.y, end.y):
+        for x in range_inclusive(first.x, end.x):
+            ivec2 texel = ivec2(x, y)
+            vec2 held = vec2(texel) + origins.zw
+            if held.x < crop.x or held.y < crop.y or held.x >= crop.z or held.y >= crop.w:
+                continue
+            vec4 colour = source[texel]
+            vec3 light = sa_decode_light(colour.rgb, curve)
+            float alpha = colour.a * mask[min(texel, last)].r
+            sum += vec4((light - vec3(row_x.w)) * alpha, alpha) * sa_weight(texel, at, footprint)
+    target[pixel] = target[pixel] + sum
+
+
+def live_transform_settle():
+    ivec2 pixel = region_texel()
+    if pixel.x < 0:
+        return
+    target[pixel] = sa_from_linear(target[pixel], curve)

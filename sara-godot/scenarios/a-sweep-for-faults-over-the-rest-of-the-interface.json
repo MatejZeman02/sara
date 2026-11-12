@@ -1,0 +1,12 @@
+[
+  {"comment": "After a fresh start and two presses of Ctrl+], dump 3 reads canvases[0].rotation at 0.5236 and top_bar_rotation.slider_degrees at 30, the same angle in degrees, with no touch on the slider. Before the fix the slider stayed at 0."},
+  {"wait": 30},
+  {"state": "01-at-rest"},
+  {"key": {"key": "bracketright", "ctrl": true}},
+  {"wait": 8},
+  {"state": "02-turned-by-the-chord"},
+  {"key": {"key": "bracketright", "ctrl": true}},
+  {"wait": 8},
+  {"state": "03-turned-twice"},
+  {"shot": "03-turned-twice"}
+]

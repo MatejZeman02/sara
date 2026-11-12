@@ -1,0 +1,45 @@
+# The `read_pixels` step's small form: a layer's texels over a
+# rectangle, made smaller and narrowed to eight bits on the graphics card, so a
+# notebook's picture crosses the bus as a few hundred kilobytes rather than as
+# the whole layer in float32.
+#
+# One dispatch over the preview, never over the canvas: each preview texel
+# averages the box of source texels it covers. Each value is clipped to the
+# unit interval before the average, and a NaN reads as zero, which is what
+# `sara.tone_map` does to a full read, so the preview's mean is the full
+# picture's to within one step of eight bits. The clip is on a picture for a
+# screen and never on the layer, which this kernel only reads.
+
+kernel read_preview
+
+# The layer's texels over the rectangle read, copied into one texture at the
+# document's depth.
+image src: readonly
+
+# One uint per preview texel, row by row, red in the low byte, so the bytes on a
+# little-endian machine are RGBA in order.
+buffer preview: uint texels[]
+
+params:
+    # The preview's size in texels.
+    float out_w
+    float out_h
+    # Source texels per preview texel along each axis.
+    float step_x
+    float step_y
+
+
+def read_preview():
+    if pixel.x >= int(out_w) or pixel.y >= int(out_h):
+        return
+    ivec2 size = image_size(src)
+    vec2 steps = vec2(step_x, step_y)
+    ivec2 start = min(ivec2(vec2(pixel) * steps), size - 1)
+    ivec2 end = min(max(ivec2(vec2(pixel + 1) * steps), start + 1), size)
+    vec4 sum = vec4(0.0)
+    for y in range(start.y, end.y):
+        for x in range(start.x, end.x):
+            vec4 c = src[ivec2(x, y)]
+            sum += clamp(mix(c, vec4(0.0), isnan(c)), 0.0, 1.0)
+    ivec2 box = end - start
+    preview.texels[pixel.y * int(out_w) + pixel.x] = pack_unorm4x8(sum / (box.x * box.y))

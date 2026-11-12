@@ -1,0 +1,563 @@
+[
+ {
+  "comment": "One stroke each of the stock presets whose one word was the closest call, on a light paper in a dark colour, in rows of four left to right: Charcoal, Broken Chalk, Canvas Scumble, Dry Brush; Pointed Mark, Streaks, Ridge, Storm Cloud; Smoky Blot, Cloud Puff, Masked Stipple, Halftone; Dust, Scumble, Living Colour, Grain Round; Torn Gouache, Paint, Lift, which erases the paper down to the empty layer under it. Then a fresh profile's Brush Presets panel lists the seven stock tags, blend, eraser, lines, paint, scatter, soft and texture, then the bundles and the engines, and no other stock word."
+ },
+ {
+  "wait": 40
+ },
+ {
+  "prefs": {
+   "ui_scale": 1.0
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "docker": "park"
+ },
+ {
+  "tool": "brush"
+ },
+ {
+  "fill": [
+   0.92,
+   0.9,
+   0.85
+  ]
+ },
+ {
+  "wait": 10
+ },
+ {
+  "colour": "#2a3550"
+ },
+ {
+  "preset": {
+   "load": "Charcoal"
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "stroke": {
+   "from": [
+    480,
+    270
+   ],
+   "to": [
+    680,
+    310
+   ],
+   "pressure": 0.7,
+   "steps": 30
+  }
+ },
+ {
+  "wait": 4
+ },
+ {
+  "preset": {
+   "load": "Broken Chalk"
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "stroke": {
+   "from": [
+    745,
+    270
+   ],
+   "to": [
+    945,
+    310
+   ],
+   "pressure": 0.7,
+   "steps": 30
+  }
+ },
+ {
+  "wait": 4
+ },
+ {
+  "preset": {
+   "load": "Canvas Scumble"
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "stroke": {
+   "from": [
+    1010,
+    270
+   ],
+   "to": [
+    1210,
+    310
+   ],
+   "pressure": 0.7,
+   "steps": 30
+  }
+ },
+ {
+  "wait": 4
+ },
+ {
+  "preset": {
+   "load": "Dry Brush"
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "stroke": {
+   "from": [
+    1275,
+    270
+   ],
+   "to": [
+    1475,
+    310
+   ],
+   "pressure": 0.7,
+   "steps": 30
+  }
+ },
+ {
+  "wait": 4
+ },
+ {
+  "preset": {
+   "load": "Pointed Mark"
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "stroke": {
+   "from": [
+    480,
+    385
+   ],
+   "to": [
+    680,
+    425
+   ],
+   "pressure": 0.7,
+   "steps": 30
+  }
+ },
+ {
+  "wait": 4
+ },
+ {
+  "preset": {
+   "load": "Streaks"
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "stroke": {
+   "from": [
+    745,
+    385
+   ],
+   "to": [
+    945,
+    425
+   ],
+   "pressure": 0.7,
+   "steps": 30
+  }
+ },
+ {
+  "wait": 4
+ },
+ {
+  "preset": {
+   "load": "Ridge"
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "stroke": {
+   "from": [
+    1010,
+    385
+   ],
+   "to": [
+    1210,
+    425
+   ],
+   "pressure": 0.7,
+   "steps": 30
+  }
+ },
+ {
+  "wait": 4
+ },
+ {
+  "preset": {
+   "load": "Storm Cloud"
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "stroke": {
+   "from": [
+    1275,
+    385
+   ],
+   "to": [
+    1475,
+    425
+   ],
+   "pressure": 0.7,
+   "steps": 30
+  }
+ },
+ {
+  "wait": 4
+ },
+ {
+  "preset": {
+   "load": "Smoky Blot"
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "stroke": {
+   "from": [
+    480,
+    500
+   ],
+   "to": [
+    680,
+    540
+   ],
+   "pressure": 0.7,
+   "steps": 30
+  }
+ },
+ {
+  "wait": 4
+ },
+ {
+  "preset": {
+   "load": "Cloud Puff"
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "stroke": {
+   "from": [
+    745,
+    500
+   ],
+   "to": [
+    945,
+    540
+   ],
+   "pressure": 0.7,
+   "steps": 30
+  }
+ },
+ {
+  "wait": 4
+ },
+ {
+  "preset": {
+   "load": "Masked Stipple"
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "stroke": {
+   "from": [
+    1010,
+    500
+   ],
+   "to": [
+    1210,
+    540
+   ],
+   "pressure": 0.7,
+   "steps": 30
+  }
+ },
+ {
+  "wait": 4
+ },
+ {
+  "preset": {
+   "load": "Halftone"
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "stroke": {
+   "from": [
+    1275,
+    500
+   ],
+   "to": [
+    1475,
+    540
+   ],
+   "pressure": 0.7,
+   "steps": 30
+  }
+ },
+ {
+  "wait": 4
+ },
+ {
+  "preset": {
+   "load": "Dust"
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "stroke": {
+   "from": [
+    480,
+    615
+   ],
+   "to": [
+    680,
+    655
+   ],
+   "pressure": 0.7,
+   "steps": 30
+  }
+ },
+ {
+  "wait": 4
+ },
+ {
+  "preset": {
+   "load": "Scumble"
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "stroke": {
+   "from": [
+    745,
+    615
+   ],
+   "to": [
+    945,
+    655
+   ],
+   "pressure": 0.7,
+   "steps": 30
+  }
+ },
+ {
+  "wait": 4
+ },
+ {
+  "preset": {
+   "load": "Living Colour"
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "stroke": {
+   "from": [
+    1010,
+    615
+   ],
+   "to": [
+    1210,
+    655
+   ],
+   "pressure": 0.7,
+   "steps": 30
+  }
+ },
+ {
+  "wait": 4
+ },
+ {
+  "preset": {
+   "load": "Grain Round"
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "stroke": {
+   "from": [
+    1275,
+    615
+   ],
+   "to": [
+    1475,
+    655
+   ],
+   "pressure": 0.7,
+   "steps": 30
+  }
+ },
+ {
+  "wait": 4
+ },
+ {
+  "preset": {
+   "load": "Torn Gouache"
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "stroke": {
+   "from": [
+    480,
+    730
+   ],
+   "to": [
+    680,
+    770
+   ],
+   "pressure": 0.7,
+   "steps": 30
+  }
+ },
+ {
+  "wait": 4
+ },
+ {
+  "preset": {
+   "load": "Paint"
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "stroke": {
+   "from": [
+    745,
+    730
+   ],
+   "to": [
+    945,
+    770
+   ],
+   "pressure": 0.7,
+   "steps": 30
+  }
+ },
+ {
+  "wait": 4
+ },
+ {
+  "preset": {
+   "load": "Lift"
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "stroke": {
+   "from": [
+    1040,
+    740
+   ],
+   "to": [
+    1080,
+    790
+   ],
+   "pressure": 0.8,
+   "steps": 30
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "shot": "1-the-closest-calls-painted"
+ },
+ {
+  "docker": {
+   "id": "BrushPresetsDocker",
+   "at": [
+    860,
+    40
+   ],
+   "size": [
+    420,
+    940
+   ]
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "preset": {
+   "finish": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "presets_docker": {}
+ },
+ {
+  "state": "2-a-fresh-profile"
+ },
+ {
+  "choice": {
+   "open": "ChooserTag"
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "2-the-tag-list-holds-the-seven"
+ },
+ {
+  "state": "2-the-tag-list-holds-the-seven"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 10
+ }
+]

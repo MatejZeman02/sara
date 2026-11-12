@@ -1,0 +1,15 @@
+[
+  {"wait": 45},
+  {"docker": {"id": "ToolOptionsDocker", "at": [300, 600]}},
+  {"prefs": {"selection_feather": 0.02}},
+  {"tool": "marquee"},
+  {"wait": 10},
+  {"shot": "feather-row-marquee"},
+  {"state": "feather-row-marquee"},
+  {"tool": "lasso"},
+  {"wait": 8},
+  {"state": "feather-row-lasso"},
+  {"tool": "wand"},
+  {"wait": 8},
+  {"state": "feather-row-wand"}
+]

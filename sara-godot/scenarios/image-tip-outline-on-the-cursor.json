@@ -1,0 +1,215 @@
+[
+  {
+    "wait": 35
+  },
+  {
+    "answer": 2
+  },
+  {
+    "wait": 6
+  },
+  {
+    "docker": {
+      "id": "ToolOptionsDocker",
+      "at": [
+        70,
+        330
+      ],
+      "size": [
+        300,
+        430
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "ColorDocker",
+      "at": [
+        1584,
+        105
+      ],
+      "size": [
+        321,
+        480
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "LayersDocker",
+      "at": [
+        1600,
+        570
+      ],
+      "size": [
+        310,
+        400
+      ]
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "fill": [
+      0.1,
+      0.1,
+      0.12
+    ]
+  },
+  {
+    "prefs": {
+      "software_cursor": "always",
+      "cursor_prediction_ms": 0.0
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "tool": {
+      "id": "brush",
+      "options": {
+        "radius": 0.08,
+        "tip_generator": 0,
+        "tip_ratio": 1.0
+      }
+    }
+  },
+  {
+    "wait": 15
+  },
+  {
+    "ring_cost": {
+      "at": [
+        900,
+        520
+      ],
+      "draws": 4
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "shot": "1-circle-tip"
+  },
+  {
+    "state": "1-circle-tip"
+  },
+  {
+    "ring_cost": ""
+  },
+  {
+    "tool": {
+      "id": "brush",
+      "options": {
+        "radius": 0.08,
+        "tip_generator": 3,
+        "tip_ratio": 1.0,
+        "tip_image_path": "res://tips/tree.png"
+      }
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "ring_cost": {
+      "at": [
+        900,
+        520
+      ],
+      "draws": 4
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "shot": "2-image-tip-upright"
+  },
+  {
+    "state": "2-image-tip-upright"
+  },
+  {
+    "ring_cost": ""
+  },
+  {
+    "tool": {
+      "id": "brush",
+      "options": {
+        "radius": 0.08,
+        "tip_generator": 3,
+        "tip_ratio": 1.0,
+        "tip_image_path": "res://tips/tree.png"
+      }
+    }
+  },
+  {
+    "brush": {
+      "tip:angle": 1.5708
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "wait": 20
+  },
+  {
+    "ring_cost": {
+      "at": [
+        900,
+        520
+      ],
+      "draws": 4
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "shot": "3-image-tip-turned"
+  },
+  {
+    "state": "3-image-tip-turned"
+  },
+  {
+    "ring_cost": ""
+  },
+  {
+    "tool": {
+      "id": "brush",
+      "options": {
+        "radius": 0.08,
+        "tip_generator": 0,
+        "tip_ratio": 1.0
+      }
+    }
+  },
+  {
+    "wait": 15
+  },
+  {
+    "ring_cost": {
+      "at": [
+        900,
+        520
+      ],
+      "draws": 4
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "shot": "4-back-to-the-circle"
+  },
+  {
+    "state": "4-back-to-the-circle"
+  },
+  {
+    "ring_cost": ""
+  }
+]

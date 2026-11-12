@@ -1,0 +1,22 @@
+# The exercise's kernel with the divisor the exercise warns about:
+# `radius * radius` where the box is `2 * radius + 1` across. Here so that the
+# checking scenario can be shown to fail on a wrong answer as well as to pass.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel blur
+
+image src: readonly
+image dst
+
+params:
+    int radius
+
+
+def blur():
+    vec4 sum = vec4(0.0)
+    for dy in range(-radius, radius + 1):
+        for dx in range(-radius, radius + 1):
+            sum += image_load(src, pixel + ivec2(dx, dy))
+    int n = radius
+    image_store(dst, pixel, sum / float(n * n))

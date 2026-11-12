@@ -1,0 +1,135 @@
+[
+ {
+  "wait": 40
+ },
+ {
+  "docker": "park"
+ },
+ {
+  "wait": 12
+ },
+ {
+  "prefs": {
+   "advanced_options": true
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "tool": {
+   "id": "brush",
+   "options": {
+    "tip_generator": 0,
+    "tip_image_path": ""
+   }
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "brush_editor": {
+   "open": true,
+   "page": "Brush Tip"
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "state": "1-brush-tip-procedural"
+ },
+ {
+  "shot": "1-brush-tip-procedural"
+ },
+ {
+  "tool": {
+   "id": "brush",
+   "options": {
+    "tip_generator": 3,
+    "tip_image_path": "res://tips/tree.png"
+   }
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "brush_editor": {
+   "page": "Brush Tip"
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "2-brush-tip-image"
+ },
+ {
+  "shot": "2-brush-tip-image"
+ },
+ {
+  "brush_editor": {
+   "page": "General"
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "3-general-airbrush-off"
+ },
+ {
+  "shot": "3-general-airbrush-off"
+ },
+ {
+  "tool": {
+   "id": "brush",
+   "options": {
+    "airbrush_enabled": true
+   }
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "brush_editor": {
+   "page": "General"
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "4-general-airbrush-on"
+ },
+ {
+  "shot": "4-general-airbrush-on"
+ },
+ {
+  "tool": {
+   "id": "brush",
+   "options": {
+    "airbrush_enabled": false,
+    "tip_generator": 0,
+    "tip_image_path": ""
+   }
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "brush_editor": {
+   "close": true
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "5-closed"
+ }
+]

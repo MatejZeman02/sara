@@ -1,0 +1,1384 @@
+[
+ {
+  "wait": 30
+ },
+ {
+  "menu": "File"
+ },
+ {
+  "wait": 4
+ },
+ {
+  "state": "menu-file"
+ },
+ {
+  "shot": "menu-file"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 3
+ },
+ {
+  "menu": "Edit"
+ },
+ {
+  "wait": 4
+ },
+ {
+  "state": "menu-edit"
+ },
+ {
+  "shot": "menu-edit"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 3
+ },
+ {
+  "menu": "View"
+ },
+ {
+  "wait": 4
+ },
+ {
+  "state": "menu-view"
+ },
+ {
+  "shot": "menu-view"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 3
+ },
+ {
+  "menu": "Window"
+ },
+ {
+  "wait": 4
+ },
+ {
+  "state": "menu-window"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 3
+ },
+ {
+  "menu": "Window"
+ },
+ {
+  "wait": 4
+ },
+ {
+  "state": "menu-dockers"
+ },
+ {
+  "shot": "menu-dockers"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 3
+ },
+ {
+  "menu": "Image"
+ },
+ {
+  "wait": 4
+ },
+ {
+  "state": "menu-image"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 3
+ },
+ {
+  "menu": "Layer"
+ },
+ {
+  "wait": 4
+ },
+ {
+  "state": "menu-layer"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 3
+ },
+ {
+  "menu": "Select"
+ },
+ {
+  "wait": 4
+ },
+ {
+  "state": "menu-select"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 3
+ },
+ {
+  "menu": "Filter"
+ },
+ {
+  "wait": 4
+ },
+ {
+  "state": "menu-filter"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 3
+ },
+ {
+  "menu": "Modules"
+ },
+ {
+  "wait": 4
+ },
+ {
+  "state": "menu-modules"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 3
+ },
+ {
+  "menu": "Help"
+ },
+ {
+  "wait": 4
+ },
+ {
+  "state": "menu-help"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 3
+ },
+ {
+  "state": "before-layer-new"
+ },
+ {
+  "menu_item": {
+   "menu": "Layer",
+   "id": 400
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "row-layer-new"
+ },
+ {
+  "key": {
+   "key": "n",
+   "ctrl": true,
+   "shift": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "chord-layer-new"
+ },
+ {
+  "state": "before-layer-duplicate"
+ },
+ {
+  "menu_item": {
+   "menu": "Layer",
+   "id": 401
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "row-layer-duplicate"
+ },
+ {
+  "key": {
+   "key": "j",
+   "ctrl": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "chord-layer-duplicate"
+ },
+ {
+  "state": "before-layer-group"
+ },
+ {
+  "menu_item": {
+   "menu": "Layer",
+   "id": 407
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "row-layer-group"
+ },
+ {
+  "key": {
+   "key": "g",
+   "ctrl": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "chord-layer-group"
+ },
+ {
+  "state": "before-layer-move-down"
+ },
+ {
+  "menu_item": {
+   "menu": "Layer",
+   "id": 404
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "row-layer-move-down"
+ },
+ {
+  "key": {
+   "key": "pagedown",
+   "ctrl": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "chord-layer-move-down"
+ },
+ {
+  "state": "before-layer-move-up"
+ },
+ {
+  "menu_item": {
+   "menu": "Layer",
+   "id": 403
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "row-layer-move-up"
+ },
+ {
+  "key": {
+   "key": "pageup",
+   "ctrl": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "chord-layer-move-up"
+ },
+ {
+  "state": "before-layer-clip"
+ },
+ {
+  "menu_item": {
+   "menu": "Layer",
+   "id": 408
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "row-layer-clip"
+ },
+ {
+  "key": {
+   "key": "g",
+   "ctrl": true,
+   "shift": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "chord-layer-clip"
+ },
+ {
+  "state": "before-layer-lock"
+ },
+ {
+  "menu_item": {
+   "menu": "Layer",
+   "id": 410
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "row-layer-lock"
+ },
+ {
+  "key": {
+   "key": "l",
+   "ctrl": true,
+   "shift": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "chord-layer-lock"
+ },
+ {
+  "state": "before-layer-alpha-lock"
+ },
+ {
+  "menu_item": {
+   "menu": "Layer",
+   "id": 411
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "row-layer-alpha-lock"
+ },
+ {
+  "key": {
+   "key": "a",
+   "ctrl": true,
+   "shift": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "chord-layer-alpha-lock"
+ },
+ {
+  "state": "before-layer-merge-down"
+ },
+ {
+  "menu_item": {
+   "menu": "Layer",
+   "id": 405
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "row-layer-merge-down"
+ },
+ {
+  "key": {
+   "key": "e",
+   "ctrl": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "chord-layer-merge-down"
+ },
+ {
+  "state": "before-layer-delete"
+ },
+ {
+  "menu_item": {
+   "menu": "Layer",
+   "id": 402
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "row-layer-delete"
+ },
+ {
+  "key": {
+   "key": "delete",
+   "shift": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "chord-layer-delete"
+ },
+ {
+  "state": "before-select-all"
+ },
+ {
+  "menu_item": {
+   "menu": "Select",
+   "id": 200
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "row-select-all"
+ },
+ {
+  "select": "none"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "key": {
+   "key": "a",
+   "ctrl": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "chord-select-all"
+ },
+ {
+  "select": [
+   400,
+   200,
+   800,
+   500
+  ]
+ },
+ {
+  "wait": 8
+ },
+ {
+  "state": "before-select-invert"
+ },
+ {
+  "menu_item": {
+   "menu": "Select",
+   "id": 202
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "row-select-invert"
+ },
+ {
+  "key": {
+   "key": "i",
+   "ctrl": true,
+   "shift": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "chord-select-invert"
+ },
+ {
+  "state": "before-select-quick-mask"
+ },
+ {
+  "menu_item": {
+   "menu": "Select",
+   "id": 203
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "row-select-quick-mask"
+ },
+ {
+  "key": {
+   "key": "q",
+   "shift": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "chord-select-quick-mask"
+ },
+ {
+  "select": [
+   400,
+   200,
+   800,
+   500
+  ]
+ },
+ {
+  "wait": 8
+ },
+ {
+  "state": "before-select-deselect"
+ },
+ {
+  "menu_item": {
+   "menu": "Select",
+   "id": 201
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "row-select-deselect"
+ },
+ {
+  "select": [
+   400,
+   200,
+   800,
+   500
+  ]
+ },
+ {
+  "wait": 10
+ },
+ {
+  "key": {
+   "key": "d",
+   "ctrl": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "chord-select-deselect"
+ },
+ {
+  "state": "before-view-zoom-in"
+ },
+ {
+  "menu_item": {
+   "menu": "View",
+   "id": 10
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "row-view-zoom-in"
+ },
+ {
+  "key": {
+   "key": "equal",
+   "ctrl": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "chord-view-zoom-in"
+ },
+ {
+  "state": "before-view-zoom-out"
+ },
+ {
+  "menu_item": {
+   "menu": "View",
+   "id": 11
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "row-view-zoom-out"
+ },
+ {
+  "key": {
+   "key": "minus",
+   "ctrl": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "chord-view-zoom-out"
+ },
+ {
+  "zoom": 3.0
+ },
+ {
+  "wait": 8
+ },
+ {
+  "state": "before-view-zoom-100"
+ },
+ {
+  "menu_item": {
+   "menu": "View",
+   "id": 12
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "row-view-zoom-100"
+ },
+ {
+  "zoom": 3.0
+ },
+ {
+  "wait": 10
+ },
+ {
+  "key": {
+   "key": "0",
+   "ctrl": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "chord-view-zoom-100"
+ },
+ {
+  "state": "before-view-rotate-left"
+ },
+ {
+  "menu_item": {
+   "menu": "View",
+   "id": 15
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "row-view-rotate-left"
+ },
+ {
+  "key": {
+   "key": "bracketleft",
+   "ctrl": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "chord-view-rotate-left"
+ },
+ {
+  "state": "before-view-rotate-right"
+ },
+ {
+  "menu_item": {
+   "menu": "View",
+   "id": 16
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "row-view-rotate-right"
+ },
+ {
+  "key": {
+   "key": "bracketright",
+   "ctrl": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "chord-view-rotate-right"
+ },
+ {
+  "menu_item": {
+   "menu": "View",
+   "id": 17
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "select": [
+   400,
+   200,
+   800,
+   500
+  ]
+ },
+ {
+  "wait": 8
+ },
+ {
+  "state": "before-image-crop-to-selection"
+ },
+ {
+  "menu_item": {
+   "menu": "Image",
+   "id": 301
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "row-image-crop-to-selection"
+ },
+ {
+  "undo": 1
+ },
+ {
+  "wait": 10
+ },
+ {
+  "select": [
+   400,
+   200,
+   800,
+   500
+  ]
+ },
+ {
+  "wait": 10
+ },
+ {
+  "key": {
+   "key": "x",
+   "ctrl": true,
+   "shift": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "chord-image-crop-to-selection"
+ },
+ {
+  "undo": 1
+ },
+ {
+  "select": "none"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "before-filter-brightness"
+ },
+ {
+  "menu_item": {
+   "menu": "Filter",
+   "id": 400
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "row-filter-brightness"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "key": {
+   "key": "b",
+   "ctrl": true,
+   "shift": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "chord-filter-brightness"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "state": "before-filter-hsl"
+ },
+ {
+  "menu_item": {
+   "menu": "Filter",
+   "id": 401
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "row-filter-hsl"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "key": {
+   "key": "u",
+   "ctrl": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "chord-filter-hsl"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "state": "before-filter-levels"
+ },
+ {
+  "menu_item": {
+   "menu": "Filter",
+   "id": 402
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "row-filter-levels"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "key": {
+   "key": "l",
+   "ctrl": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "chord-filter-levels"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "state": "before-filter-curves"
+ },
+ {
+  "menu_item": {
+   "menu": "Filter",
+   "id": 403
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "row-filter-curves"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "key": {
+   "key": "m",
+   "ctrl": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "chord-filter-curves"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "state": "before-filter-colour-balance"
+ },
+ {
+  "menu_item": {
+   "menu": "Filter",
+   "id": 404
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "row-filter-colour-balance"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "key": {
+   "key": "b",
+   "ctrl": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "chord-filter-colour-balance"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "select": [
+   400,
+   200,
+   400,
+   300
+  ]
+ },
+ {
+  "wait": 8
+ },
+ {
+  "state": "before-edit-copy"
+ },
+ {
+  "menu_item": {
+   "menu": "Edit",
+   "id": 105
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "row-edit-copy"
+ },
+ {
+  "key": {
+   "key": "c",
+   "ctrl": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "chord-edit-copy"
+ },
+ {
+  "state": "before-edit-cut"
+ },
+ {
+  "menu_item": {
+   "menu": "Edit",
+   "id": 104
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "row-edit-cut"
+ },
+ {
+  "undo": 1
+ },
+ {
+  "wait": 10
+ },
+ {
+  "key": {
+   "key": "x",
+   "ctrl": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "chord-edit-cut"
+ },
+ {
+  "undo": 1
+ },
+ {
+  "select": "none"
+ },
+ {
+  "wait": 8
+ },
+ {
+  "state": "before-edit-paste"
+ },
+ {
+  "menu_item": {
+   "menu": "Edit",
+   "id": 106
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "row-edit-paste"
+ },
+ {
+  "undo": 1
+ },
+ {
+  "wait": 10
+ },
+ {
+  "key": {
+   "key": "v",
+   "ctrl": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "chord-edit-paste"
+ },
+ {
+  "undo": 1
+ },
+ {
+  "state": "before-edit-preferences"
+ },
+ {
+  "menu_item": {
+   "menu": "Edit",
+   "id": 100
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "row-edit-preferences"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "key": {
+   "key": "comma",
+   "ctrl": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "chord-edit-preferences"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "menu": "Window"
+ },
+ {
+  "wait": 6
+ },
+ {
+  "state": "before-window-fullscreen-tick"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 4
+ },
+ {
+  "menu_item": {
+   "menu": "Window",
+   "id": 602
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "menu": "Window"
+ },
+ {
+  "wait": 6
+ },
+ {
+  "state": "row-window-fullscreen-tick"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 4
+ },
+ {
+  "key": {
+   "key": "f",
+   "ctrl": true,
+   "shift": true
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "menu": "Window"
+ },
+ {
+  "wait": 6
+ },
+ {
+  "state": "chord-window-fullscreen-tick"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 4
+ },
+ {
+  "state": "before-help-take-a-note"
+ },
+ {
+  "menu_item": {
+   "menu": "Help",
+   "id": 504
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "row-help-take-a-note"
+ },
+ {
+  "note": "cancel"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "key": {
+   "key": "c",
+   "ctrl": true,
+   "shift": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "chord-help-take-a-note"
+ },
+ {
+  "note": "cancel"
+ },
+ {
+  "state": "before-file-new"
+ },
+ {
+  "menu_item": {
+   "menu": "File",
+   "id": 199
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "row-file-new"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "key": {
+   "key": "n",
+   "ctrl": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "chord-file-new"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "state": "before-file-save"
+ },
+ {
+  "menu_item": {
+   "menu": "File",
+   "id": 201
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "row-file-save"
+ },
+ {
+  "file_picker": {
+   "cancel": true
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "key": {
+   "key": "s",
+   "ctrl": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "chord-file-save"
+ },
+ {
+  "file_picker": {
+   "cancel": true
+  }
+ },
+ {
+  "state": "before-file-open"
+ },
+ {
+  "menu_item": {
+   "menu": "File",
+   "id": 200
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "row-file-open"
+ },
+ {
+  "file_picker": {
+   "cancel": true
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "key": {
+   "key": "o",
+   "ctrl": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "chord-file-open"
+ },
+ {
+  "file_picker": {
+   "cancel": true
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "the-end"
+ },
+ {
+  "shot": "the-end"
+ }
+]

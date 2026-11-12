@@ -1,0 +1,17 @@
+[
+  {"wait": 20},
+  {"shot": "one-row"},
+  {"prefs": {"top_bar_order": ["File", "Edit", "View", "Window", "Image", "Layer", "Select", "Filter", "Modules", "Help", "Brush Presets", "Blend Mode", "Erase Toggle", "Second Row", "Size Slider", "Opacity Slider", "Hardness Slider", "Flow Slider", "Size Pressure", "Opacity Pressure"]}},
+  {"prefs": {"second_row": true}},
+  {"wait": 10},
+  {"shot": "two-rows"},
+  {"state": "two-rows"},
+  {"open": "preferences"},
+  {"wait": 10},
+  {"page": "Top Menu Bar"},
+  {"wait": 10},
+  {"shot": "preferences-top-bar"},
+  {"prefs": {"second_row": false}},
+  {"wait": 10},
+  {"shot": "one-row-again"}
+]

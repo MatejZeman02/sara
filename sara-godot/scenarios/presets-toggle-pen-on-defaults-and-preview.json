@@ -1,0 +1,302 @@
+[
+  {
+    "wait": 35
+  },
+  {
+    "answer": 2
+  },
+  {
+    "wait": 6
+  },
+  {
+    "docker": {
+      "id": "BrushPresetsDocker",
+      "at": [
+        1400,
+        620
+      ],
+      "size": [
+        280,
+        400
+      ]
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "tool": "brush"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "presets_docker": {
+      "close": true
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "presets_docker": {}
+  },
+  {
+    "state": "1-closed"
+  },
+  {
+    "shot": "1-closed"
+  },
+  {
+    "move": {
+      "at": [
+        900,
+        950
+      ]
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "click": {
+      "control": "PresetMenu"
+    }
+  },
+  {
+    "wait": 15
+  },
+  {
+    "presets_docker": {}
+  },
+  {
+    "state": "2-the-button-opened-it"
+  },
+  {
+    "shot": "2-the-button-opened-it"
+  },
+  {
+    "move": {
+      "at": [
+        908,
+        950
+      ]
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "click": {
+      "control": "PresetMenu"
+    }
+  },
+  {
+    "wait": 15
+  },
+  {
+    "presets_docker": {}
+  },
+  {
+    "state": "3-the-second-press-closed-it"
+  },
+  {
+    "shot": "3-the-second-press-closed-it"
+  },
+  {
+    "move": {
+      "at": [
+        916,
+        950
+      ]
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "key": "z"
+  },
+  {
+    "wait": 15
+  },
+  {
+    "presets_docker": {}
+  },
+  {
+    "state": "4-z-opened-it"
+  },
+  {
+    "shot": "4-z-opened-it"
+  },
+  {
+    "move": {
+      "at": [
+        924,
+        950
+      ]
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "key": "z"
+  },
+  {
+    "wait": 15
+  },
+  {
+    "presets_docker": {}
+  },
+  {
+    "state": "5-z-closed-it"
+  },
+  {
+    "key": "z"
+  },
+  {
+    "wait": 15
+  },
+  {
+    "presets_docker": {
+      "legacy": "Older"
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "preset": {
+      "load": "Older"
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "presets_docker": {
+      "pen_settings": true
+    }
+  },
+  {
+    "presets_docker": {}
+  },
+  {
+    "state": "6-a-version-2-preset-loads-with-its-curves-on"
+  },
+  {
+    "shot": "6-a-version-2-preset-loads-with-its-curves-on"
+  },
+  {
+    "move": {
+      "at": [
+        932,
+        950
+      ]
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "presets_docker": {
+      "new": true
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "presets_docker": {
+      "pen_settings": true
+    }
+  },
+  {
+    "presets_docker": {}
+  },
+  {
+    "state": "7-new-preset-is-the-class-defaults"
+  },
+  {
+    "shot": "7-new-preset-is-the-class-defaults"
+  },
+  {
+    "move": {
+      "at": [
+        940,
+        950
+      ]
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "preset": {
+      "delete": "Older"
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "brush_editor": {
+      "open": true,
+      "page": "Brush Tip"
+    }
+  },
+  {
+    "wait": 15
+  },
+  {
+    "state": "8-the-preview-on-brush-tip"
+  },
+  {
+    "shot": "8-the-preview-on-brush-tip"
+  },
+  {
+    "move": {
+      "at": [
+        948,
+        950
+      ]
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "brush_editor": {
+      "page": "General"
+    }
+  },
+  {
+    "wait": 15
+  },
+  {
+    "state": "9-the-preview-on-general"
+  },
+  {
+    "shot": "9-the-preview-on-general"
+  },
+  {
+    "move": {
+      "at": [
+        956,
+        950
+      ]
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "brush_editor": {
+      "close": true
+    }
+  },
+  {
+    "wait": 10
+  }
+]

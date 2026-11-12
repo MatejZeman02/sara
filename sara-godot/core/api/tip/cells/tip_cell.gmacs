@@ -1,0 +1,137 @@
+# Kernels: expand_tip_cell
+# One cell of a GIMP pipe, its own bytes as the file holds them, made into the
+# r32g32f texture the stroke engine binds as its tip: coverage in the red
+# channel and lightness in the green, the texel `SaTipImage.texels` builds on
+# the CPU for a tip that is not a pipe.
+#
+# A cell is a GBR's texels in rows from the top, one byte a texel for a grey
+# cell and four, red, green, blue and alpha, for a colour one. Sent as they
+# stand they are an eighth of the texture for a grey cell and half of it for a
+# colour one, and nothing on the CPU walks a texel.
+#
+# The texel is the CPU's to the bit, because the suite beside
+# `sa_brush_tip_mask.gd` holds the two roads equal texel for texel. A coverage
+# is `byte / 255` rounded to a float, read from a table the CPU filled, since
+# the card's division is not exact. A colour cell's lightness is the luminance
+# `SaTipImage` sums in doubles, three products and two sums, clamped and then
+# rounded to a float. Not every card Sara runs on has doubles, so each product
+# comes from a table as a 64-bit fixed-point number, which it is exactly, and
+# the sums and both roundings are made here in integers the way a double makes
+# them.
+
+kernel expand_tip_cell
+
+image tip: rg32f, writeonly
+# The cell's bytes, four to a word, the first byte in the lowest eight bits.
+buffer cell: uint words[]
+# `byte / 255` as the CPU rounds it to a float, one a byte value.
+buffer coverage: float of_byte[]
+# Each channel's share of the luminance, red, green and blue, 256 values each,
+# as the CPU's double times two to the 64, low word first.
+buffer luminance: uvec2 shares[]
+
+params:
+    int width
+    int height
+    # 1 for a grey cell and 4 for a colour one.
+    int depth
+
+# The lightness of a cell that carries no colour, SaTipImage.NEUTRAL_LIGHTNESS.
+const float NEUTRAL_LIGHTNESS = 0.5
+# The significant bits of a double and of a float.
+const int DOUBLE_BITS = 53
+const int FLOAT_BITS = 24
+
+
+def wide_add(uvec2 a, uvec2 b, out uint carry) -> uvec2:
+    """a + b over 64 bits, and one in carry when it passed them."""
+    uint low_carry
+    uint low = uadd_carry(a.x, b.x, low_carry)
+    uint first
+    uint high = uadd_carry(a.y, b.y, first)
+    uint second
+    high = uadd_carry(high, low_carry, second)
+    carry = first + second
+    return uvec2(low, high)
+
+
+def top_bit(uvec2 v) -> int:
+    """The highest bit set, 0 to 63, or -1 for nought."""
+    return v.y != 0u ? 32 + find_msb(v.y) : find_msb(v.x)
+
+
+def bit(int at) -> uvec2:
+    """Two to the at, for at from 0 to 63."""
+    return at >= 32 ? uvec2(0u, 1u << uint(at - 32)) : uvec2(1u << uint(at), 0u)
+
+
+def below(int at) -> uvec2:
+    """Every bit under at set, for at from 1 to 63."""
+    return at >= 32 ? uvec2(0xFFFFFFFFu, (1u << uint(at - 32)) - 1u) : uvec2((1u << uint(at)) - 1u, 0u)
+
+
+def round_to(uvec2 v, int bits, out uint carry) -> uvec2:
+    """v rounded to its first bits significant bits, to the nearest and a tie
+    to the even one, which is how the CPU rounds a sum to a double and a double
+    to a float. One in carry when the rounding reached two to the 64."""
+    carry = 0u
+    int drop = top_bit(v) + 1 - bits
+    if drop <= 0:
+        return v
+    uvec2 rest = v & below(drop)
+    uvec2 kept = v & ~below(drop)
+    uvec2 midway = bit(drop - 1)
+    uvec2 unit = bit(drop)
+    bool past = rest.y > midway.y or (rest.y == midway.y and rest.x > midway.x)
+    bool odd = (kept & unit) != uvec2(0u)
+    if past or (rest == midway and odd):
+        return wide_add(kept, unit, carry)
+    return kept
+
+
+def to_float(uvec2 v) -> float:
+    """v, a fraction of two to the 64 with no more significant bits than a
+    float holds, as that float, built from its bits so nothing rounds again.
+    Its top bit is at 52 or above, since the smallest share is over two to the
+    minus 12, so the shift never runs the other way."""
+    int top = top_bit(v)
+    if top < 0:
+        return 0.0
+    uint shift = uint(top - (FLOAT_BITS - 1))
+    uint mantissa = shift >= 32u ? v.y >> (shift - 32u) : (v.x >> shift) | (v.y << (32u - shift))
+    uint exponent = uint(top - 64 + 127)
+    return uint_bits_to_float((exponent << 23u) | (mantissa & 0x7FFFFFu))
+
+
+def lightness(uint texel) -> float:
+    """The luminance of the colour texel, summed as SaTipImage sums it, red and
+    green first and blue after, each sum rounded to a double, then clamped at
+    one and rounded to a float."""
+    uint carry
+    uvec2 red = luminance.shares[texel & 0xFFu]
+    uvec2 green = luminance.shares[256u + ((texel >> 8u) & 0xFFu)]
+    uvec2 blue = luminance.shares[512u + ((texel >> 16u) & 0xFFu)]
+    uvec2 sum = wide_add(red, green, carry)
+    sum = round_to(sum, DOUBLE_BITS, carry)
+    sum = wide_add(sum, blue, carry)
+    if carry != 0u:
+        return 1.0
+    sum = round_to(sum, DOUBLE_BITS, carry)
+    if carry != 0u:
+        return 1.0
+    sum = round_to(sum, FLOAT_BITS, carry)
+    if carry != 0u:
+        return 1.0
+    return to_float(sum)
+
+
+def expand_tip_cell():
+    if pixel.x >= width or pixel.y >= height:
+        return
+    int at = pixel.y * width + pixel.x
+    if depth == 1:
+        uint value = (cell.words[at >> 2] >> (uint(at & 3) * 8u)) & 0xFFu
+        tip[pixel] = vec4(coverage.of_byte[value], NEUTRAL_LIGHTNESS, 0.0, 0.0)
+        return
+    uint texel = cell.words[at]
+    tip[pixel] = vec4(coverage.of_byte[texel >> 24u], lightness(texel), 0.0, 0.0)

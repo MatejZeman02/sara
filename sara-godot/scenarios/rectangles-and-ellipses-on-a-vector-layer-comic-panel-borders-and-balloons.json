@@ -1,0 +1,159 @@
+[
+ {
+  "comment": "Rectangles and ellipses on a vector layer. On a white 900 by 640 document, a few strokes of paint go on Layer 1. The Shape tool then draws three panel borders, black strokes 8 pixels wide with no fill, and an ellipse balloon filled white with a black stroke 4 wide, each a drag through the canvas as a pen makes it, and the door's shape step adds a rounded caption box. The first border makes the vector layer above the paint. The Object tool then picks the balloon. The shots show the borders and the balloon over the paint, and the five objects listed in the Tool Options docker with the balloon picked."
+ },
+ {
+  "wait": 60
+ },
+ {
+  "prefs": {
+   "ui_scale": 1.0,
+   "autosave_interval_minutes": 0
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "layout_preset": {
+   "load": "minimalistic"
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "docker": {
+   "id": "ToolOptionsDocker",
+   "at": [0, 90],
+   "size": [300, 620]
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "document": "srgb",
+  "size": [900, 640]
+ },
+ {
+  "wait": 10
+ },
+ {
+  "fit": true
+ },
+ {
+  "wait": 5
+ },
+ {
+  "fill": [1.0, 1.0, 1.0]
+ },
+ {
+  "wait": 5
+ },
+ {
+  "tool": "brush"
+ },
+ {
+  "colour": "#3a78b8"
+ },
+ {
+  "stroke": {"from": [60, 120], "to": [420, 260], "pressure": 0.9, "space": "document"}
+ },
+ {
+  "colour": "#d0702c"
+ },
+ {
+  "stroke": {"from": [520, 80], "to": [840, 300], "pressure": 0.9, "space": "document"}
+ },
+ {
+  "colour": "#5aa04a"
+ },
+ {
+  "stroke": {"from": [80, 560], "to": [820, 420], "pressure": 0.9, "space": "document"}
+ },
+ {
+  "wait": 5
+ },
+ {
+  "colour": "#000000"
+ },
+ {
+  "background_colour": "#ffffff"
+ },
+ {
+  "tool": {
+   "id": "vector_shape",
+   "options": {"vector_kind": 0, "vector_corner_radius": 0, "vector_fill": false, "vector_stroke": true, "vector_stroke_width": 8}
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "stroke": {"from": [30, 30], "to": [440, 330], "pressure": 1.0, "space": "document"}
+ },
+ {
+  "wait": 5
+ },
+ {
+  "stroke": {"from": [470, 30], "to": [870, 330], "pressure": 1.0, "space": "document"}
+ },
+ {
+  "wait": 5
+ },
+ {
+  "stroke": {"from": [30, 360], "to": [870, 610], "pressure": 1.0, "space": "document"}
+ },
+ {
+  "wait": 5
+ },
+ {
+  "tool": {
+   "id": "vector_shape",
+   "options": {"vector_kind": 1, "vector_fill": true, "vector_stroke": true, "vector_stroke_width": 4}
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "stroke": {"from": [560, 380], "to": [830, 520], "pressure": 1.0, "space": "document"}
+ },
+ {
+  "wait": 5
+ },
+ {
+  "shape": {"kind": "rect", "rect": [60, 380, 220, 60], "radius": 12, "fill": [1.0, 0.96, 0.7, 1.0], "stroke": [0.0, 0.0, 0.0, 1.0], "stroke_width": 3}
+ },
+ {
+  "wait": 5
+ },
+ {
+  "state": "1-three-borders-a-balloon-and-a-caption"
+ },
+ {
+  "shot": "1-three-borders-a-balloon-and-a-caption"
+ },
+ {
+  "tool": "vector_object"
+ },
+ {
+  "wait": 5
+ },
+ {
+  "stroke": {"from": [700, 450], "to": [700, 450], "pressure": 1.0, "space": "document", "steps": 1}
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "2-the-object-tool-picks-the-balloon"
+ },
+ {
+  "shot": "2-the-object-tool-picks-the-balloon"
+ },
+ {
+  "look": {"path": "3-the-balloon-s-stroke-close.png", "rect": [540, 360, 320, 180], "scale": 3}
+ }
+]

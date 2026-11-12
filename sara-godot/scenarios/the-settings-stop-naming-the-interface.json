@@ -1,0 +1,11 @@
+[
+  {"wait": 30},
+  {"state": "before"},
+  {"shot": "before"},
+
+  {"prefs": {"theme_name": "krita", "ui_font": "ibm-plex-sans", "ui_scale": 1.25}},
+  {"wait": 20},
+
+  {"state": "after"},
+  {"shot": "after"}
+]

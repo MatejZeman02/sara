@@ -1,0 +1,206 @@
+[
+ {
+  "wait": 35
+ },
+ {
+  "answer": 2
+ },
+ {
+  "wait": 5
+ },
+ {
+  "docker": "park"
+ },
+ {
+  "colour": "#101010"
+ },
+ {
+  "tool": {
+   "id": "gradient",
+   "options": {
+    "gradient_shape": 0,
+    "gradient_repeat": 0,
+    "gradient_replace": true
+   }
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "gradient": {
+   "from": [
+    140,
+    560
+   ],
+   "to": [
+    1780,
+    560
+   ],
+   "steps": 12
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "tool": {
+   "id": "brush"
+  }
+ },
+ {
+  "brush": {
+   "radius": 0.05
+  }
+ },
+ {
+  "colour": "#d84a2a"
+ },
+ {
+  "stroke": {
+   "from": [
+    300,
+    260
+   ],
+   "to": [
+    1600,
+    340
+   ],
+   "pressure": 0.9,
+   "steps": 30
+  }
+ },
+ {
+  "colour": "#2e8f5a"
+ },
+ {
+  "stroke": {
+   "from": [
+    300,
+    520
+   ],
+   "to": [
+    1600,
+    600
+   ],
+   "pressure": 0.9,
+   "steps": 30
+  }
+ },
+ {
+  "colour": "#3a5fd0"
+ },
+ {
+  "stroke": {
+   "from": [
+    300,
+    780
+   ],
+   "to": [
+    1600,
+    860
+   ],
+   "pressure": 0.9,
+   "steps": 30
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "answer": 2
+ },
+ {
+  "wait": 5
+ },
+ {
+  "look": {
+   "path": "0-the-picture-the-histogram-is-of.png"
+  }
+ },
+ {
+  "shot": "0-the-picture-the-histogram-is-of"
+ },
+ {
+  "open": "levels"
+ },
+ {
+  "wait": 25
+ },
+ {
+  "shot": "1-master"
+ },
+ {
+  "state": "1-master"
+ },
+ {
+  "levels": {
+   "channel": "red"
+  }
+ },
+ {
+  "wait": 14
+ },
+ {
+  "shot": "2-red"
+ },
+ {
+  "state": "2-red"
+ },
+ {
+  "levels": {
+   "channel": "green"
+  }
+ },
+ {
+  "wait": 14
+ },
+ {
+  "shot": "3-green"
+ },
+ {
+  "state": "3-green"
+ },
+ {
+  "levels": {
+   "channel": "blue"
+  }
+ },
+ {
+  "wait": 14
+ },
+ {
+  "shot": "4-blue"
+ },
+ {
+  "state": "4-blue"
+ },
+ {
+  "levels": {
+   "channel": "lightness"
+  }
+ },
+ {
+  "wait": 14
+ },
+ {
+  "shot": "5-lightness"
+ },
+ {
+  "state": "5-lightness"
+ },
+ {
+  "levels": {
+   "channel": "master"
+  }
+ },
+ {
+  "wait": 14
+ },
+ {
+  "shot": "6-back-to-master"
+ },
+ {
+  "state": "6-back-to-master"
+ }
+]

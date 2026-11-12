@@ -1,0 +1,18 @@
+[
+  {"wait": 30},
+  {"docker": {"id": "InfoDocker", "at": [640, 120]}},
+  {"wait": 20},
+  {"comment": "The Document block reads Size, Depth and VRAM in a row, and the Colour space block names the gamut and the white beside the primaries. The docker is grown once so both blocks are on screen in every shot."},
+  {"docker_resize": {"id": "InfoDocker", "by": [0, 260], "grip": true}},
+  {"wait": 20},
+  {"shot": "1-default-document"},
+  {"state": "1-default-document"},
+  {"document": "acescg"},
+  {"wait": 20},
+  {"shot": "2-acescg"},
+  {"state": "2-acescg"},
+  {"document": "srgb"},
+  {"wait": 20},
+  {"shot": "3-srgb"},
+  {"state": "3-srgb"}
+]

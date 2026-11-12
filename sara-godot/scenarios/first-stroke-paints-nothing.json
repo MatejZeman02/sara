@@ -1,0 +1,21 @@
+[
+ {"wait": 35},
+ {"colour": "#101010"},
+ {"tool": {"id": "brush", "options": {"radius": 0.05, "hardness": 0.55}}},
+ {"wait": 10},
+
+ {"stroke": {"from": [500, 500], "to": [502, 500], "pressure": 1.0, "steps": 2}},
+ {"wait": 12},
+ {"state": "01-the-first-dab-of-the-run"},
+ {"shot": "01-the-first-dab-of-the-run"},
+
+ {"stroke": {"from": [700, 500], "to": [702, 500], "pressure": 1.0, "steps": 2}},
+ {"wait": 12},
+ {"state": "02-and-the-second"},
+ {"shot": "02-and-the-second"},
+
+ {"stroke": {"from": [900, 500], "to": [902, 500], "pressure": 1.0, "steps": 2}},
+ {"wait": 12},
+ {"state": "03-and-the-third"},
+ {"shot": "03-and-the-third"}
+]

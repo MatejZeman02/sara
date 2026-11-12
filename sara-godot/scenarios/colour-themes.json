@@ -1,0 +1,56 @@
+[
+  {"timeout": 300},
+  {"wait": 30},
+  {"open": "preferences"},
+  {"wait": 15},
+  {"page": "Colour Themes"},
+  {"wait": 10},
+  {"theme_rows": {}},
+  {"shot": "the-four-shipped-palettes"},
+  {"state": "the-four-shipped-palettes"},
+
+  {"theme_rows": {"save_as": "Sara Green"}},
+  {"wait": 10},
+  {"theme_rows": {}},
+  {"shot": "a-shipped-name-is-numbered"},
+  {"state": "a-shipped-name-is-numbered"},
+
+  {"theme_rows": {"save_as": "Sara Green"}},
+  {"wait": 10},
+  {"theme_rows": {}},
+  {"shot": "the-number-raises"},
+  {"state": "the-number-raises"},
+
+  {"theme_rows": {"save_as": "sara green"}},
+  {"wait": 10},
+  {"theme_rows": {}},
+  {"state": "the-lower-case-name-is-numbered-too"},
+
+  {"theme_rows": {"save_as": "My Own Palette"}},
+  {"wait": 10},
+  {"theme_rows": {}},
+  {"shot": "a-name-nobody-ships-is-taken-as-typed"},
+  {"state": "a-name-nobody-ships-is-taken-as-typed"},
+
+  {"theme_rows": {"swatch": "accent_primary", "color": "#FF00AA"}},
+  {"wait": 10},
+  {"theme_rows": {"save_as": "My Own Palette"}},
+  {"wait": 10},
+  {"theme_rows": {}},
+  {"shot": "your-own-palette-is-written-over"},
+  {"state": "your-own-palette-is-written-over"},
+
+  {"prefs": {"theme_name": "custom:sara-green-2"}},
+  {"theme_rows": {"delete": true}},
+  {"prefs": {"theme_name": "custom:sara-green-3"}},
+  {"theme_rows": {"delete": true}},
+  {"prefs": {"theme_name": "custom:sara-green-4"}},
+  {"theme_rows": {"delete": true}},
+  {"prefs": {"theme_name": "custom:my-own-palette"}},
+  {"theme_rows": {"delete": true}},
+  {"wait": 10},
+  {"theme_rows": {}},
+  {"state": "the-folder-is-as-it-was-found"},
+
+  {"prefs": {"theme_name": "default"}}
+]

@@ -1,0 +1,647 @@
+[
+ {
+  "comment": "A sensor a module registers is read by a preset's curve. The sensor fixture under tests/fixtures/sensor/modules adds Across, the dab's distance from the canvas's left edge over a thousand pixels. Opacity ticks it alone under a falling curve, so one stroke at full pressure from left to right fades out across the canvas, where pressure alone would lay it solid."
+ },
+ {
+  "args": [
+   "--modules-dir=res://tests/fixtures/sensor/modules"
+  ]
+ },
+ {
+  "wait": 45
+ },
+ {
+  "prefs": {
+   "ui_scale": 1.0
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "layout_preset": {
+   "load": "minimalistic"
+  }
+ },
+ {
+  "wait": 25
+ },
+ {
+  "document": "srgb"
+ },
+ {
+  "wait": 12
+ },
+ {
+  "fill": [
+   1.0,
+   1.0,
+   1.0
+  ]
+ },
+ {
+  "colour": [
+   0.05,
+   0.05,
+   0.05
+  ]
+ },
+ {
+  "wait": 10
+ },
+ {
+  "tool": {
+   "id": "brush",
+   "options": {
+    "radius": 0.03,
+    "hardness": 1.0,
+    "opacity": 1.0,
+    "flow": 1.0,
+    "spacing": 0.12,
+    "painting_mode": 0,
+    "tip_generator": 0,
+    "tip_ratio": 1.0
+   }
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "comment": "The first stroke reads pressure on Opacity, the preset's default, so a full-pressure stroke is solid from end to end."
+ },
+ {
+  "brush": {
+   "pen_settings": {
+    "size": {
+     "enabled": false
+    },
+    "opacity": {
+     "enabled": true,
+     "strength": 1.0,
+     "sensors": [
+      "pressure"
+     ],
+     "common_curve": [
+      [
+       0,
+       0
+      ],
+      [
+       1,
+       1
+      ]
+     ]
+    }
+   }
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "stroke": {
+   "points": [
+    {
+     "at": [
+      450,
+      380
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      500,
+      380
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      550,
+      380
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      600,
+      380
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      650,
+      380
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      700,
+      380
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      750,
+      380
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      800,
+      380
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      850,
+      380
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      900,
+      380
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      950,
+      380
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      1000,
+      380
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      1050,
+      380
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      1100,
+      380
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      1150,
+      380
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      1200,
+      380
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      1250,
+      380
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      1300,
+      380
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      1350,
+      380
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      1400,
+      380
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      1450,
+      380
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      1500,
+      380
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      1550,
+      380
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      1600,
+      380
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      1650,
+      380
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      1700,
+      380
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      1750,
+      380
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      1800,
+      380
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      1850,
+      380
+     ],
+     "pressure": 1.0
+    }
+   ]
+  }
+ },
+ {
+  "wait": 30
+ },
+ {
+  "comment": "The second unticks pressure and ticks the module's Across alone on Opacity, under a curve falling from full at the left edge to none a thousand pixels in, so the stroke fades out by a thousand pixels across the document."
+ },
+ {
+  "brush": {
+   "pen_settings": {
+    "opacity": {
+     "enabled": true,
+     "strength": 1.0,
+     "sensors": [
+      {
+       "id": "pressure",
+       "active": false
+      },
+      "fixture_across"
+     ],
+     "common_curve": [
+      [
+       0,
+       1
+      ],
+      [
+       1,
+       0
+      ]
+     ]
+    }
+   }
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "stroke": {
+   "points": [
+    {
+     "at": [
+      450,
+      520
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      500,
+      520
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      550,
+      520
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      600,
+      520
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      650,
+      520
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      700,
+      520
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      750,
+      520
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      800,
+      520
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      850,
+      520
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      900,
+      520
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      950,
+      520
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      1000,
+      520
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      1050,
+      520
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      1100,
+      520
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      1150,
+      520
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      1200,
+      520
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      1250,
+      520
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      1300,
+      520
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      1350,
+      520
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      1400,
+      520
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      1450,
+      520
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      1500,
+      520
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      1550,
+      520
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      1600,
+      520
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      1650,
+      520
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      1700,
+      520
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      1750,
+      520
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      1800,
+      520
+     ],
+     "pressure": 1.0
+    },
+    {
+     "at": [
+      1850,
+      520
+     ],
+     "pressure": 1.0
+    }
+   ]
+  }
+ },
+ {
+  "wait": 30
+ },
+ {
+  "move": [
+   10,
+   10
+  ]
+ },
+ {
+  "texel": [
+   [
+    450,
+    312
+   ],
+   [
+    550,
+    312
+   ],
+   [
+    650,
+    312
+   ],
+   [
+    750,
+    312
+   ],
+   [
+    850,
+    312
+   ],
+   [
+    950,
+    312
+   ],
+   [
+    1050,
+    312
+   ],
+   [
+    1150,
+    312
+   ],
+   [
+    1250,
+    312
+   ],
+   [
+    450,
+    506
+   ],
+   [
+    550,
+    506
+   ],
+   [
+    650,
+    506
+   ],
+   [
+    750,
+    506
+   ],
+   [
+    850,
+    506
+   ],
+   [
+    950,
+    506
+   ],
+   [
+    1050,
+    506
+   ],
+   [
+    1150,
+    506
+   ],
+   [
+    1250,
+    506
+   ]
+  ]
+ },
+ {
+  "state": "1-pressure-lays-it-solid-the-module-s-sensor-fades-it-across"
+ },
+ {
+  "shot": "1-pressure-lays-it-solid-the-module-s-sensor-fades-it-across"
+ }
+]

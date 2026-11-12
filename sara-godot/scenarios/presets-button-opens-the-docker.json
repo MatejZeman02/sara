@@ -1,0 +1,134 @@
+[
+  {
+    "wait": 35
+  },
+  {
+    "answer": 2
+  },
+  {
+    "wait": 6
+  },
+  {
+    "docker": {
+      "id": "BrushPresetsDocker",
+      "at": [
+        1400,
+        700
+      ],
+      "size": [
+        280,
+        360
+      ]
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "presets_docker": {
+      "close": true
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "tool": "brush"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "presets_docker": {}
+  },
+  {
+    "state": "1-closed"
+  },
+  {
+    "shot": "1-closed"
+  },
+  {
+    "click": {
+      "control": "PresetMenu"
+    }
+  },
+  {
+    "wait": 15
+  },
+  {
+    "presets_docker": {}
+  },
+  {
+    "state": "2-opened-by-the-button"
+  },
+  {
+    "shot": "2-opened-by-the-button"
+  },
+  {
+    "presets_docker": {
+      "close": true
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "presets_docker": {}
+  },
+  {
+    "state": "3-closed-again"
+  },
+  {
+    "move": {
+      "at": [
+        820,
+        520
+      ]
+    }
+  },
+  {
+    "press": {
+      "button": "right",
+      "at": [
+        820,
+        520
+      ]
+    }
+  },
+  {
+    "release": {
+      "button": "right",
+      "at": [
+        820,
+        520
+      ]
+    }
+  },
+  {
+    "wait": 15
+  },
+  {
+    "presets_docker": {}
+  },
+  {
+    "state": "4-opened-by-the-right-click"
+  },
+  {
+    "shot": "4-opened-by-the-right-click"
+  },
+  {
+    "preset": {
+      "open": true,
+      "finish": true
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "state": "5-the-grid-in-the-docker"
+  },
+  {
+    "shot": "5-the-grid-in-the-docker"
+  }
+]

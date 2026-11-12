@@ -1,0 +1,17 @@
+[
+  {"comment": "The brush's bar at radius 5 and at radius 500, 5 and 500 over the 1080 rows of the srgb document: the Radius slider shows two decimals at both and keeps one width, so every control after it on the bar stands at the same place in the two shots. The state dump names the bar's rows."},
+  {"window": [1600, 1200]},
+  {"wait": 60},
+  {"document": "srgb"},
+  {"wait": 20},
+  {"tool": "brush"},
+  {"wait": 15},
+  {"brush": {"radius": 0.0046296}},
+  {"wait": 15},
+  {"state": "01-radius-5"},
+  {"shot": "01-radius-5"},
+  {"brush": {"radius": 0.462963}},
+  {"wait": 15},
+  {"state": "02-radius-500"},
+  {"shot": "02-radius-500"}
+]

@@ -1,0 +1,271 @@
+# Kernels: thumb_clear, thumb_chunk, thumb_mask_clear, thumb_mask
+#
+# A layer's picture, small, for the row in the layers docker. The chunks are
+# already in VRAM, so this samples them into a texture of a few hundred texels and
+# the row shows that through a Texture2DRD. Nothing is read back.
+#
+# The picture frames the layer's paint rather than the canvas, so a small mark on a
+# wide canvas is not a speck. `thumb_bounds`, in `thumbnail_bounds.gmacs`, reduces
+# the painted texels' box into `frame` on the card, and `thumb_chunk` reads it to
+# pick the part of the document shown, so the CPU never learns the box. The frame
+# is widened round the paint to the picture's proportions, so a texel stays as
+# square in document pixels as when the picture showed the whole canvas.
+#
+# One chunk owns a thumbnail texel: the one containing the texel's centre. That is
+# what lets every chunk's dispatch share a compute list with no barrier between
+# them, since no two write the same texel. A texel straddling two chunks takes its
+# colour from one, which at this size is invisible.
+#
+# What leaves here is display values, not stored ones. A Texture2DRD reaches the
+# screen through Godot's 2D pipeline, which applies no encode of its own, so
+# showing the chunks verbatim would read an Oklab document's L, a and b as red,
+# green and blue.
+
+kernel thumb_clear
+kernel thumb_chunk
+kernel thumb_mask_clear
+kernel thumb_mask
+
+import linear_srgb_color_space
+import transfer_curve
+
+image target
+sampler source
+
+# The box round the layer's paint inside the canvas, in document pixels, as
+# min x, min y, max x and max y, inclusive. `thumbnail_bounds.gmacs` reduces
+# the layer's chunks into it and `thumb_chunk` reads it. It never leaves the
+# card. Bound to every kernel, the uniform set covering the whole layout
+# whichever kernel runs, and read by `thumb_chunk` alone.
+buffer frame: int box[4]
+
+# 96 bytes, packed by SaLayerThumbnail._params and _display_tail. The compiler
+# reads the block, so `set_params()` could pack it by name, but this
+# caller still hands over a float array it packs itself, so the order here is
+# the order the GDScript writes and the two are matched by hand.
+#
+#   The gamut matrix is float[9] and not mat3 for the reason composite.gmacs
+#   records: std430 pads every mat3 column out to 16 bytes, so a matrix declared
+#   that way spends 48 bytes carrying 36. Only the way out to linear sRGB is
+#   needed, since nothing here stores back into the document.
+#
+#   The last three floats are the checker a layer's picture is drawn over:
+#   the side of a square in texels, and the two greys, as display values. A side
+#   under one says there is no checker, and the layer kernels then write the
+#   picture bare. They also keep the block at a
+#   multiple of four floats, which set_push_constant_float_array rounds what it
+#   sends up to, so a block declared at 84 bytes would be sent 96 and SaCompute
+#   would report the mismatch.
+params:
+    vec2 document_size
+    vec2 chunk_origin
+    vec2 chunk_size
+    float display_passthrough
+    float coordinates
+    float to_linear_srgb[9]
+    float transfer_slope
+    float transfer_threshold
+    float transfer_gain
+    float transfer_exponent
+    float checker_size
+    float checker_light
+    float checker_dark
+
+# Must match SaColorSpace.Coordinates. The value arrives as a float because the
+#   block is packed from a PackedFloat32Array, and small integers are exact in
+#   float32, so the rounding below costs nothing.
+const int SA_COORDS_OKLAB = 1
+
+
+def to_linear_srgb_matrix() -> mat3:
+    return mat3(
+        to_linear_srgb[0], to_linear_srgb[1], to_linear_srgb[2],
+        to_linear_srgb[3], to_linear_srgb[4], to_linear_srgb[5],
+        to_linear_srgb[6], to_linear_srgb[7], to_linear_srgb[8]
+    )
+
+# The document's stored numbers as the screen wants them: sRGB-encoded sRGB.
+#   The same journey render/sa_canvas.gd sends the canvas on with its view mode
+#   at 0, minus the exposure and the rolloff, which are a viewer's controls and
+#   have no business in a row twenty pixels tall.
+#
+#   Nothing clamps. A wide-gamut colour outside sRGB leaves the matrix negative
+#   and stays negative through the mirrored encode, so the row clips it exactly
+#   as the canvas beside it does.
+
+
+def to_display(vec3 c) -> vec3:
+    # Exactly the identity for an sRGB document, taken as a branch rather than
+    #       as a round trip that only rounds to one, so the common case stays
+    #       bit-identical to having no conversion at all. The branch is uniform
+    #       across the dispatch, so it is free.
+    if display_passthrough > 0.5:
+        return c
+    vec3 linear
+    if int(coordinates + 0.5) == SA_COORDS_OKLAB:
+        # Oklab is defined against linear sRGB and carries no gamut of its own,
+        #           so the document's matrix and curve describe its RGB view rather than
+        #           its pixels, and are not consulted here.
+        linear = oklab_to_linear_srgb(c)
+    else:
+        vec3 document = sa_transfer_decode(
+            c, transfer_slope, transfer_threshold, transfer_gain, transfer_exponent
+        )
+        linear = to_linear_srgb_matrix() * document
+    return linear_srgb_to_srgb(linear)
+
+# What a layer's picture is drawn over: an opaque checker, or nothing where the
+#   block says there is none. The row's own ground is dark, and dark paint on it
+#   has nothing to stand against, where grey squares as light as these show black
+#   and dark blue and leave white to be told by having no squares. Drawn in the
+#   picture's display values like the paint over it, because a blend in linear
+#   light would buy nothing a picture thirty-two texels across could show.
+#
+#   The squares count from the picture's own corner, so two layers of one
+#   document have the same squares under their paint.
+
+
+def checker_at(ivec2 texel) -> vec4:
+    if checker_size < 1.0:
+        return vec4(0.0)
+    vec2 square = floor(vec2(texel) / checker_size)
+    float odd = mod(square.x + square.y, 2.0)
+    float grey = mix(checker_light, checker_dark, odd)
+    return vec4(grey, grey, grey, 1.0)
+
+# Straight colour over the backdrop. With the opaque checker this is a mix of
+#   the two by the paint's alpha and the result is opaque, and with no checker it
+#   is the paint as it was, so the one expression serves both.
+
+
+def over_backdrop(vec4 paint, vec4 back) -> vec4:
+    float alpha = paint.a + back.a * (1.0 - paint.a)
+    vec3 colour = (paint.rgb * paint.a + back.rgb * back.a * (1.0 - paint.a)) / max(alpha, 0.000001)
+    return vec4(colour, alpha)
+
+# A layer holds chunks only where paint landed, so everywhere else has to be the
+#   backdrop rather than whatever the allocation left behind. In its own
+#   dispatch list: this writes every texel and the pass below writes some, which
+#   is the one ordering the two of them need.
+
+
+def thumb_clear():
+    ivec2 texel = ivec2(global_id.xy)
+    if texel.x >= image_size(target).x or texel.y >= image_size(target).y:
+        return
+    target[texel] = checker_at(texel)
+
+# The part of the document a layer's picture shows, as origin and extent in
+#   document pixels: the box `thumb_bounds` left in `frame`, as tight as the
+#   paint, widened to the document's proportions round the paint's centre and
+#   moved inside the canvas. Nothing is added round the paint and the zoom has
+#   no limit, so the paint's longer side meets the picture's edges as the
+#   canvas's does when the picture shows it whole, and a dab of one pixel fills
+#   the picture. The canvas whole when the box is empty, which is a layer whose
+#   chunks hold nothing a texel counts.
+#
+#   Never larger than the canvas: the box lies inside it, so only the widening
+#   can pass it, and the two edges are cut back together, which keeps the
+#   proportions. Every lane of every chunk's dispatch reads the
+#   same four words, so they all frame the picture alike.
+
+
+def framed() -> vec4:
+    vec2 whole = document_size
+    if frame.box[2] < frame.box[0] or frame.box[3] < frame.box[1]:
+        return vec4(0.0, 0.0, whole.x, whole.y)
+    vec2 low = vec2(float(frame.box[0]), float(frame.box[1]))
+    vec2 high = vec2(float(frame.box[2]), float(frame.box[3])) + vec2(1.0)
+    vec2 extent = high - low
+    float aspect = whole.x / whole.y
+    extent = max(extent, vec2(extent.y * aspect, extent.x / aspect))
+    extent = min(extent, whole)
+    # `clamp` is undefined when its floor passes its ceiling, which a frame as
+    #       wide as the canvas reaches by a rounding error.
+    vec2 room = max(whole - extent, vec2(0.0))
+    vec2 origin = min(max((low + high) * 0.5 - extent * 0.5, vec2(0.0)), room)
+    return vec4(origin, extent)
+
+
+def thumb_chunk():
+    ivec2 texel = ivec2(global_id.xy)
+    ivec2 thumb = image_size(target)
+    if texel.x >= thumb.x or texel.y >= thumb.y:
+        return
+
+    vec4 view = framed()
+    vec2 centre = view.xy + (vec2(texel) + 0.5) / vec2(thumb) * view.zw
+    vec2 local = centre - chunk_origin
+    if local.x < 0.0 or local.y < 0.0 or local.x >= chunk_size.x or local.y >= chunk_size.y:
+        return
+
+    # One tap per texel aliases badly: a texel covers sixty document pixels on
+    #       a 1920 canvas, so a thin stroke would appear and disappear as the layer
+    #       is painted. Sixteen taps of a linear sampler over the texel's footprint
+    #       is a box filter close enough for a picture this size.
+    #
+    #       The taps are summed premultiplied, because a chunk holds straight
+    #       colour and a transparent texel's colour is whatever was left in it:
+    #       summed as they lie, a thin black stroke drags every colour beside it
+    #       towards black, which over a checker reads as a darker patch than the
+    #       coverage says.
+    vec2 footprint = view.zw / vec2(thumb)
+    vec2 corner = view.xy + vec2(texel) * footprint
+    vec4 sum = vec4(0.0)
+    for y in range(4):
+        for x in range(4):
+            vec2 at = corner + (vec2(x, y) + 0.5) / 4.0 * footprint
+            vec2 uv = clamp((at - chunk_origin) / chunk_size, vec2(0.0), vec2(1.0))
+            vec4 tap = texture(source, uv)
+            sum += vec4(tap.rgb * tap.a, tap.a)
+    # The average is taken in the document's own numbers and converted once,
+    #       rather than converting sixteen taps: the sixteen sit inside one texel of
+    #       a picture thirty-two across, and the difference between the two orders is
+    #       far below anything a row that size can show.
+    float coverage = sum.a / 16.0
+    vec3 mean = sum.rgb / max(sum.a, 0.000001)
+    vec4 paint = vec4(to_display(mean), coverage)
+    target[texel] = over_backdrop(paint, checker_at(texel))
+
+# A layer mask's picture, the second one on a row. Where the
+#   mask holds no chunk it reads as its rest, one unless a selection or an
+#   invert said zero, so the picture starts at the 1 by 1 of
+#   the rest bound as the source, opaque because coverage is not colour and a
+#   hidden texel is black and not a hole in the row.
+
+
+def thumb_mask_clear():
+    ivec2 texel = ivec2(global_id.xy)
+    if texel.x >= image_size(target).x or texel.y >= image_size(target).y:
+        return
+    float rest = texture(source, vec2(0.5)).r
+    target[texel] = vec4(rest, rest, rest, 1.0)
+
+# The mask is single channel, so this reads `.r` where thumb_chunk reads four,
+#   and writes it as grey. No display transform: coverage is a fraction and not
+#   a colour of the document, and white shown and black hidden is what every
+#   painting program's mask picture says. The same sixteen taps and the same one
+#   chunk per texel as thumb_chunk, for the same reasons.
+
+
+def thumb_mask():
+    ivec2 texel = ivec2(global_id.xy)
+    ivec2 thumb = image_size(target)
+    if texel.x >= thumb.x or texel.y >= thumb.y:
+        return
+
+    vec2 centre = (vec2(texel) + 0.5) / vec2(thumb) * document_size
+    vec2 local = centre - chunk_origin
+    if local.x < 0.0 or local.y < 0.0 or local.x >= chunk_size.x or local.y >= chunk_size.y:
+        return
+
+    vec2 footprint = document_size / vec2(thumb)
+    vec2 corner = vec2(texel) / vec2(thumb) * document_size
+    float sum = 0.0
+    for y in range(4):
+        for x in range(4):
+            vec2 at = corner + (vec2(x, y) + 0.5) / 4.0 * footprint
+            vec2 uv = clamp((at - chunk_origin) / chunk_size, vec2(0.0), vec2(1.0))
+            sum += texture(source, uv).r
+    float shown = sum / 16.0
+    target[texel] = vec4(shown, shown, shown, 1.0)

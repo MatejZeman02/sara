@@ -1,0 +1,13 @@
+[
+  {"wait": 35},
+  {"docker": "park"},
+  {"document": "srgb"},
+  {"wait": 10},
+  {"state": "0-the-brush-answers-only-named-blocks"},
+  {"select": {"ellipse": [910, 490, 100, 100]}},
+  {"wait": 5},
+  {"tool": "patch"},
+  {"wait": 5},
+  {"shot": "1-the-patch-tool-on-a-selection"},
+  {"state": "1-the-patch-tool-on-a-selection"}
+]

@@ -1,0 +1,39 @@
+[
+  {"renderer": "pixman"},
+  {"wait": 30},
+  {"open": "preferences"},
+  {"wait": 20},
+  {"prefs_frame": {"probe": true}},
+  {"shot": "1-embedded-open"},
+  {"state": "1-embedded-open"},
+
+  {"prefs_frame": {"minimize": true}},
+  {"wait": 15},
+  {"prefs_frame": {"probe": true}},
+  {"shot": "2-embedded-rolled-up"},
+  {"state": "2-embedded-rolled-up"},
+
+  {"prefs_frame": {"minimize": true}},
+  {"wait": 15},
+  {"state": "3-embedded-back"},
+
+  {"prefs": {"embed_subwindows": false}},
+  {"wait": 30},
+  {"prefs_frame": {"probe": true}},
+  {"state": "4-own-window-open"},
+
+  {"prefs_frame": {"minimize": true}},
+  {"wait": 25},
+  {"prefs_frame": {"probe": true}},
+  {"shot": "5-own-window-minimized"},
+  {"state": "5-own-window-minimized"},
+
+  {"prefs_frame": {"reopen": true}},
+  {"wait": 25},
+  {"prefs_frame": {"probe": true}},
+  {"shot": "6-own-window-back"},
+  {"state": "6-own-window-back"},
+
+  {"prefs": {"embed_subwindows": true}},
+  {"wait": 25}
+]

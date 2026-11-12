@@ -1,0 +1,29 @@
+[
+ {"wait": 30},
+ {"prefs": {"docker_hide_button": true}},
+ {"layout_preset": {"delete": "full (custom)"}},
+ {"layout_preset": {"load": "full"}},
+ {"wait": 30},
+ {"hide": ""},
+ {"state": "at-the-default-width"},
+ {"shot": "at-the-default-width"},
+
+ {"docker_resize": {"id": "ColorDocker", "by": [-600, -600], "grip": true}},
+ {"wait": 15},
+ {"hide": ""},
+ {"state": "at-the-smallest-width"},
+ {"shot": "at-the-smallest-width"},
+
+ {"layout_preset": {"load": "full"}},
+ {"wait": 30},
+ {"state": "back-at-the-default-width"},
+ {"hide": "Colour Picker"},
+ {"wait": 15},
+ {"state": "after-the-click-on-its-hide-button"},
+ {"shot": "after-the-click-on-its-hide-button"},
+
+ {"prefs": {"docker_hide_button": true}},
+ {"layout_preset": {"load": "default"}},
+ {"wait": 25},
+ {"layout_preset": {"delete": "full (custom)"}}
+]

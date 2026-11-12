@@ -1,0 +1,20 @@
+[
+  {"comment": "The background removal README's picture. Select Subject on a still life painted in Sara, tests/still-life.png in the module, with the weights put by hand into this checkout's shot profile as the scenario puts them, at 1280 by 800 and an interface scale of 1. One click of the tool selects the jug and the bowl."},
+  {"settings": "keep"},
+  {"wait": 35},
+  {"window": [1280, 800]},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 20},
+  {"document": "srgb", "size": [1200, 800]},
+  {"wait": 10},
+  {"import": "res://modules/sara-background-removal/tests/still-life.png"},
+  {"wait": 20},
+  {"fit": true},
+  {"wait": 10},
+  {"tool": "select_subject"},
+  {"wait": 5},
+  {"click": {"at": [670, 430]}},
+  {"wait": 60},
+  {"state": "8-select-subject"},
+  {"shot": "8-select-subject"}
+]

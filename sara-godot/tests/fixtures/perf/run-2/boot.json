@@ -1,0 +1,64 @@
+{
+ "build": {
+  "built": "",
+  "commit": "030601b",
+  "commit_full": "030601bff8a9ce12cb66f41b87ce7c6b813a96cc",
+  "dirty": false,
+  "source": "working tree",
+  "version": "0.12.0"
+ },
+ "perf": {
+  "device": {
+   "api": "vulkan 1.4.351",
+   "local": false,
+   "name": "NVIDIA GeForce RTX 3070 Laptop GPU"
+  },
+  "startup": {
+   "bootstrap_to_ready_ms": 2110.5,
+   "cache_hits": 123,
+   "compiles": 0,
+   "engine_to_main_init_ms": 4064.297,
+   "first_frame_ms": 499.129,
+   "kernels_ms": 467.143,
+   "main_init_to_ready_ms": 2025.1979999999999,
+   "marks": {
+    "bootstrap_begin": 4079.58,
+    "first_frame_after_ready": 6588.624,
+    "kernels_begin": 896.447,
+    "kernels_end": 1363.59,
+    "layout_restored": 6089.443,
+    "main_init": 4064.297,
+    "modules_registered": 4937.121,
+    "ready": 6089.495,
+    "settings_loaded": 4079.348,
+    "ui_built": 4383.786
+   },
+   "modules": {
+    "box_blur": 2.817,
+    "pga_hard_mix": 0.032,
+    "sara-base-modules": 0.895,
+    "sara-stamp-brush": 3.772
+   }
+  },
+  "vram": {
+   "chunk_edge": 256,
+   "chunks": {
+    "layers": {
+     "Background": 40,
+     "Layer 1": 6
+    },
+    "selection": 0,
+    "stroke": 0,
+    "total": 46
+   },
+   "device": "NVIDIA GeForce RTX 3070 Laptop GPU",
+   "device_buffers": 7764608,
+   "device_textures": 57819648,
+   "device_total": 97833728,
+   "history_bytes": 0,
+   "sara_buffers": 2124,
+   "sara_textures": 41239576,
+   "unaccounted_textures": 16580072
+  }
+ }
+}

@@ -1,0 +1,143 @@
+[
+ {
+  "comment": "A 1 px checker on an sRGB document and on a linear one, halved by Image > Size with Bilinear. The halved layer is read back to a .npy file, where every texel should be linear 0.5, about 0.735 encoded on sRGB, and 0.5 on linear. Under the old read the sRGB one averaged encoded values, 0.5 encoded, which is linear 0.214."
+ },
+ {
+  "window": [
+   1920,
+   1080
+  ]
+ },
+ {
+  "wait": 45
+ },
+ {
+  "document": "srgb",
+  "size": [
+   512,
+   512
+  ]
+ },
+ {
+  "wait": 12
+ },
+ {
+  "fill": [
+   1.0,
+   1.0,
+   1.0
+  ]
+ },
+ {
+  "checker": 1
+ },
+ {
+  "wait": 10
+ },
+ {
+  "read_pixels": {
+   "rect": [
+    0,
+    0,
+    64,
+    64
+   ],
+   "file": "srgb-before.npy"
+  }
+ },
+ {
+  "open": "image_size"
+ },
+ {
+  "wait": 12
+ },
+ {
+  "image_size": {
+   "width": 256,
+   "lock": true,
+   "filter": "Bilinear"
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "read_pixels": {
+   "rect": [
+    0,
+    0,
+    256,
+    256
+   ],
+   "file": "srgb-half.npy"
+  }
+ },
+ {
+  "look": {
+   "path": "srgb-half.png",
+   "rect": [
+    0,
+    0,
+    64,
+    64
+   ],
+   "scale": 4
+  }
+ },
+ {
+  "shot": "01-srgb-half"
+ },
+ {
+  "document": "linear_srgb",
+  "size": [
+   512,
+   512
+  ]
+ },
+ {
+  "wait": 12
+ },
+ {
+  "fill": [
+   1.0,
+   1.0,
+   1.0
+  ]
+ },
+ {
+  "checker": 1
+ },
+ {
+  "wait": 10
+ },
+ {
+  "open": "image_size"
+ },
+ {
+  "wait": 12
+ },
+ {
+  "image_size": {
+   "width": 256,
+   "lock": true,
+   "filter": "Bilinear"
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "read_pixels": {
+   "rect": [
+    0,
+    0,
+    256,
+    256
+   ],
+   "file": "linear-half.npy"
+  }
+ },
+ {
+  "shot": "02-linear-half"
+ }
+]

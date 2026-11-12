@@ -1,0 +1,11 @@
+[
+  {"comment": "The second boot, on the profile the first left with the dockers let out. Halfway through the fade the layout's dockers are placed and held hidden, since no layer of the main window covers a window of the OS, and they come up on the cover's gone, which a fade held halfway never reaches."},
+  {"settings": "keep"},
+  {"args": ["--hold-boot-at=halfway"]},
+  {"wait": 30},
+  {"state": "2-let-out-halfway-through-the-fade-no-docker-is-shown"},
+  {"shot": "2-let-out-halfway-through-the-fade-no-docker-is-shown"},
+  {"open": "welcome"},
+  {"wait": 20},
+  {"state": "3-let-out-the-welcome-window-a-window-of-its-own-over-the-fade"}
+]

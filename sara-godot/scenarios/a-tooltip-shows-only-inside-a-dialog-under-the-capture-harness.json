@@ -1,0 +1,35 @@
+[
+  {"wait": 40},
+  {"tooltip": {"control": "MinimizeBtn", "text": "Minimise the window. A sentence long enough to be worth wrapping, so a shot of it says whether it wrapped."}},
+  {"tooltip": {"control": "ForegroundSwatch", "text": "The colour the brush paints with. A sentence long enough to be worth wrapping, so a shot of it says whether it wrapped."}},
+
+  {"move": {"control": "MinimizeBtn"}},
+  {"wait": 90},
+  {"tooltip": {"report": true}},
+  {"state": "1-the-top-bar-unfocused"},
+  {"shot": "1-the-top-bar-unfocused"},
+
+  {"move": {"control": "ForegroundSwatch"}},
+  {"wait": 90},
+  {"tooltip": {"report": true}},
+  {"state": "2-a-docker-never-clicked"},
+  {"shot": "2-a-docker-never-clicked"},
+
+  {"click": {"control": "ForegroundSwatch"}},
+  {"wait": 10},
+  {"move": [600, 600]},
+  {"wait": 5},
+  {"move": {"control": "ForegroundSwatch"}},
+  {"wait": 90},
+  {"tooltip": {"report": true}},
+  {"state": "3-the-same-docker-clicked-first"},
+  {"shot": "3-the-same-docker-clicked-first"},
+
+  {"click": {"at": [600, 600]}},
+  {"wait": 10},
+  {"move": {"control": "ForegroundSwatch"}},
+  {"wait": 90},
+  {"tooltip": {"report": true}},
+  {"state": "4-and-the-canvas-clicked-after-it"},
+  {"shot": "4-and-the-canvas-clicked-after-it"}
+]

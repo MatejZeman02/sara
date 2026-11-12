@@ -1,0 +1,8 @@
+sara	v0.12.0	GPU-first digital painting	GPLv3	Godot 4.7-stable  5b4e0cb0f
+field	Build	v0.12.0  ·  a764c87  ·  working tree, not exported
+field	Renderer	Vulkan 1.4.351  ·  Forward+
+field	Device	NVIDIA GeForce RTX 3070 Laptop GPU
+field	Floor	met
+field	Display	Wayland  ·  1920×1080 @ 1.00×
+ready	2297	kernels 536 ms (90 cached, 0 compiled), modules 7 ms
+SaCapture: measure perf {"window":{"open":true}}

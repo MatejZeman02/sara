@@ -1,0 +1,22 @@
+[
+  {"wait": 45},
+  {"colour": "#2f4fd0"},
+  {"key": "x"},
+  {"wait": 3},
+  {"colour": "#e8b23c"},
+  {"wait": 3},
+  {"tool": {"id": "gradient", "options": {"gradient_shape": 0, "gradient_repeat": 0, "gradient_replace": false}}},
+  {"docker": {"id": "ToolOptionsDocker", "at": [1160, 120], "size": [440, 560]}},
+  {"wait": 15},
+  {"state": "ramp-as-opened"},
+  {"ramp": {"select": 1, "alpha": 0.0}},
+  {"wait": 5},
+  {"shot": "far-end-faded"},
+  {"state": "far-end-faded"},
+  {"ramp": {"add": 0.45, "color": "#20c040"}},
+  {"wait": 5},
+  {"ramp": {"save": "Capture Sunset"}},
+  {"wait": 5},
+  {"shot": "saved"},
+  {"state": "saved"}
+]

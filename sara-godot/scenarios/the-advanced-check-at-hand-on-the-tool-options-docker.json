@@ -1,0 +1,23 @@
+[
+ {"wait": 60},
+ {"prefs": {"ui_scale": 1.0, "advanced_options": false}},
+ {"wait": 20},
+ {"tool": "brush"},
+ {"wait": 10},
+ {"docker": {"id": "ToolOptionsDocker", "at": [1400, 120], "size": [420, 760]}},
+ {"wait": 20},
+ {"state": "1-the-docker-with-advanced-off"},
+ {"shot": "1-the-docker-with-advanced-off"},
+
+ {"click": {"control": "ToolOptionsAdvancedCheck"}},
+ {"wait": 20},
+ {"state": "2-the-check-clicked-and-the-advanced-rows"},
+ {"shot": "2-the-check-clicked-and-the-advanced-rows"},
+
+ {"open": "preferences"},
+ {"wait": 20},
+ {"page": "General"},
+ {"wait": 15},
+ {"state": "3-preferences-reads-the-same-switch-on"},
+ {"shot": "3-preferences-reads-the-same-switch-on"}
+]

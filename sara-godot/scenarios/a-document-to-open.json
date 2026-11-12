@@ -1,0 +1,40 @@
+[
+ {
+  "wait": 30
+ },
+ {
+  "colour": "#c04020"
+ },
+ {
+  "tool": "brush"
+ },
+ {
+  "wait": 8
+ },
+ {
+  "stroke": {
+   "from": [
+    500,
+    400
+   ],
+   "to": [
+    1100,
+    500
+   ],
+   "pressure": 1.0,
+   "steps": 16
+  }
+ },
+ {
+  "wait": 16
+ },
+ {
+  "save": "user://f100-from-the-command-line.sad"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "f100-0-the-document-this-pair-opens"
+ }
+]

@@ -1,0 +1,15 @@
+[
+  {"wait": 45},
+  {"docker": {"id": "ToolOptionsDocker", "at": [520, 120]}},
+  {"wait": 10},
+  {"shot": "brush-options"},
+  {"tool": "lasso"},
+  {"wait": 10},
+  {"shot": "lasso-options"},
+  {"tool": "eyedropper"},
+  {"wait": 10},
+  {"shot": "eyedropper-options"},
+  {"tool": "brush"},
+  {"wait": 10},
+  {"state": "docker"}
+]

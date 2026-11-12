@@ -1,0 +1,35 @@
+# Hides one chunk of a layer by its mask, for a layer that carries one. The mask
+# is single channel at the selection's format, so it cannot join clip.gmacs,
+# whose three images share the storage format: two kernels in one file share one
+# image layout. Like a clipped chunk, a masked chunk takes one pass through here
+# into a scratch chunk, and the ordinary composite reads the scratch, which keeps
+# the composite kernels two-image.
+
+kernel mask_chunk
+image target
+image source
+# A 1 by 1 mask reads as 1.0 everywhere through the clamped read, as fill.gmacs
+# reads the selection. The source and the mask are each read at the texel under
+# the target's own, so a display chunk of SaDetailView, twice a chunk across,
+# masks a chunk at 2.0 by a coverage at 1.0 or at 2.0. Of one
+# size, which is every other caller, that texel is the pixel itself.
+image mask: r32f, readonly
+
+params:
+    # The part of the chunk to mask, in chunk-local pixels: the same rectangle
+    # the composite that follows will read.
+    vec2 region_origin
+    vec2 region_size
+
+
+def mask_chunk():
+    ivec2 local = ivec2(global_id.xy)
+    if local.x >= int(region_size.x) or local.y >= int(region_size.y):
+        return
+    ivec2 pixel = local + ivec2(region_origin)
+    if pixel.x >= image_size(target).x or pixel.y >= image_size(target).y:
+        return
+    ivec2 across = image_size(target)
+    vec4 src = source[pixel * image_size(source) / across]
+    src.a *= mask[min(pixel * image_size(mask) / across, image_size(mask) - 1)].r
+    target[pixel] = src

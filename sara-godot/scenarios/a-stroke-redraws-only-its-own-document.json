@@ -1,0 +1,19 @@
+[
+  {"comment": "With one document open nothing a painter sees changes: a stroke still draws, because the easel now hears its own document's composite request rather than the bus's, and a new document in another colour space still moves the status line, the blend row's Normal label and the title, because each listener hears the document it shows. The two-document half, a stroke in one composites that easel alone and a change of space behind the front one moves nothing, is the suite of the same name."},
+  {"window": [1920, 1080]},
+  {"wait": 40},
+  {"state": "01-before"},
+  {"stroke": {"from": [700, 450], "to": [1100, 650], "pressure": 0.9, "steps": 24}},
+  {"wait": 10},
+  {"shot": "02-a-stroke-draws"},
+  {"look": {"path": "02-look.png", "long_edge": 0}},
+  {"document": "linear_srgb"},
+  {"wait": 20},
+  {"shot": "03-a-new-document-in-linear-srgb"},
+  {"state": "03-a-new-document-in-linear-srgb"},
+  {"stroke": {"from": [600, 600], "to": [1200, 400], "pressure": 0.9, "steps": 24}},
+  {"wait": 10},
+  {"shot": "04-a-stroke-on-the-new-document"},
+  {"look": {"path": "04-look.png", "long_edge": 0}},
+  {"state": "04-after"}
+]

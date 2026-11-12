@@ -1,0 +1,30 @@
+# Kernel: invert
+# The shortest point kernel that keeps the contract SaPointPass writes down,
+# for the suite: the chunk's colour at binding 0 rewritten in place, the
+# selection mask at binding 1 read per pixel and mixed by, and the region's
+# origin in the first two floats of the push constant. Nothing here is worth
+# copying but that shape.
+
+kernel invert
+
+image canvas
+# A 1 by 1 mask reads as 1.0 everywhere through the clamped read, which is a
+# document with no selection (core/api/selection/sa_selection.gd).
+image mask: r32f, readonly
+
+params:
+    float origin_x  # the dispatched region's origin in the chunk
+    float origin_y  # zero for Apply, which covers whole chunks
+    float spare_a
+    float spare_b
+
+
+def invert():
+    ivec2 px = ivec2(global_id.xy) + ivec2(int(origin_x), int(origin_y))
+    ivec2 size = image_size(canvas)
+    if px.x >= size.x or px.y >= size.y:
+        return
+    vec4 held = image_load(canvas, px)
+    float coverage = image_load(mask, min(px, image_size(mask) - 1)).r
+    vec3 inverted = vec3(1.0, 1.0, 1.0) - held.rgb
+    image_store(canvas, px, vec4(mix(held.rgb, inverted, coverage), held.a))

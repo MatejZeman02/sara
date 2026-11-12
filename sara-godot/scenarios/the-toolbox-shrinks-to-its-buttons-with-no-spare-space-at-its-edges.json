@@ -1,0 +1,15 @@
+[
+  {"wait": 35},
+  {"docker": "park"},
+  {"wait": 10},
+  {"docker": {"id": "ToolBoxDocker", "at": [700, 200], "size": [200, 500]}},
+  {"wait": 15},
+  {"docker_resize": {"id": "ToolBoxDocker", "by": [-400, -1000], "grip": true}},
+  {"wait": 20},
+  {"state": "1-the-smallest-one-column-toolbox"},
+  {"shot": "1-the-smallest-one-column-toolbox"},
+  {"docker_resize": {"id": "ToolBoxDocker", "by": [0, 110], "grip": true}},
+  {"wait": 20},
+  {"state": "2-let-go-between-two-rows-it-takes-the-nearer-whole-row"},
+  {"shot": "2-let-go-between-two-rows-it-takes-the-nearer-whole-row"}
+]

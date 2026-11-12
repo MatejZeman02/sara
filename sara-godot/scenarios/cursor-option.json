@@ -1,0 +1,297 @@
+[
+  {
+    "wait": 40
+  },
+  {
+    "docker": {
+      "id": "ToolBoxDocker",
+      "at": [
+        0,
+        90
+      ],
+      "size": [
+        60,
+        420
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "ToolOptionsDocker",
+      "at": [
+        0,
+        300
+      ],
+      "size": [
+        280,
+        430
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "ReferenceDocker",
+      "at": [
+        0,
+        760
+      ],
+      "size": [
+        280,
+        260
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "BrushPresetsDocker",
+      "at": [
+        1920,
+        78
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "ColorDocker",
+      "at": [
+        1600,
+        90
+      ],
+      "size": [
+        310,
+        480
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "LayersDocker",
+      "at": [
+        1600,
+        600
+      ],
+      "size": [
+        310,
+        400
+      ]
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "state": "01-as-found"
+  },
+  {
+    "move": {
+      "at": [
+        300,
+        700
+      ],
+      "pressure": 0.8,
+      "tilt": [
+        0.1,
+        0.1
+      ]
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "move": {
+      "at": [
+        302,
+        702
+      ],
+      "pressure": 0.8,
+      "tilt": [
+        0.1,
+        0.1
+      ]
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "probe": [
+      [
+        300,
+        700
+      ]
+    ]
+  },
+  {
+    "wait": 4
+  },
+  {
+    "prefs": {
+      "software_cursor": "auto"
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "02-auto"
+  },
+  {
+    "state": "02-auto"
+  },
+  {
+    "prefs": {
+      "software_cursor": "always"
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "03-always"
+  },
+  {
+    "state": "03-always"
+  },
+  {
+    "prefs": {
+      "software_cursor": "never"
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "04-never"
+  },
+  {
+    "state": "04-never"
+  },
+  {
+    "prefs": {
+      "software_cursor": "auto"
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "state": "05-back-on-auto"
+  },
+  {
+    "open": "preferences"
+  },
+  {
+    "wait": 25
+  },
+  {
+    "page": "Workspace"
+  },
+  {
+    "wait": 20
+  },
+  {
+    "shot": "06-workspace-page"
+  },
+  {
+    "state": "06-workspace-page"
+  },
+  {
+    "prefs_search": "pointer"
+  },
+  {
+    "wait": 15
+  },
+  {
+    "shot": "07-found-by-search"
+  },
+  {
+    "state": "07-found-by-search"
+  },
+  {
+    "key": "escape"
+  },
+  {
+    "wait": 15
+  },
+  {
+    "prefs": {
+      "software_cursor": "always"
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "menu": "View"
+  },
+  {
+    "wait": 20
+  },
+  {
+    "move": {
+      "at": [
+        420,
+        800
+      ],
+      "pressure": 0.8,
+      "tilt": [
+        0.1,
+        0.1
+      ]
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "move": {
+      "at": [
+        422,
+        802
+      ],
+      "pressure": 0.8,
+      "tilt": [
+        0.1,
+        0.1
+      ]
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "08-pen-over-an-open-menu-option-on"
+  },
+  {
+    "state": "08-pen-over-an-open-menu-option-on"
+  },
+  {
+    "prefs": {
+      "software_cursor": "never"
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "state": "09-pen-over-an-open-menu-option-off"
+  },
+  {
+    "key": "escape"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "prefs": {
+      "software_cursor": "always"
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "state": "10-left-on-always-for-the-next-run"
+  }
+]

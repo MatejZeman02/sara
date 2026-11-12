@@ -1,0 +1,14 @@
+[
+  {"wait": 30},
+  {"docker": {"id": "ToolBoxDocker", "at": [60, 120], "size": [50, 88]}},
+  {"docker": {"id": "RecorderDocker", "at": [400, 120], "size": [220, 224]}},
+  {"wait": 15},
+  {"shot": "1-both-at-their-floor"},
+  {"state": "1-both-at-their-floor"},
+
+  {"docker": {"id": "ToolBoxDocker", "at": [60, 120], "size": [60, 520]}},
+  {"docker": {"id": "RecorderDocker", "at": [400, 120], "size": [300, 270]}},
+  {"wait": 15},
+  {"shot": "2-both-at-their-default"},
+  {"state": "2-both-at-their-default"}
+]

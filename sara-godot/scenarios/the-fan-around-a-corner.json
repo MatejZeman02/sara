@@ -1,0 +1,64 @@
+[
+  {"wait": 40},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 15},
+  {"layout_preset": {"load": "minimalistic"}},
+  {"wait": 25},
+  {"document": "srgb"},
+  {"wait": 12},
+  {"fill": [1.0, 1.0, 1.0]},
+  {"colour": [0.0, 0.0, 0.0]},
+  {"wait": 10},
+
+  {"tool": {"id": "brush", "options": {
+    "radius": 0.06,
+    "hardness": 1.0,
+    "opacity": 1.0,
+    "flow": 1.0,
+    "spacing": 0.9,
+    "painting_mode": 0,
+    "tip_generator": 0,
+    "tip_shape": 1,
+    "tip_ratio": 0.12
+  }}},
+  {"wait": 20},
+  {"brush": {"pen_settings": {"rotation": {"enabled": true, "strength": 1.0, "sensors": ["drawing_angle"]}}}},
+  {"wait": 15},
+  {"state": "1-a-flat-tip-that-follows-the-stroke"},
+
+  {"stroke": {"points": [
+    {"at": [700, 300], "pressure": 1.0},
+    {"at": [800, 300], "pressure": 1.0},
+    {"at": [900, 300], "pressure": 1.0},
+    {"at": [1000, 300], "pressure": 1.0},
+    {"at": [1000, 400], "pressure": 1.0},
+    {"at": [1000, 500], "pressure": 1.0},
+    {"at": [1000, 600], "pressure": 1.0}
+  ]}},
+  {"wait": 30},
+  {"shot": "2-the-corner-with-the-fan-off"},
+  {"texel": [[897, 278], [925, 250], [869, 306], [936, 239], [858, 317], [700, 278], [897, 450], [600, 150]]},
+  {"state": "2-the-corner-with-the-fan-off"},
+
+  {"brush": {"pen_settings": {"rotation": {"enabled": true, "strength": 1.0, "sensors": [
+    {"id": "drawing_angle", "fan_corners": true, "fan_step": 10.0}
+  ]}}}},
+  {"wait": 15},
+  {"state": "3-the-fan-switched-on"},
+
+  {"fill": [1.0, 1.0, 1.0]},
+  {"wait": 20},
+  {"stroke": {"points": [
+    {"at": [700, 300], "pressure": 1.0},
+    {"at": [800, 300], "pressure": 1.0},
+    {"at": [900, 300], "pressure": 1.0},
+    {"at": [1000, 300], "pressure": 1.0},
+    {"at": [1000, 400], "pressure": 1.0},
+    {"at": [1000, 500], "pressure": 1.0},
+    {"at": [1000, 600], "pressure": 1.0}
+  ]}},
+  {"wait": 30},
+  {"shot": "4-the-same-corner-with-the-fan-on"},
+  {"texel": [[897, 278], [925, 250], [869, 306], [936, 239], [858, 317], [700, 278], [897, 450], [600, 150]]},
+  {"state": "4-the-same-corner-with-the-fan-on"}
+]

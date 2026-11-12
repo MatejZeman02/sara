@@ -1,0 +1,76 @@
+# Kernel: generate, raise_tooth
+# The fixture's own generator, the proof that a module ships the kernel of
+# a generated layer: value noise of as many octaves as the layer asks for,
+# between the layer's two colours, read at the document position and moved
+# across the lattice by a seed the layer carries.
+#
+# The block is packed by the names it declares, which is
+# `SaGeneratedLayer.params_of`. The dispatch fills `offset`, `region_origin`,
+# `region_size`, `color_a`, `color_b`, `scale`, `tooth` and `weight`, and
+# `octaves` and `seed` are this module's own parameters, which reach the
+# kernel because it names them. `noise_ground.gdshader` beside it is the same
+# grain beyond the document, and the suite works it out on the CPU too, so a
+# change here is a change in three places.
+#
+# **It answers a height**, `raise_tooth`, on the paper's terms: its defaults
+# carry a tooth, and this adds the tooth times the grain under the paint the
+# relief has summed.
+
+import noise
+
+kernel generate
+kernel raise_tooth
+
+image target
+
+params:
+    vec2 offset
+    vec2 region_origin
+    vec2 region_size
+    vec4 color_a
+    vec4 color_b
+    float scale
+    float tooth
+    float weight
+    float octaves
+    float seed
+
+
+# The grain at *at*, in cells: `octaves` of value noise, each half the last
+# one's size and weight, the whole moved by the seed, inside 0 to 1.
+
+
+def grain(vec2 at) -> float:
+    float total = 0.0
+    float amplitude = 0.5
+    float reached = 0.0
+    vec2 p = at + vec2(seed * 17.0, seed * 31.0)
+    for i in range(0, clamp(int(octaves), 1, 8)):
+        total += amplitude * sa_value_noise(p)
+        reached += amplitude
+        amplitude *= 0.5
+        p *= 2.0
+    return total / reached
+
+
+def generate():
+    ivec2 local = ivec2(global_id.xy)
+    if local.x >= int(region_size.x) or local.y >= int(region_size.y):
+        return
+    ivec2 texel = local + ivec2(region_origin)
+    if texel.x >= image_size(target).x or texel.y >= image_size(target).y:
+        return
+    vec2 at = (offset + vec2(texel)) / max(scale, 1.0)
+    image_store(target, texel, mix(color_a, color_b, grain(at)))
+
+
+def raise_tooth():
+    ivec2 local = ivec2(global_id.xy)
+    if local.x >= int(region_size.x) or local.y >= int(region_size.y):
+        return
+    ivec2 pixel = local + ivec2(region_origin)
+    if pixel.x >= image_size(target).x or pixel.y >= image_size(target).y:
+        return
+    vec2 at = (offset + vec2(pixel)) / max(scale, 1.0)
+    float paint = image_load(target, pixel).r
+    image_store(target, pixel, vec4(paint + tooth * weight * grain(at), 0.0, 0.0, 1.0))

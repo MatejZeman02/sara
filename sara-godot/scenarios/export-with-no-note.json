@@ -1,0 +1,5 @@
+[
+  {"wait": 30},
+  {"note": "export"},
+  {"state": "after-export"}
+]

@@ -1,0 +1,24 @@
+[
+  {"args": ["--modules-dir=res://tests/fixtures/modules"]},
+  {"wait": 45},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 20},
+
+  {"layout_preset": {"delete": "layout-fixture_desk (custom)"}},
+  {"layout_preset": {"delete": "layout-fixture/desk (custom)"}},
+  {"layout_preset": {"load": "default"}},
+  {"wait": 25},
+  {"state": "1-the-module-layout-is-listed"},
+
+  {"layout_preset": {"load": "layout-fixture/desk"}},
+  {"wait": 30},
+  {"state": "2-the-module-layout-is-loaded"},
+  {"shot": "2-the-module-layout-is-loaded"},
+
+  {"docker": {"id": "LayersDocker", "at": [900, 300], "size": [320, 420]}},
+  {"wait": 20},
+  {"layout_preset": {"edit": true}},
+  {"wait": 20},
+  {"state": "3-an-edit-forked-it"},
+  {"shot": "3-an-edit-forked-it"}
+]

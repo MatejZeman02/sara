@@ -1,0 +1,201 @@
+[
+  {
+    "wait": 35
+  },
+  {
+    "docker": {
+      "id": "ToolBoxDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "LayersDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "ColorDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "InfoDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "RecorderDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "MinimapDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "ToolOptionsDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "GraphDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "HistoryDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "ReferenceDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "prefs": {
+      "advanced_options": true
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "document": "srgb"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "tool": "brush"
+  },
+  {
+    "stroke": {
+      "from": [
+        760,
+        860
+      ],
+      "to": [
+        1300,
+        900
+      ],
+      "pressure": 1.0
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "shot": "f64-01-painted-with-every-docker-open"
+  },
+  {
+    "state": "f64-01-painted-with-every-docker-open"
+  },
+  {
+    "document": "display_p3"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "shot": "f64-02-after-the-first-swap"
+  },
+  {
+    "state": "f64-02-after-the-first-swap"
+  },
+  {
+    "document": "srgb"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "shot": "f64-03-after-the-second-swap"
+  },
+  {
+    "state": "f64-03-after-the-second-swap"
+  }
+]

@@ -1,0 +1,29 @@
+[
+  {"args": ["--modules-dir=res://tests/fixtures/blend-typo/modules"]},
+  {"wait": 45},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 20},
+
+  {"comment": "The fixture's mode names `hardmix` and the shader beside it declares `hard_mix`, so the registry turned the descriptor down while the modules loaded, and the line it wrote is in the problems window the boot attaches a moment later"},
+  {"state": "1-the-window-names-the-mode-the-kernel-and-the-shader"},
+  {"shot": "1-the-window-names-the-mode-the-kernel-and-the-shader"},
+
+  {"message": {"close": "button"}},
+  {"wait": 15},
+  {"state": "2-and-the-window-is-shut-and-the-app-is-still-there"},
+
+  {"document": "srgb"},
+  {"wait": 25},
+  {"fit": true},
+  {"wait": 10},
+
+  {"comment": "The blend list is asked for a mode a module did register and for the one that was refused, and only the first of the two answers: the refused one never reached the registry, so no layer can be set to a mode that would paint as Normal"},
+  {"blend": ""},
+  {"wait": 12},
+  {"blend_row": "hard_mix"},
+  {"wait": 10},
+  {"blend_row": "blend_typo_fixture"},
+  {"wait": 10},
+  {"state": "3-the-list-holds-the-working-mode-and-not-the-refused-one"},
+  {"shot": "3-the-list-holds-the-working-mode-and-not-the-refused-one"}
+]

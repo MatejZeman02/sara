@@ -1,0 +1,22 @@
+[
+  {"comment": "The Window menu lists the open documents and a press brings one forward. Sara starts with two paths on the command line, so two documents are open in tabs of their own with the second in front. The Window menu opened shows a row for each under its own rows, named as the tabs name them, the second ticked. A real press on the first's row, `tab_0`, brings it forward and closes the list, the tab bar following, and the menu opened again ticks the first."},
+  {"args": ["res://tests/data/plain_v4.sad", "res://tests/data/screen_over_twice_white_v4.sad"]},
+  {"wait": 60},
+  {"window": [1920, 1080]},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 20},
+  {"documents": true},
+  {"menu": "Window"},
+  {"wait": 10},
+  {"state": "1-the-window-menu-lists-both-the-second-ticked"},
+  {"shot": "1-the-window-menu-lists-both-the-second-ticked"},
+  {"click": {"control": "Label", "in": "Row_tab_0"}},
+  {"wait": 20},
+  {"documents": true},
+  {"state": "2-the-first-brought-forward"},
+  {"shot": "2-the-first-in-front-the-tab-bar-following"},
+  {"menu": "Window"},
+  {"wait": 10},
+  {"shot": "3-the-window-menu-ticks-the-first"},
+  {"key": {"key": "escape"}}
+]

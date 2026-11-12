@@ -1,0 +1,23 @@
+[
+  {"wait": 30},
+  {"docker": {"id": "LayersDocker", "at": [420, 160], "size": [300, 420]}},
+  {"wait": 12},
+  {"layer": {"add": "Sky", "fill": [0.2, 0.4, 0.9, 1.0]}},
+  {"layer": {"comment": "The companion painted this one: sky, too blue on purpose."}},
+  {"layer": {"add": "Hills", "fill": [0.2, 0.7, 0.3, 1.0]}},
+  {"wait": 12},
+  {"shot": "1-the-note-on-the-sky-row"},
+  {"state": "1-the-note-on-the-sky-row"},
+  {"save": "user://the-companions-layer-and-comment.sad"},
+  {"layer": {"activate": "Sky", "comment": ""}},
+  {"wait": 10},
+  {"state": "2-the-note-taken-off"},
+  {"load": "user://the-companions-layer-and-comment.sad"},
+  {"wait": 15},
+  {"shot": "3-reopened-with-the-note-back"},
+  {"state": "3-reopened-with-the-note-back"},
+  {"look": {"path": "5-look-at-384.png", "long_edge": 384}},
+  {"look": {"path": "6-look-at-the-canvas-size.png"}},
+  {"wait": 8},
+  {"state": "4-after-both-looks"}
+]

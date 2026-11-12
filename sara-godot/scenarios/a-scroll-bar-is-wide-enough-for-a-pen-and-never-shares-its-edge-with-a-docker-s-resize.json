@@ -1,0 +1,319 @@
+[
+  {
+    "comment": "A pen press one pixel in from the outer edge of the Layers docker's scroll bar, and a drag down, scroll the list and leave the docker's size alone, and a press in the clear room beside the bar does neither. The comments that name the virtual pen are where its suite, scripts/test_a_pen_on_a_docker_s_scroll_bar_scrolls_it_and_never_resizes_the_docker.py, puts the pen's records from virtual_pen.py, turned into the driver's pen steps."
+  },
+  {
+    "wait": 25
+  },
+  {
+    "docker": "park"
+  },
+  {
+    "docker": {
+      "id": "LayersDocker",
+      "at": [
+        420,
+        200
+      ],
+      "size": [
+        300,
+        300
+      ]
+    }
+  },
+  {
+    "layer": {
+      "add": "Paint Layer 1",
+      "fill": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "chunks": [
+        [
+          1,
+          0
+        ]
+      ]
+    }
+  },
+  {
+    "layer": {
+      "add": "Paint Layer 2",
+      "fill": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "chunks": [
+        [
+          2,
+          0
+        ]
+      ]
+    }
+  },
+  {
+    "layer": {
+      "add": "Paint Layer 3",
+      "fill": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "chunks": [
+        [
+          0,
+          1
+        ]
+      ]
+    }
+  },
+  {
+    "layer": {
+      "add": "Paint Layer 4",
+      "fill": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "chunks": [
+        [
+          1,
+          1
+        ]
+      ]
+    }
+  },
+  {
+    "layer": {
+      "add": "Paint Layer 5",
+      "fill": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "chunks": [
+        [
+          2,
+          1
+        ]
+      ]
+    }
+  },
+  {
+    "layer": {
+      "add": "Paint Layer 6",
+      "fill": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "chunks": [
+        [
+          0,
+          2
+        ]
+      ]
+    }
+  },
+  {
+    "layer": {
+      "add": "Paint Layer 7",
+      "fill": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "chunks": [
+        [
+          1,
+          2
+        ]
+      ]
+    }
+  },
+  {
+    "layer": {
+      "add": "Paint Layer 8",
+      "fill": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "chunks": [
+        [
+          2,
+          2
+        ]
+      ]
+    }
+  },
+  {
+    "layer": {
+      "add": "Paint Layer 9",
+      "fill": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "chunks": [
+        [
+          0,
+          0
+        ]
+      ]
+    }
+  },
+  {
+    "layer": {
+      "add": "Paint Layer 10",
+      "fill": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "chunks": [
+        [
+          1,
+          0
+        ]
+      ]
+    }
+  },
+  {
+    "layer": {
+      "add": "Paint Layer 11",
+      "fill": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "chunks": [
+        [
+          2,
+          0
+        ]
+      ]
+    }
+  },
+  {
+    "layer": {
+      "add": "Paint Layer 12",
+      "fill": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "chunks": [
+        [
+          0,
+          1
+        ]
+      ]
+    }
+  },
+  {
+    "layer": {
+      "add": "Paint Layer 13",
+      "fill": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "chunks": [
+        [
+          1,
+          1
+        ]
+      ]
+    }
+  },
+  {
+    "layer": {
+      "add": "Paint Layer 14",
+      "fill": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "chunks": [
+        [
+          2,
+          1
+        ]
+      ]
+    }
+  },
+  {
+    "wait": 15
+  },
+  {
+    "state": "1-before"
+  },
+  {
+    "wheel": {
+      "at": [
+        520,
+        360
+      ],
+      "notches": 0,
+      "read": true
+    }
+  },
+  {
+    "comment": "The virtual pen drags the bar one pixel in from its outer edge"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "state": "2-after-the-bar"
+  },
+  {
+    "wheel": {
+      "at": [
+        520,
+        360
+      ],
+      "notches": 0,
+      "read": true
+    }
+  },
+  {
+    "shot": "2-after-the-bar"
+  },
+  {
+    "comment": "The virtual pen drags in the clear room beside the bar"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "state": "3-after-the-gap"
+  },
+  {
+    "wheel": {
+      "at": [
+        520,
+        360
+      ],
+      "notches": 0,
+      "read": true
+    }
+  }
+]

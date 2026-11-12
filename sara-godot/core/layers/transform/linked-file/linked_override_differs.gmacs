@@ -1,0 +1,45 @@
+# Kernel: linked_override_differs
+#
+# Whether one chunk of a linked layer's paint holds a stroke: a texel of the
+# field as painted that differs from the file's picture by more than
+# SA_SAME, relative to the larger of one and the picture's value, sets the
+# chunk's flag. SaLinkedOverride dispatches it over every chunk either side
+# holds and reads the flags back once, a few bytes and not the canvas, outside
+# any stroke (hard rule 1).
+#
+# The tolerance is wider than a save's rounding of a full precision colour and
+# a blend's last bit, so a texel a stroke only passed over is not a stroke,
+# and narrower than one step of an 8 bit or a 16 bit channel.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel linked_override_differs
+
+# The field as painted.
+image painted: readonly
+# The field as the file gave it.
+image was: readonly
+# One uint a chunk, set to one where the chunk holds a stroke.
+buffer tally: uint flags[]
+
+params:
+    int width
+    int height
+    int slot
+
+# What two values may differ by and be the same paint.
+const float SA_SAME = 5.0e-4
+
+
+def differs(vec4 a, vec4 b) -> bool:
+    vec4 apart = abs(a - b)
+    vec4 room = SA_SAME * max(vec4(1.0), abs(b))
+    return any(greaterThan(apart, room))
+
+
+@workgroup_size(8, 8)
+def linked_override_differs():
+    if pixel.x >= width or pixel.y >= height:
+        return
+    if differs(painted[pixel], was[pixel]):
+        tally.flags[slot] = 1u

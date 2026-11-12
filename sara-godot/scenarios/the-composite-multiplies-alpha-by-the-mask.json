@@ -1,0 +1,20 @@
+[
+  {"wait": 20},
+  {"docker": {"id": "BrushPresetsDocker", "at": [2, 340], "size": [280, 360]}},
+  {"docker": {"id": "ToolOptionsDocker", "at": [70, 445], "size": [310, 563]}},
+  {"stroke": {"from": [300, 300], "to": [1300, 700], "pressure": 0.9, "steps": 24}},
+  {"layer": {"add": "Masked", "fill": [0.85, 0.25, 0.2, 1.0]}},
+  {"wait": 5},
+  {"shot": "a-red-layer-over-a-stroke-unmasked"},
+  {"layer": {"mask": {"rects": [[0, 0, 400, 4000, 1.0], [400, 0, 400, 4000, 0.0], [800, 0, 400, 4000, 0.5]]}}},
+  {"wait": 5},
+  {"shot": "masked-shown-hidden-half"},
+  {"state": "masked-shown-hidden-half"},
+  {"layer": {"activate": "Layer 1"}},
+  {"wait": 5},
+  {"shot": "masked-and-folded-into-the-top-cache"},
+  {"layer": {"activate": "Masked", "mask": {"enabled": false}}},
+  {"wait": 5},
+  {"shot": "mask-switched-off-reads-as-one"},
+  {"state": "mask-switched-off-reads-as-one"}
+]

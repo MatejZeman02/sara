@@ -1,0 +1,17 @@
+[
+  {"comment": "A let-out docker shows in a shot. The Layers docker is placed over the canvas with three layers in it, the shot is taken once embedded and once with embedded subwindows off, when the docker is a window of the operating system. Before the fix the second shot had the canvas where the docker stands, because the shot pasted open lists into the root's picture and skipped every other window of its own. Each state dump names the docker's window and its place, which the shot is read against."},
+  {"window": [1920, 1080]},
+  {"wait": 30},
+  {"document": "srgb"},
+  {"layer": {"add": "Paper"}},
+  {"layer": {"add": "Ink"}},
+  {"docker": "park"},
+  {"docker": {"id": "LayersDocker", "at": [700, 300], "size": [320, 420]}},
+  {"wait": 15},
+  {"state": "1-embedded-the-docker-is-in-the-root"},
+  {"shot": "1-embedded-the-docker-is-in-the-root"},
+  {"prefs": {"embed_subwindows": false}},
+  {"wait": 40},
+  {"state": "2-let-out-the-docker-stands-over-the-canvas"},
+  {"shot": "2-let-out-the-docker-stands-over-the-canvas"}
+]

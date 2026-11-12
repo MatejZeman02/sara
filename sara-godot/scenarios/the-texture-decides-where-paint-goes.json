@@ -1,0 +1,1753 @@
+[
+ {
+  "wait": 40
+ },
+ {
+  "document": "srgb"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "docker": "park"
+ },
+ {
+  "docker": {
+   "id": "ToolBoxDocker",
+   "at": [
+    1560,
+    40
+   ],
+   "size": [
+    340,
+    200
+   ]
+  }
+ },
+ {
+  "docker": {
+   "id": "ToolOptionsDocker",
+   "at": [
+    1560,
+    260
+   ],
+   "size": [
+    340,
+    420
+   ]
+  }
+ },
+ {
+  "wait": 25
+ },
+ {
+  "colour": "#2050c0"
+ },
+ {
+  "wait": 15
+ },
+ {
+  "tool": {
+   "id": "noise_brush",
+   "options": {
+    "radius": 0.03,
+    "hardness": 1.0,
+    "opacity": 1.0,
+    "strength": 1.0
+   }
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "move": {
+   "at": [
+    380,
+    260
+   ],
+   "pressure": 0.05
+  }
+ },
+ {
+  "press": {
+   "button": "left",
+   "at": [
+    380,
+    260
+   ],
+   "pressure": 0.05
+  }
+ },
+ {
+  "move": {
+   "at": [
+    403,
+    260
+   ],
+   "pressure": 0.074
+  }
+ },
+ {
+  "move": {
+   "at": [
+    426,
+    260
+   ],
+   "pressure": 0.098
+  }
+ },
+ {
+  "move": {
+   "at": [
+    449,
+    260
+   ],
+   "pressure": 0.121
+  }
+ },
+ {
+  "move": {
+   "at": [
+    472,
+    260
+   ],
+   "pressure": 0.145
+  }
+ },
+ {
+  "move": {
+   "at": [
+    495,
+    260
+   ],
+   "pressure": 0.169
+  }
+ },
+ {
+  "move": {
+   "at": [
+    518,
+    260
+   ],
+   "pressure": 0.193
+  }
+ },
+ {
+  "move": {
+   "at": [
+    541,
+    260
+   ],
+   "pressure": 0.216
+  }
+ },
+ {
+  "move": {
+   "at": [
+    564,
+    260
+   ],
+   "pressure": 0.24
+  }
+ },
+ {
+  "move": {
+   "at": [
+    587,
+    260
+   ],
+   "pressure": 0.264
+  }
+ },
+ {
+  "move": {
+   "at": [
+    610,
+    260
+   ],
+   "pressure": 0.287
+  }
+ },
+ {
+  "move": {
+   "at": [
+    633,
+    260
+   ],
+   "pressure": 0.311
+  }
+ },
+ {
+  "move": {
+   "at": [
+    656,
+    260
+   ],
+   "pressure": 0.335
+  }
+ },
+ {
+  "move": {
+   "at": [
+    679,
+    260
+   ],
+   "pressure": 0.359
+  }
+ },
+ {
+  "move": {
+   "at": [
+    702,
+    260
+   ],
+   "pressure": 0.382
+  }
+ },
+ {
+  "move": {
+   "at": [
+    725,
+    260
+   ],
+   "pressure": 0.406
+  }
+ },
+ {
+  "move": {
+   "at": [
+    748,
+    260
+   ],
+   "pressure": 0.43
+  }
+ },
+ {
+  "move": {
+   "at": [
+    771,
+    260
+   ],
+   "pressure": 0.454
+  }
+ },
+ {
+  "move": {
+   "at": [
+    794,
+    260
+   ],
+   "pressure": 0.477
+  }
+ },
+ {
+  "move": {
+   "at": [
+    817,
+    260
+   ],
+   "pressure": 0.501
+  }
+ },
+ {
+  "move": {
+   "at": [
+    840,
+    260
+   ],
+   "pressure": 0.525
+  }
+ },
+ {
+  "move": {
+   "at": [
+    863,
+    260
+   ],
+   "pressure": 0.549
+  }
+ },
+ {
+  "move": {
+   "at": [
+    886,
+    260
+   ],
+   "pressure": 0.573
+  }
+ },
+ {
+  "move": {
+   "at": [
+    909,
+    260
+   ],
+   "pressure": 0.596
+  }
+ },
+ {
+  "move": {
+   "at": [
+    932,
+    260
+   ],
+   "pressure": 0.62
+  }
+ },
+ {
+  "move": {
+   "at": [
+    955,
+    260
+   ],
+   "pressure": 0.644
+  }
+ },
+ {
+  "move": {
+   "at": [
+    978,
+    260
+   ],
+   "pressure": 0.667
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1001,
+    260
+   ],
+   "pressure": 0.691
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1024,
+    260
+   ],
+   "pressure": 0.715
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1047,
+    260
+   ],
+   "pressure": 0.739
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1070,
+    260
+   ],
+   "pressure": 0.762
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1093,
+    260
+   ],
+   "pressure": 0.786
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1116,
+    260
+   ],
+   "pressure": 0.81
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1139,
+    260
+   ],
+   "pressure": 0.834
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1162,
+    260
+   ],
+   "pressure": 0.858
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1185,
+    260
+   ],
+   "pressure": 0.881
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1208,
+    260
+   ],
+   "pressure": 0.905
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1231,
+    260
+   ],
+   "pressure": 0.929
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1254,
+    260
+   ],
+   "pressure": 0.953
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1277,
+    260
+   ],
+   "pressure": 0.976
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1300,
+    260
+   ],
+   "pressure": 1.0
+  }
+ },
+ {
+  "release": {
+   "button": "left"
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "tool": {
+   "id": "noise_brush",
+   "options": {
+    "radius": 0.03,
+    "hardness": 0.0,
+    "opacity": 1.0,
+    "strength": 1.0
+   }
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "move": {
+   "at": [
+    380,
+    420
+   ],
+   "pressure": 0.05
+  }
+ },
+ {
+  "press": {
+   "button": "left",
+   "at": [
+    380,
+    420
+   ],
+   "pressure": 0.05
+  }
+ },
+ {
+  "move": {
+   "at": [
+    403,
+    420
+   ],
+   "pressure": 0.074
+  }
+ },
+ {
+  "move": {
+   "at": [
+    426,
+    420
+   ],
+   "pressure": 0.098
+  }
+ },
+ {
+  "move": {
+   "at": [
+    449,
+    420
+   ],
+   "pressure": 0.121
+  }
+ },
+ {
+  "move": {
+   "at": [
+    472,
+    420
+   ],
+   "pressure": 0.145
+  }
+ },
+ {
+  "move": {
+   "at": [
+    495,
+    420
+   ],
+   "pressure": 0.169
+  }
+ },
+ {
+  "move": {
+   "at": [
+    518,
+    420
+   ],
+   "pressure": 0.193
+  }
+ },
+ {
+  "move": {
+   "at": [
+    541,
+    420
+   ],
+   "pressure": 0.216
+  }
+ },
+ {
+  "move": {
+   "at": [
+    564,
+    420
+   ],
+   "pressure": 0.24
+  }
+ },
+ {
+  "move": {
+   "at": [
+    587,
+    420
+   ],
+   "pressure": 0.264
+  }
+ },
+ {
+  "move": {
+   "at": [
+    610,
+    420
+   ],
+   "pressure": 0.287
+  }
+ },
+ {
+  "move": {
+   "at": [
+    633,
+    420
+   ],
+   "pressure": 0.311
+  }
+ },
+ {
+  "move": {
+   "at": [
+    656,
+    420
+   ],
+   "pressure": 0.335
+  }
+ },
+ {
+  "move": {
+   "at": [
+    679,
+    420
+   ],
+   "pressure": 0.359
+  }
+ },
+ {
+  "move": {
+   "at": [
+    702,
+    420
+   ],
+   "pressure": 0.382
+  }
+ },
+ {
+  "move": {
+   "at": [
+    725,
+    420
+   ],
+   "pressure": 0.406
+  }
+ },
+ {
+  "move": {
+   "at": [
+    748,
+    420
+   ],
+   "pressure": 0.43
+  }
+ },
+ {
+  "move": {
+   "at": [
+    771,
+    420
+   ],
+   "pressure": 0.454
+  }
+ },
+ {
+  "move": {
+   "at": [
+    794,
+    420
+   ],
+   "pressure": 0.477
+  }
+ },
+ {
+  "move": {
+   "at": [
+    817,
+    420
+   ],
+   "pressure": 0.501
+  }
+ },
+ {
+  "move": {
+   "at": [
+    840,
+    420
+   ],
+   "pressure": 0.525
+  }
+ },
+ {
+  "move": {
+   "at": [
+    863,
+    420
+   ],
+   "pressure": 0.549
+  }
+ },
+ {
+  "move": {
+   "at": [
+    886,
+    420
+   ],
+   "pressure": 0.573
+  }
+ },
+ {
+  "move": {
+   "at": [
+    909,
+    420
+   ],
+   "pressure": 0.596
+  }
+ },
+ {
+  "move": {
+   "at": [
+    932,
+    420
+   ],
+   "pressure": 0.62
+  }
+ },
+ {
+  "move": {
+   "at": [
+    955,
+    420
+   ],
+   "pressure": 0.644
+  }
+ },
+ {
+  "move": {
+   "at": [
+    978,
+    420
+   ],
+   "pressure": 0.667
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1001,
+    420
+   ],
+   "pressure": 0.691
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1024,
+    420
+   ],
+   "pressure": 0.715
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1047,
+    420
+   ],
+   "pressure": 0.739
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1070,
+    420
+   ],
+   "pressure": 0.762
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1093,
+    420
+   ],
+   "pressure": 0.786
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1116,
+    420
+   ],
+   "pressure": 0.81
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1139,
+    420
+   ],
+   "pressure": 0.834
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1162,
+    420
+   ],
+   "pressure": 0.858
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1185,
+    420
+   ],
+   "pressure": 0.881
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1208,
+    420
+   ],
+   "pressure": 0.905
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1231,
+    420
+   ],
+   "pressure": 0.929
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1254,
+    420
+   ],
+   "pressure": 0.953
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1277,
+    420
+   ],
+   "pressure": 0.976
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1300,
+    420
+   ],
+   "pressure": 1.0
+  }
+ },
+ {
+  "release": {
+   "button": "left"
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "wait": 20
+ },
+ {
+  "shot": "1-a-pressure-ramp-at-hardness-100-above-hardness-0"
+ },
+ {
+  "state": "1-a-pressure-ramp-at-hardness-100-above-hardness-0"
+ },
+ {
+  "tool": {
+   "id": "noise_brush",
+   "options": {
+    "radius": 0.03,
+    "hardness": 1.0,
+    "opacity": 1.0,
+    "strength": 1.0
+   }
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "move": {
+   "at": [
+    380,
+    570
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "press": {
+   "button": "left",
+   "at": [
+    380,
+    570
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    426,
+    570
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    472,
+    570
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    518,
+    570
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    564,
+    570
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    610,
+    570
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    656,
+    570
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    702,
+    570
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    748,
+    570
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    794,
+    570
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    840,
+    570
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    886,
+    570
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    932,
+    570
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    978,
+    570
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1024,
+    570
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1070,
+    570
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1116,
+    570
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1162,
+    570
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1208,
+    570
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1254,
+    570
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1300,
+    570
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "release": {
+   "button": "left"
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "tool": {
+   "id": "noise_brush",
+   "options": {
+    "radius": 0.03,
+    "hardness": 1.0,
+    "opacity": 1.0,
+    "strength": 0.6
+   }
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "move": {
+   "at": [
+    380,
+    670
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "press": {
+   "button": "left",
+   "at": [
+    380,
+    670
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    426,
+    670
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    472,
+    670
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    518,
+    670
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    564,
+    670
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    610,
+    670
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    656,
+    670
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    702,
+    670
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    748,
+    670
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    794,
+    670
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    840,
+    670
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    886,
+    670
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    932,
+    670
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    978,
+    670
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1024,
+    670
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1070,
+    670
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1116,
+    670
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1162,
+    670
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1208,
+    670
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1254,
+    670
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1300,
+    670
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "release": {
+   "button": "left"
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "tool": {
+   "id": "noise_brush",
+   "options": {
+    "radius": 0.03,
+    "hardness": 1.0,
+    "opacity": 1.0,
+    "strength": 0.2
+   }
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "move": {
+   "at": [
+    380,
+    770
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "press": {
+   "button": "left",
+   "at": [
+    380,
+    770
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    426,
+    770
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    472,
+    770
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    518,
+    770
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    564,
+    770
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    610,
+    770
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    656,
+    770
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    702,
+    770
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    748,
+    770
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    794,
+    770
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    840,
+    770
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    886,
+    770
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    932,
+    770
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    978,
+    770
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1024,
+    770
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1070,
+    770
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1116,
+    770
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1162,
+    770
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1208,
+    770
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1254,
+    770
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1300,
+    770
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "release": {
+   "button": "left"
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "tool": {
+   "id": "noise_brush",
+   "options": {
+    "radius": 0.03,
+    "hardness": 1.0,
+    "opacity": 1.0,
+    "strength": 0.0
+   }
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "move": {
+   "at": [
+    380,
+    870
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "press": {
+   "button": "left",
+   "at": [
+    380,
+    870
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    426,
+    870
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    472,
+    870
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    518,
+    870
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    564,
+    870
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    610,
+    870
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    656,
+    870
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    702,
+    870
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    748,
+    870
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    794,
+    870
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    840,
+    870
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    886,
+    870
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    932,
+    870
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    978,
+    870
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1024,
+    870
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1070,
+    870
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1116,
+    870
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1162,
+    870
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1208,
+    870
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1254,
+    870
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "move": {
+   "at": [
+    1300,
+    870
+   ],
+   "pressure": 0.5
+  }
+ },
+ {
+  "release": {
+   "button": "left"
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "wait": 20
+ },
+ {
+  "shot": "2-strength-100-60-20-and-0-at-half-pressure"
+ },
+ {
+  "state": "2-strength-100-60-20-and-0-at-half-pressure"
+ }
+]

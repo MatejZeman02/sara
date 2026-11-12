@@ -1,0 +1,23 @@
+[
+  {"wait": 30},
+  {"document": "display_p3"},
+  {"wait": 15},
+  {"fill": [1.0, 0.0, 0.0]},
+  {"colour": "#00ff00"},
+  {"stroke": {"from": [760, 396], "to": [1160, 396], "pressure": 1.0, "steps": 24}},
+  {"wait": 15},
+  {"shot": "01-the-p3-canvas-both-files-hold"},
+
+  {"export": "user://e4-p3-picture-8.png"},
+  {"wait": 10},
+  {"state": "02-the-eight-bit-png-read-back"},
+
+  {"export": "user://e4-p3-picture-16.png", "png_bits": 16},
+  {"wait": 10},
+  {"state": "03-the-sixteen-bit-png-read-back"},
+
+  {"reference": {"open": "user://e4-p3-picture-16.png"}},
+  {"wait": 30},
+  {"shot": "04-the-sixteen-bit-png-beside-the-canvas"},
+  {"state": "04-the-sixteen-bit-png-beside-the-canvas"}
+]

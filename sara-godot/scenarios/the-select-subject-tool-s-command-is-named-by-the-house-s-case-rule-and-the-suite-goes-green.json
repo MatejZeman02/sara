@@ -1,0 +1,10 @@
+[
+  {"comment": "Keyboard Shortcuts page shows the Select subject command."},
+  {"wait": 35},
+  {"open": "preferences"},
+  {"wait": 20},
+  {"page": "Keyboard Shortcuts"},
+  {"wait": 20},
+  {"shot": "01-keyboard-shortcuts"},
+  {"state": "01-keyboard-shortcuts"}
+]

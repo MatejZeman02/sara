@@ -1,0 +1,21 @@
+[
+ {"comment": "The opening of the door session scripts/test_a_door_session_paints_thousands_of_strokes_without_sara_stalling.py paints 2,000 strokes in, and the stroke it repeats: a 2160 by 720 document filled whole, saved and opened again, as each Welcome session opened the last one's save, its painted layer picked by name, since an opened document starts on Background, the Airbrush preset at radius 0.06, 43.2 px on that document, and one soft stroke on the tool route in document pixels. The suite sends every step before the first stroke as they stand and then this stroke two thousand times, each from and to its own. Painting the Welcome picture on 2026-10-05, such a session stopped answering about five minutes in, because the nested weston went idle for want of input. Run alone this file paints three of the strokes and photographs them."},
+ {"document": "srgb", "size": [2160, 720], "background": {"kind": "colour", "color": "#e8dcc4"}},
+ {"fill": [0.8, 0.72, 0.56]},
+ {"wait": 5},
+ {"save": "user://r1-a-large-document.sad"},
+ {"load": "user://r1-a-large-document.sad"},
+ {"layer": {"activate": "Layer 1"}},
+ {"fit": true},
+ {"wait": 10},
+ {"tool": "brush"},
+ {"preset": {"load": "Airbrush"}},
+ {"wait": 5},
+ {"brush": {"radius": 0.06}},
+ {"colour": "#3060a0"},
+ {"stroke": {"from": [300, 420], "to": [600, 300], "space": "document", "route": "tool", "pressure": 0.7, "steps": 16}},
+ {"stroke": {"from": [900, 200], "to": [1150, 380], "space": "document", "route": "tool", "pressure": 0.7, "steps": 16}},
+ {"stroke": {"from": [1500, 500], "to": [1800, 420], "space": "document", "route": "tool", "pressure": 0.7, "steps": 16}},
+ {"wait": 10},
+ {"shot": "1-three-soft-airbrush-strokes"}
+]

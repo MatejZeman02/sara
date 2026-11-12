@@ -1,0 +1,192 @@
+[
+  {
+    "wait": 60
+  },
+  {
+    "prefs": {
+      "ui_scale": 1.0
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "layout_preset": {
+      "load": "minimalistic"
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "document": "srgb"
+  },
+  {
+    "tool": "brush"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "preset": {
+      "open": true,
+      "icon_size": 48
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "preset": {}
+  },
+  {
+    "state": "s8-30-the-chooser-open-at-48"
+  },
+  {
+    "shot": "s8-30-the-chooser-open-at-48"
+  },
+  {
+    "preset": {
+      "icon_size": 30
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "preset": {}
+  },
+  {
+    "state": "s8-31-at-its-floor"
+  },
+  {
+    "preset": {
+      "icon_size": 12
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "preset": {}
+  },
+  {
+    "state": "s8-32-asked-for-less-than-its-floor"
+  },
+  {
+    "preset": {
+      "icon_size": 80
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "preset": {}
+  },
+  {
+    "state": "s8-33-at-its-ceiling"
+  },
+  {
+    "preset": {
+      "icon_size": 200
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "preset": {}
+  },
+  {
+    "state": "s8-34-asked-for-more-than-its-ceiling"
+  },
+  {
+    "shot": "s8-34-asked-for-more-than-its-ceiling"
+  },
+  {
+    "preset": {
+      "icon_size": 48
+    }
+  },
+  {
+    "preset": {
+      "search": "sketch"
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "preset": {}
+  },
+  {
+    "state": "s8-35-searched-for-sketch"
+  },
+  {
+    "preset": {
+      "search": "zzz"
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "preset": {}
+  },
+  {
+    "state": "s8-36-searched-for-nothing"
+  },
+  {
+    "preset": {
+      "search": ""
+    }
+  },
+  {
+    "preset": {
+      "tag": "paint"
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "preset": {}
+  },
+  {
+    "state": "s8-37-tagged-paint"
+  },
+  {
+    "preset": {
+      "tag": "Paint"
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "preset": {}
+  },
+  {
+    "state": "s8-38-tagged-with-the-wrong-case"
+  },
+  {
+    "preset": {
+      "tag": ""
+    }
+  },
+  {
+    "preset": {
+      "finish": true
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "preset": {}
+  },
+  {
+    "state": "s8-39-every-cell-drawn"
+  }
+]

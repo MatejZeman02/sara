@@ -1,0 +1,21 @@
+[
+  {"wait": 45},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 20},
+  {"document": "srgb"},
+  {"wait": 25},
+
+  {"kernel_prompt": "file"},
+  {"kernel_prompt": "clear"},
+  {"kernel_prompt": "clipboard"},
+
+  {"menu": "Modules"},
+  {"wait": 15},
+  {"shot": "1-the-row-in-the-develop-section-of-modules"},
+
+  {"menu_item": {"menu": "Modules", "id": 804}},
+  {"wait": 15},
+  {"kernel_prompt": "clipboard"},
+  {"shot": "2-after-the-press"},
+  {"state": "2-after-the-press"}
+]

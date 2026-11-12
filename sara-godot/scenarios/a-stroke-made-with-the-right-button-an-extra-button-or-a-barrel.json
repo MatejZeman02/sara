@@ -1,0 +1,445 @@
+[
+  {
+    "comment": "A drag of the right button, bound to Eraser while held, follows the pointer across an embedded docker. A docker holding the subwindow focus is handed every mouse event before the GUI, and only a left press outside it moves that focus, so the canvas's gui_input heard none of a right button drag that began while a docker held it. The Minimap docker is clicked on its title, which gives it the focus, and the right press follows with no hover between, since a hover over the canvas hands the focus back (DockerFocus). The layer is filled green and the Minimap sits over the middle of the row, with a point every 25 pixels and a zigzag over and past the docker, so a path that follows every point shows no gap and no straight segment where the pointer crossed. On the base branch the right drag erased nothing here, the docker took every motion of it, and the look after the release shows the layer whole."
+  },
+  {
+    "wait": 30
+  },
+  {
+    "layer": {
+      "fill": [
+        0.1,
+        0.6,
+        0.3,
+        1.0
+      ]
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "docker": {
+      "id": "MinimapDocker",
+      "at": [
+        760,
+        250
+      ],
+      "size": [
+        200,
+        200
+      ]
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "prefs": {
+      "pen_buttons": {
+        "right": "eraser",
+        "middle": "pan",
+        "extra1": "nothing",
+        "extra2": "nothing"
+      }
+    }
+  },
+  {
+    "move": {
+      "at": [
+        840,
+        265
+      ]
+    }
+  },
+  {
+    "press": {
+      "button": "left",
+      "at": [
+        840,
+        265
+      ]
+    }
+  },
+  {
+    "release": {
+      "button": "left",
+      "at": [
+        840,
+        265
+      ]
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "wait": 5
+  },
+  {
+    "state": "0-the-layer-green-and-the-docker-over-the-row"
+  },
+  {
+    "press": {
+      "button": "right",
+      "at": [
+        500,
+        330
+      ]
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "move": {
+      "at": [
+        500,
+        330
+      ],
+      "pressure": 0.8,
+      "tilt": [
+        0.2,
+        0.1
+      ]
+    }
+  },
+  {
+    "move": {
+      "at": [
+        525,
+        330
+      ],
+      "pressure": 0.8,
+      "tilt": [
+        0.2,
+        0.1
+      ]
+    }
+  },
+  {
+    "move": {
+      "at": [
+        550,
+        330
+      ],
+      "pressure": 0.8,
+      "tilt": [
+        0.2,
+        0.1
+      ]
+    }
+  },
+  {
+    "move": {
+      "at": [
+        575,
+        330
+      ],
+      "pressure": 0.8,
+      "tilt": [
+        0.2,
+        0.1
+      ]
+    }
+  },
+  {
+    "move": {
+      "at": [
+        600,
+        330
+      ],
+      "pressure": 0.8,
+      "tilt": [
+        0.2,
+        0.1
+      ]
+    }
+  },
+  {
+    "move": {
+      "at": [
+        625,
+        330
+      ],
+      "pressure": 0.8,
+      "tilt": [
+        0.2,
+        0.1
+      ]
+    }
+  },
+  {
+    "move": {
+      "at": [
+        650,
+        330
+      ],
+      "pressure": 0.8,
+      "tilt": [
+        0.2,
+        0.1
+      ]
+    }
+  },
+  {
+    "move": {
+      "at": [
+        675,
+        330
+      ],
+      "pressure": 0.8,
+      "tilt": [
+        0.2,
+        0.1
+      ]
+    }
+  },
+  {
+    "move": {
+      "at": [
+        700,
+        290
+      ],
+      "pressure": 0.8,
+      "tilt": [
+        0.2,
+        0.1
+      ]
+    }
+  },
+  {
+    "move": {
+      "at": [
+        725,
+        370
+      ],
+      "pressure": 0.8,
+      "tilt": [
+        0.2,
+        0.1
+      ]
+    }
+  },
+  {
+    "move": {
+      "at": [
+        750,
+        290
+      ],
+      "pressure": 0.8,
+      "tilt": [
+        0.2,
+        0.1
+      ]
+    }
+  },
+  {
+    "move": {
+      "at": [
+        775,
+        370
+      ],
+      "pressure": 0.8,
+      "tilt": [
+        0.2,
+        0.1
+      ]
+    }
+  },
+  {
+    "move": {
+      "at": [
+        800,
+        290
+      ],
+      "pressure": 0.8,
+      "tilt": [
+        0.2,
+        0.1
+      ]
+    }
+  },
+  {
+    "move": {
+      "at": [
+        825,
+        370
+      ],
+      "pressure": 0.8,
+      "tilt": [
+        0.2,
+        0.1
+      ]
+    }
+  },
+  {
+    "move": {
+      "at": [
+        850,
+        290
+      ],
+      "pressure": 0.8,
+      "tilt": [
+        0.2,
+        0.1
+      ]
+    }
+  },
+  {
+    "move": {
+      "at": [
+        875,
+        370
+      ],
+      "pressure": 0.8,
+      "tilt": [
+        0.2,
+        0.1
+      ]
+    }
+  },
+  {
+    "move": {
+      "at": [
+        900,
+        290
+      ],
+      "pressure": 0.8,
+      "tilt": [
+        0.2,
+        0.1
+      ]
+    }
+  },
+  {
+    "move": {
+      "at": [
+        925,
+        370
+      ],
+      "pressure": 0.8,
+      "tilt": [
+        0.2,
+        0.1
+      ]
+    }
+  },
+  {
+    "move": {
+      "at": [
+        950,
+        290
+      ],
+      "pressure": 0.8,
+      "tilt": [
+        0.2,
+        0.1
+      ]
+    }
+  },
+  {
+    "move": {
+      "at": [
+        975,
+        370
+      ],
+      "pressure": 0.8,
+      "tilt": [
+        0.2,
+        0.1
+      ]
+    }
+  },
+  {
+    "move": {
+      "at": [
+        1000,
+        290
+      ],
+      "pressure": 0.8,
+      "tilt": [
+        0.2,
+        0.1
+      ]
+    }
+  },
+  {
+    "move": {
+      "at": [
+        1025,
+        330
+      ],
+      "pressure": 0.8,
+      "tilt": [
+        0.2,
+        0.1
+      ]
+    }
+  },
+  {
+    "move": {
+      "at": [
+        1050,
+        330
+      ],
+      "pressure": 0.8,
+      "tilt": [
+        0.2,
+        0.1
+      ]
+    }
+  },
+  {
+    "move": {
+      "at": [
+        1075,
+        330
+      ],
+      "pressure": 0.8,
+      "tilt": [
+        0.2,
+        0.1
+      ]
+    }
+  },
+  {
+    "move": {
+      "at": [
+        1100,
+        330
+      ],
+      "pressure": 0.8,
+      "tilt": [
+        0.2,
+        0.1
+      ]
+    }
+  },
+  {
+    "state": "1-the-barrel-held-past-the-docker"
+  },
+  {
+    "release": {
+      "button": "right",
+      "at": [
+        1100,
+        330
+      ]
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "state": "2-the-eraser-took-the-path"
+  },
+  {
+    "look": {
+      "path": "3-the-erased-path-look.png"
+    }
+  },
+  {
+    "shot": "3-the-erased-path"
+  }
+]

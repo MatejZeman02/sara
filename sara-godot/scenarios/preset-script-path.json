@@ -1,0 +1,27 @@
+[
+  {"wait": 40},
+  {"tool": "brush"},
+  {"wait": 6},
+  {"preset": {"open": true}},
+  {"wait": 10},
+  {"shot": "01-the-preset-list"},
+  {"state": "01-the-preset-list"},
+  {"key": "escape"},
+  {"wait": 6},
+
+  {"preset": {"load": "Sketch"}},
+  {"wait": 10},
+  {"state": "02-a-preset-written-before-the-move-loaded"},
+  {"stroke": {"from": [500, 500], "to": [1200, 700], "pressure": 0.9, "steps": 22}},
+  {"wait": 12},
+  {"shot": "03-painted-with-it"},
+  {"state": "03-painted-with-it"},
+
+  {"preset": {"load": "Paint"}},
+  {"wait": 10},
+  {"state": "04-and-the-second-one"},
+  {"stroke": {"from": [500, 800], "to": [1200, 900], "pressure": 0.9, "steps": 22}},
+  {"wait": 12},
+  {"shot": "05-painted-with-that-one"},
+  {"state": "05-painted-with-that-one"}
+]

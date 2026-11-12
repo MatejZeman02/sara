@@ -1,0 +1,57 @@
+[
+ {
+  "comment": "A JPEG stored 400 by 200 with EXIF orientation 6, as a phone writes a portrait photograph, opened by File > Open, lands as a document 200 by 400 whose top left is the blue the stored bottom left holds."
+ },
+ {
+  "wait": 30
+ },
+ {
+  "menu_item": {
+   "menu": "File",
+   "id": 200
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "file_picker": {
+   "choose": "res://tests/data/portrait_exif_6.jpg"
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "key": "enter"
+ },
+ {
+  "wait": 25
+ },
+ {
+  "texel": [
+   [
+    10,
+    10
+   ],
+   [
+    190,
+    10
+   ],
+   [
+    10,
+    390
+   ],
+   [
+    190,
+    390
+   ]
+  ]
+ },
+ {
+  "shot": "opened"
+ },
+ {
+  "state": "opened"
+ }
+]

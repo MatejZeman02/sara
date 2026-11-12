@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  The MIME type for a Sara document, installed into the user's own MIME
+  database by packaging/install.sh and removed by uninstall.sh.
+
+  Without it a file manager has no type to offer Sara for, so "Open with"
+  never lists it whatever the desktop entry declares. The glob answers for a
+  file that is not there to be read, and the magic answers for one that is:
+  both containers start with their four ASCII bytes, SAD2 for v4 and SAD1 for
+  v3, which is the same test SaExport makes when it opens one.
+-->
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+  <mime-type type="application/x-sara-document">
+    <comment>Sara document</comment>
+    <glob pattern="*.sad"/>
+    <magic priority="60">
+      <match type="string" value="SAD2" offset="0"/>
+      <match type="string" value="SAD1" offset="0"/>
+    </magic>
+    <icon name="sara"/>
+    <generic-icon name="image-x-generic"/>
+  </mime-type>
+</mime-info>

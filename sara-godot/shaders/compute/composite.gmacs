@@ -1,0 +1,217 @@
+# Blends a single chunk from the source layer onto the canvas texture, with
+# alpha blending and layer visibility in parallel.
+#
+# Separable modes follow the W3C compositing formulas channel by channel on the
+# document's RGB values. The non-separable modes (hue, saturation, lightness,
+# color) swap polar components in Oklab instead, so they stay perceptually
+# uniform.
+#
+# A mode is defined in some coordinate system and a document declares one too,
+# and a kernel converts only where the two disagree. The wrong fetch/store pair
+# is silent on an RGB document and wrong on every other one, so the group is
+# part of what a mode is:
+#
+#   - Coordinate-agnostic: composite (Normal) and erase. Porter-Duff is a lerp
+#     and erase only carves alpha. Uses fetch_pixels / blend_and_store.
+#   - RGB-defined: the other twelve separable modes. Multiplying two signed
+#     numbers centred on zero is not a darker colour, so these go through the
+#     document's RGB view and back. Uses fetch_pixels_rgb / blend_and_store_rgb,
+#     windowed where the formula assumes 0-1. The seven that multiply or divide
+#     channels (multiply, screen, overlay, colour dodge, soft light, hard light,
+#     exclusion) take their source through libs/positive_channels.gmacs, because
+#     a product of two negatives is a positive. All but soft light are linear in
+#     the backdrop, so a negative backdrop keeps its sign as stored. Soft light
+#     is not (a square root and a square), so it nets both.
+#   - Oklab-defined: hue, saturation, lightness, color. Unwindowed, because
+#     Oklab LCh holds any lightness. Uses fetch_pixels / blend_and_store with
+#     document_to_oklch and components_to_document (libs/composite_blend_ops).
+#   - Space named by the mode: composite_srgb, composite_linear, composite_oklab.
+#     A half-covered white over black is a different grey in each, so which one
+#     is an artistic choice. Uses fetch_pixels_space / blend_and_store_space.
+#
+# Each mode's kernel is made from its `*_blended` function by the import below,
+# so a new mode is its formula and its row of the skeleton's table and nothing
+# here. Normal is the kernel `SaCompositor` falls back to for a mode nobody
+# registered.
+
+import linear_srgb_color_space, positive_channels, transfer_curve
+
+# Both textures are in set 0, differentiated by binding 0 and 1
+image canvas
+image chunk
+
+# 128 bytes, exactly the Vulkan guarantee. Packed by
+# SaCompute.pack_composite_params(). The colour space arrives as matrices rather
+# than as constants generated into the source, because a generated include is
+# global to the compiler while Sara runs more than one easel at a time: the info
+# docker's scratchpad owns its own document.
+#
+# The matrices are float[9] and not mat3 on purpose. std430 pads every mat3
+# column out to 16 bytes, so a matrix declared that way spends 48 bytes carrying
+# 36 and this block held two of them. A float array has a stride of 4, which gave
+# back the 24 bytes the coordinate system now occupies. Nothing rearranges this
+# for us: the compiler reads the kernel, import and workgroup_size directives and
+# never looks inside a params block, so the order here is the order SaColorSpace
+# writes.
+params:
+    vec2 offset
+    float opacity
+    # The document's blend reference white: the value a display-referred formula
+    # should treat as 1.0. See enter_window() below. It sits here rather than at
+    # the end because std430 has to pad to 16 bytes before the first mat3
+    # anyway, and that slot was the only spare room left in the block.
+    float blend_white
+    # Column-major, three floats a column. Read them through the two accessors
+    # below rather than indexing at the call site.
+    float doc_to_linear_srgb[9]
+    float linear_srgb_to_doc[9]
+    # The document's transfer curve, four numbers rather than a flag naming one.
+    # See libs/transfer_curve.gmacs.
+    float transfer_slope
+    float transfer_threshold
+    float transfer_gain
+    float transfer_exponent
+    # Which coordinate system the chunks hold. See SaColorSpace.Coordinates and
+    # the block of helpers below.
+    float coordinates
+    # How many of the source's texels lie along one destination pixel, 0 read as
+    # 1. See source_density() in libs/composite_blend_ops.gmacs. It took the
+    # place of the float that only ended the block on a multiple of 16 bytes, so
+    # the block is still 128: Godot reflects the declared size out of the
+    # SPIR-V and refuses a push constant that is not exactly that many bytes.
+    float density
+    # The part of the chunk this dispatch covers, in destination pixels from the
+    # chunk's origin, which at a density of 1 are chunk-local pixels, so a
+    # three-pixel dab costs a few threads and not a whole chunk's. The origin
+    # shifts gl_GlobalInvocationID into place and the size bounds it, both
+    # inside fetch_pixels, which is the single door every kernel goes through.
+    float region_x
+    float region_y
+    float region_w
+    float region_h
+
+import composite_color_space
+
+import composite_blend_ops
+
+# --- The blend modes ------------------------------------------------------------
+#
+# Each mode's kernel stores what its formula in `libs/composite_blend_modes.gmacs`
+# answers, as it is. A brush's commit runs the same formulas from
+# `stroke_commit.gmacs` and rounds the store, and both files have their kernels
+# made from the formulas by `import kernels_of/...`, which writes one kernel
+# named for each `<mode>_blended` function and calls `store_blended` below.
+
+
+def store_blended(ivec2 at, vec4 value): canvas[at] = value
+
+import kernels_of/composite_blend_modes/blended
+
+# The kernels that are not blend modes, declared after the modes' and above
+# their own `def`s, which take the default workgroup only once declared.
+kernel resample
+kernel opaque, keep_alpha
+kernel above_white_met
+kernel above_white_met_in_lch
+
+# --- A finer chunk brought down to the document's resolution ------------------
+#
+# Not a blend mode. The source's texels at the block's density, stored into the
+# destination as they are read, with no opacity and no blend, so a chunk at twice
+# the document's resolution becomes the chunk at 1.0 a mask, a clip or a filter
+# reads. Every texel of the region is written, a transparent one as zero, so the
+# destination needs no clear first. SaDocumentTexels dispatches it.
+
+
+def resample():
+    ivec2 local = ivec2(global_id.xy)
+    if local.x >= int(region_w) or local.y >= int(region_h): return
+    ivec2 at = local + ivec2(region_x, region_y)
+    ivec2 chunk_size = image_size(chunk)
+    float d = source_density()
+    ivec2 texel = ivec2(floor(vec2(at) * d))
+    if texel.x >= chunk_size.x or texel.y >= chunk_size.y: return
+    canvas[at + ivec2(offset)] = read_source(texel, chunk_size, d)
+
+# --- The adjustment layer's mix --------------------------------------------
+#
+# Not blend modes either. SaBackdropLayer mixes the backdrop towards its filtered copy
+# in the layer's mode by compositing the copy over the backdrop made opaque,
+# so the mask, the clip and the opacity alone say how far the mix goes, and
+# then writes the colour back under the backdrop's own alpha, which an
+# adjustment keeps. Neither skips a transparent texel the way fetch_pixels
+# does, since a texel with no coverage still has a colour a later mix reads.
+
+# The source's colour at full coverage.
+
+
+def opaque():
+    ivec2 local = ivec2(global_id.xy)
+    if local.x >= int(region_w) or local.y >= int(region_h): return
+    ivec2 at = local + ivec2(region_x, region_y)
+    ivec2 chunk_size = image_size(chunk)
+    if at.x >= chunk_size.x or at.y >= chunk_size.y: return
+    ivec2 to = at + ivec2(offset)
+    ivec2 canvas_size = image_size(canvas)
+    if to.x < 0 or to.y < 0 or to.x >= canvas_size.x or to.y >= canvas_size.y: return
+    canvas[to] = vec4(chunk[at].rgb, 1.0)
+
+# The source's colour under the destination's own alpha.
+
+
+def keep_alpha():
+    ivec2 local = ivec2(global_id.xy)
+    if local.x >= int(region_w) or local.y >= int(region_h): return
+    ivec2 at = local + ivec2(region_x, region_y)
+    ivec2 chunk_size = image_size(chunk)
+    if at.x >= chunk_size.x or at.y >= chunk_size.y: return
+    ivec2 to = at + ivec2(offset)
+    ivec2 canvas_size = image_size(canvas)
+    if to.x < 0 or to.y < 0 or to.x >= canvas_size.x or to.y >= canvas_size.y: return
+    canvas[to] = vec4(chunk[at].rgb, canvas[to].a)
+
+# --- The probes for a file saved before the extension -----------------------
+#
+# Neither is a blend mode. A file saved before a display-referred mode kept drawing above white was drawn by
+# the formula alone, so its picture changed exactly where that mode met a
+# value above white: a texel the source covers over a backdrop with coverage,
+# with a channel of either input above the window. SaOlderReading runs this
+# over the backdrop a layer draws onto and reads back where it met one. Every
+# pixel of the region is written, 1 in alpha where it met one and 0 elsewhere,
+# so what the backdrop held there is never read as a meeting.
+
+# The texel of the canvas a probe writes, false past the region or the canvas.
+
+
+def probed_texel(out ivec2 own) -> bool:
+    ivec2 local = ivec2(global_id.xy)
+    own = local + ivec2(region_x, region_y) + ivec2(offset)
+    if local.x >= int(region_w) or local.y >= int(region_h): return false
+    ivec2 canvas_size = image_size(canvas)
+    return own.x >= 0 and own.y >= 0 and own.x < canvas_size.x and own.y < canvas_size.y
+
+
+def above_white_met():
+    ivec2 own
+    if not probed_texel(own): return
+    ivec2 canvas_coords
+    vec4 src, dst
+    bool met = fetch_pixels_rgb_windowed(canvas_coords, src, dst) and dst.a > 0.0 and either_above_white(sa_positive_channels(src.rgb), dst.rgb)
+    canvas[own] = vec4(0.0, 0.0, 0.0, met ? 1.0 : 0.0)
+
+# The same probe for the four component modes, whose older reading differs in
+# two places. Above white, where a channel of either input passes W, as for
+# the others. And under it wherever W is not 1 on an RGB document, because the
+# older reading took its components from the stored colour over W put through
+# the document's curve, and the sRGB curve's toe makes that a different colour
+# rather than a dimmer one. An Oklab document read the same both ways, since
+# scaling L, a and b together and back again changes nothing.
+
+
+def above_white_met_in_lch():
+    ivec2 own
+    if not probed_texel(own): return
+    ivec2 canvas_coords
+    vec4 src, dst
+    bool met = not document_is_oklab() and fetch_pixels_windowed(canvas_coords, src, dst) and dst.a > 0.0 and (window_scale() != 1.0 or either_above_white(src.rgb, dst.rgb))
+    canvas[own] = vec4(0.0, 0.0, 0.0, met ? 1.0 : 0.0)

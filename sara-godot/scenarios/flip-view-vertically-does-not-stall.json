@@ -1,0 +1,858 @@
+[
+ {
+  "comment": "Flip View Vertically (Ctrl+Shift+H) pressed twice, then Flip View Horizontally (H) twice, on a painted 3000 by 2000 document with the pointer over the canvas, each press inside a perf window so the longest frame gap and the dispatches it cost are read. Four rounds: the pan tool then the brush, the Minimap docker closed then open. A window with no press in it comes first as the control. Then the bisect: everything that follows the canvas's transform switched on at once (the selection and its ants, the grid, the symmetry axes, the brush ring, the Minimap), two vertical presses, and each switched off in turn with two presses after it. The run's log must hold no Sara stall line, and the shots show the picture flipped and flipped back."
+ },
+ {
+  "wait": 30
+ },
+ {
+  "docker": "park"
+ },
+ {
+  "document": "srgb",
+  "size": [
+   3000,
+   2000
+  ]
+ },
+ {
+  "wait": 10
+ },
+ {
+  "fit": true
+ },
+ {
+  "wait": 10
+ },
+ {
+  "tool": "brush"
+ },
+ {
+  "colour": "#d84a2a"
+ },
+ {
+  "stroke": {
+   "from": [
+    420,
+    300
+   ],
+   "to": [
+    1300,
+    320
+   ],
+   "pressure": 0.9,
+   "steps": 30
+  }
+ },
+ {
+  "colour": "#2e8f5a"
+ },
+ {
+  "stroke": {
+   "from": [
+    430,
+    340
+   ],
+   "to": [
+    900,
+    840
+   ],
+   "pressure": 0.9,
+   "steps": 30
+  }
+ },
+ {
+  "wait": 120
+ },
+ {
+  "measure": {
+   "perf": "begin"
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "measure": {
+   "perf": "end"
+  }
+ },
+ {
+  "tool": "pan"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "move": {
+   "at": [
+    960,
+    540
+   ],
+   "pressure": 0.0
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "shot": "1-no-minimap-pan-before"
+ },
+ {
+  "measure": {
+   "perf": "begin"
+  }
+ },
+ {
+  "key": {
+   "key": "h",
+   "ctrl": true,
+   "shift": true
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "measure": {
+   "perf": "end"
+  }
+ },
+ {
+  "shot": "1-flipped-down"
+ },
+ {
+  "measure": {
+   "perf": "begin"
+  }
+ },
+ {
+  "key": {
+   "key": "h",
+   "ctrl": true,
+   "shift": true
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "measure": {
+   "perf": "end"
+  }
+ },
+ {
+  "shot": "1-flipped-back"
+ },
+ {
+  "measure": {
+   "perf": "begin"
+  }
+ },
+ {
+  "key": {
+   "key": "h"
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "measure": {
+   "perf": "end"
+  }
+ },
+ {
+  "shot": "1-flipped-across"
+ },
+ {
+  "measure": {
+   "perf": "begin"
+  }
+ },
+ {
+  "key": {
+   "key": "h"
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "measure": {
+   "perf": "end"
+  }
+ },
+ {
+  "shot": "1-across-back"
+ },
+ {
+  "tool": "brush"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "move": {
+   "at": [
+    960,
+    540
+   ],
+   "pressure": 0.0
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "shot": "2-no-minimap-brush-before"
+ },
+ {
+  "measure": {
+   "perf": "begin"
+  }
+ },
+ {
+  "key": {
+   "key": "h",
+   "ctrl": true,
+   "shift": true
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "measure": {
+   "perf": "end"
+  }
+ },
+ {
+  "shot": "2-flipped-down"
+ },
+ {
+  "measure": {
+   "perf": "begin"
+  }
+ },
+ {
+  "key": {
+   "key": "h",
+   "ctrl": true,
+   "shift": true
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "measure": {
+   "perf": "end"
+  }
+ },
+ {
+  "shot": "2-flipped-back"
+ },
+ {
+  "measure": {
+   "perf": "begin"
+  }
+ },
+ {
+  "key": {
+   "key": "h"
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "measure": {
+   "perf": "end"
+  }
+ },
+ {
+  "shot": "2-flipped-across"
+ },
+ {
+  "measure": {
+   "perf": "begin"
+  }
+ },
+ {
+  "key": {
+   "key": "h"
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "measure": {
+   "perf": "end"
+  }
+ },
+ {
+  "shot": "2-across-back"
+ },
+ {
+  "docker": {
+   "id": "MinimapDocker",
+   "at": [
+    1500,
+    100
+   ],
+   "size": [
+    380,
+    300
+   ]
+  }
+ },
+ {
+  "wait": 30
+ },
+ {
+  "tool": "pan"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "move": {
+   "at": [
+    960,
+    540
+   ],
+   "pressure": 0.0
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "shot": "3-minimap-pan-before"
+ },
+ {
+  "measure": {
+   "perf": "begin"
+  }
+ },
+ {
+  "key": {
+   "key": "h",
+   "ctrl": true,
+   "shift": true
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "measure": {
+   "perf": "end"
+  }
+ },
+ {
+  "shot": "3-flipped-down"
+ },
+ {
+  "measure": {
+   "perf": "begin"
+  }
+ },
+ {
+  "key": {
+   "key": "h",
+   "ctrl": true,
+   "shift": true
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "measure": {
+   "perf": "end"
+  }
+ },
+ {
+  "shot": "3-flipped-back"
+ },
+ {
+  "measure": {
+   "perf": "begin"
+  }
+ },
+ {
+  "key": {
+   "key": "h"
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "measure": {
+   "perf": "end"
+  }
+ },
+ {
+  "shot": "3-flipped-across"
+ },
+ {
+  "measure": {
+   "perf": "begin"
+  }
+ },
+ {
+  "key": {
+   "key": "h"
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "measure": {
+   "perf": "end"
+  }
+ },
+ {
+  "shot": "3-across-back"
+ },
+ {
+  "tool": "brush"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "move": {
+   "at": [
+    960,
+    540
+   ],
+   "pressure": 0.0
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "shot": "4-minimap-brush-before"
+ },
+ {
+  "measure": {
+   "perf": "begin"
+  }
+ },
+ {
+  "key": {
+   "key": "h",
+   "ctrl": true,
+   "shift": true
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "measure": {
+   "perf": "end"
+  }
+ },
+ {
+  "shot": "4-flipped-down"
+ },
+ {
+  "measure": {
+   "perf": "begin"
+  }
+ },
+ {
+  "key": {
+   "key": "h",
+   "ctrl": true,
+   "shift": true
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "measure": {
+   "perf": "end"
+  }
+ },
+ {
+  "shot": "4-flipped-back"
+ },
+ {
+  "measure": {
+   "perf": "begin"
+  }
+ },
+ {
+  "key": {
+   "key": "h"
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "measure": {
+   "perf": "end"
+  }
+ },
+ {
+  "shot": "4-flipped-across"
+ },
+ {
+  "measure": {
+   "perf": "begin"
+  }
+ },
+ {
+  "key": {
+   "key": "h"
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "measure": {
+   "perf": "end"
+  }
+ },
+ {
+  "shot": "4-across-back"
+ },
+ {
+  "tool": "brush"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "prefs": {
+   "show_grid": true
+  }
+ },
+ {
+  "symmetry": {
+   "horizontal": true,
+   "vertical": true
+  }
+ },
+ {
+  "select": {
+   "rect": [
+    600,
+    400,
+    1400,
+    900
+   ]
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "move": {
+   "at": [
+    960,
+    540
+   ],
+   "pressure": 0.0
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "shot": "bisect-all-on"
+ },
+ {
+  "measure": {
+   "perf": "begin"
+  }
+ },
+ {
+  "key": {
+   "key": "h",
+   "ctrl": true,
+   "shift": true
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "measure": {
+   "perf": "end"
+  }
+ },
+ {
+  "measure": {
+   "perf": "begin"
+  }
+ },
+ {
+  "key": {
+   "key": "h",
+   "ctrl": true,
+   "shift": true
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "measure": {
+   "perf": "end"
+  }
+ },
+ {
+  "select": "none"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "measure": {
+   "perf": "begin"
+  }
+ },
+ {
+  "key": {
+   "key": "h",
+   "ctrl": true,
+   "shift": true
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "measure": {
+   "perf": "end"
+  }
+ },
+ {
+  "measure": {
+   "perf": "begin"
+  }
+ },
+ {
+  "key": {
+   "key": "h",
+   "ctrl": true,
+   "shift": true
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "measure": {
+   "perf": "end"
+  }
+ },
+ {
+  "prefs": {
+   "show_grid": false
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "measure": {
+   "perf": "begin"
+  }
+ },
+ {
+  "key": {
+   "key": "h",
+   "ctrl": true,
+   "shift": true
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "measure": {
+   "perf": "end"
+  }
+ },
+ {
+  "measure": {
+   "perf": "begin"
+  }
+ },
+ {
+  "key": {
+   "key": "h",
+   "ctrl": true,
+   "shift": true
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "measure": {
+   "perf": "end"
+  }
+ },
+ {
+  "symmetry": {
+   "horizontal": false,
+   "vertical": false
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "measure": {
+   "perf": "begin"
+  }
+ },
+ {
+  "key": {
+   "key": "h",
+   "ctrl": true,
+   "shift": true
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "measure": {
+   "perf": "end"
+  }
+ },
+ {
+  "measure": {
+   "perf": "begin"
+  }
+ },
+ {
+  "key": {
+   "key": "h",
+   "ctrl": true,
+   "shift": true
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "measure": {
+   "perf": "end"
+  }
+ },
+ {
+  "tool": "pan"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "measure": {
+   "perf": "begin"
+  }
+ },
+ {
+  "key": {
+   "key": "h",
+   "ctrl": true,
+   "shift": true
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "measure": {
+   "perf": "end"
+  }
+ },
+ {
+  "measure": {
+   "perf": "begin"
+  }
+ },
+ {
+  "key": {
+   "key": "h",
+   "ctrl": true,
+   "shift": true
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "measure": {
+   "perf": "end"
+  }
+ },
+ {
+  "docker": "park"
+ },
+ {
+  "wait": 20
+ },
+ {
+  "shot": "bisect-all-off"
+ },
+ {
+  "measure": {
+   "perf": "begin"
+  }
+ },
+ {
+  "key": {
+   "key": "h",
+   "ctrl": true,
+   "shift": true
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "measure": {
+   "perf": "end"
+  }
+ },
+ {
+  "measure": {
+   "perf": "begin"
+  }
+ },
+ {
+  "key": {
+   "key": "h",
+   "ctrl": true,
+   "shift": true
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "measure": {
+   "perf": "end"
+  }
+ },
+ {
+  "state": "end"
+ }
+]

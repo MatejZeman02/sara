@@ -1,0 +1,46 @@
+# What a build writes. A clone of this repository is clean after
+# ./packaging/build.sh, and nothing here is a file of the source.
+
+# Every build packaging/build.sh exports: build/l the Linux binary, build/w the
+# Windows zip, build/a the Android package, build/s a source archive. The same
+# name inside a native module is the folder its library is compiled in.
+build/
+
+# Godot's import caches, in the project and in any module that is a project of
+# its own. They are rebuilt from the source on the first start, and
+# packaging/build.sh writes .godot/extension_list.cfg among them.
+.godot/
+.import/
+
+# The three files packaging/build.sh writes into the project for the length of
+# one export and removes again, which a build cut short leaves behind.
+/sara-godot/build_info.json
+/sara-godot/CHANGELOG.md
+/sara-godot/step_catalogue.json
+
+# The project settings a lesson recording lays down for one film.
+/sara-godot/override.cfg
+
+# The native modules' libraries, and the extension lists the build writes
+# beside them naming what it built.
+bin/
+*.gdextension
+*.gdextension.uid
+*.gdextension.held
+
+# Where run_tests.sh and scripts/sara_shot.py put a run's settings, logs and
+# captures, so a gate run never touches the painter's own.
+scratch/
+
+# Godot's compiled translations, made from the catalogues on import.
+*.translation
+
+# Python's bytecode cache, written by the scripts under sara-godot/scripts.
+__pycache__/
+*.pyc
+
+# A global gitignore that hides *.import would drop the import settings beside
+# every asset, and a fresh clone would then reimport them with the engine's
+# defaults and render the icons differently for everyone. A repository's own
+# .gitignore beats core.excludesFile, so this negation puts them back.
+!*.import

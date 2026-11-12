@@ -1,0 +1,9 @@
+# A file Krita's Save Custom Shortcuts writes, only the actions a painter
+# changed, with one Export Scheme line beside them: the incremental save
+# unbound, Duplicate Layer moved to the Reference solo's Ctrl+Alt+D, and the
+# none Krita writes for Preferences, which it ships with no chord. Read by
+# scenarios/import-from-krita-and-the-krita-profile-read-one-table.json.
+[Shortcuts]
+save_incremental_version=none
+duplicatelayer=Ctrl+Alt+D
+options_configure=none

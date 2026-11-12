@@ -1,0 +1,18 @@
+[
+  {"document": "srgb", "size": [600, 400], "background": {"kind": "colour", "color": "#808080"}},
+  {"brush": {"preset": "Grain Round", "colour": "#333333", "radius_px": 20.0, "thickness": 0.0, "hardness": 0.45}},
+  {"stroke": {"from": [10, 10], "to": [200, 10], "pressure": 0.6, "space": "document", "route": "tool"}},
+  {"stroke": {"from": [10, 30], "to": [200, 30], "pressure": 0.6, "space": "document", "route": "tool"}},
+  {"stroke": {"from": [10, 50], "to": [200, 50], "pressure": 0.6, "space": "document", "route": "tool"}},
+  {"brush": {"preset": "Grain Round", "colour": "#444444", "radius_px": 20.0, "thickness": 0}},
+  {"stroke": {"from": [10, 70], "to": [200, 70], "pressure": 0.6, "space": "document", "route": "tool"}},
+  {"colour": "#555555"},
+  {"brush": {"preset": "Fill", "colour": "#555555", "radius_px": 8.0}},
+  {"stroke": {"from": [10, 90], "to": [200, 90], "pressure": 1.0, "space": "document", "route": "tool"}},
+  {"stroke": {"points": [{"at": [10, 110], "pressure": 0.2}, {"at": [200, 110], "pressure": 1.0}], "smoothing": false, "space": "document", "route": "tool"}},
+  {"brush": {"opacity": 0.5}},
+  {"stroke": {"from": [10, 130], "to": [200, 130], "pressure": 1.0, "space": "document", "route": "tool"}},
+  {"pick_preset": "Blender"},
+  {"stroke": {"from": [10, 150], "to": [200, 150], "pressure": 1.0, "space": "document", "route": "tool"}},
+  {"save": "sitting-1.sad"}
+]

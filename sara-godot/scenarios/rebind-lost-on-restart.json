@@ -1,0 +1,13 @@
+[
+  {"wait": 30},
+  {"open": "preferences"},
+  {"wait": 20},
+  {"page": "Keyboard Shortcuts"},
+  {"wait": 10},
+  {"shortcut": {"search": "zoom", "show": "view_zoom_in"}},
+  {"state": "01-before-the-rebind"},
+  {"shortcut": {"search": "zoom", "action": "view_zoom_in", "chord": "Ctrl+Alt+K"}},
+  {"wait": 6},
+  {"shot": "02-rebound-and-forked"},
+  {"state": "02-rebound-and-forked"}
+]

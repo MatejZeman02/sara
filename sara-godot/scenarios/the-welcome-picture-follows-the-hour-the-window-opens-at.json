@@ -1,0 +1,12 @@
+[
+    {"comment": "The Welcome picture follows the hour the window opens at. Run with SARA_WELCOME_PICTURES=res://ui/welcome/tests/pictures/ and SARA_WELCOME_HOUR=<hour>, which is the suite's two plain pictures, a blue morning at 6 and a red evening at 18 with a disc each side, at a clock fixed between them: at 6 only the morning, at 12 both discs half there, at 18 only the evening. Then the window is put away and shown again, which reads the hour again."},
+    {"wait": 11},
+    {"open": "welcome"},
+    {"wait": 20},
+    {"shot": "0-the-band-at-the-hour"},
+    {"click": {"control": "WelcomeClose"}},
+    {"wait": 12},
+    {"open": "welcome"},
+    {"wait": 20},
+    {"shot": "1-the-band-shown-again"}
+]

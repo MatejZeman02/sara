@@ -1,0 +1,126 @@
+[
+ {
+  "wait": 30
+ },
+ {
+  "docker": "park"
+ },
+ {
+  "open": "preferences"
+ },
+ {
+  "wait": 20
+ },
+ {
+  "page": "Keyboard shortcuts"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "wheel": {
+   "at": [
+    1000,
+    500
+   ],
+   "notches": 0,
+   "read": true
+  }
+ },
+ {
+  "shot": "preferences-at-the-top"
+ },
+ {
+  "click": {
+   "at": [
+    1662,
+    820
+   ]
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "wheel": {
+   "at": [
+    1000,
+    500
+   ],
+   "notches": 0,
+   "read": true
+  }
+ },
+ {
+  "shot": "a-press-low-on-the-track-brings-the-handle-there"
+ },
+ {
+  "click": {
+   "at": [
+    1662,
+    400
+   ]
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "wheel": {
+   "at": [
+    1000,
+    500
+   ],
+   "notches": 0,
+   "read": true
+  }
+ },
+ {
+  "shot": "a-press-higher-up-brings-it-back-there"
+ },
+ {
+  "click": {
+   "at": [
+    1662,
+    820
+   ]
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "wheel": {
+   "at": [
+    1000,
+    500
+   ],
+   "notches": 0,
+   "read": true
+  }
+ },
+ {
+  "click": {
+   "at": [
+    1662,
+    300
+   ]
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "wheel": {
+   "at": [
+    1000,
+    500
+   ],
+   "notches": 0,
+   "read": true
+  }
+ },
+ {
+  "shot": "once-the-page-is-built-a-press-puts-the-handle-s-middle-under-it"
+ }
+]

@@ -1,0 +1,8 @@
+[
+  {"comment": "Run with modules/sara-jxl/bin/libsara-jxl.linux.template_release.x86_64.so moved out of its folder, which a scenario cannot do, so the run is wrapped: mv the library aside, sara_shot.py this file, mv it back. Godot then fails to open the library the module's list names for Linux, and the loader says so once among the problems the boot shows, naming the JPEG XL module and the file it looked for."},
+  {"wait": 45},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 20},
+  {"state": "1-the-problems-window-names-the-jpeg-xl-module-and-its-library"},
+  {"shot": "1-the-problems-window-names-the-jpeg-xl-module-and-its-library"}
+]

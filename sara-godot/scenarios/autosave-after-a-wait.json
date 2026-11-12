@@ -1,0 +1,8 @@
+[
+  {"wait": 30},
+  {"prefs": {"autosave_interval_minutes": 0.05}},
+  {"stroke": {"from": [500, 400], "to": [1100, 700], "pressure": 0.8, "steps": 24}},
+  {"wait": 420},
+  {"state": "after-wait"},
+  {"shot": "after-wait"}
+]

@@ -1,0 +1,23 @@
+[
+  {"wait": 30},
+  {"canvas": [1024, 512]},
+  {"fit": true},
+  {"wait": 5},
+  {"colour": "#333333"},
+  {"path": {"polygon": [[470, 230], [550, 230], [550, 280], [470, 280]], "antialias": false}},
+  {"colour": "#808080"},
+  {"path": {"polygon": [[490, 250], [491, 250], [491, 251], [490, 251]]}},
+  {"path": {"polygon": [[500, 250], [501, 250], [501, 251], [500, 251]], "antialias": false}},
+  {"path": {"polygon": [[524, 244], [527, 244], [527, 247], [524, 247]], "antialias": false}},
+  {"path": {"polygon": [[511, 255], [514, 255], [514, 258], [511, 258]], "antialias": false}},
+  {"read_pixels": {"rect": [485, 245, 11, 11], "file": "soft-one-pixel.npy"}},
+  {"read_pixels": {"rect": [495, 245, 11, 11], "file": "hard-one-pixel.npy"}},
+  {"read_pixels": {"rect": [520, 240, 11, 11], "file": "hard-three-pixels.npy"}},
+  {"read_pixels": {"rect": [507, 251, 11, 11], "file": "hard-three-pixels-across-four-chunks.npy"}},
+  {"state": "after"},
+  {"shot": "ground-and-marks"},
+  {"zoom": 8.0},
+  {"wait": 5},
+  {"texel": [[490, 250], [491, 250], [500, 250], [499, 250], [501, 250], [500, 249], [501, 251], [524, 244], [526, 246], [523, 245], [527, 245], [511, 255], [513, 257], [510, 255], [514, 258], [512, 256]]},
+  {"shot": "marks-zoomed"}
+]

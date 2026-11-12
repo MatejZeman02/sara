@@ -1,0 +1,110 @@
+[
+  {
+    "wait": 20
+  },
+  {"docker": {"id": "LayersDocker", "at": [1600, 570], "size": [310, 400]}},
+  {"docker": {"id": "ToolBoxDocker", "at": [0, 78], "size": [60, 520]}},
+  {"wait": 10},
+  {
+    "state": "start"
+  },
+  {
+    "key": {
+      "key": "c",
+      "ctrl": true,
+      "shift": true
+    }
+  },
+  {
+    "move": [
+      960,
+      24
+    ]
+  },
+  {
+    "wait": 5
+  },
+  {
+    "shot": "hover-top-bar"
+  },
+  {
+    "state": "hover-top-bar"
+  },
+  {
+    "move": [
+      1700,
+      778
+    ]
+  },
+  {
+    "wait": 5
+  },
+  {
+    "shot": "hover-layers"
+  },
+  {
+    "state": "hover-layers"
+  },
+  {
+    "key": "escape"
+  },
+  {
+    "note": "on"
+  },
+  {
+    "click": {
+      "at": [
+        30,
+        311
+      ]
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "shot": "click-toolbox"
+  },
+  {
+    "note": "cancel"
+  },
+  {
+    "open": "preferences"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "page": "Top Menu Bar"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "note": {
+      "target": "SecondRowCheck",
+      "text": "The switch sits above the list rather than in it."
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "shot": "note-box"
+  },
+  {
+    "state": "note-box"
+  },
+  {
+    "note": "save"
+  },
+  {
+    "wait": 5
+  },
+  {
+    "shot": "after-save"
+  },
+  {
+    "state": "after-save"
+  }
+]

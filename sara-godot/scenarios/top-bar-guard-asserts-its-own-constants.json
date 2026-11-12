@@ -1,0 +1,23 @@
+[
+  { "wait": 40 },
+  { "window": [1920, 1080] },
+  { "wait": 20 },
+  { "prefs": { "second_row": true } },
+  { "wait": 16 },
+  { "prefs": { "second_row": false } },
+  { "wait": 16 },
+  { "state": "1-one-row-asked-for-at-1920" },
+  { "shot": "1-one-row-asked-for-at-1920" },
+  { "window": [2560, 1440] },
+  { "wait": 20 },
+  { "prefs": { "second_row": true } },
+  { "wait": 16 },
+  { "prefs": { "second_row": false } },
+  { "wait": 16 },
+  { "state": "2-one-row-asked-for-at-2560" },
+  { "shot": "2-one-row-asked-for-at-2560" },
+  { "window": [1920, 1080] },
+  { "wait": 24 },
+  { "state": "3-the-same-bar-narrowed-back-to-1920" },
+  { "shot": "3-the-same-bar-narrowed-back-to-1920" }
+]

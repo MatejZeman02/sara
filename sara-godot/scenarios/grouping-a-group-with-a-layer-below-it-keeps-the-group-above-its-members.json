@@ -1,0 +1,89 @@
+[
+  {
+    "wait": 30
+  },
+  {
+    "layer": {
+      "add": "Low"
+    }
+  },
+  {
+    "layer": {
+      "fill": [
+        0.9,
+        0.1,
+        0.1,
+        0.5
+      ]
+    }
+  },
+  {
+    "layer": {
+      "add": "Member"
+    }
+  },
+  {
+    "layer": {
+      "fill": [
+        0.1,
+        0.9,
+        0.2,
+        0.5
+      ]
+    }
+  },
+  {
+    "layer": {
+      "add": "Top"
+    }
+  },
+  {
+    "layer": {
+      "fill": [
+        0.9,
+        0.8,
+        0.1,
+        0.5
+      ]
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "pick_rows": [
+      1,
+      0
+    ]
+  },
+  {
+    "layer_action": "group"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "1-inner-made"
+  },
+  {
+    "state": "1-inner-made"
+  },
+  {
+    "pick_rows": [
+      3,
+      0
+    ]
+  },
+  {
+    "layer_action": "group"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "shot": "2-low-and-inner-grouped"
+  },
+  {
+    "state": "2-low-and-inner-grouped"
+  }
+]

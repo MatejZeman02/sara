@@ -1,0 +1,35 @@
+[
+ {"wait": 30},
+ {"prefs": {"docker_hide_button": true}},
+ {"layout_preset": {"delete": "full (custom)"}},
+ {"layout_preset": {"load": "full"}},
+ {"wait": 30},
+ {"hide": ""},
+ {"state": "01-at-the-default-width"},
+ {"shot": "01-at-the-default-width"},
+
+ {"docker_resize": {"id": "ColorDocker", "by": [-600, -600], "grip": true}},
+ {"wait": 15},
+ {"hide": ""},
+ {"state": "02-at-the-smallest-width"},
+ {"shot": "02-at-the-smallest-width"},
+
+ {"layout_preset": {"load": "full"}},
+ {"wait": 30},
+ {"hide": "Colour Picker"},
+ {"wait": 15},
+ {"state": "03-the-picker-closes-on-its-own-button"},
+ {"shot": "03-the-picker-closes-on-its-own-button"},
+
+ {"layout_preset": {"load": "full"}},
+ {"wait": 30},
+ {"hide": "Minimap"},
+ {"wait": 15},
+ {"state": "04-the-minimap-closes-too"},
+ {"shot": "04-the-minimap-closes-too"},
+
+ {"prefs": {"docker_hide_button": true}},
+ {"layout_preset": {"load": "default"}},
+ {"wait": 25},
+ {"layout_preset": {"delete": "full (custom)"}}
+]

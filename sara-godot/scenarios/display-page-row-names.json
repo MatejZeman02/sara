@@ -1,0 +1,38 @@
+[
+  {"wait": 40},
+  {"prefs": {"tonemap_highlights": false}},
+  {"wait": 10},
+
+  {"menu": "View"},
+  {"wait": 20},
+  {"shot": "01-the-view-menu"},
+  {"state": "01-the-view-menu"},
+  {"key": "escape"},
+  {"wait": 15},
+
+  {"open": "preferences"},
+  {"wait": 25},
+  {"page": "Display"},
+  {"wait": 20},
+  {"shot": "02-the-display-page"},
+  {"state": "02-the-display-page"},
+
+  {"view_row": "Tonemap Highlights"},
+  {"wait": 15},
+  {"shot": "03-the-roll-off-row-picked-by-the-name-the-menu-uses"},
+  {"state": "03-the-roll-off-row-picked-by-the-name-the-menu-uses"},
+
+  {"view_row": "Normal View"},
+  {"wait": 15},
+  {"shot": "04-the-ordinary-view-picked-by-the-name-the-menu-uses"},
+  {"state": "04-the-ordinary-view-picked-by-the-name-the-menu-uses"},
+
+  {"key": "escape"},
+  {"wait": 15},
+  {"menu": "View"},
+  {"wait": 20},
+  {"shot": "05-the-view-menu-after"},
+  {"state": "05-the-view-menu-after"},
+  {"key": "escape"},
+  {"wait": 10}
+]

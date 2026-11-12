@@ -1,0 +1,45 @@
+# Kernel: linked_override_keep
+#
+# One chunk of a linked layer's paint after its file is read again: where the
+# field as painted differs from the picture the file gave before, the texel is
+# the override and is kept, and everywhere else it takes the new picture. The
+# test is linked_override_differs's, texel by texel, so a texel a stroke only
+# passed over follows the file. SaLinkedOverride runs it on a reload and an
+# open, never during a stroke.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel linked_override_keep
+
+# The field as painted.
+image painted: readonly
+# The field as the file gave it before.
+image was: readonly
+# The field as the file gives it now.
+image now: readonly
+# The field the layer takes, a texture of its own.
+image into
+
+params:
+    int width
+    int height
+
+# What two values may differ by and be the same paint.
+const float SA_SAME = 5.0e-4
+
+
+def differs(vec4 a, vec4 b) -> bool:
+    vec4 apart = abs(a - b)
+    vec4 room = SA_SAME * max(vec4(1.0), abs(b))
+    return any(greaterThan(apart, room))
+
+
+@workgroup_size(8, 8)
+def linked_override_keep():
+    if pixel.x >= width or pixel.y >= height:
+        return
+    vec4 stroke = painted[pixel]
+    if differs(stroke, was[pixel]):
+        into[pixel] = stroke
+    else:
+        into[pixel] = now[pixel]

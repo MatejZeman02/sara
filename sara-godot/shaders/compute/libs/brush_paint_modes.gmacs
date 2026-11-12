@@ -1,0 +1,82 @@
+# How a dab's paint lands on the texel under it, over, as a wash or as an erase.
+#
+# The three ways a brush stroke lays paint, as a library any engine's dab kernel
+# imports. The arithmetic lives here rather than inline in the stamp brush's
+# `dab.gmacs` because the noise brush lays its paint the same way and a module
+# sees the door and nothing else.
+#
+# Straight alpha in and out. Every function takes the texel as it was loaded,
+# colour and alpha unmultiplied, and answers the texel to store in the same terms.
+# The layer stores straight alpha and the compositor multiplies by it, which is
+# why the colour arithmetic divides where `over` needs it. *src_a* is what this
+# dab lays here (coverage times opacity times flow and whatever else the kernel
+# scales it by) and every function expects it above nought. Nothing here reads a
+# binding or a push constant.
+#
+# Written from the idea rather than ported, so the file carries no copyright line
+# but Sara's own.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# The alpha a wash dab leaves, alpha darken, which is what makes a wash stroke
+# reach the opacity it was set to and stop. **A wash is a ceiling rather than an
+# accumulation**: the alpha climbs by *flow* of *full_a* (what the dab would lay
+# here at full flow), never past *full_a* and never below *dst_a*, so a second
+# dab over the first adds nothing and four dabs at a quarter flow reach the
+# opacity. At a flow of one it is `max(dst_a, full_a)`, so a texel under five
+# dabs is no stronger than under one. The outer `max` is for a soft dab's rim
+# passing over a spot an earlier dab already filled, where alpha must not fall.
+#
+# The step is linear, `dst_a + flow * (full_a - dst_a)`, rather than a fraction
+# of the gap, because a geometric step shrinks with the gap, so overlapping dabs
+# at a quarter flow would stop short of the opacity and the stroke under-build.
+# Moving to `max(dst_a, src_a)` with `src_a` already scaled by flow would make a
+# quarter-flow stroke a quarter-alpha stroke however many dabs crossed it.
+
+
+def sa_wash_ceiling(float dst_a, float full_a, float flow) -> float:
+    float climbed = min(full_a, dst_a + flow * full_a)
+    return max(dst_a, climbed)
+
+# The whole wash texel, the alpha left alone when *alpha_locked*. The colour is a
+# lerp by `over`'s share, `src_a / (src_a + dst_a * (1 - src_a))`, and not by
+# `src_a` alone, which is right over opaque paint and wrong over everything
+# else: on a clear texel `under.rgb` is the zero a cleared texture holds, so the
+# paint would be pulled towards a black that is not there, every dab's fade would
+# composite as the paint scaled towards black by its own alpha and a stroke's
+# soft rim would be dark. A thin stroke of an imported Krita preset is all rim,
+# because Krita's presets are wash unless they say build-up. At `dst_a` of one
+# the share is `src_a`, the plain lerp, and a dab lands at its own colour. At
+# `dst_a` of zero it is one. Between, a half-covered texel takes the paint in
+# proportion to what the dab adds. `src_a` is above zero here, so the
+# denominator is too.
+
+
+def sa_washed(vec4 under, vec3 paint_rgb, float src_a, float full_a, float flow, bool alpha_locked) -> vec4:
+    float dst_a = under.a
+    float wash_weight = src_a / (src_a + dst_a * (1.0 - src_a))
+    vec3 washed = mix(under.rgb, paint_rgb, wash_weight)
+    float washed_a = alpha_locked ? dst_a : sa_wash_ceiling(dst_a, full_a, flow)
+    return vec4(washed, washed_a)
+
+# Erase: takes *src_a* of the alpha away and keeps the colour. Alpha lock
+# forbids an erase outright, so a locked caller skips the texel.
+
+
+def sa_erased(vec4 under, float src_a) -> vec4:
+    return vec4(under.rgb, max(0.0, under.a * (1.0 - src_a)))
+
+# Build-up, Porter and Duff's `over` on straight alpha: the alpha is the union of
+# the two, and the colour is the two premultiplied colours summed and divided back
+# out by it. A texel that ends with no alpha answers black rather than a divide
+# by nought.
+
+
+def sa_laid_over(vec4 under, vec3 paint_rgb, float src_a, bool alpha_locked) -> vec4:
+    float dst_a = under.a
+    float blended_a = src_a + dst_a * (1.0 - src_a)
+    float out_a = alpha_locked ? dst_a : blended_a
+    vec3 out_rgb = vec3(0.0)
+    if blended_a > 0.0:
+        out_rgb = (paint_rgb * src_a + under.rgb * dst_a * (1.0 - src_a)) / blended_a
+    return vec4(out_rgb, out_a)

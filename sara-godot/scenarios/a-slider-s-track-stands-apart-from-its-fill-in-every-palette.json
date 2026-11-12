@@ -1,0 +1,17 @@
+[
+  {"comment": "A slider's fill stands at least 3 to 1 on its empty track. The Workspace page of Preferences, whose sliders are the UI scale and the text size, shot under the default palette and under Pink, the one palette whose track the rule moves."},
+  {"wait": 45},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 20},
+  {"prefs": {"theme_name": "default"}},
+  {"wait": 20},
+  {"open": "preferences"},
+  {"wait": 20},
+  {"page": "Workspace"},
+  {"wait": 10},
+  {"shot": "1-default-workspace-sliders"},
+  {"prefs": {"theme_name": "pink"}},
+  {"wait": 25},
+  {"shot": "2-pink-workspace-sliders"},
+  {"wait": 5}
+]

@@ -1,0 +1,115 @@
+[
+  {
+    "comment": "The Modules window shows each module's page. On a fresh profile at 1280 by 1024 and an interface scale of 1, the Modules window is opened the way a module's row in Modules, Active Modules opens it, on the base modules' page, the noise brush engine's and Box Blur's in turn. Each page shows the module's name, its sentence from manifest.cfg, its version and commit, authors, licence, state and where it came from, and under them its README drawn with the manual's renderer, a picture from the README's folder among it. Each page is then scrolled down by the wheel over it, the way a painter reads on, so the shot shows the README's picture under the facts."
+  },
+  {
+    "wait": 45
+  },
+  {
+    "window": [
+      1280,
+      1024
+    ]
+  },
+  {
+    "prefs": {
+      "ui_scale": 1.0
+    }
+  },
+  {
+    "wait": 25
+  },
+  {
+    "open": "modules",
+    "space": "sara-base-modules"
+  },
+  {
+    "wait": 30
+  },
+  {
+    "state": "1-the-base-modules-page"
+  },
+  {
+    "shot": "1-the-base-modules-page"
+  },
+  {
+    "wheel": {
+      "at": [
+        760,
+        520
+      ],
+      "notches": -8
+    }
+  },
+  {
+    "wait": 15
+  },
+  {
+    "state": "1-the-base-modules-page-scrolled"
+  },
+  {
+    "shot": "1-the-base-modules-page-scrolled"
+  },
+  {
+    "open": "modules",
+    "space": "sara-noise-brush"
+  },
+  {
+    "wait": 30
+  },
+  {
+    "state": "2-the-noise-brush-engine-page"
+  },
+  {
+    "shot": "2-the-noise-brush-engine-page"
+  },
+  {
+    "wheel": {
+      "at": [
+        760,
+        520
+      ],
+      "notches": -8
+    }
+  },
+  {
+    "wait": 15
+  },
+  {
+    "state": "2-the-noise-brush-engine-page-scrolled"
+  },
+  {
+    "shot": "2-the-noise-brush-engine-page-scrolled"
+  },
+  {
+    "open": "modules",
+    "space": "box_blur"
+  },
+  {
+    "wait": 30
+  },
+  {
+    "state": "3-the-box-blur-page"
+  },
+  {
+    "shot": "3-the-box-blur-page"
+  },
+  {
+    "wheel": {
+      "at": [
+        760,
+        520
+      ],
+      "notches": -8
+    }
+  },
+  {
+    "wait": 15
+  },
+  {
+    "state": "3-the-box-blur-page-scrolled"
+  },
+  {
+    "shot": "3-the-box-blur-page-scrolled"
+  }
+]

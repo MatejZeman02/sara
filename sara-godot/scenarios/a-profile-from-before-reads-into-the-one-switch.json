@@ -1,0 +1,20 @@
+[
+  {"comment": "The migration: run straight after a profile of version 16 was written into the capture's settings folder with the Maximize button option on for the Graph docker alone, as 0.17.1 stored it. The one switch reads on, every docker draws the button, the Graph's own key is gone from the file, and the Workspace page shows the switch on."},
+  {"settings": "keep"},
+  {"wait": 30},
+  {"docker": "park"},
+  {"docker": {"id": "ToolBoxDocker", "at": [300, 160]}},
+  {"docker": {"id": "LayersDocker", "at": [640, 160], "size": [340, 420]}},
+  {"docker": {"id": "GraphDocker", "at": [1180, 520], "size": [320, 260]}},
+  {"wait": 10},
+  {"hide": ""},
+  {"shot": "1-every-docker-has-the-button-after-the-read"},
+  {"open": "preferences"},
+  {"wait": 20},
+  {"page": "Workspace"},
+  {"wait": 10},
+  {"page_row": {"row": "maximise_button"}},
+  {"prefs_search": "maximize"},
+  {"wait": 20},
+  {"shot": "2-the-switch-reads-on"}
+]

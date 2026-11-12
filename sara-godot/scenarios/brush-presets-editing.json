@@ -1,0 +1,125 @@
+[
+  {
+    "wait": 60
+  },
+  {
+    "prefs": {
+      "ui_scale": 1.0
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "layout_preset": {
+      "load": "minimalistic"
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "document": "srgb"
+  },
+  {
+    "tool": "brush"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "brush_editor": {
+      "open": true
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "state": "s8-20-opened-with-nothing-touched"
+  },
+  {
+    "brush_editor": {
+      "save_as": "Probe Inker"
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "state": "s8-21-after-save-as"
+  },
+  {
+    "shot": "s8-21-after-save-as"
+  },
+  {
+    "brush_editor": {
+      "page": "Scatter",
+      "check": true
+    }
+  },
+  {
+    "wait": 4
+  },
+  {
+    "state": "s8-22-dirty-after-an-edit"
+  },
+  {
+    "brush_editor": {
+      "save": true
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "state": "s8-23-saved-again"
+  },
+  {
+    "brush_editor": {
+      "page": "Scatter",
+      "check": false
+    }
+  },
+  {
+    "brush_editor": {
+      "reset": true
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "state": "s8-24-after-a-reset"
+  },
+  {
+    "brush_editor": {}
+  },
+  {
+    "brush_editor": {
+      "preview": 20
+    }
+  },
+  {
+    "wait": 4
+  },
+  {
+    "state": "s8-25-twenty-asks-in-one-frame"
+  },
+  {
+    "brush_editor": {
+      "close": true
+    }
+  },
+  {
+    "preset": {
+      "save": "Probe Wash"
+    }
+  },
+  {
+    "wait": 4
+  },
+  {
+    "state": "s8-26-two-presets-in-the-library"
+  }
+]

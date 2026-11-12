@@ -1,0 +1,94 @@
+[
+ {
+  "comment": "The restart. Run under sara_shot.py --keep-settings after the fresh-profile scenario of this change, so the file itself never asks for the kept profile. Sara Filters is still unticked, and a press on its row ticks it and brings its presets back to the grid."
+ },
+ {
+  "wait": 40
+ },
+ {
+  "prefs": {
+   "ui_scale": 1.0
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "docker": {
+   "id": "BrushPresetsDocker",
+   "at": [
+    860,
+    40
+   ],
+   "size": [
+    420,
+    940
+   ]
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "tool": "brush"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "preset": {
+   "finish": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "presets_docker": {}
+ },
+ {
+  "state": "1-after-a-restart-sara-filters-is-still-unticked"
+ },
+ {
+  "choice": {
+   "open": "ChooserBundles"
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "1-after-a-restart-sara-filters-is-still-unticked"
+ },
+ {
+  "choice": {
+   "pick": 2
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "preset": {
+   "finish": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "presets_docker": {}
+ },
+ {
+  "state": "2-ticked-again-its-presets-are-back"
+ },
+ {
+  "shot": "2-ticked-again-its-presets-are-back"
+ }
+]

@@ -1,0 +1,11 @@
+[
+  {"comment": "A fresh settings folder and the brush in hand: the bar shows no Mirror V, no Flat or Environment button and no Grow, and Radius stands to the right of Opacity. The state dump's top_bar_rows names the bar's rows in order. Rotation and its reset stay on the desktop, and the suite of the same name reads them off on Android."},
+  {"window": [1600, 1200]},
+  {"wait": 60},
+  {"document": "srgb"},
+  {"wait": 20},
+  {"tool": "brush"},
+  {"wait": 15},
+  {"state": "01-a-fresh-bar-with-the-brush"},
+  {"shot": "01-a-fresh-bar-with-the-brush"}
+]

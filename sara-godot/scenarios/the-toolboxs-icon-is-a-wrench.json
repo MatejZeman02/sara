@@ -1,0 +1,21 @@
+[
+  {"wait": 35},
+  {"docker": "park"},
+  {"wait": 10},
+  {"docker": {"id": "ToolBoxDocker", "at": [820, 340], "size": [200, 300]}},
+  {"wait": 20},
+  {"state": "1-the-wrench-on-the-title-bar"},
+  {"shot": "1-the-wrench-on-the-title-bar"},
+  {"note": {"target": "TitleIcon"}},
+  {"wait": 15},
+  {"state": "2-the-note-mode-outlines-the-title-icon"},
+  {"shot": "2-the-note-mode-outlines-the-title-icon"},
+  {"note": "cancel"},
+  {"wait": 10},
+  {"prefs": {"ui_font_scale": 1.6}},
+  {"wait": 25},
+  {"state": "3-the-same-wrench-at-the-largest-font"},
+  {"shot": "3-the-same-wrench-at-the-largest-font"},
+  {"prefs": {"ui_font_scale": 1.0}},
+  {"wait": 15}
+]

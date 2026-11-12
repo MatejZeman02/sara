@@ -1,0 +1,7 @@
+[
+  {"args": ["--machine-console"]},
+  {"wait": 5},
+  {"measure": {"perf": "read"}},
+  {"state": "boot"},
+  {"shot": "whole-after-the-boot"}
+]

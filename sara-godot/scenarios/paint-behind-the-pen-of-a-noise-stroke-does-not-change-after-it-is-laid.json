@@ -1,0 +1,438 @@
+[
+ {
+  "comment": "Thick Impasto is dragged through the door's stroke step across upright strokes of old impasto, once showing its front under the pen and, after an undo, once more with the front off and the same seed, which is the stroke as its body alone paints it. A look after each lift, and the layer's texels of each, which the run's reading compares: the two lifts should leave the same layer."
+ },
+ {
+  "wait": 60
+ },
+ {
+  "prefs": {
+   "ui_scale": 1.0,
+   "show_relief": true
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "document": "srgb",
+  "size": [
+   900,
+   600
+  ]
+ },
+ {
+  "wait": 10
+ },
+ {
+  "fit": true
+ },
+ {
+  "wait": 5
+ },
+ {
+  "fill": [
+   0.92,
+   0.9,
+   0.85
+  ]
+ },
+ {
+  "layer": {
+   "add": "Paint"
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "tool": {
+   "id": "noise_brush"
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "brush": {
+   "tool": "noise_brush",
+   "preset": "Thick Impasto",
+   "colour": [
+    0.72,
+    0.46,
+    0.22
+   ],
+   "seed": 3
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "stroke": {
+   "space": "document",
+   "route": "tool",
+   "from": [
+    120,
+    170
+   ],
+   "to": [
+    120,
+    430
+   ],
+   "pressure": 0.9,
+   "steps": 30
+  }
+ },
+ {
+  "wait": 4
+ },
+ {
+  "stroke": {
+   "space": "document",
+   "route": "tool",
+   "from": [
+    180,
+    170
+   ],
+   "to": [
+    180,
+    430
+   ],
+   "pressure": 0.9,
+   "steps": 30
+  }
+ },
+ {
+  "wait": 4
+ },
+ {
+  "stroke": {
+   "space": "document",
+   "route": "tool",
+   "from": [
+    240,
+    170
+   ],
+   "to": [
+    240,
+    430
+   ],
+   "pressure": 0.9,
+   "steps": 30
+  }
+ },
+ {
+  "wait": 4
+ },
+ {
+  "stroke": {
+   "space": "document",
+   "route": "tool",
+   "from": [
+    300,
+    170
+   ],
+   "to": [
+    300,
+    430
+   ],
+   "pressure": 0.9,
+   "steps": 30
+  }
+ },
+ {
+  "wait": 4
+ },
+ {
+  "stroke": {
+   "space": "document",
+   "route": "tool",
+   "from": [
+    360,
+    170
+   ],
+   "to": [
+    360,
+    430
+   ],
+   "pressure": 0.9,
+   "steps": 30
+  }
+ },
+ {
+  "wait": 4
+ },
+ {
+  "stroke": {
+   "space": "document",
+   "route": "tool",
+   "from": [
+    420,
+    170
+   ],
+   "to": [
+    420,
+    430
+   ],
+   "pressure": 0.9,
+   "steps": 30
+  }
+ },
+ {
+  "wait": 4
+ },
+ {
+  "stroke": {
+   "space": "document",
+   "route": "tool",
+   "from": [
+    480,
+    170
+   ],
+   "to": [
+    480,
+    430
+   ],
+   "pressure": 0.9,
+   "steps": 30
+  }
+ },
+ {
+  "wait": 4
+ },
+ {
+  "stroke": {
+   "space": "document",
+   "route": "tool",
+   "from": [
+    540,
+    170
+   ],
+   "to": [
+    540,
+    430
+   ],
+   "pressure": 0.9,
+   "steps": 30
+  }
+ },
+ {
+  "wait": 4
+ },
+ {
+  "stroke": {
+   "space": "document",
+   "route": "tool",
+   "from": [
+    600,
+    170
+   ],
+   "to": [
+    600,
+    430
+   ],
+   "pressure": 0.9,
+   "steps": 30
+  }
+ },
+ {
+  "wait": 4
+ },
+ {
+  "stroke": {
+   "space": "document",
+   "route": "tool",
+   "from": [
+    660,
+    170
+   ],
+   "to": [
+    660,
+    430
+   ],
+   "pressure": 0.9,
+   "steps": 30
+  }
+ },
+ {
+  "wait": 4
+ },
+ {
+  "stroke": {
+   "space": "document",
+   "route": "tool",
+   "from": [
+    720,
+    170
+   ],
+   "to": [
+    720,
+    430
+   ],
+   "pressure": 0.9,
+   "steps": 30
+  }
+ },
+ {
+  "wait": 4
+ },
+ {
+  "stroke": {
+   "space": "document",
+   "route": "tool",
+   "from": [
+    780,
+    170
+   ],
+   "to": [
+    780,
+    430
+   ],
+   "pressure": 0.9,
+   "steps": 30
+  }
+ },
+ {
+  "wait": 4
+ },
+ {
+  "look": {
+   "path": "00-the-old-paint.png",
+   "rect": [
+    0,
+    150,
+    900,
+    300
+   ]
+  }
+ },
+ {
+  "brush": {
+   "tool": "noise_brush",
+   "preset": "Thick Impasto",
+   "colour": [
+    0.2,
+    0.36,
+    0.75
+   ],
+   "seed": 7,
+   "front_shown": true
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "stroke": {
+   "space": "document",
+   "route": "tool",
+   "from": [
+    80,
+    300
+   ],
+   "to": [
+    820,
+    300
+   ],
+   "pressure": 0.9,
+   "steps": 80
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "look": {
+   "path": "01-with-the-front.png",
+   "rect": [
+    0,
+    150,
+    900,
+    300
+   ]
+  }
+ },
+ {
+  "read_pixels": {
+   "layer": "Paint",
+   "rect": [
+    0,
+    150,
+    900,
+    300
+   ],
+   "file": "01-with-the-front.npy"
+  }
+ },
+ {
+  "state": "01-with-the-front"
+ },
+ {
+  "undo": 1
+ },
+ {
+  "wait": 10
+ },
+ {
+  "brush": {
+   "tool": "noise_brush",
+   "preset": "Thick Impasto",
+   "colour": [
+    0.2,
+    0.36,
+    0.75
+   ],
+   "seed": 7,
+   "front_shown": false
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "stroke": {
+   "space": "document",
+   "route": "tool",
+   "from": [
+    80,
+    300
+   ],
+   "to": [
+    820,
+    300
+   ],
+   "pressure": 0.9,
+   "steps": 80
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "look": {
+   "path": "02-with-no-front.png",
+   "rect": [
+    0,
+    150,
+    900,
+    300
+   ]
+  }
+ },
+ {
+  "read_pixels": {
+   "layer": "Paint",
+   "rect": [
+    0,
+    150,
+    900,
+    300
+   ],
+   "file": "02-with-no-front.npy"
+  }
+ },
+ {
+  "state": "02-with-no-front"
+ }
+]

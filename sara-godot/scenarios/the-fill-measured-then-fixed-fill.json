@@ -1,0 +1,29 @@
+[
+  {"args": ["--machine-console"]},
+  {"wait": 30},
+  {"docker": "park"},
+  {"document": "srgb"},
+  {"wait": 10},
+  {"tool": "bucket_fill"},
+  {"colour": "#3c78c8"},
+  {"wait": 10},
+
+  {"measure": {"perf": "begin"}},
+  {"click": {"at": [960, 540]}},
+  {"wait": 10},
+  {"measure": {"perf": "end"}},
+  {"state": "fill-empty-1920x1080"},
+  {"shot": "fill-empty-1920x1080"},
+  {"wait": 10},
+
+  {"undo": 1},
+  {"wait": 10},
+  {"select": {"ellipse": [560, 240, 800, 600]}},
+  {"wait": 5},
+  {"measure": {"perf": "begin"}},
+  {"click": {"at": [960, 540]}},
+  {"wait": 10},
+  {"measure": {"perf": "end"}},
+  {"state": "fill-inside-an-ellipse"},
+  {"shot": "fill-inside-an-ellipse"}
+]

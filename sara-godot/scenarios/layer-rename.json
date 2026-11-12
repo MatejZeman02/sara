@@ -1,0 +1,148 @@
+[
+  {
+    "wait": 25
+  },
+  {
+    "layer": {
+      "add": "Middle",
+      "fill": [
+        0.15,
+        0.45,
+        0.9,
+        1.0
+      ],
+      "chunks": [
+        [
+          0,
+          0
+        ]
+      ]
+    }
+  },
+  {
+    "layer": {
+      "add": "Top",
+      "fill": [
+        0.2,
+        0.8,
+        0.35,
+        1.0
+      ],
+      "chunks": [
+        [
+          1,
+          1
+        ]
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "LayersDocker",
+      "at": [
+        420,
+        620
+      ],
+      "size": [
+        460,
+        400
+      ]
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "shot": "before"
+  },
+  {
+    "state": "before"
+  },
+  {
+    "layer_rename": {
+      "row": 1,
+      "open": "double"
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "double-click-open"
+  },
+  {
+    "state": "double-click-open"
+  },
+  {
+    "layer_rename": {
+      "text": "Sky"
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "state": "typed"
+  },
+  {
+    "layer_rename": {
+      "key": "enter"
+    }
+  },
+  {
+    "wait": 15
+  },
+  {
+    "shot": "enter-committed"
+  },
+  {
+    "state": "enter-committed"
+  },
+  {
+    "layer_rename": {
+      "open": "f2"
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "f2-open"
+  },
+  {
+    "state": "f2-open"
+  },
+  {
+    "layer_rename": {
+      "text": "Thrown away",
+      "key": "escape"
+    }
+  },
+  {
+    "wait": 15
+  },
+  {
+    "shot": "escape-cancelled"
+  },
+  {
+    "state": "escape-cancelled"
+  },
+  {
+    "save": "user://layer-rename.sad"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "load": "user://layer-rename.sad"
+  },
+  {
+    "wait": 25
+  },
+  {
+    "shot": "reopened"
+  },
+  {
+    "state": "reopened"
+  }
+]

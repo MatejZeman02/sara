@@ -1,0 +1,95 @@
+# Kernels: reduce_clear, reduce_color, reduce_mask
+#
+# A reduced copy of a layer and of the selection over the rectangle a filter
+# runs on, for the thumbnail of a filter's dialog. A point
+# filter records a pass rather than showing a texture, and its pass is then run
+# over this copy, so the thumbnail shows the filter without the layer leaving
+# VRAM and without a dispatch over the whole of it at full size.
+#
+# The same sampling as thumbnail.gmacs, the layers docker's picture, with two
+# differences. The numbers are stored ones and not display ones, because the
+# thumbnail is painted through the canvas's own material and the point kernel
+# reads stored numbers. And a dispatch covers the part of the target one chunk
+# reaches rather than all of it, so a large layer costs its chunks' share of a
+# few hundred texels each and not the whole target once per chunk, because no
+# pass runs over the whole canvas.
+#
+# One chunk owns a target texel, the one holding the texel's centre, so the
+# dispatches of one layer share a compute list and no two write the same texel.
+
+kernel reduce_clear
+kernel reduce_color
+kernel reduce_mask
+
+image target
+sampler source
+
+params:
+    # The part of the target this dispatch covers, in target texels.
+    vec2 origin
+    vec2 extent
+    # How many document pixels one target texel spans, across and down.
+    vec2 texel_span
+    # The chunk's corner in document pixels from the covered rectangle's
+    #   corner, and how many document pixels the chunk spans.
+    vec2 chunk_origin
+    vec2 chunk_span
+    vec2 spare
+
+
+def reduce_clear():
+    ivec2 local = ivec2(global_id.xy)
+    if local.x >= int(extent.x) or local.y >= int(extent.y):
+        return
+    ivec2 texel = local + ivec2(origin)
+    if texel.x >= image_size(target).x or texel.y >= image_size(target).y:
+        return
+    target[texel] = vec4(0.0)
+
+# The texel this dispatch writes, or (-1, -1) when it lies outside the region,
+#   the target or the chunk that owns its centre.
+
+
+def owned_texel() -> ivec2:
+    ivec2 local = ivec2(global_id.xy)
+    if local.x >= int(extent.x) or local.y >= int(extent.y):
+        return ivec2(-1)
+    ivec2 texel = local + ivec2(origin)
+    if texel.x >= image_size(target).x or texel.y >= image_size(target).y:
+        return ivec2(-1)
+    vec2 inside = (vec2(texel) + 0.5) * texel_span - chunk_origin
+    if inside.x < 0.0 or inside.y < 0.0 or inside.x >= chunk_span.x or inside.y >= chunk_span.y:
+        return ivec2(-1)
+    return texel
+
+# The mean of sixteen taps over the texel's footprint in the chunk. One tap
+#   aliases a thin stroke in and out of the picture as a slider moves, and
+#   sixteen of a linear sampler are a box close enough at this size. Taps past
+#   the chunk's edge are clamped to it, which moves a fraction of a texel.
+
+
+def footprint_mean(ivec2 texel) -> vec4:
+    vec2 corner = vec2(texel) * texel_span
+    vec4 sum = vec4(0.0)
+    for y in range(4):
+        for x in range(4):
+            vec2 at = corner + (vec2(x, y) + 0.5) / 4.0 * texel_span
+            vec2 uv = clamp((at - chunk_origin) / chunk_span, vec2(0.0), vec2(1.0))
+            sum += texture(source, uv)
+    return sum / 16.0
+
+
+def reduce_color():
+    ivec2 texel = owned_texel()
+    if texel.x < 0:
+        return
+    target[texel] = footprint_mean(texel)
+
+# Coverage is single channel, so the mean's first channel is the whole answer.
+
+
+def reduce_mask():
+    ivec2 texel = owned_texel()
+    if texel.x < 0:
+        return
+    target[texel] = vec4(footprint_mean(texel).r)

@@ -1,0 +1,7 @@
+[
+  {"comment": "The first start of midi-becomes-a-module-of-its-own, which switches MIDI on. MIDI ships switched off on a fresh profile, so this start takes it off the list and midi-becomes-a-module-of-its-own starts again on this profile, with settings keep. The dump shows midi under off still, because the switch reads at the next start."},
+  {"wait": 40},
+  {"prefs": {"modules_off": ["sara-stats"]}},
+  {"wait": 10},
+  {"state": "0-midi-switched-on-for-the-next-start"}
+]

@@ -1,0 +1,5 @@
+[
+  {"args": ["--machine-console"]},
+  {"wait": 40},
+  {"state": "the-device-answers"}
+]

@@ -1,0 +1,173 @@
+# Kernel: generate, raise_tooth
+# A woven canvas ground that stores nothing: two sets of threads crossing, over
+# and under, between the layer's two colours, over a region of one chunk. The push
+# constant is packed by the names below, through SaGeneratedLayer.params_of, so the
+# threads' thickness, irregularity and angle arrive as the layer's parameters of
+# those names.
+#
+# The weave never repeats. A canvas drawn from one cell of a plain weave tiles
+# every few millimetres, which the eye finds first. So where a thread runs, how
+# thick it is, how its fibres twist and how pale it is all wander by the door's
+# value noise read at the document position (chunk offset plus texel, as the
+# paper's grain does), and none of it moves under a pan.
+#
+# Besides threads, each by an amount of its own (nought adds nothing): *slub* lays
+# the lumps a spun thread carries, up to twice as thick and standing higher.
+# *fuzz* lays loose fibres standing off a thread and roughens the crowns. *crimp*
+# bends a thread over and under the ones it crosses, thinner and darker where it
+# dips. *priming* is the ground filling the hollows, nought for raw linen and one
+# for an oil primed canvas whose weave shows only as texture under the primer.
+#
+# `scale` is the thread spacing in pixels, `thickness` a thread's width as a share
+# of the spacing, `irregularity` how far the wander reaches (0 a machine weave),
+# and `angle` the weave's turn in degrees.
+#
+# `raise_tooth` answers a height the way the paper does: the same weave at the
+# same document position, times *tooth* (the threads' height in virtual
+# millimetres). It runs over the relief's summed height after the paint's heights
+# are summed there and adds itself whole under them, however thick. A stroke buries
+# the weave, not this kernel: it reads the threads in the surface beneath its layer
+# and keeps the brush's height less them.
+
+import noise
+
+kernel generate
+kernel raise_tooth
+
+image target
+
+params:
+    vec2 offset
+    vec2 region_origin
+    vec2 region_size
+    float thickness
+    float irregularity
+    vec4 color_a
+    vec4 color_b
+    float scale
+    float tooth
+    float weight
+    float angle
+    float slub
+    float fuzz
+    float crimp
+    float priming
+
+# How high a thread of cross-section *across* stands, 1 on its crown and 0 at
+# its edges, a round thread seen from the side.
+
+
+def crown(float across) -> float:
+    return sqrt(max(1.0 - across * across, 0.0))
+
+# The weave at document position *doc*: how pale it is in 0 to 1 and how high
+# it stands in 0 to 1. The warp runs along the weave's second axis and the
+# weft along its first, and the warp is on top where the sum of the two
+# thread numbers is even.
+
+
+def weave(vec2 doc) -> vec2:
+    float turn = radians(angle)
+    float c = cos(turn)
+    float s = sin(turn)
+    vec2 p = vec2(c * doc.x + s * doc.y, c * doc.y - s * doc.x) / max(scale, 2.0)
+    # A slow field bends every thread over a dozen of them, so the spacing
+    # opens and closes across the canvas as a loom's tension does.
+    vec2 slow = p / 12.0
+    vec2 bend = vec2(sa_value_fbm(slow + vec2(17.0, 3.0)), sa_value_fbm(slow + vec2(-41.0, 29.0))) - 0.5
+    p += bend * irregularity * 4.0
+    # Each thread keeps its own distance from its neighbours and wavers along
+    # its length: a noise one thread wide, read across the threads.
+    p += irregularity * 0.5 * (vec2(sa_value_noise(vec2(p.x + 5.3, p.y / 5.0)), sa_value_noise(vec2(p.x / 5.0, p.y + 71.9))) - 0.5)
+    vec2 thread = floor(p)
+    vec2 within = fract(p) - 0.5
+    # A thread thickens and thins along its length, each its own way.
+    float warp_width = thickness * (1.0 + irregularity * 0.7 * (sa_value_noise(vec2(thread.x * 7.31, p.y / 3.0)) - 0.5))
+    float weft_width = thickness * (1.0 + irregularity * 0.7 * (sa_value_noise(vec2(p.x / 3.0, thread.y * 7.31 + 101.0)) - 0.5))
+    # Slubs proper: now and then a stretch of a thread swells to twice its
+    # width, each thread's lumps where its own noise crests.
+    float warp_slub = 0.0
+    float weft_slub = 0.0
+    if slub > 0.0:
+        warp_slub = slub * smoothstep(0.72, 0.95, sa_value_noise(vec2(thread.x * 5.17 + 33.0, p.y / 2.2)))
+        weft_slub = slub * smoothstep(0.72, 0.95, sa_value_noise(vec2(p.x / 2.2, thread.y * 5.17 + 77.0)))
+        warp_width *= 1.0 + warp_slub
+        weft_width *= 1.0 + weft_slub
+    # Over and under: a thread rises to the middle of the cell it crosses on
+    # top and dips to the middle of the one it crosses beneath. The parabola
+    # meets itself at every cell edge in value and in slope.
+    float warp_on_top = 1.0 - mod(thread.x + thread.y, 2.0)
+    float warp_lift = 0.5 + 0.5 * (1.0 - 4.0 * within.y * within.y) * (2.0 * warp_on_top - 1.0)
+    float weft_lift = 0.5 + 0.5 * (1.0 - 4.0 * within.x * within.x) * (1.0 - 2.0 * warp_on_top)
+    # Crimp: a thread pressed under its neighbour narrows there, so the one
+    # on top reads as passing over it rather than lying beside it.
+    if crimp > 0.0:
+        warp_width *= 1.0 - 0.4 * crimp * (1.0 - warp_lift)
+        weft_width *= 1.0 - 0.4 * crimp * (1.0 - weft_lift)
+    float warp_crown = crown(within.x / max(0.5 * warp_width, 0.01))
+    float weft_crown = crown(within.y / max(0.5 * weft_width, 0.01))
+    # A thicker stretch of thread stands higher, and the thickest the wander
+    # allows stands the whole tooth.
+    float warp_height = warp_crown * (0.35 + 0.65 * warp_lift) * warp_width / (thickness * (1.0 + 0.35 * irregularity))
+    float weft_height = weft_crown * (0.35 + 0.65 * weft_lift) * weft_width / (thickness * (1.0 + 0.35 * irregularity))
+    # The twist: the fibres of a spun thread lie on a slant, each thread's
+    # starting where its own hash says.
+    float warp_twist = abs(fract(p.y * 2.5 + within.x * 1.5 + sa_hash21(vec2(thread.x, 3.7))) - 0.5) * 2.0
+    float weft_twist = abs(fract(p.x * 2.5 + within.y * 1.5 + sa_hash21(vec2(11.3, thread.y))) - 0.5) * 2.0
+    # The tone: every thread is dyed a little its own way, and the way drifts
+    # along it.
+    float warp_tone = sa_value_noise(vec2(thread.x * 3.1 + 11.0, p.y / 6.0))
+    float weft_tone = sa_value_noise(vec2(p.x / 6.0, thread.y * 3.1 + 57.0))
+    float warp_seen = step(weft_height, warp_height)
+    float height = max(warp_height, weft_height)
+    float lift = mix(weft_lift, warp_lift, warp_seen)
+    float twist = mix(weft_twist, warp_twist, warp_seen)
+    float tone = mix(weft_tone, warp_tone, warp_seen)
+    float shade = sqrt(height) * (0.55 + 0.45 * lift) * (0.85 + 0.15 * twist)
+    shade *= 1.0 + irregularity * 0.4 * (tone - 0.5)
+    shade += 0.06 * (sa_value_noise(doc * 0.7) - 0.5)
+    if crimp > 0.0:
+        shade *= 1.0 - 0.35 * crimp * (1.0 - lift)
+    if slub > 0.0:
+        float lump = mix(weft_slub, warp_slub, warp_seen)
+        height /= 1.0 + 0.5 * slub
+        shade += 0.12 * lump * height
+    if fuzz > 0.0:
+        # Loose fibres a pixel wide at two slants, standing in the gaps
+        # where the threads leave room, and a fine roughness on the crowns.
+        vec2 one = vec2(doc.x + doc.y, doc.y - doc.x) * 0.70710678
+        float hairs = max(smoothstep(0.8, 0.95, sa_value_noise(vec2(one.x / max(scale, 2.0), one.y / 0.9) + vec2(13.0, 0.0))), smoothstep(0.8, 0.95, sa_value_noise(vec2(one.y / max(scale, 2.0), one.x / 0.9) + vec2(0.0, 29.0))))
+        float gap = 1.0 - min(height, 1.0)
+        shade += fuzz * (0.45 * hairs * gap + 0.12 * (sa_value_noise(doc * 0.9 + vec2(7.0, 3.0)) - 0.5))
+        height += 0.3 * fuzz * hairs * gap
+    if priming > 0.0:
+        # The primer stands to a level in the hollows and is pale, and over
+        # a thick priming the weave's own contrast sinks under it.
+        float level = 0.6 * priming
+        float filled = clamp((level - height) / 0.15, 0.0, 1.0)
+        shade = mix(shade, 0.9, max(filled, 0.35 * priming))
+        height = max(height, level)
+    return vec2(clamp(shade, 0.0, 1.0), height)
+
+
+def generate():
+    ivec2 local = ivec2(global_id.xy)
+    if local.x >= int(region_size.x) or local.y >= int(region_size.y):
+        return
+    ivec2 texel = local + ivec2(region_origin)
+    if texel.x >= image_size(target).x or texel.y >= image_size(target).y:
+        return
+    vec2 cloth = weave(offset + vec2(texel))
+    target[texel] = mix(color_b, color_a, cloth.x)
+
+
+def raise_tooth():
+    ivec2 local = ivec2(global_id.xy)
+    if local.x >= int(region_size.x) or local.y >= int(region_size.y):
+        return
+    ivec2 pixel = local + ivec2(region_origin)
+    if pixel.x >= image_size(target).x or pixel.y >= image_size(target).y:
+        return
+    float paint = target[pixel].r
+    float cloth = weave(offset + vec2(pixel)).y
+    target[pixel] = vec4(paint + tooth * weight * cloth, 0.0, 0.0, 1.0)

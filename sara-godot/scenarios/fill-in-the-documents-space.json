@@ -1,0 +1,211 @@
+[
+  {
+    "wait": 35
+  },
+  {
+    "answer": 2
+  },
+  {
+    "wait": 6
+  },
+  {
+    "presets_docker": {
+      "close": true
+    }
+  },
+  {
+    "docker": {
+      "id": "LayersDocker",
+      "at": [
+        1560,
+        600
+      ],
+      "size": [
+        340,
+        420
+      ]
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "document": "oklab_p3"
+  },
+  {
+    "wait": 20
+  },
+  {
+    "colour": "#a7a2ae"
+  },
+  {
+    "wait": 6
+  },
+  {
+    "texel": [
+      [
+        128,
+        128
+      ]
+    ]
+  },
+  {
+    "layer_collapse": ""
+  },
+  {
+    "state": "1-oklab-p3-before-the-fill"
+  },
+  {
+    "shot": "1-oklab-p3-before-the-fill"
+  },
+  {
+    "move": {
+      "at": [
+        900,
+        950
+      ]
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "key": {
+      "key": "backspace",
+      "alt": true
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "texel": [
+      [
+        128,
+        128
+      ]
+    ]
+  },
+  {
+    "layer_collapse": ""
+  },
+  {
+    "state": "2-oklab-p3-filled-with-the-grey-purple"
+  },
+  {
+    "shot": "2-oklab-p3-filled-with-the-grey-purple"
+  },
+  {
+    "move": {
+      "at": [
+        908,
+        950
+      ]
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "colour": "#ffffff"
+  },
+  {
+    "wait": 6
+  },
+  {
+    "tool": "eyedropper"
+  },
+  {
+    "wait": 8
+  },
+  {
+    "press": {
+      "button": "left",
+      "at": [
+        900,
+        500
+      ]
+    }
+  },
+  {
+    "release": {
+      "button": "left",
+      "at": [
+        900,
+        500
+      ]
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "state": "3-the-eyedropper-reads-the-fill-back"
+  },
+  {
+    "shot": "3-the-eyedropper-reads-the-fill-back"
+  },
+  {
+    "move": {
+      "at": [
+        916,
+        950
+      ]
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "tool": "brush"
+  },
+  {
+    "document": "srgb"
+  },
+  {
+    "wait": 20
+  },
+  {
+    "colour": "#a7a2ae"
+  },
+  {
+    "wait": 6
+  },
+  {
+    "key": {
+      "key": "backspace",
+      "alt": true
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "texel": [
+      [
+        128,
+        128
+      ]
+    ]
+  },
+  {
+    "layer_collapse": ""
+  },
+  {
+    "state": "4-srgb-filled-with-the-same-colour"
+  },
+  {
+    "shot": "4-srgb-filled-with-the-same-colour"
+  },
+  {
+    "move": {
+      "at": [
+        924,
+        950
+      ]
+    }
+  },
+  {
+    "wait": 12
+  }
+]

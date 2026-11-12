@@ -1,0 +1,500 @@
+[
+  {
+    "wait": 45
+  },
+  {"docker": "park"},
+  {
+    "docker": {
+      "id": "ToolBoxDocker",
+      "at": [
+        0,
+        90
+      ],
+      "size": [
+        60,
+        420
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "ToolOptionsDocker",
+      "at": [
+        0,
+        300
+      ],
+      "size": [
+        280,
+        430
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "ReferenceDocker",
+      "at": [
+        0,
+        760
+      ],
+      "size": [
+        280,
+        260
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "ColorDocker",
+      "at": [
+        1600,
+        90
+      ],
+      "size": [
+        310,
+        480
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "LayersDocker",
+      "at": [
+        1600,
+        600
+      ],
+      "size": [
+        310,
+        400
+      ]
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "document": "srgb"
+  },
+  {
+    "wait": 20
+  },
+  {
+    "colour": "#e8b23c"
+  },
+  {
+    "tool": "brush"
+  },
+  {
+    "wait": 4
+  },
+  {
+    "stroke": {
+      "from": [
+        350,
+        450
+      ],
+      "to": [
+        1200,
+        800
+      ],
+      "pressure": 0.9,
+      "steps": 28
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "tool": {
+      "id": "transform",
+      "options": {
+        "transform_mode": 0
+      }
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "select": [
+      400,
+      400,
+      500,
+      400
+    ]
+  },
+  {
+    "wait": 8
+  },
+  {
+    "press": {
+      "button": "left",
+      "at": [
+        902,
+        776
+      ]
+    }
+  },
+  {
+    "move": [
+      999,
+      844
+    ]
+  },
+  {
+    "wait": 2
+  },
+  {
+    "move": [
+      1057,
+      902
+    ]
+  },
+  {
+    "wait": 2
+  },
+  {
+    "wait": 6
+  },
+  {
+    "shot": "1-normal-a-corner-scales"
+  },
+  {
+    "state": "1-normal-a-corner-scales"
+  },
+  {
+    "release": "left"
+  },
+  {
+    "wait": 6
+  },
+  {
+    "key": "escape"
+  },
+  {
+    "wait": 8
+  },
+  {
+    "document": "srgb"
+  },
+  {
+    "wait": 20
+  },
+  {
+    "colour": "#e8b23c"
+  },
+  {
+    "tool": "brush"
+  },
+  {
+    "wait": 4
+  },
+  {
+    "stroke": {
+      "from": [
+        350,
+        450
+      ],
+      "to": [
+        1200,
+        800
+      ],
+      "pressure": 0.9,
+      "steps": 28
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "tool": {
+      "id": "transform",
+      "options": {
+        "transform_mode": 2
+      }
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "select": [
+      400,
+      400,
+      500,
+      400
+    ]
+  },
+  {
+    "wait": 8
+  },
+  {
+    "press": {
+      "button": "left",
+      "at": [
+        659,
+        388
+      ]
+    }
+  },
+  {
+    "move": [
+      756,
+      388
+    ]
+  },
+  {
+    "wait": 2
+  },
+  {
+    "move": [
+      834,
+      388
+    ]
+  },
+  {
+    "wait": 2
+  },
+  {
+    "wait": 6
+  },
+  {
+    "shot": "2-shear-an-edge-leans"
+  },
+  {
+    "state": "2-shear-an-edge-leans"
+  },
+  {
+    "release": "left"
+  },
+  {
+    "wait": 6
+  },
+  {
+    "key": "escape"
+  },
+  {
+    "wait": 8
+  },
+  {
+    "document": "srgb"
+  },
+  {
+    "wait": 20
+  },
+  {
+    "colour": "#e8b23c"
+  },
+  {
+    "tool": "brush"
+  },
+  {
+    "wait": 4
+  },
+  {
+    "stroke": {
+      "from": [
+        350,
+        450
+      ],
+      "to": [
+        1200,
+        800
+      ],
+      "pressure": 0.9,
+      "steps": 28
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "tool": {
+      "id": "transform",
+      "options": {
+        "transform_mode": 1
+      }
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "select": [
+      400,
+      400,
+      500,
+      400
+    ]
+  },
+  {
+    "wait": 8
+  },
+  {
+    "press": {
+      "button": "left",
+      "at": [
+        902,
+        388
+      ]
+    }
+  },
+  {
+    "move": [
+      863,
+      456
+    ]
+  },
+  {
+    "wait": 2
+  },
+  {
+    "move": [
+      824,
+      514
+    ]
+  },
+  {
+    "wait": 2
+  },
+  {
+    "wait": 6
+  },
+  {
+    "shot": "3-perspective-one-corner-alone"
+  },
+  {
+    "state": "3-perspective-one-corner-alone"
+  },
+  {
+    "release": "left"
+  },
+  {
+    "wait": 4
+  },
+  {
+    "press": {
+      "button": "left",
+      "at": [
+        417,
+        388
+      ]
+    }
+  },
+  {
+    "move": [
+      455,
+      340
+    ]
+  },
+  {
+    "wait": 2
+  },
+  {
+    "move": [
+      485,
+      320
+    ]
+  },
+  {
+    "wait": 2
+  },
+  {
+    "wait": 6
+  },
+  {
+    "release": "left"
+  },
+  {
+    "wait": 4
+  },
+  {
+    "press": {
+      "button": "left",
+      "at": [
+        902,
+        776
+      ]
+    }
+  },
+  {
+    "move": [
+      950,
+      805
+    ]
+  },
+  {
+    "wait": 2
+  },
+  {
+    "move": [
+      999,
+      844
+    ]
+  },
+  {
+    "wait": 2
+  },
+  {
+    "wait": 6
+  },
+  {
+    "release": "left"
+  },
+  {
+    "wait": 4
+  },
+  {
+    "press": {
+      "button": "left",
+      "at": [
+        417,
+        776
+      ]
+    }
+  },
+  {
+    "move": [
+      397,
+      805
+    ]
+  },
+  {
+    "wait": 2
+  },
+  {
+    "move": [
+      378,
+      825
+    ]
+  },
+  {
+    "wait": 2
+  },
+  {
+    "wait": 6
+  },
+  {
+    "shot": "4-perspective-four-corners-placed"
+  },
+  {
+    "state": "4-perspective-four-corners-placed"
+  },
+  {
+    "release": "left"
+  },
+  {
+    "wait": 6
+  },
+  {
+    "key": "enter"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "shot": "5-perspective-committed"
+  },
+  {
+    "state": "5-perspective-committed"
+  }
+]

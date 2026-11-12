@@ -1,0 +1,18 @@
+[
+  {"wait": 20},
+  {"canvas": [700, 500]},
+  {"wait": 5},
+  {"zoom": 1.0},
+  {"wait": 10},
+  {"select": {"quick_mask": true}},
+  {"wait": 5},
+  {"shot": "1-no-selection"},
+  {"state": "1-no-selection"},
+  {"select": {"quick_mask": false}},
+  {"select": {"rect": [560, 300, 100, 150]}},
+  {"wait": 5},
+  {"select": {"quick_mask": true}},
+  {"wait": 5},
+  {"shot": "2-selection-in-the-last-chunk"},
+  {"state": "2-selection-in-the-last-chunk"}
+]

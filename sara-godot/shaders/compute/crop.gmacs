@@ -1,0 +1,32 @@
+# Kernel: shift
+# Copies a rectangle out of one chunk into another at a different offset,
+# which is the whole of a crop: the document's origin moves, so every texel
+# moves with it and the chunk grid is rebuilt underneath.
+#
+# One dispatch per overlapping pair. A destination chunk straddles up to four
+# source chunks when the crop's origin is not a multiple of the chunk edge,
+# and the CPU works out each overlap, so this kernel only ever copies one
+# rectangle from one place to one other place.
+#
+# Both images carry the document's depth, so one `use_storage_format` sets
+# the pair, the way copy_masked.gmacs binds its source and its destination.
+
+kernel shift
+
+image source: readonly
+image destination: writeonly
+
+params:
+    # Where the rectangle starts in the destination, then in the source.
+    vec4 origins
+    # How big it is, and two floats of padding to close the block.
+    vec4 extent
+
+
+def shift():
+    ivec2 local = ivec2(global_id.xy)
+    if local.x >= int(extent.x) or local.y >= int(extent.y):
+        return
+    ivec2 from = local + ivec2(int(origins.z), int(origins.w))
+    ivec2 to = local + ivec2(int(origins.x), int(origins.y))
+    destination[to] = source[from]

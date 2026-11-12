@@ -1,0 +1,330 @@
+[
+ {
+  "wait": 40
+ },
+ {
+  "open": "new_document"
+ },
+ {
+  "wait": 20
+ },
+ {
+  "shot": "space-01-new-document"
+ },
+ {
+  "state": "space-01-new-document"
+ },
+ {
+  "new_document_gamut": "display_p3"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "space-02-gamut-display-p3"
+ },
+ {
+  "new_document_gamut": "ap1"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "shot": "space-03-gamut-ap1"
+ },
+ {
+  "state": "space-03-gamut-ap1"
+ },
+ {
+  "new_document_gamut": "rec2020"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "space-04-gamut-rec2020"
+ },
+ {
+  "new_document_gamut": "srgb"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "space-05-gamut-back-to-srgb"
+ },
+ {
+  "new_document_row": {
+   "depth": "32-bit float"
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "space-05a-depth-32-bit-float"
+ },
+ {
+  "new_document_row": {
+   "depth": "16-bit float"
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "state": "space-05b-depth-back-to-16-bit-float"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 15
+ },
+ {
+  "document": "srgb"
+ },
+ {
+  "wait": 15
+ },
+ {
+  "fill": [
+   4.0,
+   2.0,
+   1.0
+  ]
+ },
+ {
+  "wait": 12
+ },
+ {
+  "shot": "space-06-srgb-filled-hdr"
+ },
+ {
+  "state": "space-06-srgb-filled-hdr"
+ },
+ {
+  "tool": "eyedropper"
+ },
+ {
+  "wait": 8
+ },
+ {
+  "press": {
+   "button": "left",
+   "at": [
+    600,
+    700
+   ]
+  }
+ },
+ {
+  "release": {
+   "button": "left",
+   "at": [
+    600,
+    700
+   ]
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "shot": "space-07-eyedropper-read-hdr"
+ },
+ {
+  "state": "space-07-eyedropper-read-hdr"
+ },
+ {
+  "save": "user://t3-hdr.sad"
+ },
+ {
+  "wait": 15
+ },
+ {
+  "colour": "#000000"
+ },
+ {
+  "wait": 8
+ },
+ {
+  "load": "user://t3-hdr.sad"
+ },
+ {
+  "wait": 20
+ },
+ {
+  "press": {
+   "button": "left",
+   "at": [
+    640,
+    720
+   ]
+  }
+ },
+ {
+  "release": {
+   "button": "left",
+   "at": [
+    640,
+    720
+   ]
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "shot": "space-08-hdr-through-a-file"
+ },
+ {
+  "state": "space-08-hdr-through-a-file"
+ },
+ {
+  "tool": "brush"
+ },
+ {
+  "wait": 8
+ },
+ {
+  "document": "linear_srgb"
+ },
+ {
+  "wait": 15
+ },
+ {
+  "fill": [
+   0.25,
+   0.5,
+   0.75
+  ]
+ },
+ {
+  "wait": 12
+ },
+ {
+  "shot": "space-09-linear-srgb"
+ },
+ {
+  "state": "space-09-linear-srgb"
+ },
+ {
+  "document": "display_p3"
+ },
+ {
+  "wait": 15
+ },
+ {
+  "fill": [
+   0.0,
+   1.0,
+   0.0
+  ]
+ },
+ {
+  "wait": 12
+ },
+ {
+  "shot": "space-10-display-p3-green"
+ },
+ {
+  "state": "space-10-display-p3-green"
+ },
+ {
+  "document": "acescg"
+ },
+ {
+  "wait": 15
+ },
+ {
+  "fill": [
+   2.0,
+   0.4,
+   0.1
+  ]
+ },
+ {
+  "wait": 12
+ },
+ {
+  "shot": "space-11-acescg-hdr"
+ },
+ {
+  "state": "space-11-acescg-hdr"
+ },
+ {
+  "document": "rec2020"
+ },
+ {
+  "wait": 15
+ },
+ {
+  "fill": [
+   0.2,
+   0.6,
+   0.3
+  ]
+ },
+ {
+  "wait": 12
+ },
+ {
+  "shot": "space-12-rec2020"
+ },
+ {
+  "state": "space-12-rec2020"
+ },
+ {
+  "document": "oklab"
+ },
+ {
+  "wait": 15
+ },
+ {
+  "fill": [
+   0.5,
+   0.5,
+   0.5
+  ]
+ },
+ {
+  "wait": 12
+ },
+ {
+  "shot": "space-13-oklab"
+ },
+ {
+  "state": "space-13-oklab"
+ },
+ {
+  "document": "oklab_p3"
+ },
+ {
+  "wait": 15
+ },
+ {
+  "state": "space-14-oklab-p3"
+ },
+ {
+  "open": "color_space"
+ },
+ {
+  "wait": 25
+ },
+ {
+  "shot": "space-15-convert-dialog"
+ },
+ {
+  "state": "space-15-convert-dialog"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "space-16-convert-cancelled"
+ }
+]

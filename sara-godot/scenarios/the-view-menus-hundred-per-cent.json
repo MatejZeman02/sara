@@ -1,0 +1,29 @@
+[
+ {"wait": 60},
+ {"layout_preset": {"load": "minimalistic"}},
+ {"wait": 20},
+ {"document": "srgb"},
+ {"wait": 10},
+ {"canvas": [768, 768]},
+ {"wait": 10},
+ {"checker": 64},
+ {"wait": 10},
+ {"prefs": {"ui_scale": 1.25}},
+ {"wait": 30},
+ {"menu_item": {"menu": "View", "id": 13}},
+ {"wait": 15},
+ {"state": "1-a-fitted-document-at-an-interface-scale-of-1-25"},
+ {"shot": "1-a-fitted-document-at-an-interface-scale-of-1-25"},
+
+ {"menu_item": {"menu": "View", "id": 12}},
+ {"wait": 20},
+ {"state": "2-view-zoom-to-100-from-the-menu"},
+ {"shot": "2-view-zoom-to-100-from-the-menu"},
+
+ {"menu_item": {"menu": "View", "id": 13}},
+ {"wait": 15},
+ {"key": {"key": "0", "ctrl": true}},
+ {"wait": 20},
+ {"state": "3-the-same-zoom-from-the-chord"},
+ {"shot": "3-the-same-zoom-from-the-chord"}
+]

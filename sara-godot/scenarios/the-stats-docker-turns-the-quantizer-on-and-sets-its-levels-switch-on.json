@@ -1,0 +1,7 @@
+[
+  {"comment": "The first start of the-stats-docker-turns-the-quantizer-on-and-sets-its-levels, which switches Stats on. Stats ships switched off on a fresh profile, so this start takes it off the list and the-stats-docker-turns-the-quantizer-on-and-sets-its-levels starts again on this profile, with settings keep. The dump shows sara-stats under off still, because the switch reads at the next start."},
+  {"wait": 40},
+  {"prefs": {"modules_off": ["midi"]}},
+  {"wait": 10},
+  {"state": "0-sara-stats-switched-on-for-the-next-start"}
+]

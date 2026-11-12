@@ -1,0 +1,38 @@
+# Fills the part of a padded neighbourhood source that lies past the document's
+# edge with the nearest texel inside it, for the neighbourhood runner. A blur or
+# a sharpen reads a few texels past the texel it writes, and past the canvas's
+# edge there is no paint and never will be: read as transparent, the edge of an
+# opaque layer is an edge against nothing, so a sharpen rims the canvas and a
+# blur darkens it. Clamped, the edge reads as itself continued, the way Krita and
+# Photoshop read it. A position inside the document that holds no chunk is not
+# touched, and still reads as transparent.
+#
+# Reads and writes one texture: every texel it writes lies outside the inside
+# rectangle and every texel it reads lies in it, so no thread reads what
+# another writes.
+
+kernel clamp_edge
+image target
+
+params:
+    # The part of the texture to fill, in its own pixels.
+    vec2 region_origin
+    vec2 region_size
+    # The document rectangle within it, in the same pixels, never empty.
+    vec2 inside_origin
+    vec2 inside_size
+
+
+def clamp_edge():
+    ivec2 local = ivec2(global_id.xy)
+    if local.x >= int(region_size.x) or local.y >= int(region_size.y):
+        return
+    ivec2 pixel = local + ivec2(region_origin)
+    if pixel.x >= image_size(target).x or pixel.y >= image_size(target).y:
+        return
+    ivec2 low = ivec2(inside_origin)
+    ivec2 high = low + ivec2(inside_size) - ivec2(1, 1)
+    ivec2 nearest = clamp(pixel, low, high)
+    if nearest == pixel:
+        return
+    target[pixel] = target[nearest]

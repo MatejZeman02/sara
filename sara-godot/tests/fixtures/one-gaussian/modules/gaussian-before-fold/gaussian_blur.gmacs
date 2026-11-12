@@ -1,0 +1,79 @@
+# A copy of the base module's `gaussian_blur.gmacs` as it stood before the Gaussian of
+# the three blurs was folded into the `gaussian` library. Every line below this
+# paragraph is the kernel as it was, so
+# `modules/sara-base-modules/base/tests/test_the_shared_gaussian_paints_what_the_three_copies_painted.gd`
+# can run the old arithmetic beside the new and read the two equal texel for
+# texel. It is never edited to follow the kernel it copies.
+#
+# The Gaussian blur, one neighbourhood kernel under the
+# contract SaNeighbourhoodPass writes: the padded source at binding 0, the
+# selection mask at binding 1, the chunk-sized target at binding 2.
+#
+# Separable inside one dispatch. The pass takes one kernel and no scratch
+# texture, so the horizontal half runs into workgroup memory rather than into
+# a second texture: the group walks the rows its eight outputs read, eight at
+# a time, every thread blurring one row across, and after a barrier each thread
+# adds the eight rows of its own column into its vertical sum. A texel costs
+# about (radius / 4 + 1) * (2 * radius + 9) reads against the square's
+# (2 * radius + 1) ^ 2, 116 against 441 at radius 10 and 1526 against 10201 at
+# 50, in 1 KB of shared memory whatever the radius.
+#
+# Colour is straight alpha, so every tap is premultiplied before it is summed
+# and the sum is divided back out at the end. The rows held in shared memory
+# are premultiplied. Nothing clamps but the coordinates.
+
+kernel gaussian_blur
+
+image src: readonly
+image mask: r32f, readonly
+image dst
+
+params:
+    int radius
+    int halo
+    vec2 origin
+
+# One row of the group's default eight by eight, which the formatter keeps
+# undeclared, so the array's 64 is that group and nothing else.
+shared vec4 across[64]
+
+# The premultiplied colour, the straightening and the mask's blend,
+# imported after the params because the library reads `halo` and the
+# three images by name.
+import neighbourhood
+
+
+def weight(int offset, float sigma) -> float:
+    return exp(-float(offset * offset) / (2.0 * sigma * sigma))
+
+
+def gaussian_blur():
+    ivec2 at = pixel + ivec2(origin)
+    bool inside = at.x < image_size(dst).x and at.y < image_size(dst).y
+    int reach = max(min(radius, halo), 0)
+    # Three standard deviations to the radius, so the tail left out is under
+    # a hundredth of the weight.
+    float sigma = max(float(reach) / 3.0, 0.001)
+    float line = 0.0
+    for i in range(-reach, reach + 1):
+        line += weight(i, sigma)
+    ivec2 last = image_size(src) - 1
+    int top = at.y - int(local_id.y) - reach
+    int blocks = (8 + 2 * reach + 7) / 8
+    vec4 sum = vec4(0.0)
+    for block in range(0, blocks):
+        int row = top + block * 8 + int(local_id.y)
+        vec4 part = vec4(0.0)
+        for dx in range(-reach, reach + 1):
+            ivec2 tap = clamp(ivec2(at.x + dx, row) + ivec2(halo, halo), ivec2(0, 0), last)
+            part += weight(dx, sigma) * sa_premultiplied(image_load(src, tap))
+        across[local_index] = part
+        barrier()
+        for ly in range(0, 8):
+            int dy = top + block * 8 + ly - at.y
+            if abs(dy) <= reach:
+                sum += weight(dy, sigma) * across[ly * 8 + int(local_id.x)]
+        barrier()
+    if not inside:
+        return
+    sa_finish(at, sa_kept(at), sa_straight(sum / (line * line)))

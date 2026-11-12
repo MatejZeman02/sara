@@ -1,0 +1,102 @@
+# Library: painted colour stored into a half field, rounded to a half
+# stochastically by the kernel, from a seed.
+#
+# A store into an F16 field narrows each channel, and an NVIDIA GPU under Vulkan
+# truncates towards zero. A brush stroke stores its colour twice (a dab into the
+# stroke buffer, the commit into the layer), so a thin glaze on a half document
+# stalls short of the full one: once a stroke's step is under half a half step,
+# truncation throws it away every time. Rounding to the nearest half only halves
+# that stall.
+#
+# So the kernel rounds the float itself. It takes the half above with odds set by
+# how near the float is to it and the half below otherwise, which is right on
+# average however small the step, and it stores a float the half holds exactly, so
+# no card's narrowing moves it.
+#
+# The draw is a hash, never a clock: the stroke's seed, the dab's seed and the
+# texel, through `lattice_hash.gmacs`'s integer hash, so a replay and a suite paint
+# the same bits on every card. The dab's seed is in it because one invocation lays
+# many dabs on one texel, and one draw reused would repeat its error.
+#
+# A full precision field is left as it is. A kernel is compiled once per storage
+# format and cannot name its own, so the store helper stores, reads back what the
+# field kept and stores again only the channels the field narrowed, the way
+# `convert_color_space.gmacs` learns it. A float32 field keeps every channel but a
+# NaN, which the rounding gives back as it came.
+#
+# Nothing clamps. An infinity, a NaN, a float32 subnormal and a number past the
+# largest half come back as they went in, and the device narrows them its own way.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+import lattice_hash
+import nearest_half
+
+# The float32 bits of 65504, the largest half. Past it the device's narrowing
+# decides, as it does for an infinity.
+const uint SA_HALF_LARGEST_BITS = 0x477fe000u
+# The weight of the thirteen dropped bits, the number of draws one half step is
+# cut into.
+const uint SA_HALF_STEP_BITS = 0x2000u
+
+# *x* rounded to the half below or the half above its magnitude, the one above
+# with odds of how far past the one below *x* lies, a share of one half step.
+# *draw* is 32 random bits, and the same bits give the same half.
+
+
+def sa_stochastic_half(float x, uint draw) -> float:
+    uint bits = float_bits_to_uint(x)
+    uint magnitude = bits & 0x7fffffffu
+    if magnitude >= SA_FLOAT_SPECIAL_BITS or magnitude < SA_FLOAT_NORMAL_BITS or magnitude > SA_HALF_LARGEST_BITS:
+        return x
+    if magnitude < SA_HALF_NORMAL_BITS:
+        # A half below 2^-14 keeps a fixed step of 2^-24. The magnitude in steps
+        # is exact in a float32, and the draw's top 24 bits are added below it,
+        # so the floor goes up with odds of the fraction.
+        float steps = abs(x) * SA_HALF_SUBNORMAL_STEPS
+        float kept = floor(steps) + (fract(steps) * 16777216.0 > float(draw >> 8u) ? 1.0 : 0.0)
+        return uint_bits_to_float((bits & 0x80000000u) | float_bits_to_uint(kept / SA_HALF_SUBNORMAL_STEPS))
+    # The dropped bits plus a draw under one step carry into the kept bits with
+    # odds of the dropped bits over the step, which is the stochastic rounding of
+    # the magnitude. A carry out of the mantissa moves the exponent up, and the
+    # half there is the next one above, so that is right too.
+    uint rounded = (magnitude + (draw & SA_HALF_DROPPED_BITS)) & ~SA_HALF_DROPPED_BITS
+    return uint_bits_to_float((bits & 0x80000000u) | rounded)
+
+# The 32 bits a texel's store draws from: the stroke's seed, the dab's own and
+# the texel. The two seeds are folded into the lattice's third axis, the stroke's
+# mixed first, so two strokes never walk the same dab sequence.
+
+
+def sa_stochastic_draw(uint stroke_seed, uint dab_seed, ivec2 texel) -> uint:
+    return sa_lattice_bits(ivec3(texel, int(sa_lowbias32(stroke_seed) + dab_seed)))
+
+# *c* rounded channel by channel where *narrowed* says the field did not keep
+# it, each channel from its own bits of the chain *draw* starts, and left as it
+# is elsewhere.
+
+
+def sa_stochastic_halves(vec4 c, bvec4 narrowed, uint draw) -> vec4:
+    vec4 rounded = c
+    uint bits = draw
+    for channel in range(4):
+        if narrowed[channel]:
+            rounded[channel] = sa_stochastic_half(c[channel], bits)
+        bits = sa_lowbias32(bits + 0x9e3779b9u)
+    return rounded
+
+# *value* stored at *at* of the importer's `canvas`, and stored again rounded
+# where the canvas did not keep it, drawn from *stroke_seed*, *dab_seed* and
+# the texel. The importer declares `image canvas` before it imports this, as the
+# dab, the noise dab and the stroke commit all do, because a storage image
+# cannot be handed to a function whose format the kernel does not know.
+#
+# One load more on every store, and the hash and a second store only where the
+# field narrowed, so a full precision canvas pays the load and nothing else.
+
+
+def sa_store_rounded(ivec2 at, vec4 value, uint stroke_seed, uint dab_seed):
+    image_store(canvas, at, value)
+    bvec4 narrowed = not_equal(image_load(canvas, at), value)
+    if any(narrowed):
+        image_store(canvas, at, sa_stochastic_halves(value, narrowed, sa_stochastic_draw(stroke_seed, dab_seed, at)))

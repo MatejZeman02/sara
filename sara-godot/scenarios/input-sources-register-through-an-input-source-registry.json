@@ -1,0 +1,16 @@
+[
+  {"wait": 45},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 20},
+  {"open": "preferences"},
+  {"page": "MIDI"},
+  {"wait": 15},
+  {"page_row": {"row": "listen", "value": true}},
+  {"wait": 15},
+  {"midi": {"control": 7, "value": 64}},
+  {"state": "1-the-midi-page-with-listen-on"},
+  {"shot": "1-the-midi-page-with-listen-on"},
+  {"page_row": {"row": "listen", "value": false}},
+  {"wait": 10},
+  {"state": "2-listen-off-again"}
+]

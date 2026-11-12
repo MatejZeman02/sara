@@ -1,0 +1,46 @@
+[
+  {"wait": 30},
+  {"docker": {"id": "BrushPresetsDocker", "at": [1500, 120], "size": [320, 460]}},
+  {"wait": 12},
+  {"tool": "brush"},
+  {"wait": 5},
+  {"state": "1-before-anything-is-typed"},
+
+  {"click": {"control": "ChooserSearch"}},
+  {"wait": 5},
+  {"presets_docker": "before-typing"},
+  {"state": "2-the-docker-search-has-the-keyboard"},
+
+  {"key": {"key": "e", "shape": "label"}},
+  {"key": "bracketright"},
+  {"wait": 8},
+  {"presets_docker": "after-typing"},
+  {"state": "3-e-and-bracket-typed-rather-than-fired"},
+  {"shot": "3-e-and-bracket-typed-rather-than-fired"},
+
+  {"key": "escape"},
+  {"wait": 8},
+  {"state": "4-escape-left-the-box-and-not-the-docker"},
+
+  {"key": "escape"},
+  {"wait": 10},
+  {"state": "5-the-second-escape-closed-nothing"},
+
+  {"open": "preferences"},
+  {"wait": 15},
+  {"page": "General"},
+  {"wait": 10},
+  {"click": {"control": "PreferencesSearch"}},
+  {"wait": 5},
+  {"key": {"key": "g", "shape": "label"}},
+  {"key": {"key": "a", "shape": "label"}},
+  {"key": {"key": "m", "shape": "label"}},
+  {"wait": 8},
+  {"state": "6-gam-typed-into-the-preferences-search"},
+  {"shot": "6-gam-typed-into-the-preferences-search"},
+
+  {"key": {"key": "comma", "ctrl": true}},
+  {"wait": 15},
+  {"state": "7-ctrl-comma-toggled-preferences"},
+  {"shot": "7-ctrl-comma-toggled-preferences"}
+]

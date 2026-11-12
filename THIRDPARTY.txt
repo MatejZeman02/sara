@@ -1,0 +1,977 @@
+========================================================================
+Sara - third-party credits and licences
+========================================================================
+
+Sara is written by its contributors and released under the GNU General Public
+License v3.0 or later (GPLv3). See the LICENSE file for the full GPLv3 text.
+
+This project was made possible by the following third-party open-source
+software and libraries, and the pictures and data it carries are credited
+below:
+
+------------------------------------------------------------------------
+Godot Engine 4.7.2, the engine inside every build
+------------------------------------------------------------------------
+Copyright (c) 2014-present Godot Engine contributors.
+Copyright (c) 2007-2014 Juan Linietsky, Ariel Manzur.
+License: MIT License, whose text is at the end of this file
+Source: https://github.com/godotengine/godot, tag 4.7.2-stable
+
+Sara's binary is Godot's 4.7.2 export template with Sara's project packed
+into it. The template is compiled with the third-party code below, each under
+the licence named beside it, as the engine itself lists them through
+Engine.get_copyright_info(). The list is the engine's whole one, so a part
+only a platform or the editor uses is named too. Every notice and licence text
+is in the engine's COPYRIGHT.txt, at
+https://github.com/godotengine/godot/blob/4.7.2-stable/COPYRIGHT.txt
+
+  Bullet Continuous Collision Detection and Physics Library, MIT and Zlib
+  Linux AppStream Metadata File, CC0-1.0
+  Godot Engine logo, CC-BY-4.0
+  Betsy, MIT
+  Chipmunk2D Joint Constraints, MIT
+  Open Dynamics Engine, BSD-3-clause
+  Jolt Physics, MIT
+  Joint Non-Local Means (JNLM) denoiser, MIT
+  The Android Open Source Project, Apache-2.0
+  ProcessPhoenix, Apache-2.0
+  Robert Penner's Easing Functions, MIT
+  NVidia's FXAA 3.11, simplified by Simon Rodriguez, BSD-3-clause and MIT
+  Intel ASSAO and related files, MIT
+  Temporal Anti-Aliasing resolve implementation, MIT
+  Subpixel Morphological Antialiasing, MIT
+  AccessKit, MIT
+  AMD FidelityFX Super Resolution, MIT
+  AMD FidelityFX Super Resolution 2, MIT
+  ANGLE, BSD-3-clause
+  Arm ASTC Encoder, Apache-2.0
+  Basis Universal, Apache-2.0
+  Brotli, MIT
+  CA certificates, MPL-2.0
+  Clipper2, BSL-1.0
+  Convection Texture Tools Stand-Alone Kernels, MIT
+  D3D12 Memory Allocator, MIT
+  DirectX Headers, MIT
+  doctest, MIT
+  dr_libs, Unlicense or MIT-0
+  Embree, Apache-2.0
+  ENet, MIT
+  etcpak, BSD-3-clause
+  DroidSans font, Apache-2.0
+  Inter font, OFL-1.1
+  JetBrains Mono font, OFL-1.1
+  Noto Sans font, OFL-1.1
+  Open Sans font, OFL-1.1
+  Vazirmatn font, OFL-1.1
+  The FreeType Project, FTL
+  GamepadMotionHelpers, MIT
+  glad, CC0-1.0 and Apache-2.0
+  glslang, glslang
+  Graphite engine, MIT
+  Grisu2 float serialization algorithm, MIT and Apache-2.0
+  HarfBuzz text shaping library, HarfBuzz
+  International Components for Unicode, Unicode
+  libbacktrace, BSD-3-clause
+  libjpeg-turbo, BSD-3-clause and IJG
+  KTX, Apache-2.0
+  OggVorbis, BSD-3-clause
+  libpng, Zlib
+  OggTheora, BSD-3-clause
+  WebP codec, BSD-3-clause
+  Manifold, Apache-2.0
+  Mbed TLS, Apache-2.0
+  meshoptimizer, MIT
+  metal-cpp, Apache-2.0
+  mingw-std-threads, BSD-2-clause
+  MiniUPnP Project, BSD-3-clause
+  MiniZip, Zlib
+  bcdec, MIT
+  Fast Filtering of Reflection Probes, MIT
+  FastLZ, MIT
+  FastNoise Lite, MIT
+  libjingle, BSD-3-clause
+  Tangent Space Normal Maps implementation, Zlib
+  NVIDIA NVAPI (minimal excerpt), MIT
+  OK Lab color space, MIT
+  Minimal PCG32 implementation, Apache-2.0
+  PolyPartition / Triangulator, MIT
+  Quite OK Audio Format, MIT
+  r128 library, Unlicense
+  SMAZ, BSD-3-clause
+  SMOL-V, Unlicense or MIT
+  stb libraries, Unlicense or MIT
+  YUV2RGB, BSD-2-clause
+  Multi-channel signed distance field generator, MIT
+  OpenXR Loader, Apache-2.0
+  PCRE2, BSD-3-clause
+  Recast, Zlib
+  RVO2, Apache-2.0
+  SDL, Zlib
+  hidapi, BSD-3-clause
+  SPIRV-Cross, Apache-2.0 or MIT
+  SPIRV-Headers, MIT
+  SPIRV-Reflect, Apache-2.0
+  Swappy, Apache-2.0
+  ThorVG, MIT
+  TinyEXR, BSD-3-clause
+  ufbx, MIT
+  V-HACD, BSD-3-clause
+  volk, MIT
+  Vulkan Headers, Apache-2.0
+  Vulkan Memory Allocator, MIT
+  Wayland core protocol, MIT
+  Wayland protocols, MIT
+  Mesa Wayland protocols, X11
+  Wslay, MIT
+  xatlas, MIT
+  zlib, Zlib
+  Zstandard, BSD-3-clause
+
+------------------------------------------------------------------------
+Libraries compiled into the native modules
+------------------------------------------------------------------------
+Two modules are native libraries built beside the binary, the JPEG XL codec
+(sara-jxl, libsara-jxl.*.so and .dll) and the TIFF reader's LZW unpacker
+(libsara-tiff-lzw.*.so and .dll). Both are built from the modules'
+CMakeLists.txt and link everything statically, so the only libraries they
+load are the system's own: libc, libm and the loader on Linux, KERNEL32 and
+the Universal C Runtime's api-ms-win-crt parts on Windows. What is compiled
+into them is:
+
+godot-cpp, the C++ bindings both modules are written against
+Copyright (c) 2017-present Godot Engine contributors.
+Copyright (c) 2014-2017 Juan Linietsky, Ariel Manzur.
+License: MIT License, whose text is at the end of this file
+In: both modules
+Source: https://github.com/godotengine/godot-cpp, commit 2bb1acf6f8ae
+
+libjxl 0.12.0, the JPEG XL reference codec, with Sara's patches
+Copyright (c) the JPEG XL Project Authors.
+License: BSD 3-Clause License, whose text is at the end of this file, and
+         the project's additional patent grant in its PATENTS file
+In: sara-jxl
+Source: https://github.com/libjxl/libjxl, tag v0.12.0. The patches are
+        the module's own, in modules/sara-jxl/patches/ of the source.
+
+skcms, the colour management libjxl is built with (lcms is not)
+Copyright (c) 2018 Google Inc.
+License: BSD 3-Clause License, in Google's words at the end of this file
+In: sara-jxl
+Source: https://skia.googlesource.com/skcms, the copy libjxl 0.12.0 pins
+
+Highway 1.2.0, the SIMD library libjxl is built with
+Copyright (c) The Highway Project Authors.
+License: Apache License 2.0 or BSD 3-Clause License, at the user's choice.
+         Sara takes the BSD 3-Clause License, whose text is at the end of
+         this file.
+In: sara-jxl
+Source: https://github.com/google/highway, the copy libjxl 0.12.0 pins
+
+Brotli 1.2.0, the compression libjxl is built with
+Copyright (c) 2009, 2010, 2013-2016 by the Brotli Authors.
+License: MIT License, whose text is at the end of this file
+In: sara-jxl
+Source: https://github.com/google/brotli, the copy libjxl 0.12.0 pins
+
+The LZW unpacker is Sara's own code written from the TIFF 6.0 specification.
+No libtiff is in any build.
+
+------------------------------------------------------------------------
+The compilers' runtimes in the native modules
+------------------------------------------------------------------------
+The Linux libraries are built with the system's GCC and link its C++ runtime
+statically (-static-libstdc++ -static-libgcc).
+
+libstdc++ and libgcc, the GNU C++ and compiler runtimes
+Copyright (c) the Free Software Foundation, Inc.
+License: GNU General Public License v3.0 with the GCC Runtime Library
+         Exception 3.1, which lets the compiled runtime go into a program
+         under any licence. Full text:
+         https://www.gnu.org/licenses/gcc-exception-3.1.html
+In: both modules, Linux
+
+The Windows libraries are cross-built with llvm-mingw (UCRT) and link with
+-static, which puts these into each DLL:
+
+libc++, libc++abi, libunwind and compiler-rt's builtins, of the LLVM Project
+Copyright (c) the LLVM Project contributors.
+License: Apache License 2.0 with LLVM Exceptions. The exceptions let the
+         compiled runtime be redistributed in a program without the
+         licence's notice conditions. Full text:
+         https://llvm.org/LICENSE.txt
+In: both modules, Windows
+Source: https://github.com/mstorsjo/llvm-mingw
+
+The MinGW-w64 runtime, libmingw32, libmingwex and libmoldname
+Copyright (c) 2009, 2010, 2011, 2012, 2013 by the mingw-w64 project, and
+          the holders its notice names
+License: the MinGW-w64 runtime licence, a BSD-style licence with notices
+         that have to travel with the binary, whose whole text is at the
+         end of this file
+In: both modules, Windows
+Source: https://www.mingw-w64.org
+
+------------------------------------------------------------------------
+A-Compute
+------------------------------------------------------------------------
+Copyright (c) 2024 Acerola (Garrett Gunnell)
+License: MIT License
+Source: https://github.com/GarrettGunnell/Acerola-Compute
+
+------------------------------------------------------------------------
+Krita 5.2.13
+------------------------------------------------------------------------
+Copyright (c) 1999-2022 the Krita contributors, named in the copyright lines
+the five Sara files below carry verbatim, listed one page below.
+License: GNU General Public License v2.0 or later, except
+         libs/pigment/compositeops/KoCompositeOpAlphaDarken.h and
+         plugins/paintops/libpaintop/kis_texture_option.cpp, which are
+         GNU Lesser General Public License v2.0 or later. Both permit
+         relicensing upwards, and Sara's own licence is GPLv3-or-later.
+Source: https://invent.kde.org/graphics/krita
+
+Sara's stamp brush engine and its dynamics were written against Krita 5.2.13.
+Almost all of it is written from what the mechanisms do rather than from Krita's
+code. Five ports remain, and each carries the original SPDX-FileCopyrightText
+lines verbatim, unmodified, beside Sara's own SPDX-License-Identifier.
+
+They are listed, with their lines and the mechanism each is for, in four
+files, the stamp brush's for the one it still holds, the door's two for the
+three that moved into it, the sensor and the stroke state with the brush's
+dynamics and the tip image with the tips, and the widget
+toolkit's for the one that moved with the curve option control:
+
+  modules/sara-base-modules/stamp-brush/PROVENANCE.md
+  core/api/dynamics/PROVENANCE.md
+  core/api/tip/PROVENANCE.md
+  ui/widgets/curve_option/PROVENANCE.md
+
+The five Sara files they name are:
+
+  core/api/tip/sa_tip_image.gd
+  core/api/dynamics/sa_sensor.gd
+  core/api/dynamics/speed/sa_speed_smoother.gd
+  ui/widgets/curve_option/sa_curve_option_control.gd
+  modules/sara-base-modules/stamp-brush/shaders/pattern_modes.gmacs
+
+All five carry a pointer to the page beside them rather than the lines
+themselves, which is a rule of its own: a licence obligation spread over eight
+headers in two directories is one refactor from losing a line and nobody
+noticing, and that was found when two files credited the wrong person
+for the same mechanism. The fourth was the brush editor's and kept its lines in
+its own header until it moved into the module and then on into the widget
+toolkit.
+
+Two suites read those pages on every run of the test suite and fail when a file
+carries a line its page does not grant it, or when a page grants a line to a
+file that does not exist.
+modules/sara-base-modules/stamp-brush/tests/test_provenance.gd sweeps the
+module against its page and sara-godot/tests/test_dynamics_provenance.gd sweeps
+the skeleton's three directories, ui/brush_editor, ui/widgets and core, against
+the door's two.
+
+Everything else was read against Krita's behaviour rather than taken. The
+project's two brush specifications, the stamp engine's and the dynamics', keep
+a row per mechanism naming the Krita source it was read against and whether it
+was ported or only looked at, and a public build does not carry them. A
+mechanism that was only read owes nobody anything. The ports above are the
+whole of what was copied.
+
+------------------------------------------------------------------------
+Oklab Color Space
+------------------------------------------------------------------------
+Copyright (c) 2020 Björn Ottosson
+License: MIT License
+Source: https://bottosson.github.io/posts/oklab/
+
+------------------------------------------------------------------------
+Krita 5.2.13, the Smart Patch tool's numbers in the patch tool
+------------------------------------------------------------------------
+Copyright (c) 2017 Eugene Ingerman, as the file's own SPDX-FileCopyrightText says
+License: GNU General Public License v2.0 or later, which permits relicensing
+         upwards, and Sara's own licence is GPLv3-or-later.
+Source: https://invent.kde.org/graphics/krita,
+        plugins/tools/tool_smart_patch/kis_inpaint.cpp
+
+The patch tool's Texture method was written for the GPU from PatchMatch
+(Barnes, Shechtman, Finkelstein and Goldman, 2009) and the completion of
+Wexler, Shechtman and Irani (2007), and copies no line of Krita's file. It
+keeps Krita's tuned numbers: the similarity curve and its 0.999 and 0.10, the
+distance's scale, the floor under a vote, the patch radius of four and the
+rounds per level. The lines and what each number is are on
+
+  modules/sara-base-modules/base/patch/PROVENANCE.md
+
+and the two Sara files it names are
+
+  modules/sara-base-modules/base/patch/patch_match.gmacs
+  modules/sara-base-modules/base/patch/sa_patch_match.gd
+
+Krita's file names Xavier Philippeau as the original author and David
+Chatting's PatchMatch (https://github.com/davidchatting/PatchMatch) as the code
+it adopted. Sara takes nothing from either beyond what Krita ships.
+
+------------------------------------------------------------------------
+OpenDRT v1.1.0, the Tonemap filter's OpenDRT method
+------------------------------------------------------------------------
+Written by Jed Smith
+License: GNU General Public License v3.0
+Source: https://github.com/jedypod/open-display-transform,
+        display-transforms/opendrt/OpenDRT.dctl, v1.1.0
+
+The Tonemap filter offers two methods: Sara's own Paper, made for a painter's
+canvas, and OpenDRT, a display transform made to form a picture out of
+scene-linear camera data. OpenDRT is Jed Smith's, ported from the DCTL to a
+Sara kernel, and the DCTL's own banner is carried verbatim in
+
+  modules/sara-base-modules/base/shaders/opendrt.gmacs
+
+The repository's parameters page is what the filter's rows, their ranges and
+the Look and Tonescale presets were read from. The DCTL's header writes
+"License: GPLv3" with no copyright line, which is read as GPL-3.0, and Sara's
+own licence is GPLv3-or-later, so the port ships under it. The Sara files
+that carry it are
+
+  modules/sara-base-modules/base/shaders/opendrt.gmacs
+  modules/sara-base-modules/base/usual/opendrt_parameters.gd
+  modules/sara-base-modules/base/usual/tonemap_filter.gd
+
+------------------------------------------------------------------------
+Fonts
+------------------------------------------------------------------------
+Eight font families ship in every build, four in the project for the
+interface, three in the text module for text layers, and one inside the
+Godot export template. Each is under the SIL Open Font License 1.1, whose
+text is at the end of this file.
+
+Inter, version 4.001
+Copyright (c) 2016 The Inter Project Authors (https://github.com/rsms/inter)
+License: SIL Open Font License 1.1
+Files: sara-godot/ui/themes/fonts/inter/Inter-Regular.ttf, Inter-Bold.ttf
+Source: https://github.com/rsms/inter
+
+IBM Plex Sans, version 3.005
+Copyright (c) 2017 IBM Corp. with Reserved Font Name "Plex"
+License: SIL Open Font License 1.1
+Files: sara-godot/ui/themes/fonts/ibm-plex-sans/IBMPlexSans-Regular.ttf,
+       IBMPlexSans-Bold.ttf
+Source: https://github.com/IBM/plex
+
+Source Sans 3, version 3.052
+Copyright 2010-2024 Adobe (http://www.adobe.com/), with Reserved Font Name
+'Source'. All Rights Reserved. Source is a trademark of Adobe in the United
+States and/or other countries.
+License: SIL Open Font License 1.1
+Files: sara-godot/ui/themes/fonts/source-sans-3/SourceSans3-Regular.ttf,
+       SourceSans3-Bold.ttf
+Source: https://github.com/adobe-fonts/source-sans
+
+Atkinson Hyperlegible, version 1.006
+Copyright 2020 Braille Institute of America, Inc.
+License: SIL Open Font License 1.1
+Files: sara-godot/ui/themes/fonts/atkinson-hyperlegible/AtkinsonHyperlegible-Regular.ttf,
+       AtkinsonHyperlegible-Bold.ttf
+Source: https://www.brailleinstitute.org/freefont
+
+Source Serif 4, version 4.005
+Copyright 2014 - 2023 Adobe (http://www.adobe.com/), with Reserved Font Name
+'Source'. All Rights Reserved. Source is a trademark of Adobe in the United
+States and/or other countries.
+License: SIL Open Font License 1.1
+Files: sara-godot/modules/sara-base-modules/text/fonts/shipped/SourceSerif4-Regular.ttf
+Source: https://github.com/adobe-fonts/source-serif
+
+Comic Neue, version 2.003
+Copyright 2014 The Comic Neue Project Authors (https://github.com/crozynski/comicneue)
+License: SIL Open Font License 1.1
+Files: sara-godot/modules/sara-base-modules/text/fonts/shipped/ComicNeue-Regular.ttf
+Source: https://github.com/crozynski/comicneue
+
+Caveat, version 2.000, the variable font of its weights
+Copyright 2014 The Caveat Project Authors (https://github.com/googlefonts/caveat)
+License: SIL Open Font License 1.1
+Files: sara-godot/modules/sara-base-modules/text/fonts/shipped/Caveat-Variable.ttf
+Source: https://github.com/googlefonts/caveat
+
+Open Sans SemiBold, inside the Godot 4.7.2 export template
+Copyright 2020 The Open Sans Project Authors
+License: SIL Open Font License 1.1
+The engine's fallback face, drawn wherever no face is chosen, which is the
+font choice Preferences calls "Open Sans (built in)".
+Source: https://github.com/googlefonts/opensans
+
+------------------------------------------------------------------------
+Krita 4 Default Resources bundle, in two of the manual's pictures
+------------------------------------------------------------------------
+Author: Deevad with derivations of the brushes of Ramon Miranda, Razvanc,
+        Radian, Wolthera, Storm, Scottyp and other, as its meta.xml says
+License: CC0, "CC-0" in the bundle's meta.xml
+Files: none of the bundle's own. sara-godot/manual/pictures/03-importing-krita-presets.png
+       and 03-a-not-carried-tag.png are Sara's shots of its presets imported,
+       the second with the cells Sara paints with its tips.
+Source: https://krita.org
+
+------------------------------------------------------------------------
+Pictures, tips, icons and profiles made for Sara
+------------------------------------------------------------------------
+The Sara project made the following itself, and they are under the project's
+licence, the GNU General Public License v3.0 or later, except where a line
+below says otherwise. None of them is taken from another project.
+
+Interface icons (sara-godot/assets/icons/), drawn for Sara on a 16 by 16 grid.
+Some names follow the names of Godot's editor icons because the interface once
+fell back to the editor's theme, and the shapes are Sara's own.
+
+The application icon (sara-godot/ui/icon.png, icon-bw.png and icon.ico), a 3D
+render of Sara's mark made for the project, with its black and white cut.
+
+The colour profiles (sara-godot/assets/icc/), written by
+sara-godot/scripts/gen_icc_profiles.py from Sara's own primaries. Each carries
+the notice "No copyright, use freely".
+
+The welcome pictures (sara-godot/ui/welcome/pictures/), painted in Sara, by
+hand and by coding agents driving it through its door, and exported by Sara
+with its own sRGB profile.
+
+The manual's pictures (sara-godot/manual/pictures/) and the boot cover
+(sara-godot/assets/boot_cover_stock.webp), shots of Sara. Two of the manual's
+pictures show Krita's CC0 preset bundle, named above.
+
+The brush tips (sara-godot/tips/). Twenty-three are drawings made for Sara,
+and each PNG carries its own notice in its text chunks, the Creative Commons
+Attribution 4.0 International licence (CC BY 4.0) with the attribution to
+travel with the file. The other tips are shapes made for the test suites and
+are under the project's licence.
+
+The test pictures under the tests folders and sara-godot/scenarios/fixtures
+are written by the suites' scripts or exported by Sara, and are under the
+project's licence too.
+
+------------------------------------------------------------------------
+Code taken from elsewhere
+------------------------------------------------------------------------
+Six sources of code in the parent tree that the entries above did not name,
+found by reading every kernel and searching the tree for what was ported,
+adapted or copied.
+
+Okhsv and Okhsl colour picker code
+Copyright (c) 2021 Björn Ottosson
+License: MIT License
+Files: sara-godot/utils/okhsv_conversions.gd,
+       sara-godot/shaders/ui/okhsv_picker.gdshader, and the suite
+       sara-godot/ui/dockers/color/tests/test_okhsv_shader.gd
+Source: https://github.com/bottosson/bottosson.github.io/blob/master/misc/colorpicker/colorconversion.js
+
+ok-color-picker, the TypeScript port the two files above were converted from
+Copyright (c) 2022 Brian Holbrook
+License: MIT License
+Files: sara-godot/utils/okhsv_conversions.gd and
+       sara-godot/shaders/ui/okhsv_picker.gdshader, through a Python port
+Source: https://github.com/holbrookdev/ok-color-picker
+
+Hash without Sine
+Copyright (c) 2014 David Hoskins
+License: MIT License, as Lygia's generative/random.glsl names it for the
+         same code
+Files: sara-godot/shaders/compute/libs/noise.gmacs (sa_hash21, sa_hash22),
+       sara-godot/shaders/canvas/canvas.gdshader,
+       sara-godot/shaders/canvas/paper.gdshader, and the suites' copies in
+       sara-godot/tests/fixtures/noise-ground/ and
+       sara-godot/core/layers/generated/tests/
+Source: https://www.shadertoy.com/view/4djSRW
+
+darktable
+Copyright (C) 2011-2026 darktable developers
+License: GNU General Public License v3.0 or later
+Files: sara-godot/shaders/compute/libs/positive_channels.gmacs, from
+       src/iop/sigmoid.c, _desaturate_negative_values
+       sara-godot/shaders/compute/graph.gmacs, baselog and its inverse, from
+       src/libs/scopes/vectorscope.c, baselog and VECTORSCOPE_BASE_LOG
+       sara-godot/modules/sara-base-modules/base/filters/local_contrast/local_contrast.gmacs,
+       curve, from src/common/locallaplacian.c, curve_scalar
+Source: https://github.com/darktable-org/darktable
+
+Krita 5.2.13 action data
+Copyright (c) the Krita contributors
+License: GNU General Public License v2.0 or later
+Files: sara-godot/scenarios/fixtures/krita-stock.shortcuts, extracted from
+       krita.action and kritamenu.action
+Source: https://invent.kde.org/graphics/krita
+
+lowbias32, from the Hash Function Prospector
+Author: Christopher Wellons
+License: The Unlicense, released into the public domain
+Files: sara-godot/shaders/compute/libs/lattice_hash.gmacs (sa_lowbias32),
+       which sa_lattice_hash and through it the noise library's volume and
+       sara-godot/core/layers/simulation/simulation.gmacs (sa_step_random)
+       call
+Source: https://github.com/skeeto/hash-prospector, its README
+It replaced the pcg3d listing of Jarzynski and Olano's "Hash Functions for
+GPU Rendering", JCGT 9(3), 2020, whose only licence was the paper's CC BY-ND
+3.0. No file of the tree holds pcg3d now. The noise
+brush's field mixes with the same rounds, the entry below.
+
+------------------------------------------------------------------------
+lowbias32, the integer hash of the noise brush's field
+------------------------------------------------------------------------
+Christopher Wellons, Hash Function Prospector
+License: The Unlicense, a public domain dedication
+Files: sara-godot/modules/sara-noise-brush-engine/noise_fields.gmacs
+       (noise_hash), sara-godot/modules/sara-noise-brush-engine/noise_field_reading.gd
+       (hash21)
+Source: https://github.com/skeeto/hash-prospector
+
+The hash's last three rounds are lowbias32, shifts and constants alike. No
+notice is owed, and the entry is a credit, so a reader finds where the numbers
+came from. Where the two multipliers before it, 1597334677 and 3812015801,
+came from was not found.
+
+========================================================================
+MIT LICENSE TEXT
+========================================================================
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+========================================================================
+BSD 3-CLAUSE LICENSE TEXT
+========================================================================
+The licence of libjxl and of Highway as Sara takes it, in libjxl's words.
+Highway's copy names The Highway Project Authors as its holder.
+
+Copyright (c) the JPEG XL Project Authors.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+
+3. Neither the name of the copyright holder nor the names of its
+   contributors may be used to endorse or promote products derived from
+   this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+========================================================================
+SKCMS LICENSE TEXT
+========================================================================
+Copyright (c) 2018 Google Inc. All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+   * Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+   * Redistributions in binary form must reproduce the above
+copyright notice, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the
+distribution.
+   * Neither the name of Google Inc. nor the names of its
+contributors may be used to endorse or promote products derived from
+this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+========================================================================
+MINGW-W64 RUNTIME LICENSE TEXT
+========================================================================
+The notices of the MinGW-w64 runtime the Windows module libraries link,
+whole, as llvm-mingw ships them in COPYING.MinGW-w64-runtime.txt.
+
+MinGW-w64 runtime licensing
+***************************
+
+This program or library was built using MinGW-w64 and statically
+linked against the MinGW-w64 runtime. Some parts of the runtime
+are under licenses which require that the copyright and license
+notices are included when distributing the code in binary form.
+These notices are listed below.
+
+
+========================
+Overall copyright notice
+========================
+
+Copyright (c) 2009, 2010, 2011, 2012, 2013 by the mingw-w64 project
+
+This license has been certified as open source. It has also been designated
+as GPL compatible by the Free Software Foundation (FSF).
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+   1. Redistributions in source code must retain the accompanying copyright
+      notice, this list of conditions, and the following disclaimer.
+   2. Redistributions in binary form must reproduce the accompanying
+      copyright notice, this list of conditions, and the following disclaimer
+      in the documentation and/or other materials provided with the
+      distribution.
+   3. Names of the copyright holders must not be used to endorse or promote
+      products derived from this software without prior written permission
+      from the copyright holders.
+   4. The right to distribute this software or to use it for any purpose does
+      not give you the right to use Servicemarks (sm) or Trademarks (tm) of
+      the copyright holders.  Use of them is covered by separate agreement
+      with the copyright holders.
+   5. If any files are modified, you must cause the modified files to carry
+      prominent notices stating that you changed the files and the date of
+      any change.
+
+Disclaimer
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS ``AS IS'' AND ANY EXPRESSED
+OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
+EVENT SHALL THE COPYRIGHT HOLDERS BE LIABLE FOR ANY DIRECT, INDIRECT,
+INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
+OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+========================================
+getopt, getopt_long, and getop_long_only
+========================================
+
+Copyright (c) 2002 Todd C. Miller <Todd.Miller@courtesan.com>
+
+Permission to use, copy, modify, and distribute this software for any
+purpose with or without fee is hereby granted, provided that the above
+copyright notice and this permission notice appear in all copies.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+Sponsored in part by the Defense Advanced Research Projects
+Agency (DARPA) and Air Force Research Laboratory, Air Force
+Materiel Command, USAF, under agreement number F39502-99-1-0512.
+
+        *       *       *       *       *       *       *
+
+Copyright (c) 2000 The NetBSD Foundation, Inc.
+All rights reserved.
+
+This code is derived from software contributed to The NetBSD Foundation
+by Dieter Baron and Thomas Klausner.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+ 1. Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+ 2. Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS
+``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS
+BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.
+
+
+===============================================================
+gdtoa: Converting between IEEE floating point numbers and ASCII
+===============================================================
+
+The author of this software is David M. Gay.
+
+Copyright (C) 1997, 1998, 1999, 2000, 2001 by Lucent Technologies
+All Rights Reserved
+
+Permission to use, copy, modify, and distribute this software and
+its documentation for any purpose and without fee is hereby
+granted, provided that the above copyright notice appear in all
+copies and that both that the copyright notice and this
+permission notice and warranty disclaimer appear in supporting
+documentation, and that the name of Lucent or any of its entities
+not be used in advertising or publicity pertaining to
+distribution of the software without specific, written prior
+permission.
+
+LUCENT DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS.
+IN NO EVENT SHALL LUCENT OR ANY OF ITS ENTITIES BE LIABLE FOR ANY
+SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER
+IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,
+ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
+THIS SOFTWARE.
+
+        *       *       *       *       *       *       *
+
+The author of this software is David M. Gay.
+
+Copyright (C) 2005 by David M. Gay
+All Rights Reserved
+
+Permission to use, copy, modify, and distribute this software and its
+documentation for any purpose and without fee is hereby granted,
+provided that the above copyright notice appear in all copies and that
+both that the copyright notice and this permission notice and warranty
+disclaimer appear in supporting documentation, and that the name of
+the author or any of his current or former employers not be used in
+advertising or publicity pertaining to distribution of the software
+without specific, written prior permission.
+
+THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN
+NO EVENT SHALL THE AUTHOR OR ANY OF HIS CURRENT OR FORMER EMPLOYERS BE
+LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY
+DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
+WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,
+ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
+SOFTWARE.
+
+        *       *       *       *       *       *       *
+
+The author of this software is David M. Gay.
+
+Copyright (C) 2004 by David M. Gay.
+All Rights Reserved
+Based on material in the rest of /netlib/fp/gdota.tar.gz,
+which is copyright (C) 1998, 2000 by Lucent Technologies.
+
+Permission to use, copy, modify, and distribute this software and
+its documentation for any purpose and without fee is hereby
+granted, provided that the above copyright notice appear in all
+copies and that both that the copyright notice and this
+permission notice and warranty disclaimer appear in supporting
+documentation, and that the name of Lucent or any of its entities
+not be used in advertising or publicity pertaining to
+distribution of the software without specific, written prior
+permission.
+
+LUCENT DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS.
+IN NO EVENT SHALL LUCENT OR ANY OF ITS ENTITIES BE LIABLE FOR ANY
+SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER
+IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,
+ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
+THIS SOFTWARE.
+
+
+=========================
+Parts of the math library
+=========================
+
+Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
+
+Developed at SunSoft, a Sun Microsystems, Inc. business.
+Permission to use, copy, modify, and distribute this
+software is freely granted, provided that this notice
+is preserved.
+
+        *       *       *       *       *       *       *
+
+Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
+
+Developed at SunPro, a Sun Microsystems, Inc. business.
+Permission to use, copy, modify, and distribute this
+software is freely granted, provided that this notice
+is preserved.
+
+        *       *       *       *       *       *       *
+
+FIXME: Cephes math lib
+Copyright (C) 1984-1998 Stephen L. Moshier
+
+It sounds vague, but as to be found at
+<http://lists.debian.org/debian-legal/2004/12/msg00295.html>, it gives an
+impression that the author could be willing to give an explicit
+permission to distribute those files e.g. under a BSD style license. So
+probably there is no problem here, although it could be good to get a
+permission from the author and then add a license into the Cephes files
+in MinGW runtime. At least on follow-up it is marked that debian sees the
+version a-like BSD one. As MinGW.org (where those cephes parts are coming
+from) distributes them now over 6 years, it should be fine.
+
+=================================================
+Some string, memory and time conversion functions
+=================================================
+
+Copyright © 2005-2020 Rich Felker, et al.
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+===================================
+Headers and IDLs imported from Wine
+===================================
+
+Some header and IDL files were imported from the Wine project. These files
+are prominent maked in source. Their copyright belongs to contributors and
+they are distributed under LGPL license.
+
+Disclaimer
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+========================================================================
+SIL OPEN FONT LICENSE TEXT
+========================================================================
+The licence of the five font families above, in the words the four font
+folders under sara-godot/ui/themes/fonts/ carry beside their faces.
+
+SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007
+-----------------------------------------------------------
+
+PREAMBLE
+The goals of the Open Font License (OFL) are to stimulate worldwide
+development of collaborative font projects, to support the font creation
+efforts of academic and linguistic communities, and to provide a free and
+open framework in which fonts may be shared and improved in partnership
+with others.
+
+The OFL allows the licensed fonts to be used, studied, modified and
+redistributed freely as long as they are not sold by themselves. The
+fonts, including any derivative works, can be bundled, embedded,
+redistributed and/or sold with any software provided that any reserved
+names are not used by derivative works. The fonts and derivatives,
+however, cannot be released under any other type of license. The
+requirement for fonts to remain under this license does not apply
+to any document created using the fonts or their derivatives.
+
+DEFINITIONS
+"Font Software" refers to the set of files released by the Copyright
+Holder(s) under this license and clearly marked as such. This may
+include source files, build scripts and documentation.
+
+"Reserved Font Name" refers to any names specified as such after the
+copyright statement(s).
+
+"Original Version" refers to the collection of Font Software components as
+distributed by the Copyright Holder(s).
+
+"Modified Version" refers to any derivative made by adding to, deleting,
+or substituting -- in part or in whole -- any of the components of the
+Original Version, by changing formats or by porting the Font Software to a
+new environment.
+
+"Author" refers to any designer, engineer, programmer, technical
+writer or other person who contributed to the Font Software.
+
+PERMISSION & CONDITIONS
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of the Font Software, to use, study, copy, merge, embed, modify,
+redistribute, and sell modified and unmodified copies of the Font
+Software, subject to the following conditions:
+
+1) Neither the Font Software nor any of its individual components,
+in Original or Modified Versions, may be sold by itself.
+
+2) Original or Modified Versions of the Font Software may be bundled,
+redistributed and/or sold with any software, provided that each copy
+contains the above copyright notice and this license. These can be
+included either as stand-alone text files, human-readable headers or
+in the appropriate machine-readable metadata fields within text or
+binary files as long as those fields can be easily viewed by the user.
+
+3) No Modified Version of the Font Software may use the Reserved Font
+Name(s) unless explicit written permission is granted by the corresponding
+Copyright Holder. This restriction only applies to the primary font name as
+presented to the users.
+
+4) The name(s) of the Copyright Holder(s) or the Author(s) of the Font
+Software shall not be used to promote, endorse or advertise any
+Modified Version, except to acknowledge the contribution(s) of the
+Copyright Holder(s) and the Author(s) or with their explicit written
+permission.
+
+5) The Font Software, modified or unmodified, in part or in whole,
+must be distributed entirely under this license, and must not be
+distributed under any other license. The requirement for fonts to
+remain under this license does not apply to any document created
+using the Font Software.
+
+TERMINATION
+This license becomes null and void if any of the above conditions are
+not met.
+
+DISCLAIMER
+THE FONT SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT
+OF COPYRIGHT, PATENT, TRADEMARK, OR OTHER RIGHT. IN NO EVENT SHALL THE
+COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+INCLUDING ANY GENERAL, SPECIAL, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL
+DAMAGES, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM
+OTHER DEALINGS IN THE FONT SOFTWARE.

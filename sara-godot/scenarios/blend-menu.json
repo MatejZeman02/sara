@@ -1,0 +1,15 @@
+[
+  {"wait": 30},
+  {"prefs": {"blend_favorites": ["normal", "multiply"]}},
+  {"wait": 10},
+  {"blend": "Darken"},
+  {"wait": 10},
+  {"shot": "blend-menu"},
+  {"blend_row": "screen!"},
+  {"wait": 10},
+  {"shot": "blend-row-ticked"},
+  {"blend_row": "screen"},
+  {"wait": 10},
+  {"shot": "blend-row-chosen"},
+  {"state": "blend-menu"}
+]

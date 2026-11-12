@@ -1,0 +1,57 @@
+[
+  {"wait": 30},
+
+  {"docker": {"id": "MinimapDocker", "at": [1180, 140], "size": [320, 260]}},
+  {"wait": 12},
+
+  {"prefs": {"docker_hide_button": false}},
+  {"wait": 10},
+  {"hide": ""},
+  {"shot": "switch-off"},
+  {"state": "switch-off"},
+
+  {"prefs": {"docker_hide_button": true}},
+  {"wait": 10},
+  {"hide": ""},
+  {"shot": "switch-on"},
+  {"state": "switch-on"},
+
+  {"menu": "Window"},
+  {"wait": 8},
+  {"state": "menu-before-hiding"},
+  {"key": "escape"},
+  {"wait": 8},
+
+  {"hide": "Layers"},
+  {"wait": 12},
+  {"shot": "layers-hidden"},
+  {"state": "layers-hidden"},
+
+  {"menu": "Window"},
+  {"wait": 8},
+  {"state": "menu-after-hiding"},
+  {"key": "escape"},
+  {"wait": 8},
+
+  {"hide": "Minimap"},
+  {"wait": 12},
+  {"shot": "two-hidden"},
+  {"state": "two-hidden"},
+
+  {"docker": {"id": "LayersDocker"}},
+  {"docker": {"id": "MinimapDocker"}},
+  {"wait": 10},
+
+  {"prefs": {"docker_hide_button": false}},
+  {"wait": 10},
+  {"hide": ""},
+  {"shot": "switch-off-again"},
+  {"state": "switch-off-again"},
+
+  {"hide": "Layers"},
+  {"wait": 12},
+  {"shot": "click-with-switch-off"},
+  {"state": "click-with-switch-off"},
+
+  {"prefs": {"docker_hide_button": true}}
+]

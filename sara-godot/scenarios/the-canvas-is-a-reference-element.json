@@ -1,0 +1,53 @@
+[
+  {"wait": 30},
+  {"docker": "park"},
+  {"docker": {"id": "ReferenceDocker", "at": [40, 120], "size": [900, 560]}},
+  {"wait": 10},
+  {"fill": [0.85, 0.25, 0.15]},
+  {"wait": 5},
+  {"select": {"rect": [0, 0, 960, 1080]}},
+  {"fill": [0.15, 0.25, 0.85]},
+  {"select": "none"},
+  {"wait": 10},
+  {"reference": {"open": ["res://ui/icon.png"]}},
+  {"wait": 10},
+
+  {"reference": {"canvas": true}},
+  {"wait": 15},
+  {"shot": "1-the-canvas-is-an-element-beside-the-picture"},
+  {"state": "1-the-canvas-is-an-element-beside-the-picture"},
+
+  {"reference": {"select": 1, "toggle": "greyscale"}},
+  {"wait": 10},
+  {"shot": "2-the-canvas-element-greyed"},
+  {"state": "2-the-canvas-element-greyed"},
+
+  {"reference": {"select": 1, "toggle": "greyscale"}},
+  {"reference": {"select": 1, "toggle": "flip"}},
+  {"wait": 10},
+  {"shot": "3-the-canvas-element-flipped"},
+  {"state": "3-the-canvas-element-flipped"},
+
+  {"reference": {"crop": {"picture": 1, "rect": [480, 270, 960, 540]}}},
+  {"reference": {"fit": true}},
+  {"wait": 10},
+  {"shot": "4-the-canvas-element-cropped"},
+  {"state": "4-the-canvas-element-cropped"},
+
+  {"tool": {"id": "brush", "options": {"radius": 0.06, "hardness": 1.0, "opacity": 1.0, "flow": 1.0}}},
+  {"colour": [1.0, 1.0, 1.0]},
+  {"wait": 10},
+  {"stroke": {"from": [1100, 700], "to": [1800, 900], "pressure": 1.0, "steps": 30}},
+  {"wait": 20},
+  {"shot": "5-a-stroke-and-the-element-follows"},
+  {"state": "5-a-stroke-and-the-element-follows"},
+
+  {"save": "user://the-canvas-is-a-reference-element.sad"},
+  {"wait": 10},
+  {"document": "srgb"},
+  {"wait": 15},
+  {"load": "user://the-canvas-is-a-reference-element.sad"},
+  {"wait": 25},
+  {"shot": "6-reopened-and-the-element-is-still-the-canvas"},
+  {"state": "6-reopened-and-the-element-is-still-the-canvas"}
+]

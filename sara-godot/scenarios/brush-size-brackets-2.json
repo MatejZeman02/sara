@@ -1,0 +1,64 @@
+[
+  {"wait": 45},
+  {"tool": "brush"},
+  {"wait": 6},
+  {"state": "01-start"},
+  {"shot": "01-start"},
+
+  {"key": {"key": "bracketright", "shape": "both"}},
+  {"key": {"key": "bracketright", "shape": "both"}},
+  {"key": {"key": "bracketright", "shape": "both"}},
+  {"wait": 6},
+  {"state": "02-both-fields"},
+
+  {"key": {"key": "bracketright", "shape": "physical"}},
+  {"key": {"key": "bracketright", "shape": "physical"}},
+  {"key": {"key": "bracketright", "shape": "physical"}},
+  {"wait": 6},
+  {"state": "03-physical-only"},
+
+  {"key": {"key": "bracketright", "shape": "keycode"}},
+  {"key": {"key": "bracketright", "shape": "keycode"}},
+  {"key": {"key": "bracketright", "shape": "keycode"}},
+  {"wait": 6},
+  {"state": "04-keycode-only"},
+
+  {"key": {"key": "bracketright", "shape": "label", "alt": true}},
+  {"key": {"key": "bracketright", "shape": "label", "alt": true}},
+  {"key": {"key": "bracketright", "shape": "label", "alt": true}},
+  {"wait": 6},
+  {"state": "05-label-with-altgr"},
+
+  {"key": {"key": "bracketright", "shape": "both", "alt": true, "ctrl": true}},
+  {"key": {"key": "bracketright", "shape": "both", "alt": true, "ctrl": true}},
+  {"key": {"key": "bracketright", "shape": "both", "alt": true, "ctrl": true}},
+  {"wait": 6},
+  {"state": "06-altgr-as-ctrl-and-alt"},
+  {"shot": "06-altgr-as-ctrl-and-alt"},
+
+  {"key": {"key": "bracketleft", "shape": "label", "alt": true}},
+  {"key": {"key": "bracketleft", "shape": "label", "alt": true}},
+  {"key": {"key": "bracketleft", "shape": "label", "alt": true}},
+  {"key": {"key": "bracketleft", "shape": "label", "alt": true}},
+  {"key": {"key": "bracketleft", "shape": "label", "alt": true}},
+  {"wait": 6},
+  {"state": "07-left-bracket-shrinks"},
+
+  {"key": {"key": "bracketright", "shape": "both", "ctrl": true}},
+  {"key": {"key": "bracketright", "shape": "both", "ctrl": true}},
+  {"wait": 8},
+  {"state": "08-ctrl-still-rotates-only"},
+  {"shot": "08-ctrl-still-rotates-only"},
+
+  {"tool": "transform"},
+  {"wait": 6},
+  {"key": {"key": "bracketright", "shape": "both"}},
+  {"key": {"key": "bracketright", "shape": "both"}},
+  {"wait": 6},
+  {"state": "09-transform-has-no-size"},
+
+  {"tool": "brush"},
+  {"wait": 6},
+  {"state": "10-back-on-the-brush"},
+  {"shot": "10-back-on-the-brush"}
+]

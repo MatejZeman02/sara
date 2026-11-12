@@ -1,0 +1,30 @@
+[
+ {"wait": 40},
+ {"preset": {"save": "Probe doomed"}},
+ {"wait": 15},
+ {"preset": {"load": "Probe doomed"}},
+ {"wait": 15},
+ {"presets_docker": {}},
+ {"shot": "1-the-preset-is-loaded"},
+ {"state": "1-the-preset-is-loaded"},
+
+ {"presets_docker": {"delete": true}},
+ {"wait": 20},
+ {"presets_docker": {}},
+ {"shot": "2-delete-asks-first"},
+ {"state": "2-delete-asks-first"},
+
+ {"answer": 0},
+ {"wait": 20},
+ {"presets_docker": {}},
+ {"shot": "3-cancel-leaves-it-alone"},
+ {"state": "3-cancel-leaves-it-alone"},
+
+ {"presets_docker": {"delete": true}},
+ {"wait": 20},
+ {"answer": 1},
+ {"wait": 25},
+ {"presets_docker": {}},
+ {"shot": "4-delete-removes-it"},
+ {"state": "4-delete-removes-it"}
+]

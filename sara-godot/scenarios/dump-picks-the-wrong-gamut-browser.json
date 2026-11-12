@@ -1,0 +1,65 @@
+[
+  {
+    "wait": 35
+  },
+  {
+    "open": "preferences"
+  },
+  {
+    "wait": 20
+  },
+  {
+    "page": "Colour Spaces"
+  },
+  {
+    "wait": 20
+  },
+  {
+    "state": "1-preferences-alone"
+  },
+  {
+    "shot": "1-preferences-alone"
+  },
+  {
+    "open": "color_space"
+  },
+  {
+    "wait": 20
+  },
+  {
+    "state": "2-both-open-dialog-in-front"
+  },
+  {
+    "shot": "2-both-open-dialog-in-front"
+  },
+  {
+    "open": "preferences"
+  },
+  {
+    "wait": 14
+  },
+  {
+    "open": "preferences"
+  },
+  {
+    "wait": 20
+  },
+  {
+    "state": "3-both-open-preferences-in-front"
+  },
+  {
+    "shot": "3-both-open-preferences-in-front"
+  },
+  {
+    "key": "escape"
+  },
+  {
+    "wait": 20
+  },
+  {
+    "state": "4-dialog-alone"
+  },
+  {
+    "shot": "4-dialog-alone"
+  }
+]

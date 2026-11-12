@@ -1,0 +1,24 @@
+[
+ {"wait": 30},
+ {"prefs": {"second_row": true}},
+ {"wait": 12},
+ {"open": "preferences"},
+ {"wait": 20},
+ {"page": "Top Menu Bar"}, {"layout_gesture": {"elements": "Top Bar"}},
+ {"wait": 12},
+ {"layout_rows": {}},
+ {"state": "01-the-switch-on-and-two-rows"},
+ {"shot": "01-the-switch-on-and-two-rows"},
+
+ {"prefs": {"second_row": false}},
+ {"wait": 20},
+ {"layout_rows": {}},
+ {"state": "02-the-switch-off-at-1920"},
+ {"shot": "02-the-switch-off-at-1920"},
+
+ {"prefs": {"second_row": true}},
+ {"wait": 15},
+ {"layout_rows": {}},
+ {"state": "03-back-on"},
+ {"shot": "03-back-on"}
+]

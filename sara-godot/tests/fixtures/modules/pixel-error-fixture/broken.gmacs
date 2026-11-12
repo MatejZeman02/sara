@@ -1,0 +1,3 @@
+def pixel(ivec2 at) -> vec4:
+    vec4 c = src(at)
+    return c.rgb

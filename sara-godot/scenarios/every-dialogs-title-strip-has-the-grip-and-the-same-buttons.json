@@ -1,0 +1,38 @@
+[
+  {"comment": "Every dialog's title strip begins with the grip. At 1920 by 1080 and a UI scale of 1, on a document with a layer and some paint, Feather, Border and Colour Range are each opened by their own Select menu row and photographed, then closed by the cross on their title strips, and Preferences is photographed last as the strip that keeps the minimise and the maximise beside its cross. Each strip reads '::  Feather', '::  Border', '::  Colour Range' and '::  Preferences'."},
+  {"wait": 45},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 20},
+  {"window": [1920, 1080]},
+  {"wait": 20},
+  {"document": "srgb"},
+  {"wait": 25},
+  {"layer": {"add": "Paint", "fill": [0.12, 0.2, 0.35, 1.0]}},
+  {"wait": 10},
+
+  {"menu_item": {"menu": "Select", "id": 300}},
+  {"wait": 25},
+  {"shot": "1-feather"},
+  {"state": "1-feather"},
+  {"click": {"control": "CloseButton", "in": "RadiusDialog"}},
+  {"wait": 12},
+
+  {"menu_item": {"menu": "Select", "id": 400}},
+  {"wait": 25},
+  {"shot": "2-border"},
+  {"state": "2-border"},
+  {"click": {"control": "CloseButton", "in": "RadiusDialog"}},
+  {"wait": 12},
+
+  {"menu_item": {"menu": "Select", "id": 204}},
+  {"wait": 25},
+  {"shot": "3-colour-range"},
+  {"state": "3-colour-range"},
+  {"click": {"control": "CloseButton", "in": "ColorRangeDialog"}},
+  {"wait": 12},
+
+  {"open": "preferences"},
+  {"wait": 30},
+  {"shot": "4-preferences"},
+  {"state": "4-preferences"}
+]

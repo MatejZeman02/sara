@@ -1,0 +1,13 @@
+[
+  {"wait": 30},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 15},
+  {"menu_item": {"menu": "File", "id": 206}},
+  {"wait": 8},
+  {"file_picker": {"choose": "res://tests/data/import_gradient.png"}},
+  {"wait": 25},
+  {"shot": "the-import-asks-about-the-fit"},
+  {"state": "the-import-asks-about-the-fit"},
+  {"key": "escape"},
+  {"wait": 15}
+]

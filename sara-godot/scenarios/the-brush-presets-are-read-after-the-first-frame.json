@@ -1,0 +1,11 @@
+[
+  {"comment": "The brush presets are scanned a frame after the first frame after ready rather than in the frame that binds the bar to the tool machine. The Brush Presets docker is shown at the scenario's first step and read at once and five frames later, and the perf read's startup marks put presets_scanned after first_frame_after_ready. A docker shown while the scan is still held is the suite's case, test_presets_scan_after_the_first_frame.gd, because the runner's first step comes after the scan has landed."},
+  {"args": ["--machine-console"]},
+  {"docker": {"id": "BrushPresetsDocker", "at": [1240, 60], "size": [640, 940]}},
+  {"presets_docker": {"engines": true}},
+  {"wait": 5},
+  {"presets_docker": {"engines": true}},
+  {"measure": {"perf": "read"}},
+  {"state": "n2-the-presets-after-the-scan"},
+  {"shot": "n2-the-presets-docker-after-the-scan"}
+]

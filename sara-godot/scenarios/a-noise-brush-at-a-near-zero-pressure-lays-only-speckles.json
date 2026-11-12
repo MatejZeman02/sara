@@ -1,0 +1,1177 @@
+[
+ {
+  "comment": "A noise brush at a near zero pressure lays only speckles. For each of the six presets, a white 1200 by 1200 document in black with randomness at nought, four level strokes from x 100 to 1100 at y 150, 450, 750 and 1050, sent at 0.00985, 0.02956, 0.05912 and 0.09853, the presses the harness pen's table turns into 0.05, 0.15, 0.3 and 0.5 at the brush. Each stroke's middle 800 pixels are measured over a band of a fifth of the preset's radius either side of the path, which a body tapered to a third of its radius still fills, and a look of each document is kept for review."
+ },
+ {
+  "wait": 60
+ },
+ {
+  "prefs": {
+   "ui_scale": 1.0,
+   "autosave_interval_minutes": 0
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "layout_preset": {
+   "load": "minimalistic"
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "document": "srgb",
+  "size": [
+   1200,
+   1200
+  ]
+ },
+ {
+  "wait": 10
+ },
+ {
+  "fit": true
+ },
+ {
+  "wait": 5
+ },
+ {
+  "fill": [
+   1.0,
+   1.0,
+   1.0
+  ]
+ },
+ {
+  "layer": {
+   "add": "Firm Fill"
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "colour": [
+   0.0,
+   0.0,
+   0.0
+  ]
+ },
+ {
+  "preset": {
+   "load": "Firm Fill"
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "tool": {
+   "id": "noise_brush",
+   "options": {
+    "randomness": 0.0
+   }
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "stroke": {
+   "from": [
+    100,
+    150
+   ],
+   "to": [
+    1100,
+    150
+   ],
+   "pressure": 0.00985,
+   "steps": 80,
+   "space": "document",
+   "route": "tool",
+   "smoothing": false
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "stroke": {
+   "from": [
+    100,
+    450
+   ],
+   "to": [
+    1100,
+    450
+   ],
+   "pressure": 0.02956,
+   "steps": 80,
+   "space": "document",
+   "route": "tool",
+   "smoothing": false
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "stroke": {
+   "from": [
+    100,
+    750
+   ],
+   "to": [
+    1100,
+    750
+   ],
+   "pressure": 0.05912,
+   "steps": 80,
+   "space": "document",
+   "route": "tool",
+   "smoothing": false
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "stroke": {
+   "from": [
+    100,
+    1050
+   ],
+   "to": [
+    1100,
+    1050
+   ],
+   "pressure": 0.09853,
+   "steps": 80,
+   "space": "document",
+   "route": "tool",
+   "smoothing": false
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "wait": 20
+ },
+ {
+  "measure": {
+   "rect": [
+    200,
+    143,
+    800,
+    15
+   ]
+  }
+ },
+ {
+  "measure": {
+   "rect": [
+    200,
+    443,
+    800,
+    15
+   ]
+  }
+ },
+ {
+  "measure": {
+   "rect": [
+    200,
+    743,
+    800,
+    15
+   ]
+  }
+ },
+ {
+  "measure": {
+   "rect": [
+    200,
+    1043,
+    800,
+    15
+   ]
+  }
+ },
+ {
+  "look": {
+   "path": "1-firm-fill.png",
+   "rect": [
+    0,
+    0,
+    1200,
+    1200
+   ],
+   "scale": 0.5
+  }
+ },
+ {
+  "document": "srgb",
+  "size": [
+   1200,
+   1200
+  ]
+ },
+ {
+  "wait": 10
+ },
+ {
+  "fit": true
+ },
+ {
+  "wait": 5
+ },
+ {
+  "fill": [
+   1.0,
+   1.0,
+   1.0
+  ]
+ },
+ {
+  "layer": {
+   "add": "Smeary Flat"
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "colour": [
+   0.0,
+   0.0,
+   0.0
+  ]
+ },
+ {
+  "preset": {
+   "load": "Smeary Flat"
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "tool": {
+   "id": "noise_brush",
+   "options": {
+    "randomness": 0.0
+   }
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "stroke": {
+   "from": [
+    100,
+    150
+   ],
+   "to": [
+    1100,
+    150
+   ],
+   "pressure": 0.00985,
+   "steps": 80,
+   "space": "document",
+   "route": "tool",
+   "smoothing": false
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "stroke": {
+   "from": [
+    100,
+    450
+   ],
+   "to": [
+    1100,
+    450
+   ],
+   "pressure": 0.02956,
+   "steps": 80,
+   "space": "document",
+   "route": "tool",
+   "smoothing": false
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "stroke": {
+   "from": [
+    100,
+    750
+   ],
+   "to": [
+    1100,
+    750
+   ],
+   "pressure": 0.05912,
+   "steps": 80,
+   "space": "document",
+   "route": "tool",
+   "smoothing": false
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "stroke": {
+   "from": [
+    100,
+    1050
+   ],
+   "to": [
+    1100,
+    1050
+   ],
+   "pressure": 0.09853,
+   "steps": 80,
+   "space": "document",
+   "route": "tool",
+   "smoothing": false
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "wait": 20
+ },
+ {
+  "measure": {
+   "rect": [
+    200,
+    142,
+    800,
+    17
+   ]
+  }
+ },
+ {
+  "measure": {
+   "rect": [
+    200,
+    442,
+    800,
+    17
+   ]
+  }
+ },
+ {
+  "measure": {
+   "rect": [
+    200,
+    742,
+    800,
+    17
+   ]
+  }
+ },
+ {
+  "measure": {
+   "rect": [
+    200,
+    1042,
+    800,
+    17
+   ]
+  }
+ },
+ {
+  "look": {
+   "path": "2-smeary-flat.png",
+   "rect": [
+    0,
+    0,
+    1200,
+    1200
+   ],
+   "scale": 0.5
+  }
+ },
+ {
+  "document": "srgb",
+  "size": [
+   1200,
+   1200
+  ]
+ },
+ {
+  "wait": 10
+ },
+ {
+  "fit": true
+ },
+ {
+  "wait": 5
+ },
+ {
+  "fill": [
+   1.0,
+   1.0,
+   1.0
+  ]
+ },
+ {
+  "layer": {
+   "add": "Sea Sponge"
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "colour": [
+   0.0,
+   0.0,
+   0.0
+  ]
+ },
+ {
+  "preset": {
+   "load": "Sea Sponge"
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "tool": {
+   "id": "noise_brush",
+   "options": {
+    "randomness": 0.0
+   }
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "stroke": {
+   "from": [
+    100,
+    150
+   ],
+   "to": [
+    1100,
+    150
+   ],
+   "pressure": 0.00985,
+   "steps": 80,
+   "space": "document",
+   "route": "tool",
+   "smoothing": false
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "stroke": {
+   "from": [
+    100,
+    450
+   ],
+   "to": [
+    1100,
+    450
+   ],
+   "pressure": 0.02956,
+   "steps": 80,
+   "space": "document",
+   "route": "tool",
+   "smoothing": false
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "stroke": {
+   "from": [
+    100,
+    750
+   ],
+   "to": [
+    1100,
+    750
+   ],
+   "pressure": 0.05912,
+   "steps": 80,
+   "space": "document",
+   "route": "tool",
+   "smoothing": false
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "stroke": {
+   "from": [
+    100,
+    1050
+   ],
+   "to": [
+    1100,
+    1050
+   ],
+   "pressure": 0.09853,
+   "steps": 80,
+   "space": "document",
+   "route": "tool",
+   "smoothing": false
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "wait": 20
+ },
+ {
+  "measure": {
+   "rect": [
+    200,
+    141,
+    800,
+    19
+   ]
+  }
+ },
+ {
+  "measure": {
+   "rect": [
+    200,
+    441,
+    800,
+    19
+   ]
+  }
+ },
+ {
+  "measure": {
+   "rect": [
+    200,
+    741,
+    800,
+    19
+   ]
+  }
+ },
+ {
+  "measure": {
+   "rect": [
+    200,
+    1041,
+    800,
+    19
+   ]
+  }
+ },
+ {
+  "look": {
+   "path": "3-sea-sponge.png",
+   "rect": [
+    0,
+    0,
+    1200,
+    1200
+   ],
+   "scale": 0.5
+  }
+ },
+ {
+  "document": "srgb",
+  "size": [
+   1200,
+   1200
+  ]
+ },
+ {
+  "wait": 10
+ },
+ {
+  "fit": true
+ },
+ {
+  "wait": 5
+ },
+ {
+  "fill": [
+   1.0,
+   1.0,
+   1.0
+  ]
+ },
+ {
+  "layer": {
+   "add": "Ribbon Pen"
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "colour": [
+   0.0,
+   0.0,
+   0.0
+  ]
+ },
+ {
+  "preset": {
+   "load": "Ribbon Pen"
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "tool": {
+   "id": "noise_brush",
+   "options": {
+    "randomness": 0.0
+   }
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "stroke": {
+   "from": [
+    100,
+    150
+   ],
+   "to": [
+    1100,
+    150
+   ],
+   "pressure": 0.00985,
+   "steps": 80,
+   "space": "document",
+   "route": "tool",
+   "smoothing": false
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "stroke": {
+   "from": [
+    100,
+    450
+   ],
+   "to": [
+    1100,
+    450
+   ],
+   "pressure": 0.02956,
+   "steps": 80,
+   "space": "document",
+   "route": "tool",
+   "smoothing": false
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "stroke": {
+   "from": [
+    100,
+    750
+   ],
+   "to": [
+    1100,
+    750
+   ],
+   "pressure": 0.05912,
+   "steps": 80,
+   "space": "document",
+   "route": "tool",
+   "smoothing": false
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "stroke": {
+   "from": [
+    100,
+    1050
+   ],
+   "to": [
+    1100,
+    1050
+   ],
+   "pressure": 0.09853,
+   "steps": 80,
+   "space": "document",
+   "route": "tool",
+   "smoothing": false
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "wait": 20
+ },
+ {
+  "measure": {
+   "rect": [
+    200,
+    146,
+    800,
+    9
+   ]
+  }
+ },
+ {
+  "measure": {
+   "rect": [
+    200,
+    446,
+    800,
+    9
+   ]
+  }
+ },
+ {
+  "measure": {
+   "rect": [
+    200,
+    746,
+    800,
+    9
+   ]
+  }
+ },
+ {
+  "measure": {
+   "rect": [
+    200,
+    1046,
+    800,
+    9
+   ]
+  }
+ },
+ {
+  "look": {
+   "path": "4-ribbon-pen.png",
+   "rect": [
+    0,
+    0,
+    1200,
+    1200
+   ],
+   "scale": 0.5
+  }
+ },
+ {
+  "document": "srgb",
+  "size": [
+   1200,
+   1200
+  ]
+ },
+ {
+  "wait": 10
+ },
+ {
+  "fit": true
+ },
+ {
+  "wait": 5
+ },
+ {
+  "fill": [
+   1.0,
+   1.0,
+   1.0
+  ]
+ },
+ {
+  "layer": {
+   "add": "Graphite Pencil"
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "colour": [
+   0.0,
+   0.0,
+   0.0
+  ]
+ },
+ {
+  "preset": {
+   "load": "Graphite Pencil"
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "tool": {
+   "id": "noise_brush",
+   "options": {
+    "randomness": 0.0
+   }
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "stroke": {
+   "from": [
+    100,
+    150
+   ],
+   "to": [
+    1100,
+    150
+   ],
+   "pressure": 0.00985,
+   "steps": 80,
+   "space": "document",
+   "route": "tool",
+   "smoothing": false
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "stroke": {
+   "from": [
+    100,
+    450
+   ],
+   "to": [
+    1100,
+    450
+   ],
+   "pressure": 0.02956,
+   "steps": 80,
+   "space": "document",
+   "route": "tool",
+   "smoothing": false
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "stroke": {
+   "from": [
+    100,
+    750
+   ],
+   "to": [
+    1100,
+    750
+   ],
+   "pressure": 0.05912,
+   "steps": 80,
+   "space": "document",
+   "route": "tool",
+   "smoothing": false
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "stroke": {
+   "from": [
+    100,
+    1050
+   ],
+   "to": [
+    1100,
+    1050
+   ],
+   "pressure": 0.09853,
+   "steps": 80,
+   "space": "document",
+   "route": "tool",
+   "smoothing": false
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "wait": 20
+ },
+ {
+  "measure": {
+   "rect": [
+    200,
+    148,
+    800,
+    5
+   ]
+  }
+ },
+ {
+  "measure": {
+   "rect": [
+    200,
+    448,
+    800,
+    5
+   ]
+  }
+ },
+ {
+  "measure": {
+   "rect": [
+    200,
+    748,
+    800,
+    5
+   ]
+  }
+ },
+ {
+  "measure": {
+   "rect": [
+    200,
+    1048,
+    800,
+    5
+   ]
+  }
+ },
+ {
+  "look": {
+   "path": "5-graphite-pencil.png",
+   "rect": [
+    0,
+    0,
+    1200,
+    1200
+   ],
+   "scale": 0.5
+  }
+ },
+ {
+  "document": "srgb",
+  "size": [
+   1200,
+   1200
+  ]
+ },
+ {
+  "wait": 10
+ },
+ {
+  "fit": true
+ },
+ {
+  "wait": 5
+ },
+ {
+  "fill": [
+   1.0,
+   1.0,
+   1.0
+  ]
+ },
+ {
+  "layer": {
+   "add": "Bristle Flat"
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "colour": [
+   0.0,
+   0.0,
+   0.0
+  ]
+ },
+ {
+  "preset": {
+   "load": "Bristle Flat"
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "tool": {
+   "id": "noise_brush",
+   "options": {
+    "randomness": 0.0
+   }
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "stroke": {
+   "from": [
+    100,
+    150
+   ],
+   "to": [
+    1100,
+    150
+   ],
+   "pressure": 0.00985,
+   "steps": 80,
+   "space": "document",
+   "route": "tool",
+   "smoothing": false
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "stroke": {
+   "from": [
+    100,
+    450
+   ],
+   "to": [
+    1100,
+    450
+   ],
+   "pressure": 0.02956,
+   "steps": 80,
+   "space": "document",
+   "route": "tool",
+   "smoothing": false
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "stroke": {
+   "from": [
+    100,
+    750
+   ],
+   "to": [
+    1100,
+    750
+   ],
+   "pressure": 0.05912,
+   "steps": 80,
+   "space": "document",
+   "route": "tool",
+   "smoothing": false
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "stroke": {
+   "from": [
+    100,
+    1050
+   ],
+   "to": [
+    1100,
+    1050
+   ],
+   "pressure": 0.09853,
+   "steps": 80,
+   "space": "document",
+   "route": "tool",
+   "smoothing": false
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "wait": 20
+ },
+ {
+  "measure": {
+   "rect": [
+    200,
+    144,
+    800,
+    13
+   ]
+  }
+ },
+ {
+  "measure": {
+   "rect": [
+    200,
+    444,
+    800,
+    13
+   ]
+  }
+ },
+ {
+  "measure": {
+   "rect": [
+    200,
+    744,
+    800,
+    13
+   ]
+  }
+ },
+ {
+  "measure": {
+   "rect": [
+    200,
+    1044,
+    800,
+    13
+   ]
+  }
+ },
+ {
+  "look": {
+   "path": "6-bristle-flat.png",
+   "rect": [
+    0,
+    0,
+    1200,
+    1200
+   ],
+   "scale": 0.5
+  }
+ }
+]

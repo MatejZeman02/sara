@@ -1,0 +1,56 @@
+[
+  {"wait": 30},
+  {"docker": {"id": "InfoDocker", "at": [1500, 20], "size": [400, 200]}},
+  {"docker": {"id": "ToolOptionsDocker", "at": [0, 300], "size": [280, 500]}},
+  {"docker": {"id": "GraphDocker", "at": [0, 820], "size": [240, 200]}},
+  {"docker": {"id": "ReferenceDocker", "at": [1500, 240], "size": [280, 200]}},
+  {"docker": {"id": "LayersDocker", "at": [1440, 460], "size": [460, 560]}},
+  {"docker": {"id": "ColorDocker", "at": [1500, 240], "size": [260, 200]}},
+  {"wait": 12},
+  {"option": {"key": "radius", "value": 0.05}},
+  {"option": {"key": "hardness", "value": 1.0}},
+  {"wait": 6},
+  {"state": "01-fresh"},
+
+  {"colour": "#d24a1c"},
+  {"stroke": {"from": [420, 400], "to": [1120, 400], "pressure": 1.0, "steps": 20}},
+  {"wait": 14},
+  {"layer": {"add": "Sky"}},
+  {"wait": 8},
+  {"colour": "#1c6ad2"},
+  {"stroke": {"from": [420, 560], "to": [1120, 560], "pressure": 1.0, "steps": 20}},
+  {"wait": 16},
+  {"state": "02-two-painted-layers"},
+  {"shot": "02-two-painted-layers"},
+
+  {"save": "scratch/tour-document.sad"},
+  {"wait": 12},
+  {"state": "03-saved"},
+
+  {"colour": "#2fa84f"},
+  {"stroke": {"from": [420, 700], "to": [1120, 700], "pressure": 1.0, "steps": 20}},
+  {"wait": 16},
+  {"state": "04-painted-after-the-save"},
+  {"shot": "04-painted-after-the-save"},
+
+  {"load": "scratch/tour-document.sad"},
+  {"wait": 20},
+  {"state": "05-loaded-back"},
+  {"shot": "05-loaded-back"},
+
+  {"undo": 1},
+  {"wait": 14},
+  {"state": "06-undo-after-a-load"},
+  {"shot": "06-undo-after-a-load"},
+
+  {"document": "srgb"},
+  {"wait": 16},
+  {"state": "07-new-srgb-document"},
+  {"shot": "07-new-srgb-document"},
+
+  {"colour": "#d24a1c"},
+  {"stroke": {"from": [420, 400], "to": [1120, 400], "pressure": 1.0, "steps": 20}},
+  {"wait": 16},
+  {"state": "08-painted-the-new-document"},
+  {"shot": "08-painted-the-new-document"}
+]

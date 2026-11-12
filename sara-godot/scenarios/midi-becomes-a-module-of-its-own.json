@@ -1,0 +1,20 @@
+[
+  {"comment": "Runs after midi-becomes-a-module-of-its-own-switch-on, on the profile it leaves with MIDI switched on, because MIDI ships switched off on a fresh profile."},
+  {"settings": "keep"},
+  {"wait": 45},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 20},
+  {"open": "preferences"},
+  {"page": "MIDI"},
+  {"wait": 15},
+  {"state": "1-the-midi-page-from-the-module"},
+  {"shot": "1-the-midi-page-from-the-module"},
+  {"page_row": {"row": "listen", "value": true}},
+  {"wait": 15},
+  {"midi": {"control": 7, "value": 64}},
+  {"state": "2-listen-on-from-the-module"},
+  {"shot": "2-listen-on-from-the-module"},
+  {"page_row": {"row": "listen", "value": false}},
+  {"wait": 10},
+  {"state": "3-listen-off-again"}
+]

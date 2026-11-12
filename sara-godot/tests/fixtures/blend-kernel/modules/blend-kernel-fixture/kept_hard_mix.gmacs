@@ -1,0 +1,67 @@
+# Kernel: kept_hard_mix
+# A blend kernel shipped by a test module rather than by Sara, which is the
+# door a third-party module walks to bring a mode Sara has no formula for. It is
+# Hard Mix exactly as the module that once shipped it wrote it, so it proves two
+# things: that the door still runs a module's own kernel, and that the
+# skeleton's Hard Mix, which took the formula over, composites as this did.
+#
+# Everything above the kernel is the compositor's contract, restated: two images
+# in set 0, and the push constant SaCompute.pack_composite_params() writes. A
+# module has to restate it because the block lives inside composite.gmacs rather
+# than in a library either file could import, and Godot refuses a push constant
+# that is not exactly the size the SPIR-V declares, so a block that drifts from
+# that one is a kernel that will not run at all, and the suite that dispatches
+# this one fails.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+kernel kept_hard_mix
+
+import linear_srgb_color_space
+import transfer_curve
+
+# Both textures are in set 0, differentiated by binding 0 and 1.
+image canvas
+image chunk
+
+# 128 bytes, the order SaColorSpace writes and SaCompute.pack_composite_params()
+# packs. The matrices are float[9] rather than mat3 because std430 pads a mat3
+# column out to 16 bytes. The density, which fetch_pixels reads, ends the block
+# on a multiple of 16.
+params:
+    vec2 offset
+    float opacity
+    # The document's blend reference white, the value a display-referred formula
+    # treats as 1.0. Hard Mix is one of those, so this is the number its
+    # threshold is measured against.
+    float blend_white
+    float doc_to_linear_srgb[9]
+    float linear_srgb_to_doc[9]
+    float transfer_slope
+    float transfer_threshold
+    float transfer_gain
+    float transfer_exponent
+    float coordinates
+    float density
+    # The part of the chunk this dispatch covers, in chunk-local pixels. Read
+    # inside fetch_pixels, which every kernel goes through.
+    float region_x
+    float region_y
+    float region_w
+    float region_h
+
+import composite_color_space
+
+import composite_blend_ops
+
+# The formula of the skeleton's hard_mix_blended in libs/composite_blend_modes.gmacs,
+# where the reasons for its reach above white are written.
+
+
+def kept_hard_mix():
+    ivec2 canvas_coords
+    vec4 src, dst
+    if not fetch_pixels_rgb_windowed(canvas_coords, src, dst): return
+    vec3 cs = min(src.rgb, vec3(1.0))
+    vec3 cd = min(dst.rgb, vec3(1.0))
+    vec3 B = step(vec3(1.0), cs + cd) + (src.rgb - cs) + (dst.rgb - cd)
+    blend_and_store_rgb_windowed(canvas_coords, src, dst, B)

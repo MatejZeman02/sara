@@ -1,0 +1,11 @@
+[
+  {"wait": 40},
+
+  {"open": "new_document"},
+  {"wait": 20},
+  {"shot": "01-template-hint-and-create-in-the-accent"},
+  {"state": "01-template-hint-and-create-in-the-accent"},
+
+  {"new_document_row": {"close": true}},
+  {"wait": 10}
+]

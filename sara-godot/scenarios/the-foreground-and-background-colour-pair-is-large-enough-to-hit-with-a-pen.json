@@ -1,0 +1,19 @@
+[
+  {
+    "comment": "The foreground and background pair on the top bar's second row is pressed with the virtual pen, first on the swap mark, which swaps red over blue, then on the reset mark, which gives black over white. The comments that name the virtual pen are where its suite, scripts/test_the_colour_pair_on_the_bar_answers_a_pen.py, puts the pen's records from virtual_pen.py, turned into the driver's pen steps."
+  },
+  {"wait": 25},
+  {"colour": "#ff0000"},
+  {"background_colour": "#0000ff"},
+  {"wait": 5},
+  {"shot": "1-red-over-blue"},
+  {"state": "1-red-over-blue"},
+  {"comment": "The virtual pen presses the swap mark"},
+  {"wait": 10},
+  {"shot": "2-after-the-swap-mark"},
+  {"state": "2-after-the-swap-mark"},
+  {"comment": "The virtual pen presses the reset mark"},
+  {"wait": 10},
+  {"shot": "3-after-the-reset-mark"},
+  {"state": "3-after-the-reset-mark"}
+]

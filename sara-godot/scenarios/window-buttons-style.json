@@ -1,0 +1,15 @@
+[
+  {"wait": 30},
+  {"prefs": {"window_button_position": "right"}},
+  {"wait": 15},
+  {"shot": "right-windows-and-gnome"},
+  {"state": "right"},
+  {"prefs": {"window_button_position": "left"}},
+  {"wait": 15},
+  {"shot": "left-macos"},
+  {"state": "left"},
+  {"prefs": {"window_button_position": "auto"}},
+  {"wait": 15},
+  {"shot": "auto"},
+  {"state": "auto"}
+]

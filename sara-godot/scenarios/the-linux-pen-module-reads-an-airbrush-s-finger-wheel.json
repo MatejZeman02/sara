@@ -1,0 +1,22 @@
+[
+  {"comment": "The Linux pen module reads an airbrush's finger wheel off the kernel's node. Run it with `python scripts/virtual_airbrush.py`, which makes a virtual airbrush on /dev/uinput, starts Sara on the GNOME desktop with `--pen-node` naming that airbrush's node, and plays the airbrush before each `state` named here: into range over the canvas, a touch with the wheel at its lowest, a glide turning it to its middle and on to its highest, and the lift out of range. Each dump's `pen_source` block reads the wheel. Replayed alone, with no airbrush, the dumps read the module reading no pen."},
+  {"wait": 30},
+  {"state": "1-the-airbrush-in-range-over-the-canvas"},
+  {"state": "2-touching-with-the-wheel-at-its-lowest"},
+  {"state": "3-mid-stroke-the-wheel-turned-to-its-middle"},
+  {"state": "4-mid-stroke-the-wheel-turned-to-its-highest"},
+  {"state": "5-lifted-and-out-of-range"},
+  {"shot": "5-lifted-and-out-of-range"},
+  {"open": "preferences"},
+  {"wait": 20},
+  {"page": "Tablet"},
+  {"wait": 15},
+  {"prefs_search": "pen module"},
+  {"wait": 15},
+  {"state": "6-the-tablet-page-says-the-module-reads-the-wheel"},
+  {"shot": "6-the-tablet-page-says-the-module-reads-the-wheel"},
+  {"prefs_search": ""},
+  {"wait": 10},
+  {"page": "General"},
+  {"wait": 10}
+]

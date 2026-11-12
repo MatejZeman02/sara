@@ -1,0 +1,15 @@
+[
+  {"comment": "On a fresh settings folder at 1920 by 1080 the welcome window opens in the first launch's state, Krita is pressed in its Quick settings, and the window closes. The shot shows the Krita layout with Tool Options open whole beside the toolbox, and the Layers docker in the right column no shorter than its 272 floor. The state line names every open docker and its rectangle."},
+  {"wait": 45},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 20},
+  {"open": "welcome", "launch": "first"},
+  {"wait": 15},
+  {"workspace": {"welcome": true, "coming_from": "krita"}},
+  {"wait": 30},
+  {"shot": "0-krita-pressed-in-quick-settings"},
+  {"key": "escape"},
+  {"wait": 20},
+  {"state": "1-the-krita-layout"},
+  {"shot": "1-the-krita-layout-opens-tool-options-whole-and-the-layers-over-its-floor"}
+]

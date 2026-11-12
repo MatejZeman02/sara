@@ -1,0 +1,414 @@
+[
+ {
+  "wait": 30
+ },
+ {
+  "docker": {
+   "id": "InfoDocker",
+   "at": [
+    1500,
+    20
+   ],
+   "size": [
+    400,
+    200
+   ]
+  }
+ },
+ {
+  "docker": {
+   "id": "ToolOptionsDocker",
+   "at": [
+    0,
+    300
+   ],
+   "size": [
+    280,
+    500
+   ]
+  }
+ },
+ {
+  "docker": {
+   "id": "GraphDocker",
+   "at": [
+    0,
+    820
+   ],
+   "size": [
+    240,
+    200
+   ]
+  }
+ },
+ {
+  "docker": {
+   "id": "ReferenceDocker",
+   "at": [
+    1500,
+    240
+   ],
+   "size": [
+    280,
+    200
+   ]
+  }
+ },
+ {
+  "docker": {
+   "id": "LayersDocker",
+   "at": [
+    1600,
+    460
+   ],
+   "size": [
+    300,
+    300
+   ]
+  }
+ },
+ {
+  "docker": {
+   "id": "ColorDocker",
+   "at": [
+    1600,
+    780
+   ],
+   "size": [
+    260,
+    250
+   ]
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "01-canvas-cleared"
+ },
+ {
+  "shot": "01-canvas-cleared"
+ },
+ {
+  "tool": "brush"
+ },
+ {
+  "wait": 6
+ },
+ {
+  "state": "02-brush-picked"
+ },
+ {
+  "option": {
+   "key": "radius",
+   "value": 0.05
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "state": "03-radius-from-the-docker"
+ },
+ {
+  "key": "bracketright"
+ },
+ {
+  "key": "bracketright"
+ },
+ {
+  "key": "bracketright"
+ },
+ {
+  "wait": 6
+ },
+ {
+  "state": "04-three-brackets-larger"
+ },
+ {
+  "key": "bracketleft"
+ },
+ {
+  "wait": 6
+ },
+ {
+  "state": "05-one-bracket-smaller"
+ },
+ {
+  "option": {
+   "key": "opacity",
+   "value": 0.4
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "state": "06-opacity-from-the-docker"
+ },
+ {
+  "colour": "#d24a1c"
+ },
+ {
+  "stroke": {
+   "from": [
+    420,
+    460
+   ],
+   "to": [
+    1120,
+    560
+   ],
+   "pressure": 1.0,
+   "steps": 20
+  }
+ },
+ {
+  "wait": 14
+ },
+ {
+  "state": "07-one-stroke-at-opacity-04"
+ },
+ {
+  "shot": "07-one-stroke-at-opacity-04"
+ },
+ {
+  "option": {
+   "key": "opacity",
+   "value": 1.0
+  }
+ },
+ {
+  "colour": "#1c6ad2"
+ },
+ {
+  "stroke": {
+   "from": [
+    420,
+    640
+   ],
+   "to": [
+    1120,
+    740
+   ],
+   "pressure": 1.0,
+   "steps": 20
+  }
+ },
+ {
+  "wait": 14
+ },
+ {
+  "state": "08-second-stroke-at-full"
+ },
+ {
+  "shot": "08-second-stroke-at-full"
+ },
+ {
+  "undo": 1
+ },
+ {
+  "wait": 14
+ },
+ {
+  "state": "09-undone"
+ },
+ {
+  "shot": "09-undone"
+ },
+ {
+  "redo": 1
+ },
+ {
+  "wait": 14
+ },
+ {
+  "state": "10-redone"
+ },
+ {
+  "shot": "10-redone"
+ },
+ {
+  "tool": "eraser"
+ },
+ {
+  "option": {
+   "key": "radius",
+   "value": 0.05
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "state": "11-eraser-picked"
+ },
+ {
+  "stroke": {
+   "from": [
+    700,
+    420
+   ],
+   "to": [
+    700,
+    780
+   ],
+   "pressure": 1.0,
+   "steps": 16
+  }
+ },
+ {
+  "wait": 14
+ },
+ {
+  "state": "12-erased-across-both"
+ },
+ {
+  "shot": "12-erased-across-both"
+ },
+ {
+  "tool": "brush"
+ },
+ {
+  "brush": {
+   "stabilizer_mode": 2,
+   "stabilizer_amount": 0.8
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "state": "13-stabilizer-rope"
+ },
+ {
+  "symmetry": {
+   "horizontal": true
+  }
+ },
+ {
+  "colour": "#2fa84f"
+ },
+ {
+  "stroke": {
+   "from": [
+    500,
+    850
+   ],
+   "to": [
+    800,
+    900
+   ],
+   "pressure": 1.0,
+   "steps": 20
+  }
+ },
+ {
+  "wait": 16
+ },
+ {
+  "state": "14-mirrored-stroke"
+ },
+ {
+  "shot": "14-mirrored-stroke"
+ },
+ {
+  "symmetry": {
+   "horizontal": false
+  }
+ },
+ {
+  "brush": {
+   "stabilizer_mode": 0,
+   "stabilizer_amount": 0.0
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "bar_option": {
+   "key": "radius",
+   "value": 0.012
+  }
+ },
+ {
+  "bar_option": {
+   "key": "opacity",
+   "value": 1.0
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "state": "15-radius-from-the-bar"
+ },
+ {
+  "colour": "#8a3ad2"
+ },
+ {
+  "stroke": {
+   "from": [
+    420,
+    300
+   ],
+   "to": [
+    1120,
+    300
+   ],
+   "pressure": 1.0,
+   "steps": 20
+  }
+ },
+ {
+  "wait": 14
+ },
+ {
+  "state": "16-a-thin-band-from-the-bar"
+ },
+ {
+  "shot": "16-a-thin-band-from-the-bar"
+ },
+ {
+  "bar_option": {
+   "key": "radius",
+   "value": 0.075
+  }
+ },
+ {
+  "bar_option": {
+   "key": "opacity",
+   "value": 0.3
+  }
+ },
+ {
+  "wait": 6
+ },
+ {
+  "state": "17-opacity-from-the-bar"
+ },
+ {
+  "stroke": {
+   "from": [
+    420,
+    380
+   ],
+   "to": [
+    1120,
+    380
+   ],
+   "pressure": 1.0,
+   "steps": 20
+  }
+ },
+ {
+  "wait": 14
+ },
+ {
+  "state": "18-a-thick-faint-band-from-the-bar"
+ },
+ {
+  "shot": "18-a-thick-faint-band-from-the-bar"
+ }
+]

@@ -1,0 +1,154 @@
+[
+  {
+    "wait": 30
+  },
+  {
+    "open": "preferences"
+  },
+  {
+    "wait": 15
+  },
+  {
+    "page": "Colour Themes"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "theme_rows": {}
+  },
+  {
+    "shot": "1-linked-as-opened"
+  },
+  {
+    "state": "1-linked-as-opened"
+  },
+  {
+    "theme_rows": {
+      "swatch": "bg_secondary",
+      "color": "#FF0000"
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "theme_rows": {
+      "swatch": "bg_panel",
+      "color": "#00FF00"
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "theme_rows": {}
+  },
+  {
+    "shot": "2-linked-shadow-and-highlight-refuse"
+  },
+  {
+    "state": "2-linked-shadow-and-highlight-refuse"
+  },
+  {
+    "theme_rows": {
+      "link": "background",
+      "on": false
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "theme_rows": {}
+  },
+  {
+    "shot": "3-unlinked-as-shown"
+  },
+  {
+    "state": "3-unlinked-as-shown"
+  },
+  {
+    "theme_rows": {
+      "swatch": "bg_secondary",
+      "color": "#FF0000"
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "theme_rows": {
+      "swatch": "bg_panel",
+      "color": "#00FF00"
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "theme_rows": {}
+  },
+  {
+    "shot": "4-unlinked-shadow-and-highlight-take"
+  },
+  {
+    "state": "4-unlinked-shadow-and-highlight-take"
+  },
+  {
+    "theme_rows": {
+      "link": "background",
+      "on": true
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "theme_rows": {}
+  },
+  {
+    "shot": "5-relinked-locks-again"
+  },
+  {
+    "state": "5-relinked-locks-again"
+  },
+  {
+    "theme_rows": {
+      "swatch": "text_muted",
+      "color": "#0000FF"
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "theme_rows": {}
+  },
+  {
+    "state": "6-a-second-groups-shadow-refuses"
+  },
+  {
+    "theme_rows": {
+      "swatch": "bg_primary",
+      "color": "#503038"
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "theme_rows": {}
+  },
+  {
+    "shot": "7-the-base-still-slides-the-locked-shades"
+  },
+  {
+    "state": "7-the-base-still-slides-the-locked-shades"
+  },
+  {
+    "prefs": {
+      "theme_name": "default"
+    }
+  }
+]

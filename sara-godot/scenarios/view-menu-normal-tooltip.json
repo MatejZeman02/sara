@@ -1,0 +1,209 @@
+[
+ {
+  "wait": 40
+ },
+ {
+  "prefs": {
+   "theme_name": "default",
+   "ui_scale": 1.0
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "menu": "View"
+ },
+ {
+  "wait": 20
+ },
+ {
+  "shot": "01-view-menu-open"
+ },
+ {
+  "state": "01-view-menu-open"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 12
+ },
+ {
+  "open": "preferences"
+ },
+ {
+  "wait": 25
+ },
+ {
+  "page": "Display"
+ },
+ {
+  "wait": 20
+ },
+ {
+  "shot": "02-display-page"
+ },
+ {
+  "state": "02-display-page"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 12
+ },
+ {
+  "wait": 20
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "wait": 20
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "menu": "File"
+ },
+ {
+  "wait": 18
+ },
+ {
+  "state": "03-file-menu"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "menu": "Edit"
+ },
+ {
+  "wait": 18
+ },
+ {
+  "state": "04-edit-menu"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "menu": "Image"
+ },
+ {
+  "wait": 18
+ },
+ {
+  "state": "05-image-menu"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "menu": "Layer"
+ },
+ {
+  "wait": 18
+ },
+ {
+  "state": "06-layer-menu"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "menu": "Select"
+ },
+ {
+  "wait": 18
+ },
+ {
+  "state": "07-select-menu"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "menu": "Filter"
+ },
+ {
+  "wait": 18
+ },
+ {
+  "state": "08-filter-menu"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "menu": "Modules"
+ },
+ {
+  "wait": 18
+ },
+ {
+  "state": "09-modules-menu"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "menu": "Window"
+ },
+ {
+  "wait": 18
+ },
+ {
+  "state": "10-window-menu"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "menu": "Help"
+ },
+ {
+  "wait": 18
+ },
+ {
+  "state": "11-help-menu"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 10
+ }
+]

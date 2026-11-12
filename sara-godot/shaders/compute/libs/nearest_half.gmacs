@@ -1,0 +1,46 @@
+# Library: a float32 rounded to the nearest half float, ties to even.
+#
+# A store into an F16 field narrows each channel, and the device chooses how.
+# An NVIDIA GPU under Vulkan truncates towards zero, measured over every 8-bit
+# colour on the sRGB cube's surface converted into an F16 Oklab chunk, so half
+# the channels land one step of the half's last bit below the nearest, and pure
+# magenta's `a` decodes to a green 0.68 of an 8-bit level inside the cube.
+# What this answers is a float32 that a
+# half holds exactly, so every narrowing keeps it as it is, truncating or
+# rounding, and the stored number is NumPy's `astype(np.float16)` of the float.
+#
+# Nothing clamps. An infinity, a NaN and a float32 subnormal come back as they
+# went in, bit for bit, and the device narrows them its own way. So does
+# a number past the largest half, 65504.
+
+# The float32 bits of 2^-14, the smallest normal half. Below it a half keeps a
+# fixed step of 2^-24 rather than ten bits of mantissa.
+const uint SA_HALF_NORMAL_BITS = 0x38800000u
+# Where a float32 subnormal ends and the exponent field of all ones begins.
+const uint SA_FLOAT_NORMAL_BITS = 0x00800000u
+const uint SA_FLOAT_SPECIAL_BITS = 0x7f800000u
+# The thirteen mantissa bits a float32 has and a half does not.
+const uint SA_HALF_DROPPED_BITS = 0x1fffu
+# 2^24, the inverse of the half's subnormal step, exact in a float32.
+const float SA_HALF_SUBNORMAL_STEPS = 16777216.0
+
+
+def sa_nearest_half(float x) -> float:
+    uint bits = float_bits_to_uint(x)
+    uint magnitude = bits & 0x7fffffffu
+    if magnitude >= SA_FLOAT_SPECIAL_BITS or magnitude < SA_FLOAT_NORMAL_BITS:
+        return x
+    if magnitude < SA_HALF_NORMAL_BITS:
+        # A multiple of 2^-24 times a power of two is exact in a float32, so
+        # the one rounding here is round_even's own.
+        return round_even(x * SA_HALF_SUBNORMAL_STEPS) / SA_HALF_SUBNORMAL_STEPS
+    # Half the dropped bits' weight less one, and the one back when the kept
+    # bit is odd, is a round to nearest with ties to even. A carry out of the
+    # mantissa moves the exponent up, which is the right answer too.
+    uint kept = (magnitude >> 13u) & 1u
+    uint rounded = (magnitude + (SA_HALF_DROPPED_BITS >> 1u) + kept) & ~SA_HALF_DROPPED_BITS
+    return uint_bits_to_float((bits & 0x80000000u) | rounded)
+
+
+def sa_nearest_halves(vec4 c) -> vec4:
+    return vec4(sa_nearest_half(c.r), sa_nearest_half(c.g), sa_nearest_half(c.b), sa_nearest_half(c.a))

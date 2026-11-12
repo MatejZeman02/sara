@@ -1,0 +1,32 @@
+[
+ {"wait": 60},
+ {"state": "0-the-boots-fit"},
+ {"shot": "0-the-boots-fit"},
+
+ {"layout_preset": {"load": "minimalistic"}},
+ {"wait": 20},
+ {"document": "srgb"},
+ {"wait": 10},
+ {"canvas": [768, 768]},
+ {"wait": 10},
+ {"checker": 64},
+ {"wait": 10},
+ {"state": "1-a-resized-document-at-an-interface-scale-of-0-9"},
+ {"shot": "1-a-resized-document-at-an-interface-scale-of-0-9"},
+
+ {"prefs": {"ui_scale": 1.25}},
+ {"wait": 30},
+ {"canvas": [768, 768]},
+ {"wait": 10},
+ {"checker": 64},
+ {"wait": 10},
+ {"state": "2-a-resized-document-at-an-interface-scale-of-1-25"},
+ {"shot": "2-a-resized-document-at-an-interface-scale-of-1-25"},
+
+ {"canvas": [1536, 512]},
+ {"wait": 10},
+ {"checker": 64},
+ {"wait": 10},
+ {"state": "3-a-wide-document-at-an-interface-scale-of-1-25"},
+ {"shot": "3-a-wide-document-at-an-interface-scale-of-1-25"}
+]

@@ -1,0 +1,151 @@
+[
+  {
+    "wait": 30
+  },
+  {
+    "fill": [
+      0.35,
+      0.35,
+      0.35
+    ]
+  },
+  {
+    "wait": 8
+  },
+  {
+    "colour": "#3a3a3a"
+  },
+  {
+    "stroke": {
+      "from": [
+        500,
+        300
+      ],
+      "to": [
+        1400,
+        300
+      ],
+      "pressure": 0.9,
+      "steps": 24
+    }
+  },
+  {
+    "colour": "#b0b0b0"
+  },
+  {
+    "stroke": {
+      "from": [
+        500,
+        500
+      ],
+      "to": [
+        1400,
+        500
+      ],
+      "pressure": 0.9,
+      "steps": 24
+    }
+  },
+  {
+    "colour": "#f0f0f0"
+  },
+  {
+    "stroke": {
+      "from": [
+        500,
+        700
+      ],
+      "to": [
+        1400,
+        700
+      ],
+      "pressure": 0.9,
+      "steps": 24
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "0-painted"
+  },
+  {
+    "preview": {
+      "kind": "brightness_contrast",
+      "brightness": 0.0,
+      "contrast": 0.0
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "shot": "1-neutral"
+  },
+  {
+    "state": "1-neutral"
+  },
+  {
+    "preview": {
+      "kind": "brightness_contrast",
+      "brightness": 0.0,
+      "contrast": 80.0
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "shot": "2-contrast-up"
+  },
+  {
+    "state": "2-contrast-up"
+  },
+  {
+    "preview": {
+      "kind": "brightness_contrast",
+      "brightness": 45.0,
+      "contrast": 0.0
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "shot": "3-brighter"
+  },
+  {
+    "state": "3-brighter"
+  },
+  {
+    "preview": {
+      "kind": "brightness_contrast",
+      "brightness": 45.0,
+      "contrast": 0.0,
+      "enabled": false
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "shot": "4-preview-off"
+  },
+  {
+    "state": "4-preview-off"
+  },
+  {
+    "preview": {
+      "cancel": true
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "shot": "5-closed"
+  },
+  {
+    "state": "5-closed"
+  }
+]

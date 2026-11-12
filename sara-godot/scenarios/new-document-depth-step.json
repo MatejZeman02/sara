@@ -1,0 +1,33 @@
+[
+  {"wait": 40},
+
+  {"open": "new_document"},
+  {"wait": 20},
+  {"state": "01-the-dialog-as-it-opens"},
+
+  {"new_document_row": {"space": "sRGB"}},
+  {"wait": 10},
+  {"shot": "02-the-preset-row-sets-a-known-start"},
+  {"state": "02-the-preset-row-sets-a-known-start"},
+
+  {"new_document_row": {"depth": "32-bit float"}},
+  {"wait": 10},
+  {"shot": "03-depth-32-bit-float"},
+  {"state": "03-depth-32-bit-float"},
+
+  {"new_document_row": {"depth": "16-bit float"}},
+  {"wait": 10},
+  {"state": "04-depth-back-to-16-bit-float"},
+
+  {"new_document_row": {"transfer": "Linear", "coordinates": "Oklab", "depth": "32-bit float"}},
+  {"wait": 10},
+  {"shot": "05-three-rows-in-one-step"},
+  {"state": "05-three-rows-in-one-step"},
+
+  {"new_document_row": {"gamut": "ap1"}},
+  {"wait": 10},
+  {"state": "06-the-gamut-row-through-the-same-step"},
+
+  {"key": "escape"},
+  {"wait": 15}
+]

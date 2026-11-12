@@ -1,0 +1,98 @@
+# How a stroke moves the paint's surface under it towards its own height.
+#
+# The impasto mix as a library any engine's kernel imports. A height is in
+# virtual millimetres, zero meaning bare. A layer stores its own as one half
+# float a texel, and signed: the surface a stroke left less the surface beneath
+# the layer (every layer below that shows, and the grounds' tooth). Nothing
+# clamps the height and the mix has no ceiling: a stroke crossing itself stands
+# no higher than on either arm. *rate*, *load* and *coverage* are clamped to the
+# unit range, because a step past the whole gap is the one thing the rule
+# forbids. Nothing here reads a binding or a push constant.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# One step of a half float at *value*: ten bits of mantissa below its
+# exponent, and the smallest normal's step at and near nought.
+
+
+def sa_height_half_step(float value) -> float:
+    return exp2(floor(log2(max(abs(value), 0.00006103515625))) - 10.0)
+
+# Moves *height* by rate times coverage of the gap and never past *target*, so
+# the step shrinks as the height closes in and a hundred steps on one texel
+# approach the target without reaching past it. The eraser is the same call with
+# a target of nought.
+#
+# **A step is at least one half float step, or the whole gap if that is
+# less.** The height is stored in sixteen bits, and a device writes a storage
+# image of them by truncating rather than rounding. A share of the gap smaller
+# than one step there would store as no move at all, so a slow rate stalled
+# twenty steps short of its target, 1.481 of 1.5 at a rate of 0.05, and the
+# shortfall would add up update over update. The floor turns that tail into a
+# walk of one step an update. The step is measured at the larger of the two
+# ends, so it is one the store can represent whichever way the move goes.
+
+
+def sa_height_towards(float height, float target, float rate, float coverage) -> float:
+    float share = clamp(rate, 0.0, 1.0) * clamp(coverage, 0.0, 1.0)
+    if share <= 0.0:
+        return height
+    float gap = target - height
+    float least = min(abs(gap), sa_height_half_step(max(abs(height), abs(target))))
+    float moved = height + sign(gap) * max(abs(gap) * share, least)
+    if height <= target:
+        return min(moved, target)
+    return max(moved, target)
+
+
+def sa_height_mobility(float surface, float brush) -> float:
+    if surface <= brush:
+        return 1.0
+    if brush <= 0.0:
+        return 0.0
+    return brush / surface
+
+# Moves the shown surface (beneath plus height) towards the brush's height by
+# load times coverage times `sa_height_mobility`, and keeps the new surface less
+# beneath. A brush height below nought counts as nought.
+
+
+def sa_height_mixed(float height, float beneath, float brush, float load, float coverage) -> float:
+    float aim = max(brush, 0.0)
+    float weight = clamp(load, 0.0, 1.0) * sa_height_mobility(beneath + height, aim)
+    return sa_height_towards(height, aim - beneath, weight, coverage)
+
+
+def sa_height_carried_on(float carried, float distance, float reach) -> float:
+    return carried * exp(-max(distance, 0.0) / max(reach, 0.0001))
+
+# Carries the taller of the two heights, because what a stroke pushes is what
+# stands up in its way. Carrying the mean would lay a height under the stroke's
+# own and never show it.
+
+
+def sa_height_picked_up(float carried, float found) -> float:
+    return max(carried, found)
+
+# Only raises, because laying paint down never digs. The mix comes after it.
+
+
+def sa_height_laid_ahead(float height, float beneath, float carried, float share, float coverage) -> float:
+    if beneath + height >= carried:
+        return height
+    return sa_height_towards(height, carried - beneath, share, coverage)
+
+
+def sa_height_pressed(float pressure, float above) -> float:
+    return clamp((pressure - above) / max(1.0 - above, 0.0001), 0.0, 1.0)
+
+# Raises the footprint's two sides under a hard press and leaves the middle half
+# as it was. Volume is not kept.
+
+
+def sa_height_piled(float brush, float across, float pressure, float above, float share) -> float:
+    float pressed = sa_height_pressed(pressure, above)
+    if pressed <= 0.0:
+        return brush
+    float side = smoothstep(0.5, 1.0, abs(across))
+    return brush * (1.0 + share * pressed * side)

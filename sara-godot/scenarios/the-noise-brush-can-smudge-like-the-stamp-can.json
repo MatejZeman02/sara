@@ -1,0 +1,33 @@
+[
+ {"wait": 60},
+ {"prefs": {"ui_scale": 1.0}},
+ {"wait": 20},
+ {"layout_preset": {"load": "minimalistic"}},
+ {"wait": 20},
+ {"document": "srgb"},
+ {"wait": 10},
+ {"layer": {"fill": [0.9, 0.1, 0.1, 1.0], "chunks": [[1, 1]]}},
+ {"wait": 6},
+ {"layer": {"fill": [0.1, 0.2, 0.9, 1.0], "chunks": [[2, 1]]}},
+ {"wait": 6},
+ {"layer": {"add": "Smudge"}},
+ {"wait": 10},
+ {"tool": {"id": "noise_brush", "options": {"radius": 0.02, "hardness": 1.0, "opacity": 1.0, "strength": 1.0}}},
+ {"wait": 10},
+ {"colour": "#20c020"},
+ {"wait": 10},
+ {"state": "01-the-noise-brush-before-the-stage"},
+ {"shot": "01-the-noise-brush-before-the-stage"},
+
+ {"stroke": {"from": [450, 442], "to": [760, 442], "pressure": 1.0, "steps": 40}},
+ {"wait": 20},
+ {"state": "02-a-plain-stroke-lays-its-green"},
+ {"shot": "02-a-plain-stroke-lays-its-green"},
+
+ {"brush": {"tool": "noise_brush", "smudge_pickup_option:enabled": true, "smudge_color_rate_option:enabled": false, "smudge_pickup_option:strength": 0.3}},
+ {"wait": 10},
+ {"stroke": {"from": [450, 542], "to": [760, 542], "pressure": 1.0, "steps": 40}},
+ {"wait": 20},
+ {"state": "03-a-smudge-stroke-drags-the-red-into-the-blue"},
+ {"shot": "03-a-smudge-stroke-drags-the-red-into-the-blue"}
+]

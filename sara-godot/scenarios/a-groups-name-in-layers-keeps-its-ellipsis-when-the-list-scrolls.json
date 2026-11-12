@@ -1,0 +1,193 @@
+[
+  {
+    "wait": 25
+  },
+  {
+    "docker": "park"
+  },
+  {
+    "docker": {
+      "id": "LayersDocker",
+      "at": [
+        420,
+        200
+      ],
+      "size": [
+        300,
+        300
+      ]
+    }
+  },
+  {
+    "layer": {
+      "add": "Paint Layer",
+      "fill": [
+        0.8,
+        0.3,
+        0.2,
+        1.0
+      ],
+      "chunks": [
+        [
+          0,
+          0
+        ]
+      ],
+      "group": true
+    }
+  },
+  {
+    "layer": {
+      "add": "Second",
+      "fill": [
+        0.3,
+        0.8,
+        0.2,
+        1.0
+      ],
+      "chunks": [
+        [
+          1,
+          0
+        ]
+      ],
+      "group": true
+    }
+  },
+  {
+    "layer": {
+      "add": "Third",
+      "fill": [
+        0.3,
+        0.3,
+        0.8,
+        1.0
+      ],
+      "chunks": [
+        [
+          0,
+          1
+        ]
+      ],
+      "group": true,
+      "isolated": true
+    }
+  },
+  {
+    "wait": 15
+  },
+  {
+    "shot": "few-rows"
+  },
+  {
+    "layer": {
+      "add": "Paint Layer 1",
+      "fill": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "chunks": [
+        [
+          0,
+          2
+        ]
+      ]
+    }
+  },
+  {
+    "layer": {
+      "add": "Paint Layer 2",
+      "fill": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "chunks": [
+        [
+          1,
+          2
+        ]
+      ]
+    }
+  },
+  {
+    "layer": {
+      "add": "Paint Layer 3",
+      "fill": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "chunks": [
+        [
+          2,
+          2
+        ]
+      ]
+    }
+  },
+  {
+    "layer": {
+      "add": "Paint Layer 4",
+      "fill": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "chunks": [
+        [
+          0,
+          2
+        ]
+      ]
+    }
+  },
+  {
+    "layer": {
+      "add": "Paint Layer 5",
+      "fill": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "chunks": [
+        [
+          1,
+          2
+        ]
+      ]
+    }
+  },
+  {
+    "layer": {
+      "add": "Paint Layer 6",
+      "fill": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "chunks": [
+        [
+          2,
+          2
+        ]
+      ]
+    }
+  },
+  {
+    "wait": 15
+  },
+  {
+    "shot": "scrolling"
+  },
+  {
+    "state": "scrolling"
+  }
+]

@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="SaPalette" load_steps=2 format=3]
+
+[ext_resource type="Script" uid="uid://dufcweud0h0ju" path="res://ui/themes/sa_palette.gd" id="1_palette"]
+
+[resource]
+script = ExtResource("1_palette")
+display_name = "Procreate Dark"
+bg_primary = Color(0.109804, 0.109804, 0.117647, 1)
+bg_secondary = Color(0.078431, 0.078431, 0.078431, 1)
+bg_slider = Color(0.054902, 0.054902, 0.058824, 1)
+bg_input = Color(0.043137, 0.043137, 0.047059, 1)
+bg_panel = Color(0.145098, 0.145098, 0.152941, 1)
+bg_sidebar = Color(0.094118, 0.094118, 0.101961, 1)
+bg_track = Color(0.047059, 0.047059, 0.05098, 1)
+border_primary = Color(0.227451, 0.227451, 0.235294, 1)
+border_secondary = Color(0.172549, 0.172549, 0.180392, 1)
+border_selected = Color(0.556863, 0.556863, 0.576471, 1)
+border_drag = Color(0.117647, 0.486275, 0.94902, 1)
+accent_primary = Color(0.117647, 0.486275, 0.94902, 1)
+accent_fill = Color(0.227451, 0.560784, 0.960784, 1)
+accent_gauge = Color(0.290196, 0.52549, 0.784314, 1)
+accent_ceiling = Color(0.878431, 0.713725, 0.290196, 1)
+accent_stroke = Color(0.74902, 0.352941, 0.94902, 1)
+text_primary = Color(0.94902, 0.94902, 0.968627, 1)
+text_muted = Color(0.556863, 0.556863, 0.576471, 1)

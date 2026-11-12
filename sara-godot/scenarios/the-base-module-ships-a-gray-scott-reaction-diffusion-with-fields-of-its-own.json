@@ -1,0 +1,24 @@
+[
+  {"comment": "The base module ships Gray-Scott, a reaction and diffusion whose two concentrations are a field of its own. A disc is painted in one colour, Gray-Scott goes on the layer through `simulation` with its defaults, and two thousand steps are run, five hundred at a time. The shot at step 2000 is the record `check_shots.py` reads, since the seed is a hash of the texel and the steps are the same on every run from the same disc."},
+  {"wait": 45},
+  {"tool": "brush"},
+  {"brush": {"colour": "#c8643c", "radius_px": 24}},
+  {"wait": 4},
+  {"stroke": {"space": "document", "route": "tool", "from": [958, 540], "to": [962, 540], "pressure": 1.0, "steps": 2}},
+  {"wait": 10},
+  {"zoom": 4.0},
+  {"wait": 10},
+  {"shot": "01-the-disc-as-painted"},
+  {"state": "01-the-disc-as-painted"},
+
+  {"simulation": {"rule": "gray_scott", "steps": 500}},
+  {"wait": 10},
+  {"shot": "02-gray-scott-at-step-five-hundred"},
+
+  {"simulation": {"steps": 500}},
+  {"simulation": {"steps": 500}},
+  {"simulation": {"steps": 500}},
+  {"wait": 10},
+  {"shot": "03-gray-scott-at-step-two-thousand"},
+  {"state": "03-gray-scott-at-step-two-thousand"}
+]

@@ -1,0 +1,14 @@
+[
+  {"comment": "Sara started without a door under an X server of its own, the clipboard emptied, Modules, Local Server ticked and the clipboard read back, which the tick leaves empty, then the dialog's Copy Prompt for Agent button pressed and the clipboard read back again. scripts/test_door_connect_an_agent.py reads the clipboard from outside Sara during the long wait and quits Sara through the door the row opened before the wait ends."},
+  {"wait": 30},
+  {"kernel_prompt": "clear"},
+  {"menu_item": {"menu": "Modules", "id": 805}},
+  {"wait": 20},
+  {"kernel_prompt": "clipboard"},
+  {"shot": "after-the-tick"},
+  {"click": {"control": "CopyPromptButton"}},
+  {"wait": 20},
+  {"kernel_prompt": "clipboard"},
+  {"shot": "after-the-button"},
+  {"wait": 3000}
+]

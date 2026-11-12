@@ -1,0 +1,203 @@
+[
+  {
+    "comment": "Enter presses the button the outline is on. Colour Space and Feather open with the outline on Cancel and are sent one Enter as a keyboard sends it, keycode and physical code both. The state after each says whether the dialog closed, how many history steps there are, and what the selection's bounds are. Then Feather again with its radius field open and typed into, and one Enter, which is the case the default still answers. Then Colour Space with Tab walked to Assign and Convert, so the outline and Enter agree there too. Every Enter closes its dialog, so no step closes one by its cross. Nothing is saved."
+  },
+  {
+    "wait": 45
+  },
+  {
+    "window": [
+      1920,
+      1080
+    ]
+  },
+  {
+    "prefs": {
+      "ui_scale": 1.0
+    }
+  },
+  {
+    "wait": 25
+  },
+  {
+    "layer": {
+      "add": "Sky"
+    }
+  },
+  {
+    "colour": "#2050d0"
+  },
+  {
+    "path": {
+      "circle": [
+        960,
+        540,
+        300
+      ]
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "state": "00-before-any-enter"
+  },
+  {
+    "comment": "01, Colour Space with the outline on Cancel, and one Enter."
+  },
+  {
+    "menu_item": {
+      "menu": "Image",
+      "id": 300
+    }
+  },
+  {
+    "wait": 25
+  },
+  {
+    "state": "01-colour-space-open"
+  },
+  {
+    "shot": "01-colour-space-open"
+  },
+  {
+    "key": "enter"
+  },
+  {
+    "wait": 15
+  },
+  {
+    "state": "01-colour-space-after-enter"
+  },
+  {
+    "shot": "01-colour-space-after-enter"
+  },
+  {
+    "comment": "02, Feather on a 600 by 400 selection with the outline on Cancel, and one Enter."
+  },
+  {
+    "select": {
+      "rect": [
+        600,
+        400,
+        600,
+        400
+      ]
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "menu_item": {
+      "menu": "Select",
+      "id": 300
+    }
+  },
+  {
+    "wait": 25
+  },
+  {
+    "state": "02-feather-open"
+  },
+  {
+    "shot": "02-feather-open"
+  },
+  {
+    "key": "enter"
+  },
+  {
+    "wait": 15
+  },
+  {
+    "state": "02-feather-after-enter"
+  },
+  {
+    "shot": "02-feather-after-enter"
+  },
+  {
+    "comment": "03, Feather again with 9 typed into its radius field, and one Enter: focus is in a field, so the default answers."
+  },
+  {
+    "menu_item": {
+      "menu": "Select",
+      "id": 300
+    }
+  },
+  {
+    "wait": 25
+  },
+  {
+    "slider_edit": {
+      "name": "RadiusSlider",
+      "window": "RadiusDialog",
+      "type": "9"
+    }
+  },
+  {
+    "wait": 5
+  },
+  {
+    "state": "03-feather-typing"
+  },
+  {
+    "shot": "03-feather-typing"
+  },
+  {
+    "key": "enter"
+  },
+  {
+    "wait": 15
+  },
+  {
+    "state": "03-feather-after-enter-in-the-field"
+  },
+  {
+    "shot": "03-feather-after-enter-in-the-field"
+  },
+  {
+    "select": "none"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "comment": "04, Colour Space with one Tab from Cancel to Assign, and one Enter: the outline and the default agree."
+  },
+  {
+    "menu_item": {
+      "menu": "Image",
+      "id": 300
+    }
+  },
+  {
+    "wait": 25
+  },
+  {
+    "key": "tab"
+  },
+  {
+    "wait": 5
+  },
+  {
+    "state": "04-colour-space-on-assign"
+  },
+  {
+    "shot": "04-colour-space-on-assign"
+  },
+  {
+    "key": "enter"
+  },
+  {
+    "wait": 15
+  },
+  {
+    "state": "04-colour-space-after-enter-on-assign"
+  },
+  {
+    "shot": "04-colour-space-after-enter-on-assign"
+  },
+  {
+    "state": "05-the-end"
+  }
+]

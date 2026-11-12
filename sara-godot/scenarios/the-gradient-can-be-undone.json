@@ -1,0 +1,348 @@
+[
+  {
+    "wait": 40
+  },
+  {
+    "docker": "park"
+  },
+  {
+    "document": "srgb"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "docker": "UndoDocker"
+  },
+  {
+    "wait": 8
+  },
+  {
+    "fill": [
+      0.38,
+      0.33,
+      0.3
+    ]
+  },
+  {
+    "wait": 8
+  },
+  {
+    "state": "1-a-layer-of-forty-chunks"
+  },
+  {
+    "shot": "1-a-layer-of-forty-chunks"
+  },
+  {
+    "select": [
+      300,
+      300,
+      200,
+      200
+    ]
+  },
+  {
+    "wait": 8
+  },
+  {
+    "gradient": {
+      "from": [
+        300,
+        300
+      ],
+      "to": [
+        500,
+        500
+      ],
+      "steps": 6
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "state": "2-a-ramp-under-a-marquee"
+  },
+  {
+    "shot": "2-a-ramp-under-a-marquee"
+  },
+  {
+    "key": {
+      "key": "z",
+      "ctrl": true
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "state": "3-the-marquee-ramp-undone"
+  },
+  {
+    "shot": "3-the-marquee-ramp-undone"
+  },
+  {
+    "select": "none"
+  },
+  {
+    "wait": 8
+  },
+  {
+    "gradient": {
+      "from": [
+        200,
+        200
+      ],
+      "to": [
+        1700,
+        900
+      ],
+      "steps": 8
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "state": "4-a-ramp-across-the-canvas"
+  },
+  {
+    "shot": "4-a-ramp-across-the-canvas"
+  },
+  {
+    "key": {
+      "key": "z",
+      "ctrl": true
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "state": "5-ctrl-z-puts-the-fill-back"
+  },
+  {
+    "shot": "5-ctrl-z-puts-the-fill-back"
+  },
+  {
+    "key": {
+      "key": "z",
+      "ctrl": true,
+      "shift": true
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "state": "6-ctrl-shift-z-brings-the-ramp-forward"
+  },
+  {
+    "shot": "6-ctrl-shift-z-brings-the-ramp-forward"
+  },
+  {
+    "gradient": {
+      "from": [
+        200,
+        200
+      ],
+      "to": [
+        1700,
+        900
+      ],
+      "steps": 6
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "gradient": {
+      "from": [
+        240,
+        200
+      ],
+      "to": [
+        1700,
+        900
+      ],
+      "steps": 6
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "gradient": {
+      "from": [
+        280,
+        200
+      ],
+      "to": [
+        1700,
+        900
+      ],
+      "steps": 6
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "gradient": {
+      "from": [
+        320,
+        200
+      ],
+      "to": [
+        1700,
+        900
+      ],
+      "steps": 6
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "gradient": {
+      "from": [
+        360,
+        200
+      ],
+      "to": [
+        1700,
+        900
+      ],
+      "steps": 6
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "gradient": {
+      "from": [
+        400,
+        200
+      ],
+      "to": [
+        1700,
+        900
+      ],
+      "steps": 6
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "gradient": {
+      "from": [
+        440,
+        200
+      ],
+      "to": [
+        1700,
+        900
+      ],
+      "steps": 6
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "state": "7-eight-ramps-and-the-budget"
+  },
+  {
+    "shot": "7-eight-ramps-and-the-budget"
+  },
+  {
+    "key": {
+      "key": "z",
+      "ctrl": true
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "key": {
+      "key": "z",
+      "ctrl": true
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "key": {
+      "key": "z",
+      "ctrl": true
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "key": {
+      "key": "z",
+      "ctrl": true
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "key": {
+      "key": "z",
+      "ctrl": true
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "key": {
+      "key": "z",
+      "ctrl": true
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "key": {
+      "key": "z",
+      "ctrl": true
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "key": {
+      "key": "z",
+      "ctrl": true
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "key": {
+      "key": "z",
+      "ctrl": true
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "state": "8-undone-as-far-as-it-goes"
+  },
+  {
+    "shot": "8-undone-as-far-as-it-goes"
+  }
+]

@@ -1,0 +1,18 @@
+[
+  {"wait": 25},
+  {"document": "srgb"},
+  {"wait": 10},
+  {"docker": {"id": "LayersDocker", "at": [1150, 640], "size": [520, 320]}},
+  {"wait": 10},
+  {"shot": "fresh-empty-layer"},
+  {"state": "fresh-empty-layer"},
+  {"layer": {"add": "Painted", "fill": [0.25, 0.66, 0.85, 1.0], "chunks": [[0, 0], [1, 0], [2, 0], [0, 1]]}},
+  {"wait": 25},
+  {"shot": "painted-beside-empty"},
+  {"state": "painted-beside-empty"},
+  {"layer": {"add": "Folder"}},
+  {"layer": {"group": true}},
+  {"wait": 25},
+  {"shot": "group-row"},
+  {"state": "group-row"}
+]

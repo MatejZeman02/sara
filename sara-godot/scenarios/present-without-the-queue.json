@@ -1,0 +1,28 @@
+[
+  {"wait": 40},
+  {"docker": {"id": "ToolOptionsDocker", "at": [70, 330], "size": [300, 430]}},
+  {"docker": {"id": "ColorDocker", "at": [1584, 105], "size": [321, 480]}},
+  {"wait": 10},
+  {"tool": "brush"},
+  {"wait": 20},
+
+  {"pacer": "at-rest-before-anything-moves"},
+  {"state": "1-at-rest"},
+
+  {"move": [900, 560]},
+  {"pacer": "one-frame-after-a-motion-event"},
+  {"move": [901, 560]},
+  {"move": [902, 561]},
+  {"pacer": "still-moving"},
+  {"state": "2-moving"},
+
+  {"wait": 30},
+  {"pacer": "after-thirty-frames-of-stillness"},
+  {"state": "3-at-rest-again"},
+
+  {"move": [905, 565]},
+  {"pacer": "moving-again"},
+  {"wait": 30},
+  {"pacer": "and-resting-again"},
+  {"state": "4-rest-again"}
+]

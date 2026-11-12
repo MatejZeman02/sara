@@ -1,0 +1,33 @@
+[
+ {"comment": "The status line begins with the document in front, as its tab reads it, and the tool in hand. Two documents are saved under names of their own, the line is read with each in front, then with the Bucket picked, then with a name too long for the line."},
+ {"wait": 60},
+ {"window": [1920, 1080]},
+ {"wait": 30},
+ {"save": "user://first-painting.sad"},
+ {"wait": 20},
+ {"tab": "add"},
+ {"wait": 20},
+ {"save": "user://second-painting.sad"},
+ {"wait": 20},
+ {"tab": 0},
+ {"wait": 15},
+ {"shot": "1-the-first-painting-in-front"},
+ {"control": {"list": "StatusLine"}},
+
+ {"tab": 1},
+ {"wait": 15},
+ {"shot": "2-the-second-painting-in-front"},
+ {"control": {"list": "StatusLine"}},
+
+ {"tool": "bucket_fill"},
+ {"wait": 15},
+ {"shot": "3-the-bucket-in-hand"},
+ {"control": {"list": "StatusLine"}},
+
+ {"window": [1280, 1024]},
+ {"wait": 30},
+ {"save": "user://a-painting-whose-name-goes-on-and-on-far-past-the-room-the-status-line-has-for-it-at-the-bottom-of-a-window-of-1280-pixels-and-still-it-goes-on-until-it-is-two-hundred-characters-long-xxxxxxx.sad"},
+ {"wait": 20},
+ {"shot": "4-a-long-name-cut-on-the-1280-panel"},
+ {"control": {"list": "StatusLine"}}
+]

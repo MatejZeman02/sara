@@ -1,0 +1,21 @@
+[
+  {"comment": "The base module ships the Game of Life. Three short strokes in two colours are painted with a small brush, Life goes on the layer through `simulation` with Conway's counts, and two hundred steps are run. The shot at step 200 is the record `check_shots.py` reads, since Life is the same picture on every run from the same strokes."},
+  {"wait": 45},
+  {"tool": "brush"},
+  {"brush": {"colour": "#c8503c", "radius_px": 2}},
+  {"wait": 4},
+  {"stroke": {"space": "document", "route": "tool", "from": [870, 500], "to": [950, 500], "pressure": 1.0, "steps": 20}},
+  {"stroke": {"space": "document", "route": "tool", "from": [880, 530], "to": [940, 518], "pressure": 1.0, "steps": 16}},
+  {"brush": {"colour": "#3c78c8", "radius_px": 2}},
+  {"wait": 4},
+  {"stroke": {"space": "document", "route": "tool", "from": [910, 470], "to": [918, 550], "pressure": 1.0, "steps": 20}},
+  {"wait": 10},
+  {"zoom": 6.0},
+  {"wait": 10},
+  {"shot": "01-the-pattern-as-painted"},
+
+  {"simulation": {"rule": "life", "steps": 200}},
+  {"wait": 10},
+  {"shot": "02-life-at-step-two-hundred"},
+  {"state": "02-life-at-step-two-hundred"}
+]

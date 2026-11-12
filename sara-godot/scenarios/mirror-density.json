@@ -1,0 +1,414 @@
+[
+  {
+    "wait": 35
+  },
+  {
+    "docker": {
+      "id": "BrushPresetsDocker",
+      "at": [
+        2,
+        340
+      ],
+      "size": [
+        280,
+        360
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "ToolBoxDocker",
+      "at": [
+        0,
+        90
+      ],
+      "size": [
+        60,
+        420
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "ToolOptionsDocker",
+      "at": [
+        0,
+        300
+      ],
+      "size": [
+        280,
+        430
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "ReferenceDocker",
+      "at": [
+        0,
+        760
+      ],
+      "size": [
+        280,
+        260
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "ColorDocker",
+      "at": [
+        1600,
+        90
+      ],
+      "size": [
+        310,
+        480
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "LayersDocker",
+      "at": [
+        1600,
+        600
+      ],
+      "size": [
+        310,
+        400
+      ]
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "prefs": {
+      "advanced_options": true
+    }
+  },
+  {
+    "colour": "#101010"
+  },
+  {
+    "tool": {
+      "id": "brush",
+      "options": {
+        "radius": 0.035,
+        "hardness": 0.7,
+        "spacing": 0.3,
+        "tip_spikes": 5,
+        "tip_ratio": 0.3
+      }
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "stroke": {
+      "from": [
+        340,
+        220
+      ],
+      "to": [
+        360,
+        220
+      ],
+      "pressure": 1.0,
+      "steps": 4
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "tool": {
+      "id": "brush",
+      "options": {
+        "radius": 0.035,
+        "hardness": 0.7,
+        "spacing": 0.3,
+        "tip_spikes": 5,
+        "tip_ratio": 0.3,
+        "tip_mirror_horizontal": false,
+        "tip_mirror_vertical": false,
+        "tip_density": 1.0
+      }
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "stroke": {
+      "from": [
+        760,
+        620
+      ],
+      "to": [
+        1120,
+        620
+      ],
+      "pressure": 1.0,
+      "steps": 20
+    }
+  },
+  {
+    "wait": 25
+  },
+  {
+    "shot": "1-plain"
+  },
+  {
+    "state": "1-plain"
+  },
+  {
+    "tool": {
+      "id": "brush",
+      "options": {
+        "radius": 0.035,
+        "hardness": 0.7,
+        "spacing": 0.3,
+        "tip_spikes": 5,
+        "tip_ratio": 0.3,
+        "tip_mirror_horizontal": true,
+        "tip_mirror_vertical": true,
+        "tip_density": 1.0
+      }
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "stroke": {
+      "from": [
+        760,
+        780
+      ],
+      "to": [
+        1120,
+        780
+      ],
+      "pressure": 1.0,
+      "steps": 20
+    }
+  },
+  {
+    "wait": 25
+  },
+  {
+    "shot": "2-mirrored-h"
+  },
+  {
+    "state": "2-mirrored-h"
+  },
+  {
+    "symmetry": {
+      "horizontal": true,
+      "vertical": true,
+      "radial": 1
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "tool": {
+      "id": "brush",
+      "options": {
+        "radius": 0.035,
+        "hardness": 0.7,
+        "spacing": 0.3,
+        "tip_spikes": 5,
+        "tip_ratio": 0.3,
+        "tip_mirror_horizontal": true,
+        "tip_mirror_vertical": true,
+        "tip_density": 1.0
+      }
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "stroke": {
+      "from": [
+        760,
+        940
+      ],
+      "to": [
+        1120,
+        940
+      ],
+      "pressure": 1.0,
+      "steps": 20
+    }
+  },
+  {
+    "wait": 25
+  },
+  {
+    "shot": "3-with-radial-symmetry"
+  },
+  {
+    "state": "3-with-radial-symmetry"
+  },
+  {
+    "symmetry": {
+      "radial": 1,
+      "horizontal": false,
+      "vertical": false
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "tool": {
+      "id": "brush",
+      "options": {
+        "radius": 0.035,
+        "hardness": 0.7,
+        "spacing": 0.3,
+        "tip_spikes": 5,
+        "tip_ratio": 0.3,
+        "tip_density": 1.0,
+        "tip_mirror_horizontal": false
+      }
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "stroke": {
+      "from": [
+        300,
+        620
+      ],
+      "to": [
+        700,
+        620
+      ],
+      "pressure": 1.0,
+      "steps": 20
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "tool": {
+      "id": "brush",
+      "options": {
+        "radius": 0.035,
+        "hardness": 0.7,
+        "spacing": 0.3,
+        "tip_spikes": 5,
+        "tip_ratio": 0.3,
+        "tip_density": 0.6,
+        "tip_mirror_horizontal": false
+      }
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "stroke": {
+      "from": [
+        300,
+        700
+      ],
+      "to": [
+        700,
+        700
+      ],
+      "pressure": 1.0,
+      "steps": 20
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "tool": {
+      "id": "brush",
+      "options": {
+        "radius": 0.035,
+        "hardness": 0.7,
+        "spacing": 0.3,
+        "tip_spikes": 5,
+        "tip_ratio": 0.3,
+        "tip_density": 0.3,
+        "tip_mirror_horizontal": false
+      }
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "stroke": {
+      "from": [
+        300,
+        780
+      ],
+      "to": [
+        700,
+        780
+      ],
+      "pressure": 1.0,
+      "steps": 20
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "tool": {
+      "id": "brush",
+      "options": {
+        "radius": 0.035,
+        "hardness": 0.7,
+        "spacing": 0.3,
+        "tip_spikes": 5,
+        "tip_ratio": 0.3,
+        "tip_density": 0.1,
+        "tip_mirror_horizontal": false
+      }
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "stroke": {
+      "from": [
+        300,
+        860
+      ],
+      "to": [
+        700,
+        860
+      ],
+      "pressure": 1.0,
+      "steps": 20
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "wait": 25
+  },
+  {
+    "shot": "4-density-sweep"
+  },
+  {
+    "state": "4-density-sweep"
+  }
+]

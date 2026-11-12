@@ -1,0 +1,18 @@
+[
+  {"comment": "Display Exposure, Gamut Warning and Show Relief in View while each would change nothing, and on its shot the three greyed rows stood 31 pixels apart among live rows 35 apart. View is opened at 1920 by 1080 with the three greyed, as before, so the rows can be seen standing evenly and View can be seen ending above the window's foot without a scroll bar. Then the keyboard rests on the second row, whose mark had no margin and stood that row at 29 pixels among rows of 33."},
+  {"window": [1920, 1080]},
+  {"wait": 40},
+  {"prefs": {"display_exposure_stops": 0.0, "display_exposure_enabled": false, "show_relief": true, "relief_strength": 2.0}},
+  {"fill": [2.0, 0.6, -0.1]},
+  {"wait": 20},
+  {"menu": "View"},
+  {"wait": 16},
+  {"state": "1-view-with-three-rows-greyed"},
+  {"shot": "1-view-with-three-rows-greyed"},
+  {"key": "down"},
+  {"key": "down"},
+  {"wait": 10},
+  {"shot": "2-the-keyboard-on-the-second-row"},
+  {"key": "escape"},
+  {"wait": 10}
+]

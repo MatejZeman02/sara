@@ -1,0 +1,35 @@
+[
+  {"comment": "A floating docker may stand partly past the window's edge and stays where it was put. At 1280 by 1024 Layers opens at 960, 485, 310 wide. A drag of 155 to the right takes it half past the right edge, 165 of it left on the window, more than the 128 of its title strip SaDockerLayoutFit.reached keeps, so it stands there. A window 20 narrower leaves it where it is, one 80 narrower brings it in only until 128 of the strip is back, and the window grown again returns it to 1115. A drag of 400 more stops it at 1152, the strip's head on the window. A drag of 1000 up stops its top at the window's top row, over the bar, since a docker may go anywhere in the window."},
+  {"window": [1280, 1024]},
+  {"wait": 30},
+  {"state": "01-layers-where-it-opens"},
+  {"shot": "01-layers-where-it-opens"},
+
+  {"drag": {"window": "Layers", "by": [155, 0]}},
+  {"wait": 10},
+  {"state": "02-layers-half-past-the-right-edge"},
+  {"shot": "02-layers-half-past-the-right-edge"},
+
+  {"window": [1260, 1024]},
+  {"wait": 30},
+  {"state": "03-a-window-20-narrower-leaves-it"},
+
+  {"window": [1200, 1024]},
+  {"wait": 30},
+  {"state": "04-a-window-80-narrower-brings-the-strip-back"},
+  {"shot": "04-a-window-80-narrower-brings-the-strip-back"},
+
+  {"window": [1280, 1024]},
+  {"wait": 30},
+  {"state": "05-grown-again-it-returns"},
+  {"shot": "05-grown-again-it-returns"},
+
+  {"drag": {"window": "Layers", "by": [400, 0]}},
+  {"wait": 10},
+  {"state": "06-dragged-on-it-stops-with-the-strip-in"},
+  {"shot": "06-dragged-on-it-stops-with-the-strip-in"},
+
+  {"drag": {"window": "Layers", "by": [0, -1000]}},
+  {"wait": 10},
+  {"state": "07-its-top-stops-at-the-window-s-top-row"}
+]

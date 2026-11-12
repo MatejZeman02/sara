@@ -1,0 +1,21 @@
+[
+  {"comment": "The open question and the fit question each give every size in pixels, and the open one says the picture opens as a new document. Shot 1 is the window opening a PNG, shot 2 the fit question over a document."},
+  {"wait": 30},
+  {"prefs": {"ui_scale": 1.0, "ask_when_opening": true}},
+  {"wait": 20},
+  {"prefs": {"ask_eight_bit_when_opening": true}},
+  {"menu_item": {"menu": "File", "id": 200}},
+  {"wait": 8},
+  {"file_picker": {"choose": "res://tests/data/import_gradient.png"}},
+  {"wait": 20},
+  {"shot": "1-opening-a-png"},
+  {"state": "1-opening-a-png"},
+  {"key": "escape"},
+  {"wait": 15},
+  {"prefs": {"import_fit": "ask"}},
+  {"open": "import_fit"},
+  {"wait": 20},
+  {"shot": "2-the-fit-question"},
+  {"state": "2-the-fit-question"},
+  {"key": "escape"}
+]

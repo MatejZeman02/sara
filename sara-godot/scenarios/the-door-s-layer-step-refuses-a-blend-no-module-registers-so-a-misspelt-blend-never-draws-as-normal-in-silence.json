@@ -1,0 +1,35 @@
+[
+  {
+    "comment": "A layer step given the blend colour, the British spelling of the id color, leaves the layer's mode as it was and answers the refusal in errors naming colour and color, then goes on with its other keys. Multiply on a second layer is set with no error, and a brush step given colour is refused the same way."
+  },
+  {
+    "wait": 45
+  },
+  {
+    "document": "srgb"
+  },
+  {
+    "wait": 25
+  },
+  {
+    "layer": {
+      "add": "red-streak-night-autumn",
+      "blend": "colour",
+      "opacity": 0.5
+    }
+  },
+  {
+    "layer": {
+      "add": "shade",
+      "blend": "multiply"
+    }
+  },
+  {
+    "brush": {
+      "blend_mode": "colour"
+    }
+  },
+  {
+    "layers": "after"
+  }
+]

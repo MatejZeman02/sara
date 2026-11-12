@@ -1,0 +1,103 @@
+[
+  {
+    "comment": "Advanced mode shows its check and its values whole. The brush's Tool Options docker at its default 300 wide with Advanced off, then the check clicked, where every row has to end inside the docker, the docker stays 300 rather than growing to its widest slider, and the Opacity and Flow dynamics read 100%, Pressure and 100%, no sensor whole. Last the docker asked for its floor of 160, where it stops at the width the stamp's pattern chooser keeps, the check still reads Advanced, and a value too long for the row is cut with an ellipsis and says its whole text in its tooltip."
+  },
+  {
+    "window": [
+      1920,
+      1080
+    ]
+  },
+  {
+    "wait": 60
+  },
+  {
+    "document": "srgb"
+  },
+  {
+    "wait": 20
+  },
+  {
+    "prefs": {
+      "ui_scale": 1.0,
+      "advanced_options": false
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "tool": "brush"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "docker": {
+      "id": "ToolOptionsDocker",
+      "at": [
+        600,
+        100
+      ],
+      "size": [
+        300,
+        700
+      ]
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "state": "1-advanced-off-at-300"
+  },
+  {
+    "shot": "1-advanced-off-at-300"
+  },
+  {
+    "click": {
+      "control": "ToolOptionsAdvancedCheck"
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "state": "2-advanced-on-at-300"
+  },
+  {
+    "shot": "2-advanced-on-at-300"
+  },
+  {
+    "docker": {
+      "id": "ToolOptionsDocker",
+      "at": [
+        600,
+        100
+      ],
+      "size": [
+        160,
+        700
+      ]
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "state": "3-advanced-on-at-the-floor"
+  },
+  {
+    "shot": "3-advanced-on-at-the-floor"
+  },
+  {
+    "tooltip": {
+      "look": "FlowOptionCurve"
+    }
+  },
+  {
+    "tooltip": {
+      "look": "OpacityOptionCurve"
+    }
+  }
+]

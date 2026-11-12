@@ -1,0 +1,47 @@
+# Kernel: seamless_copy_masked
+# The copy half of Layer via Seamless Cut. Copies a rectangle
+# of one chunk into another, as `copy_masked` does, with the alpha the new
+# layer needs so that it stacks back over what the cut leaves to the picture
+# that stood there.
+#
+# For a texel of straight colour c and alpha a under a selection of s, the cut
+# leaves c at a(1 - s), `cut_masked`, and this copy takes c at
+# a s / (1 - a + a s). One over the other covers a everywhere: the copy's
+# share plus the hole's share of what it lets through is
+# (a s + a (1 - s)(1 - a)) / (1 - a + a s), which is a. Where a s is 0 the
+# copy takes nothing, and on opaque paint it is opaque wherever s is above 0.
+#
+# The denominator is never below a s while a is at most 1. Float paint may
+# hold an alpha above 1, and the larger of the two keeps the division away
+# from zero there and the copy at full cover. Nothing clamps the colour.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel seamless_copy_masked
+
+image source: readonly
+# The document-wide selection, as in paint.gmacs: a 1 by 1 mask reads as 1.0
+# everywhere through the clamped read (core/api/selection/sa_selection.gd).
+image mask: r32f, readonly
+image destination: writeonly
+params:
+    float offset_x
+    float offset_y
+    float width
+    float height
+
+
+def seamless_copy_masked():
+    ivec2 px = ivec2(global_id.xy) + ivec2(int(offset_x), int(offset_y))
+    ivec2 size = image_size(source)
+    if px.x >= size.x or px.y >= size.y:
+        return
+    if px.x >= int(offset_x + width) or px.y >= int(offset_y + height):
+        return
+    vec4 c = source[px]
+    float coverage = mask[min(px * image_size(mask) / image_size(source), image_size(mask) - 1)].r
+    float lifted = c.a * coverage
+    float alpha = 0.0
+    if lifted > 0.0:
+        alpha = lifted / max(1.0 - c.a + lifted, lifted)
+    destination[px] = vec4(c.rgb, alpha)

@@ -1,0 +1,19 @@
+[
+  {"wait": 30},
+  {"open": "preferences"},
+  {"wait": 15},
+  {"page": "Keyboard Shortcuts"},
+  {"wait": 10},
+  {"shot": "sections"},
+  {"state": "sections"},
+  {"shortcut": {"search": "copy"}},
+  {"wait": 5},
+  {"shortcut": {"listen": "edit_copy"}},
+  {"wait": 5},
+  {"shot": "listening"},
+  {"key": {"key": "n", "ctrl": true}},
+  {"wait": 20},
+  {"shortcut": {"show": "edit_copy"}},
+  {"shot": "after-ctrl-n"},
+  {"state": "after-ctrl-n"}
+]

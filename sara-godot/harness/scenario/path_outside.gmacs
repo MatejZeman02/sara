@@ -1,0 +1,78 @@
+# The `path` step's count of the paint it laid outside the painter's
+# selection, on the graphics card, with a uint a chunk read back.
+#
+# The step fills its shape whole unless `inside_selection` asks for the clip,
+# so a fill can paint past a selection without knowing it has. So when a selection is active and the key is not given, the
+# step counts the pixels where its shape's mask lays more than the painter's
+# mask lets through, which are the pixels the clip would have laid less on,
+# and its answer says how many.
+#
+# One kernel over one of the shape's mask chunks, through SaChunkWalk, so the
+# dispatch is the chunks the shape entered and no others (hard rules 2 and 3).
+# The painter's chunk at the same grid position is read beside it, or the
+# selection's 1 by 1 stand-in that reads as nothing where the painter's
+# selection holds no chunk. Both are drawn by the one selection at one texel a
+# pixel, so the same texel of each is the same pixel.
+#
+# A slot per chunk, as measure.gmacs keeps one, so the caller can weigh each
+# chunk by its own texels a pixel and no count can overflow a uint. Nothing
+# here runs during a stroke, and what crosses the bus is the slots, never a
+# texel, the allowance hard rule 1 gives the `measure` step.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel path_outside
+
+# The shape's mask chunk, which the walk binds.
+image shape: readonly
+# The painter's mask chunk at the same grid position, or the stand-in.
+image selected: readonly
+
+# One uint a chunk, the texels of that chunk the shape lays more on than the
+# selection lets through, in the order SaScenarioPath hands the slots out.
+buffer tally: uint cells[]
+
+# 32 bytes, packed by SaScenarioPath._push in the order written here, every
+# field a float for the reason measure.gmacs gives.
+params:
+    # Where the dispatch starts, in chunk-local pixels, since the walk aligns
+    # the start down to the workgroup grid.
+    float offset_x
+    float offset_y
+    # The end of the chunk's share, exclusive, in chunk-local pixels.
+    float end_x
+    float end_y
+    # Which cell of the buffer this chunk adds into.
+    float slot
+    float pad_a
+    float pad_b
+    float pad_c
+
+# Half a level of an eight-bit channel. A pixel the shape covers by no more
+# than this beyond the selection shows nothing on a screen, and a selection a
+# feather leaves a hair under one inside would otherwise count every pixel.
+const float LEVEL = 0.5 / 255.0
+
+
+def dispatch_pixel() -> ivec2:
+    return ivec2(global_id.xy) + ivec2(int(offset_x), int(offset_y))
+
+
+def outside_share(ivec2 px) -> bool:
+    ivec2 size = image_size(shape)
+    if px.x >= size.x or px.y >= size.y:
+        return true
+    return px.x >= int(end_x) or px.y >= int(end_y)
+
+
+def path_outside():
+    ivec2 px = dispatch_pixel()
+    if outside_share(px):
+        return
+    float laid = shape[px].r
+    # Clamped into the stand-in, which is one texel, as the selection's own
+    # kernels read a neighbour.
+    float held = selected[min(px, image_size(selected) - 1)].r
+    if laid - held <= LEVEL:
+        return
+    atomic_add(tally.cells[ uint(slot) ], 1u)

@@ -1,0 +1,32 @@
+[
+  {
+    "wait": 10
+  },
+  {
+    "layer": {
+      "add": "ViewLayer",
+      "type": "frame"
+    }
+  },
+  {
+    "wait": 30
+  },
+  {
+    "save": "user://frame-layer.sad"
+  },
+  {
+    "wait": 30
+  },
+  {
+    "load": "user://frame-layer.sad"
+  },
+  {
+    "wait": 20
+  },
+  {
+    "texel": [[96, 96], [400, 96]]
+  },
+  {
+    "shot": "frame-layer-row"
+  }
+]

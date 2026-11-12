@@ -1,0 +1,26 @@
+[
+  {"comment": "A floating docker goes anywhere in the window, the top bar included. At 1280 by 1024 the Minimap is placed at 500, 300. A drag of 285 up stands it at y 15, over the menu bar, where the Navigator is wanted. A window shrunk to 1200 by 900 and grown back leaves it there. A drag of 500 more up stops it at y 0, the window's top row, its whole title strip still in. The Window menu's show and the dialogs still open under the bar, which the suite beside this reads."},
+  {"window": [1280, 1024]},
+  {"wait": 30},
+  {"docker": {"id": "MinimapDocker", "at": [500, 300], "size": [260, 200]}},
+  {"wait": 10},
+  {"state": "01-the-minimap-under-the-bar"},
+  {"shot": "01-the-minimap-under-the-bar"},
+
+  {"drag": {"window": "Minimap", "by": [0, -285]}},
+  {"wait": 10},
+  {"state": "02-dragged-onto-the-bar"},
+  {"shot": "02-dragged-onto-the-bar"},
+
+  {"window": [1200, 900]},
+  {"wait": 30},
+  {"window": [1280, 1024]},
+  {"wait": 30},
+  {"state": "03-still-on-the-bar-after-a-resize"},
+  {"shot": "03-still-on-the-bar-after-a-resize"},
+
+  {"drag": {"window": "Minimap", "by": [0, -500]}},
+  {"wait": 10},
+  {"state": "04-past-the-top-it-stops-at-the-window-s-top-row"},
+  {"shot": "04-past-the-top-it-stops-at-the-window-s-top-row"}
+]

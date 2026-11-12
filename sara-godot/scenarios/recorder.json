@@ -1,0 +1,12 @@
+[
+  {"document": "srgb"},
+  {"wait": 5},
+  {"recorder": {"start": true, "settle": 0.5}},
+  {"stroke": {"from": [400, 300], "to": [1200, 700], "pressure": 1.0, "steps": 16}},
+  {"wait": 60},
+  {"stroke": {"from": [400, 700], "to": [1200, 300], "pressure": 1.0, "steps": 16}},
+  {"wait": 60},
+  {"recorder": {"stop": true}},
+  {"shot": "recorded"},
+  {"state": "recorded"}
+]

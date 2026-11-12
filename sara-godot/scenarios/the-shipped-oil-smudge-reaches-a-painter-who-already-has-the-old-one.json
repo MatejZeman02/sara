@@ -1,0 +1,15 @@
+[
+  {"comment": "The shipped Oil Smudge reaches a painter who already has the old one. Run on a profile whose brush presets folder holds an older Oil Smudge, written before the dilution became Colour Rate, or a copy of it with one value changed, and no record of what Sara wrote there. Sara starts, Oil Smudge is loaded and the Tool Options docker is shown with its Paint and Smudge slider. The untouched file should have been replaced at start, so the slider reads 50 %. The edited file is the painter's and is left alone, so its Colour Rate stays off and the slider reads off."},
+  {"settings": "keep"},
+  {"wait": 30},
+  {"prefs": {"ui_scale": 1.0, "theme_name": "default"}},
+  {"window": [1920, 1080]},
+  {"wait": 15},
+  {"brush": {"preset": "Oil Smudge"}},
+  {"wait": 10},
+  {"docker": {"id": "ToolOptionsDocker", "at": [1560, 260], "size": [340, 700]}},
+  {"wait": 12},
+  {"control": {"list": "ToolOptionsDocker"}},
+  {"state": "oil-smudge"},
+  {"shot": "oil-smudge"}
+]

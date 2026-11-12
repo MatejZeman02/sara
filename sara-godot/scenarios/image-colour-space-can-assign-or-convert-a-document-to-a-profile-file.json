@@ -1,0 +1,14 @@
+[
+  {"comment": "Image > Colour Space's Target ends on Profile file. Picking it opens the file picker, a matrix ICC profile chosen there puts its description in the choice and its primaries, white and curve in the rows, ready for Assign or Convert."},
+  {"wait": 40},
+
+  {"open": "color_space"},
+  {"wait": 20},
+  {"shot": "01-image-colour-space-before-a-profile-file-is-chosen"},
+  {"page_row": {"page": "TargetRows", "row": "space", "value": 9}},
+  {"wait": 10},
+  {"file_picker": {"choose": "res://ui/color_space/profile_file/tests/fixtures/studio_panel.icc"}},
+  {"wait": 20},
+  {"shot": "02-the-target-names-the-profile-file-s-description"},
+  {"state": "02-the-target-names-the-profile-file-s-description"}
+]

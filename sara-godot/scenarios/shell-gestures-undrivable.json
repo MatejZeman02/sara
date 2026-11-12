@@ -1,0 +1,95 @@
+[
+  {
+    "wait": 30
+  },
+  {
+    "layout_preset": {
+      "load": "default"
+    }
+  },
+  {
+    "wait": 25
+  },
+  {
+    "state": "01-default-layout"
+  },
+  {
+    "key": {
+      "key": "f9"
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "state": "02-f9-toggled-the-info-docker"
+  },
+  {
+    "menu_item": {
+      "menu": "Window",
+      "id": 3
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "state": "03-the-dockers-row-toggled-it-back"
+  },
+  {
+    "menu_item": {
+      "menu": "Window",
+      "id": 5
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "state": "04-the-minimap-row-opened-it"
+  },
+  {
+    "drag": {
+      "window": "Minimap",
+      "by": [
+        -120,
+        60
+      ]
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "shot": "05-the-minimap-moved"
+  },
+  {
+    "state": "05-the-minimap-moved"
+  },
+  {
+    "drag": {
+      "window": "Minimap",
+      "by": [
+        120,
+        -60
+      ]
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "state": "06-and-back"
+  },
+  {
+    "layout_preset": {
+      "load": "default"
+    }
+  },
+  {
+    "wait": 25
+  },
+  {
+    "state": "07-back-to-default"
+  }
+]

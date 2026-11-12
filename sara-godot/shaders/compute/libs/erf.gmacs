@@ -1,0 +1,44 @@
+# The Gauss error function, which GLSL does not have.
+#
+# Written as a library rather than inside `dab.gmacs` because the Gaussian
+# mask generator is only the first caller: a Gaussian blur, a soft selection
+# falloff and anything else integrating a normal distribution wants the same
+# function, and none of them should reimplement it.
+#
+# A file with no #kernel line is registered as a library rather than as a
+# shader, which is how libs/noise.gmacs works beside it.
+#
+# **Abramowitz and Stegun 7.1.26**, the five-term rational approximation with
+# the exponential tail. Its worst-case absolute error is about 1.5e-7, which is
+# below the resolution of the float32 mask this feeds and far below the eighth
+# of a texel any of it is ever read at. The alternative, a series expansion,
+# costs a loop per texel and buys precision nothing downstream can hold.
+#
+# The approximation is stated for non-negative arguments only. `erf` is odd, so
+# the sign is pulled out and put back, and the guard is a `sign()` rather than a
+# branch because both sides of a branch are evaluated on a GPU anyway.
+#
+# Handbook of Mathematical Functions, Abramowitz and Stegun, 1964, is a work of
+# the United States government and is in the public domain, so nothing here
+# carries a third-party copyright line.
+
+# The five coefficients and the scale of 7.1.26, in the order the polynomial
+#   evaluates them. Named rather than inlined because a reader checking this
+#   against the handbook checks the numbers first.
+const float SA_ERF_P = 0.3275911
+const float SA_ERF_A1 = 0.254829592
+const float SA_ERF_A2 = -0.284496736
+const float SA_ERF_A3 = 1.421413741
+const float SA_ERF_A4 = -1.453152027
+const float SA_ERF_A5 = 1.061405429
+
+
+def sa_erf(float x) -> float:
+    """erf(x) for any real x, to about 1.5e-7."""
+    float s = sign(x)
+    float a = abs(x)
+    float t = 1.0 / (1.0 + SA_ERF_P * a)
+    # Horner rather than five multiplies, which is the same polynomial with
+    # four fewer operations and one less chance of a transcription slip.
+    float poly = t * (SA_ERF_A1 + t * (SA_ERF_A2 + t * (SA_ERF_A3 + t * (SA_ERF_A4 + t * SA_ERF_A5))))
+    return s * (1.0 - poly * exp(-a * a))

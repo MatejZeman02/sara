@@ -1,0 +1,160 @@
+[
+ {
+  "wait": 40
+ },
+ {
+  "docker": "park"
+ },
+ {
+  "wait": 12
+ },
+ {
+  "prefs": {
+   "advanced_options": true
+  }
+ },
+ {
+  "tool": {
+   "id": "brush",
+   "options": {
+    "tip_generator": 0,
+    "tip_image_path": "",
+    "tip_ratio": 1.0,
+    "tip_mirror_horizontal": false,
+    "tip_mirror_vertical": false,
+    "radius": 0.06,
+    "hardness": 1.0
+   }
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "brush_editor": {
+   "open": true,
+   "page": "Brush Tip"
+  }
+ },
+ {
+  "wait": 25
+ },
+ {
+  "state": "1-the-preview-is-there"
+ },
+ {
+  "shot": "1-the-preview-is-there"
+ },
+ {
+  "tool": {
+   "id": "brush",
+   "options": {
+    "tip_ratio": 0.3
+   }
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "brush_editor": {
+   "page": "Brush Tip"
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "state": "2-ratio-squashed"
+ },
+ {
+  "shot": "2-ratio-squashed"
+ },
+ {
+  "tool": {
+   "id": "brush",
+   "options": {
+    "tip_ratio": 1.0,
+    "tip_generator": 3,
+    "tip_image_path": "res://tips/tree.png"
+   }
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "brush_editor": {
+   "page": "Brush Tip"
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "state": "3-a-tree-tip"
+ },
+ {
+  "shot": "3-a-tree-tip"
+ },
+ {
+  "tool": {
+   "id": "brush",
+   "options": {
+    "tip_mirror_horizontal": true
+   }
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "brush_editor": {
+   "page": "Brush Tip"
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "state": "4-mirrored"
+ },
+ {
+  "shot": "4-mirrored"
+ },
+ {
+  "brush_editor": {
+   "page": "General"
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "5-no-preview-on-general"
+ },
+ {
+  "tool": {
+   "id": "brush",
+   "options": {
+    "tip_mirror_horizontal": false,
+    "tip_generator": 0,
+    "tip_image_path": "",
+    "tip_ratio": 1.0,
+    "radius": 0.02314814815,
+    "hardness": 0.0
+   }
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "brush_editor": {
+   "close": true
+  }
+ },
+ {
+  "wait": 10
+ }
+]

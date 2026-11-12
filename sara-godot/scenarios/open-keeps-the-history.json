@@ -1,0 +1,40 @@
+[
+ {"wait": 30},
+ {"layout_preset": {"load": "default"}},
+ {"wait": 25},
+ {"colour": "#c04030"},
+ {"stroke": {"from": [820, 520], "to": [1060, 760], "pressure": 0.9, "steps": 16}},
+ {"wait": 20},
+ {"save": "user://open-keeps-the-history.sad"},
+ {"wait": 15},
+ {"state": "saved"},
+ {"shot": "saved"},
+
+ {"colour": "#3060c0"},
+ {"stroke": {"from": [820, 760], "to": [1060, 520], "pressure": 0.9, "steps": 16}},
+ {"wait": 20},
+ {"layer": {"add": "paint"}},
+ {"wait": 15},
+ {"state": "painted-over-and-not-saved"},
+ {"shot": "painted-over-and-not-saved"},
+
+ {"menu_item": {"menu": "File", "id": 200}},
+ {"wait": 15},
+ {"file_picker": {"choose": "user://open-keeps-the-history.sad"}},
+ {"wait": 20},
+ {"state": "the-question-if-there-is-one"},
+ {"answer": 1},
+ {"wait": 30},
+ {"state": "just-opened"},
+ {"shot": "just-opened"},
+
+ {"undo": 1},
+ {"wait": 25},
+ {"state": "after-one-undo"},
+ {"shot": "after-one-undo"},
+
+ {"undo": 1},
+ {"wait": 25},
+ {"state": "after-a-second-undo"},
+ {"shot": "after-a-second-undo"}
+]

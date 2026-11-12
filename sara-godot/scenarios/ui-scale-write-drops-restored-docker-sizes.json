@@ -1,0 +1,48 @@
+[
+  {"wait": 45},
+  {"docker": {"id": "ToolBoxDocker", "at": [60, 90], "size": [200, 300]}},
+  {"docker": {"id": "LayersDocker", "at": [300, 90], "size": [340, 260]}},
+  {"docker": {"id": "ToolOptionsDocker", "at": [700, 90], "size": [320, 380]}},
+  {"docker": {"id": "MinimapDocker", "at": [1100, 90], "size": [400, 240]}},
+  {"docker": {"id": "ReferenceDocker", "at": [1100, 400], "size": [300, 290]}},
+  {"docker": {"id": "BrushPresetsDocker", "at": [700, 520], "size": [320, 360]}},
+  {"wait": 25},
+  {"state": "1-a-restored-layout"},
+  {"shot": "1-a-restored-layout"},
+
+  {"prefs": {"theme_name": "default"}},
+  {"wait": 20},
+  {"state": "2-a-theme-write-moves-nothing"},
+
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 25},
+  {"state": "3-a-scale-write-of-the-scale-already-held"},
+  {"shot": "3-a-scale-write-of-the-scale-already-held"},
+
+  {"prefs": {"ui_scale": 1.5}},
+  {"wait": 30},
+  {"state": "4-embedded-at-one-and-a-half"},
+  {"shot": "4-embedded-at-one-and-a-half"},
+
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 30},
+  {"state": "5-embedded-back-at-one"},
+  {"shot": "5-embedded-back-at-one"},
+
+  {"prefs": {"embed_subwindows": false}},
+  {"wait": 40},
+  {"state": "6-the-same-dockers-as-real-windows"},
+
+  {"prefs": {"ui_scale": 1.5}},
+  {"wait": 40},
+  {"state": "7-real-windows-at-one-and-a-half"},
+
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 40},
+  {"state": "8-real-windows-back-at-one"},
+
+  {"prefs": {"embed_subwindows": true}},
+  {"wait": 30},
+  {"state": "9-embedded-again"},
+  {"shot": "9-embedded-again"}
+]

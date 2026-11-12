@@ -1,0 +1,47 @@
+# Where the graph's samples sit on the document and what each one reads.
+#
+# Apart from graph.gmacs because the sample is one responsibility: the grid runs
+# along the document's own axes, every sample is tested against the part of
+# the document the view shows, and a sample that passes reads the picture the
+# way the view does. Included after the `source` sampler, the `shown` buffer,
+# the push constant, `MAX_TAPS` and `TENT_WIDTH`, and before `graph_bin`, the
+# one kernel that calls `shown_by_view` and `pixel_of`.
+#
+# The grid's origin and edge vectors in the push constant are the box of the
+# shown part along the document's axes, clipped to the document, so a column
+# of a waveform is a run of document x whatever the view's rotation or
+# mirror. `shown` holds the view's parallelogram as the affine map that takes
+# a document point to where it sits on the screen, 0 to 1 both ways, so the
+# corners of a turned view's box, which the screen does not show, are left
+# out. A pass with no view stores the map that sends every point to the
+# screen's middle, and every sample is shown.
+
+# Whether the document point *at* is on the screen.
+
+
+def shown_by_view(vec2 at) -> bool:
+    vec2 on_screen = vec2(shown.edges[0], shown.edges[1]) * at.x + vec2(shown.edges[2], shown.edges[3]) * at.y
+    on_screen += vec2(shown.edges[4], shown.edges[5])
+    return on_screen.x >= 0.0 and on_screen.y >= 0.0 and on_screen.x <= 1.0 and on_screen.y <= 1.0
+
+# What the pixel at *uv* shows, read the way the view reads it: one tap where
+#   a pixel covers a texel or less, and a flat block of linear taps across
+#   the pixel's footprint where it covers more. The footprint is a sample's
+#   share of the two edge vectors, in texels, and the taps run along them,
+#   which are the document's own axes.
+
+
+def pixel_of(vec2 uv) -> vec4:
+    vec2 footprint = vec2(length(doc_x) / max(samples.x, 1.0), length(doc_y) / max(samples.y, 1.0))
+    vec2 spread = max(footprint - vec2(TENT_WIDTH), vec2(0.0))
+    int taps = int(clamp(ceil(max(spread.x, spread.y)), 0.0, float(MAX_TAPS - 1))) + 1
+    if taps <= 1:
+        return texture(source, uv)
+    vec2 step_x = doc_x / max(length(doc_x), 1e-6) / source_size
+    vec2 step_y = doc_y / max(length(doc_y), 1e-6) / source_size
+    vec4 sum = vec4(0.0)
+    for j in range(taps):
+        for i in range(taps):
+            vec2 texels = (vec2(i, j) / (taps - 1) - 0.5) * spread
+            sum += texture(source, uv + step_x * texels.x + step_y * texels.y)
+    return sum / (taps * taps)

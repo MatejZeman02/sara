@@ -1,0 +1,216 @@
+[
+ {
+  "comment": "A soft stroke selected with the Wand, then Select > Feather. The dialog's slider reaches 0 px, shot on its own. Feather at 20 and then at 5 is the edge 5 gives alone, so the dump's selection_bounds after the 5 is the one a single Feather of 5 gives, and Feather at 0 gives the hard edge back."
+ },
+ {
+  "window": [
+   1920,
+   1080
+  ]
+ },
+ {
+  "wait": 45
+ },
+ {
+  "docker": {
+   "id": "UndoDocker",
+   "at": [
+    1500,
+    120
+   ],
+   "size": [
+    380,
+    760
+   ]
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "document": "srgb"
+ },
+ {
+  "wait": 25
+ },
+ {
+  "zoom": 2.0
+ },
+ {
+  "wait": 10
+ },
+ {
+  "colour": "#c8503c"
+ },
+ {
+  "tool": {
+   "id": "brush",
+   "options": {
+    "radius": 0.03,
+    "hardness": 0.0,
+    "opacity": 1.0,
+    "flow": 1.0
+   }
+  }
+ },
+ {
+  "wait": 4
+ },
+ {
+  "stroke": {
+   "from": [
+    700,
+    540
+   ],
+   "to": [
+    1100,
+    540
+   ],
+   "pressure": 1.0,
+   "steps": 24
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "tool": "wand"
+ },
+ {
+  "wait": 4
+ },
+ {
+  "click": {
+   "at": [
+    900,
+    540
+   ]
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "01-the-wand-selection"
+ },
+ {
+  "shot": "01-the-wand-selection"
+ },
+ {
+  "menu_item": {
+   "menu": "Select",
+   "id": 300
+  }
+ },
+ {
+  "wait": 25
+ },
+ {
+  "slider_edit": {
+   "name": "RadiusSlider",
+   "window": "RadiusDialog",
+   "type": "20"
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "state": "02-the-feather-dialog-at-20"
+ },
+ {
+  "shot": "02-the-feather-dialog-at-20"
+ },
+ {
+  "key": {
+   "key": "enter"
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "03-feathered-at-20"
+ },
+ {
+  "shot": "03-feathered-at-20"
+ },
+ {
+  "menu_item": {
+   "menu": "Select",
+   "id": 300
+  }
+ },
+ {
+  "wait": 25
+ },
+ {
+  "slider_edit": {
+   "name": "RadiusSlider",
+   "window": "RadiusDialog",
+   "type": "5"
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "state": "04-the-feather-dialog-at-5"
+ },
+ {
+  "shot": "04-the-feather-dialog-at-5"
+ },
+ {
+  "key": {
+   "key": "enter"
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "05-feathered-at-5"
+ },
+ {
+  "shot": "05-feathered-at-5"
+ },
+ {
+  "menu_item": {
+   "menu": "Select",
+   "id": 300
+  }
+ },
+ {
+  "wait": 25
+ },
+ {
+  "slider_edit": {
+   "name": "RadiusSlider",
+   "window": "RadiusDialog",
+   "type": "0"
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "state": "06-the-feather-dialog-at-0"
+ },
+ {
+  "shot": "06-the-feather-dialog-at-0"
+ },
+ {
+  "key": {
+   "key": "enter"
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "state": "07-feathered-at-0"
+ },
+ {
+  "shot": "07-feathered-at-0"
+ }
+]

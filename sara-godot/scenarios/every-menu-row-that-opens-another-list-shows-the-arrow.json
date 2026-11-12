@@ -1,0 +1,38 @@
+[
+  {"comment": "Every menu row that opens another list ends in the arrow. At 1920 by 1080 and a UI scale of 1. The Layer menu opened first, where Adjustment Layer, Effect Layer, Ground and Duplicate To end in the arrow in the chord column, as the dump's open_menus rows say in their hint. Then the Filter menu, whose sections end in the same arrow, and the Modules menu, whose Active Modules does. Last the Layers docker's arrow beside the plus, whose Adjustment Layer, Effect Layer and Ground rows end in it too."},
+  {"wait": 45},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 20},
+  {"window": [1920, 1080]},
+  {"wait": 20},
+  {"document": "srgb"},
+  {"wait": 10},
+
+  {"menu": "Layer"},
+  {"wait": 16},
+  {"state": "1-the-layer-menu-marks-its-lists"},
+  {"shot": "1-the-layer-menu-marks-its-lists"},
+  {"key": "escape"},
+  {"wait": 8},
+
+  {"menu": "Filter"},
+  {"wait": 16},
+  {"state": "2-the-filter-menu-marks-its-sections"},
+  {"shot": "2-the-filter-menu-marks-its-sections"},
+  {"key": "escape"},
+  {"wait": 8},
+
+  {"menu": "Modules"},
+  {"wait": 16},
+  {"state": "3-the-modules-menu-marks-active-modules"},
+  {"shot": "3-the-modules-menu-marks-active-modules"},
+  {"key": "escape"},
+  {"wait": 8},
+
+  {"click": {"control": "AddTypeBtn", "in": "LayersDocker"}},
+  {"wait": 16},
+  {"state": "4-the-layers-arrow-marks-its-lists"},
+  {"shot": "4-the-layers-arrow-marks-its-lists"},
+  {"key": "escape"},
+  {"wait": 8}
+]

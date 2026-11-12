@@ -1,0 +1,160 @@
+[
+ {
+  "comment": "Lasso dragged out of the Select flyout, whose group is marquee, lasso, wand, patch, onto the upper half of the Patch row, and then from a fresh open onto the lower half. the capture read lasso after patch for both halves."
+ },
+ {
+  "wait": 45
+ },
+ {
+  "prefs": {
+   "ui_scale": 1.0
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "document": "srgb"
+ },
+ {
+  "wait": 20
+ },
+ {
+  "message": {
+   "close": "escape"
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "docker": "park"
+ },
+ {
+  "docker": {
+   "id": "ToolBoxDocker",
+   "at": [
+    700,
+    200
+   ],
+   "size": [
+    220,
+    420
+   ]
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "toolbox": {
+   "flyout": "select"
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 12
+ },
+ {
+  "click": {
+   "at": [
+    760,
+    212
+   ]
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "key": {
+   "key": "space",
+   "ctrl": true
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "toolbox": {
+   "flyout": "select"
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "1-the-select-flyout-before-the-drag"
+ },
+ {
+  "state": "1-the-select-flyout-before-the-drag"
+ },
+ {
+  "toolbox": {
+   "drag": {
+    "start": "lasso"
+   }
+  }
+ },
+ {
+  "wait": 3
+ },
+ {
+  "toolbox": {
+   "drag": {
+    "row": "patch",
+    "half": "upper"
+   }
+  }
+ },
+ {
+  "wait": 3
+ },
+ {
+  "shot": "2-lasso-in-hand-over-the-upper-half-of-the-patch-row"
+ },
+ {
+  "toolbox": {
+   "drag": {
+    "drop": true
+   }
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "toolbox": {
+   "flyout": "select"
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "3-lasso-dropped-on-the-upper-half-of-the-patch-row"
+ },
+ {
+  "state": "3-lasso-dropped-on-the-upper-half-of-the-patch-row"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 12
+ },
+ {
+  "key": {
+   "key": "space",
+   "ctrl": true
+  }
+ },
+ {
+  "wait": 20
+ }
+]

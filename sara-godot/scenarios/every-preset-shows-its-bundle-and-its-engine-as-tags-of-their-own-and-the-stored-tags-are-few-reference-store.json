@@ -1,0 +1,69 @@
+[
+ {
+  "comment": "A store of presets. Run under sara_shot.py --keep-settings on a profile whose brush presets folder is a scratch copy of a store with the tag mine put on Wash by hand. After one start the stock presets carry at most the ten stored tags, and mine is still on Wash."
+ },
+ {
+  "wait": 40
+ },
+ {
+  "prefs": {
+   "ui_scale": 1.0
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "docker": {
+   "id": "BrushPresetsDocker",
+   "at": [
+    860,
+    40
+   ],
+   "size": [
+    420,
+    940
+   ]
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "tool": "brush"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "preset": {
+   "finish": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "presets_docker": {}
+ },
+ {
+  "state": "1-the-author-s-store-after-one-start"
+ },
+ {
+  "choice": {
+   "open": "ChooserTag"
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "2-the-author-s-tag-list"
+ },
+ {
+  "state": "2-the-author-s-tag-list"
+ },
+ {
+  "key": "escape"
+ }
+]

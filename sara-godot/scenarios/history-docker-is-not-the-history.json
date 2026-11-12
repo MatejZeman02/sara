@@ -1,0 +1,19 @@
+[
+  { "wait": 35 },
+  { "menu": "Window" },
+  { "wait": 10 },
+  { "state": "1-the-dockers-menu-offers-no-history" },
+  { "shot": "1-the-dockers-menu-offers-no-history" },
+  { "key": "escape" },
+  { "wait": 10 },
+  { "docker": { "id": "HistoryDocker", "at": [1400, 140], "size": [260, 300] } },
+  { "wait": 14 },
+  { "docker": { "id": "InfoDocker", "at": [1400, 480], "size": [340, 420] } },
+  { "wait": 16 },
+  { "state": "2-the-trail-and-the-stack-side-by-side" },
+  { "shot": "2-the-trail-and-the-stack-side-by-side" },
+  { "stroke": { "from": [400, 400], "to": [900, 500], "pressure": 1.0, "steps": 10 } },
+  { "wait": 20 },
+  { "state": "3-a-stroke-moves-the-stack-and-not-the-trail" },
+  { "shot": "3-a-stroke-moves-the-stack-and-not-the-trail" }
+]

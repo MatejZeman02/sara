@@ -1,0 +1,103 @@
+# Lit grain, the fourth shipped pattern.
+#
+# The brush dynamics spec asks for small grains placed at random and lit from
+# one side. A grain here is a round bump on a jittered
+# lattice, one per cell and never crossing into a neighbour's, and what the
+# tile carries is not the bump's height but the light falling on its own
+# slope. So a grain has a bright flank and a dark one rather than a single
+# flat value, and turning `light` through half a turn swaps them.
+#
+# The canvas's own relief, the height an impasto layer would carry, is not
+# here: nothing in the tree holds a height field, so the relief this lights is
+# the paper's and not the canvas's.
+#
+# `tile` is written by the store from the texture's own width, so the lattice
+# wraps at whatever size the pattern is generated at and the tile repeats
+# seamlessly. `zoom` is written beside it, how many of those texels one texel
+# of the pattern's own tile spans, so a brush's texture scale draws the grains
+# that much wider. The five a painter changes are below them:
+#
+#   `grain`    how wide one grain's cell is, in the pattern's own texels.
+#              Small is a fine tooth.
+#   `density`  what share of the cells carry a grain at all. Under one the
+#              lattice stops reading as a lattice, which is what "placed at
+#              random" asks for, and one is a full screen of them.
+#   `light`    where the light comes from, in degrees, nought pointing right
+#              and turning towards the bottom of the tile, so the default of
+#              225 is the top left an engraver lights from.
+#   `relief`   how far the shading swings either side of `neutral`.
+#   `neutral`  the value where no grain sits, which is what a flat stretch of
+#              paper takes. One paints in full and nought is tooth.
+#
+# **The mean of a tile is `neutral`.** A grain is lit by the slope alone, and
+# a round bump's slope points one way on one flank and exactly the other way
+# on the other, so a grain gives back in highlight what it takes in shadow.
+# That is what makes `neutral` a number a painter can reason about rather than
+# a starting point the grain drags away from.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+uniform float tile: hint_range(1, 4096) = 256.0
+uniform float zoom: hint_range(0.01, 64) = 1.0
+uniform float grain: hint_range(2, 128) = 12.0
+uniform float density: hint_range(0, 1) = 0.6
+uniform float light: hint_range(0, 360) = 225.0
+uniform float relief: hint_range(0, 1) = 0.3
+uniform float neutral: hint_range(0, 1) = 0.65
+
+const float SA_LIT_RADIANS = 0.01745329251994329577
+
+# The smallest and the widest a grain is, as a fraction of its cell. The
+# widest leaves a fifth of the cell as room to be jittered in, which is what
+# keeps a grain inside its own cell and every point under at most one grain.
+# A grain too small to be one texel wide is not drawn small, it is drawn
+# aliased, so the smallest is a tenth rather than nothing.
+
+const float SA_LIT_SMALLEST = 0.10
+const float SA_LIT_WIDEST = 0.32
+
+# One number per cell, from the cell's wrapped position and a salt, so three
+# asks of the same cell answer three unrelated numbers and the cell across
+# the tile's edge answers the same three.
+
+
+def sa_lit_hash(vec2 cell, vec2 salt) -> float:
+    return fract(sin(dot(cell + salt, vec2(127.1, 311.7))) * 43758.5453)
+
+# The slope of one grain's bump at `offset` cells from its centre, in units
+# of the grain's own radius so the number does not chase the grain's size.
+# The bump is (1 - t*t) squared, which is one at the centre, nought at the
+# rim and flat at both, so the tile has no step where a grain ends.
+
+
+def sa_lit_slope(vec2 offset, float radius) -> vec2:
+    float reach = length(offset)
+    if reach < 0.00001 or reach >= radius:
+        return vec2(0.0)
+    float t = reach / radius
+    return -4.0 * t * (1.0 - t * t) * offset / reach
+
+
+def pixel(ivec2 at) -> vec4:
+    # Over the tile in the pattern's own texels, rounded back to the whole
+    # number it is, as Paper Grain counts its cells.
+    float cells = max(floor(round(tile / zoom) / grain), 1.0)
+    vec2 p = vec2(at) * cells / tile
+    vec2 base = floor(p)
+    vec2 slope = vec2(0.0)
+    for y in range(-1, 2):
+        for x in range(-1, 2):
+            vec2 cell = base + vec2(float(x), float(y))
+            vec2 wrapped = mod(cell, cells)
+            if sa_lit_hash(wrapped, vec2(57.3, 83.1)) < density:
+                float radius = mix(SA_LIT_SMALLEST, SA_LIT_WIDEST, sa_lit_hash(wrapped, vec2(0.0, 0.0)))
+                float room = 0.5 - radius
+                float jx = sa_lit_hash(wrapped, vec2(19.3, 7.7)) * 2.0 - 1.0
+                float jy = sa_lit_hash(wrapped, vec2(3.1, 41.9)) * 2.0 - 1.0
+                vec2 centre = cell + vec2(0.5, 0.5) + vec2(jx, jy) * room
+                slope += sa_lit_slope(p - centre, radius)
+    vec3 normal = normalize(vec3(-slope.x, -slope.y, 1.0))
+    float angle = light * SA_LIT_RADIANS
+    vec2 towards = vec2(cos(angle), sin(angle))
+    float value = clamp(neutral + relief * dot(normal.xy, towards), 0.0, 1.0)
+    return vec4(value, value, value, 1.0)

@@ -1,0 +1,179 @@
+[
+  {
+    "comment": "A mouse flick on the Brush Presets docker's grid sets the list gliding, and 200 notches of the wheel upwards go in the frame after the release, while it still glides. Three seconds on the list stands at its top. Then the list is put at its end and 200 notches at rest carry it to its top as well. The docker stands 800 pixels tall, because a notch moves an eighth of the list's face, and at the 370 of the default size 200 notches move about three quarters of the 76 presets and no more."
+  },
+  {
+    "wait": 40
+  },
+  {
+    "docker": "park"
+  },
+  {
+    "docker": {
+      "id": "BrushPresetsDocker",
+      "at": [
+        420,
+        200
+      ],
+      "size": [
+        310,
+        800
+      ]
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "presets_docker": {}
+  },
+  {
+    "state": "1-before-the-flick"
+  },
+  {
+    "shot": "1-before-the-flick"
+  },
+  {
+    "move": [
+      575,
+      470
+    ]
+  },
+  {
+    "press": {
+      "button": "left",
+      "at": [
+        575,
+        470
+      ]
+    }
+  },
+  {
+    "wait": 1
+  },
+  {
+    "move": {
+      "at": [
+        575,
+        432.5
+      ]
+    }
+  },
+  {
+    "wait": 1
+  },
+  {
+    "move": {
+      "at": [
+        575,
+        395.0
+      ]
+    }
+  },
+  {
+    "wait": 1
+  },
+  {
+    "move": {
+      "at": [
+        575,
+        357.5
+      ]
+    }
+  },
+  {
+    "wait": 1
+  },
+  {
+    "move": {
+      "at": [
+        575,
+        320.0
+      ]
+    }
+  },
+  {
+    "release": {
+      "button": "left",
+      "at": [
+        575,
+        320.0
+      ]
+    }
+  },
+  {
+    "wait": 1
+  },
+  {
+    "wheel": {
+      "at": [
+        575,
+        400
+      ],
+      "notches": 200
+    }
+  },
+  {
+    "presets_docker": {}
+  },
+  {
+    "state": "2-the-notches-during-the-glide"
+  },
+  {
+    "shot": "2-the-notches-during-the-glide"
+  },
+  {
+    "wait": 180
+  },
+  {
+    "presets_docker": {}
+  },
+  {
+    "state": "3-three-seconds-on"
+  },
+  {
+    "shot": "3-three-seconds-on"
+  },
+  {
+    "wheel": {
+      "at": [
+        575,
+        400
+      ],
+      "notches": -400
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "presets_docker": {}
+  },
+  {
+    "state": "4-at-the-end"
+  },
+  {
+    "shot": "4-at-the-end"
+  },
+  {
+    "wheel": {
+      "at": [
+        575,
+        400
+      ],
+      "notches": 200
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "presets_docker": {}
+  },
+  {
+    "state": "5-200-notches-at-rest"
+  },
+  {
+    "shot": "5-200-notches-at-rest"
+  }
+]

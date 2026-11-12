@@ -1,0 +1,25 @@
+# Dot screen, the third shipped pattern.
+#
+# A halftone: a square grid of discs, a whole number of them per tile so the
+# screen wraps at the edge. One inside a disc and nought between, with an
+# edge one texel wide so the discs are round rather than stepped. A dab
+# through it paints dots.
+#
+# `tile` is written by the store from the texture's own width. `dots` is how
+# many discs sit along one tile and `radius` is a disc's radius as a fraction
+# of the cell, a half being discs that touch.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+uniform float tile: hint_range(1, 4096) = 256.0
+uniform int dots: hint_range(1, 64) = 8
+uniform float radius: hint_range(0, 0.7) = 0.35
+
+
+def pixel(ivec2 at) -> vec4:
+    float cell = tile / float(dots)
+    vec2 inside = fract((vec2(at) + 0.5) / cell) - 0.5
+    float distance = length(inside)
+    float edge = 0.5 / cell
+    float value = 1.0 - smoothstep(radius - edge, radius + edge, distance)
+    return vec4(value, value, value, 1.0)

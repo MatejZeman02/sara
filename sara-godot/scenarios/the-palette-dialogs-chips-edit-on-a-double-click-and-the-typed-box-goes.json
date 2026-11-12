@@ -1,0 +1,22 @@
+[
+ {"comment": "The Palette dialog with no typed box under its chips, a chip edited through the picker a double click opens, and the edited chip in the palette the preview reads. A capture starts with no kept swatches, so the two chips come in through the step's colours, which is each a ticked chip."},
+ {"wait": 40},
+ {"prefs": {"ui_scale": 1.0}},
+ {"wait": 15},
+ {"palette": {"colours": ["#e03020", "#40a060"], "shadows": 100, "midtones": 60, "highlights": 0}},
+ {"wait": 25},
+ {"state": "1-the-dialog-with-no-typed-box"},
+ {"shot": "1-the-dialog-with-no-typed-box"},
+
+ {"palette": {"edit": [1, "#2060c0"]}},
+ {"wait": 20},
+ {"state": "2-a-chip-edited-in-its-picker"},
+ {"shot": "2-a-chip-edited-in-its-picker"},
+
+ {"palette": {"close_edit": true}},
+ {"wait": 15},
+ {"palette": {"read": true}},
+ {"wait": 10},
+ {"state": "3-the-edited-chip-in-the-palette"},
+ {"shot": "3-the-edited-chip-in-the-palette"}
+]

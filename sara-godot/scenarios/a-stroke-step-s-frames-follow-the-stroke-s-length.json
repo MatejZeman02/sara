@@ -1,0 +1,20 @@
+[
+  {"wait": 25},
+  {"colour": "#1f3f8c"},
+  {"fit": true},
+  {"wait": 5},
+  {"zoom": 1.0},
+  {"wait": 10},
+  {"stroke": {"route": "tool", "space": "document", "from": [700, 300], "to": [704, 300], "pressure": 0.8}},
+  {"stroke": {"route": "tool", "space": "document", "from": [700, 400], "to": [1100, 400], "pressure": 0.8}},
+  {"stroke": {"route": "tool", "space": "document", "from": [700, 500], "to": [800, 500], "pressure": 0.8}},
+  {"stroke": {"route": "tool", "space": "document", "from": [700, 600], "to": [1100, 600], "pressure": 0.8, "steps": 3}},
+  {"stroke": {"route": "tool", "space": "document", "from": [700, 700], "to": [704, 700], "pressure": 0.8, "steps": 16}},
+  {"wait": 10},
+  {"stroke": {"from": [900, 520], "to": [904, 520], "pressure": 0.8}},
+  {"stroke": {"from": [900, 560], "to": [1200, 560], "pressure": 0.8}},
+  {"wait": 10},
+  {"look": {"path": "w2-look.png", "long_edge": 960}},
+  {"shot": "after"},
+  {"state": "after"}
+]

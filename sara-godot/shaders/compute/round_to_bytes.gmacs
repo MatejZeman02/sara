@@ -1,0 +1,55 @@
+# Kernel: round_to_bytes
+#
+# Lifts every channel of a float image by half an eight-bit step, in place, so
+# the narrowing Godot's Image.convert does afterwards lands on the nearest step
+# rather than the one below. That conversion truncates, so a stored value a
+# hair under a step would leave an export a whole step down.
+#
+# Asked to dither, it moves the lift by up to half a step either way before
+# the narrowing, so a soft edge less than a step deep is a fine scatter of the
+# two steps in the right proportion rather than a hard edge one step off, and a
+# long gentle gradient does not band. The amount comes from a fixed pattern, `sa_lattice_hash` of the texel's place in the picture,
+# integer arithmetic and the same on every card, so two exports of one picture
+# are the same to the bit and the cells an export walks meet with no seam.
+# One number moves the three colour channels, so a grey stays grey rather than
+# taking a coloured noise, and a channel at 0 or 1 stays there: the lift less
+# half a step is never below 0, and the narrowing clips the one above 255. The
+# alpha is rounded and never dithered. A composite leaves an opaque texel a hair
+# under 1 here and there, which rounding takes to 255 and a dither could take
+# to 254, and one such texel makes a picture with no transparency read as one
+# with it.
+#
+# Runs over a scratch copy of the composite that an export or a recorded frame
+# reads back and then drops, never over a chunk. Nothing clamps here either: the
+# narrowing that follows is what clips.
+
+kernel round_to_bytes
+
+import lattice_hash
+
+image field
+
+params:
+    # Half of one step in 255, from the CPU so the number has one home.
+    float half_step
+    # One step in 255 to dither by up to half of it either way, or 0 for none.
+    float dither
+    # Where the dispatched cell starts in the picture, in pixels, so the pattern
+    # is keyed to the picture and not to the cell.
+    vec2 cell
+
+
+def round_to_bytes():
+    ivec2 pixel_coords = ivec2(global_id.xy)
+    ivec2 size = image_size(field)
+
+    if pixel_coords.x >= size.x or pixel_coords.y >= size.y:
+        return
+
+    vec4 lifted = field[pixel_coords] + vec4(half_step)
+    # A branch rather than a dither of 0 added, so an export with the switch
+    # off is the very sum it always was.
+    if dither > 0.0:
+        ivec2 at = ivec2(cell) + pixel_coords
+        lifted.rgb += vec3(dither * (sa_lattice_hash(ivec3(at, 0)) - 0.5))
+    field[pixel_coords] = lifted

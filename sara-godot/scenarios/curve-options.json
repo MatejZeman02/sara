@@ -1,0 +1,256 @@
+[
+  {
+    "wait": 60
+  },
+  {
+    "prefs": {
+      "ui_scale": 1.0
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "layout_preset": {
+      "load": "minimalistic"
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "document": "srgb"
+  },
+  {
+    "tool": "brush"
+  },
+  {
+    "wait": 10
+  },
+  {
+    "brush_editor": {
+      "open": true,
+      "page": "Size",
+      "check": true
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "curve_option": {
+      "preset": "linear"
+    }
+  },
+  {
+    "wait": 3
+  },
+  {
+    "curve_option": {
+      "preset": "reverse_linear"
+    }
+  },
+  {
+    "wait": 3
+  },
+  {
+    "curve_option": {
+      "preset": "s"
+    }
+  },
+  {
+    "wait": 3
+  },
+  {
+    "curve_option": {
+      "preset": "reverse_s"
+    }
+  },
+  {
+    "wait": 3
+  },
+  {
+    "curve_option": {
+      "preset": "u"
+    }
+  },
+  {
+    "wait": 3
+  },
+  {
+    "curve_option": {
+      "preset": "arch"
+    }
+  },
+  {
+    "wait": 3
+  },
+  {
+    "curve_option": {
+      "preset": "j"
+    }
+  },
+  {
+    "wait": 3
+  },
+  {
+    "curve_option": {
+      "preset": "l"
+    }
+  },
+  {
+    "wait": 3
+  },
+  {
+    "shot": "s8-10-the-eighth-shape"
+  },
+  {
+    "curve_option": {
+      "points": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.3,
+          0.8
+        ],
+        [
+          1.0,
+          1.0
+        ]
+      ]
+    }
+  },
+  {
+    "wait": 3
+  },
+  {
+    "state": "s8-11-three-points"
+  },
+  {
+    "curve_option": {
+      "strength": -5.0
+    }
+  },
+  {
+    "wait": 3
+  },
+  {
+    "state": "s8-12-strength-under-its-floor"
+  },
+  {
+    "curve_option": {
+      "strength": 99.0
+    }
+  },
+  {
+    "wait": 3
+  },
+  {
+    "state": "s8-13-strength-over-its-ceiling"
+  },
+  {
+    "curve_option": {
+      "share": true
+    }
+  },
+  {
+    "curve_option": {
+      "share": false
+    }
+  },
+  {
+    "curve_option": {
+      "use_curve": false
+    }
+  },
+  {
+    "curve_option": {
+      "use_curve": true
+    }
+  },
+  {
+    "wait": 3
+  },
+  {
+    "curve_option": {
+      "preset": "arch"
+    }
+  },
+  {
+    "wait": 3
+  },
+  {
+    "state": "s8-14-an-arch-before-the-page-switch"
+  },
+  {
+    "brush_editor": {
+      "page": "Opacity"
+    }
+  },
+  {
+    "brush_editor": {
+      "page": "Size"
+    }
+  },
+  {
+    "wait": 4
+  },
+  {
+    "curve_option": {}
+  },
+  {
+    "state": "s8-15-after-the-page-switch"
+  },
+  {
+    "brush_editor": {
+      "close": true
+    }
+  },
+  {
+    "brush_editor": {
+      "open": true,
+      "page": "Size"
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "curve_option": {}
+  },
+  {
+    "state": "s8-16-after-a-close-and-a-reopen"
+  },
+  {
+    "brush_editor": {
+      "close": true
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "stroke": {
+      "from": [
+        760,
+        900
+      ],
+      "to": [
+        1300,
+        900
+      ],
+      "pressure": 1.0
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "state": "s8-17-a-stroke-under-an-arch-curve"
+  },
+  {
+    "shot": "s8-17-a-stroke-under-an-arch-curve"
+  }
+]

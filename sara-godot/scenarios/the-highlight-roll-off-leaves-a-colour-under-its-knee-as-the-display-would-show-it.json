@@ -1,0 +1,37 @@
+[
+  {"wait": 30},
+  {"prefs": {"tonemap_highlights": false, "tonemap_knee": 4.0, "tonemap_desaturation": 0.0,
+             "display_exposure_enabled": false, "display_exposure_stops": 0.0, "gamut_mapping": "clip"}},
+
+  {"menu_item": {"menu": "File", "id": 200}},
+  {"wait": 8},
+  {"file_picker": {"choose": "res://tests/data/a_portrait_whose_skin_stands_at_1_28.exr"}},
+  {"wait": 20},
+  {"key": "enter"},
+  {"wait": 25},
+  {"zoom": 1.0},
+  {"wait": 10},
+
+  {"texel": [[160, 160], [140, 220], [180, 220], [160, 235], [100, 200], [85, 200]]},
+  {"shot": "the-face-with-the-rolloff-off"},
+
+  {"prefs": {"tonemap_highlights": true}},
+  {"wait": 10},
+  {"texel": [[160, 160], [140, 220], [180, 220], [160, 235], [100, 200], [85, 200]]},
+  {"shot": "the-face-with-the-rolloff-on-at-knee-4"},
+
+  {"prefs": {"tonemap_knee": 1.0}},
+  {"wait": 10},
+  {"texel": [[160, 160], [140, 220], [180, 220], [160, 235], [100, 200], [85, 200]]},
+  {"shot": "the-face-with-the-rolloff-on-at-knee-1"},
+
+  {"prefs": {"tonemap_knee": 4.0}},
+  {"open": "preferences"},
+  {"wait": 20},
+  {"page": "Display"},
+  {"wait": 15},
+  {"shot": "the-display-page-at-knee-4"},
+  {"state": "the-display-page-at-knee-4"},
+  {"key": "escape"},
+  {"wait": 5}
+]

@@ -1,0 +1,135 @@
+# Kernels: sad_blob_planes, sad_blob_texels
+#
+# One field of one chunk as a `.sad` stores it from version 14, and back.
+# SaSadBlob, beside this, runs the first before the readback of a save and the
+# second after the upload of a load, so no loop over a byte runs on the CPU.
+#
+# A float's bytes do not repeat where Zstd looks for repeats. Its sign and
+# exponent change little from one texel to the next and its low mantissa bytes
+# are close to noise, and the two sit side by side in every texel. So each
+# channel's bit pattern is first taken from the texel to its left as an integer,
+# which is exact, and the differences are then split into byte planes: every
+# texel's first byte, then every texel's second, and so on. The planes of the
+# high bytes come out nearly all zero, which is what Zstd finds.
+#
+# A half float is loaded as a float and packed back to its sixteen bits, which
+# gives back the bits the texture holds, since every half is a float exactly.
+
+kernel sad_blob_planes, sad_blob_texels
+
+image field
+# The planes, four bytes to a word, the first byte in the lowest eight bits.
+# Plane k is byte k of every texel in row order, and a texel's byte k is byte
+# k % channel_bytes of its channel k / channel_bytes, the order the texture's
+# own bytes lie in.
+buffer planes: uint words[]
+
+params:
+    int width
+    int height
+    # One to four.
+    int channels
+    # 2 for a half float, 4 for a float.
+    int channel_bytes
+
+# The lanes of a row's workgroup, and the steps of their scan.
+const int ROW_LANES = 256
+const int ROW_LANE_BITS = 8
+
+# Each lane's sum of its run, scanned across the row.
+shared uvec4 lane_sums[ROW_LANES]
+
+
+def bits_of(float value) -> uint:
+    """The pattern a channel of the field holds for *value*."""
+    if channel_bytes == 2:
+        return pack_half2x16(vec2(value, 0.0))
+    return float_bits_to_uint(value)
+
+
+def value_of(uint bits) -> float:
+    """The value whose pattern is *bits*, the inverse of bits_of."""
+    if channel_bytes == 2:
+        return unpack_half2x16(bits).x
+    return uint_bits_to_float(bits)
+
+
+def delta_at(int at) -> uvec4:
+    """Each channel's difference at texel *at*, put together from its planes."""
+    int plane_words = width * height / 4
+    uint shift = uint(at & 3) * 8u
+    uvec4 delta = uvec4(0u)
+    for channel in range(channels):
+        for byte in range(channel_bytes):
+            uint word = planes.words[(channel * channel_bytes + byte) * plane_words + at / 4]
+            delta[channel] |= ((word >> shift) & 0xFFu) << uint(byte * 8)
+    return delta
+
+
+def channel_mask() -> uint:
+    """The bits a channel holds, so a difference wraps as the channel does."""
+    return channel_bytes == 2 ? 0xFFFFu : 0xFFFFFFFFu
+
+
+# Four texels side by side a lane, so each lane writes whole words. The width
+#   is a multiple of four, which SaSadBlob checks before it asks.
+@workgroup_size(8, 8)
+def sad_blob_planes():
+    if pixel.x * 4 >= width or pixel.y >= height:
+        return
+    int plane_words = width * height / 4
+    int word_at = (pixel.y * width + pixel.x * 4) / 4
+    uint mask = channel_mask()
+    # The texel left of the first, then the four, and zero left of the row.
+    vec4 texels[5]
+    for i in range(5):
+        int x = pixel.x * 4 + i - 1
+        texels[i] = x >= 0 ? field[ivec2(x, pixel.y)] : vec4(0.0)
+    for channel in range(channels):
+        uint deltas[4]
+        for i in range(4):
+            deltas[i] = (bits_of(texels[i + 1][channel]) - bits_of(texels[i][channel])) & mask
+        for byte in range(channel_bytes):
+            uint word = 0u
+            for i in range(4):
+                word |= ((deltas[i] >> uint(byte * 8)) & 0xFFu) << uint(i * 8)
+            planes.words[(channel * channel_bytes + byte) * plane_words + word_at] = word
+
+
+# The differences of one row, read out of the planes and summed back into
+#   texels. A workgroup is a row and a lane is a run of texels in it, so the
+#   reads of a warp are neighbouring words. Each lane sums its run, the runs'
+#   sums are scanned across the row in shared memory, and each lane then adds
+#   its run on top of what is left of it. Integer sums wrap, so a half's sum is
+#   masked once at the end.
+@workgroup_size(256, 1)
+def sad_blob_texels():
+    int y = int(group_id.y)
+    if y >= height:
+        return
+    int lane = int(local_id.x)
+    int run = (width + ROW_LANES - 1) / ROW_LANES
+    int first = lane * run
+    uvec4 total = uvec4(0u)
+    for k in range(run):
+        if first + k < width:
+            total += delta_at(y * width + first + k)
+    lane_sums[lane] = total
+    barrier()
+    for step in range(ROW_LANE_BITS):
+        int offset = 1 << step
+        uvec4 left = lane >= offset ? lane_sums[lane - offset] : uvec4(0u)
+        barrier()
+        lane_sums[lane] += left
+        barrier()
+    uvec4 sums = lane > 0 ? lane_sums[lane - 1] : uvec4(0u)
+    uint mask = channel_mask()
+    for k in range(run):
+        int x = first + k
+        if x >= width:
+            break
+        sums += delta_at(y * width + x)
+        vec4 value = vec4(0.0)
+        for channel in range(channels):
+            value[channel] = value_of(sums[channel] & mask)
+        field[ivec2(x, y)] = value

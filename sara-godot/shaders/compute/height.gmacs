@@ -1,0 +1,92 @@
+# The height half of a merge and a flatten, of a transform's landing, and of a
+# wash eraser's stroke.
+#
+# A layer's paint carries a height where it has one, in virtual millimetres, and a
+# layer with no height field is flat paint, zero. The height is signed: a layer
+# stores what its strokes changed of the surface beneath it.
+#
+# `height_added`, for a merge and a flatten. The view sums the heights of the
+# layers that show, each weighted by its opacity, its groups' and its mask
+# (`relief_sum.gmacs`), so the lower layer gains the upper height weighted the
+# same way. The upper paint's alpha weights nothing, because the view's sum reads
+# none. *cover* is the upper layer's mask, or a one texel stand-in at one where it
+# has none, and both heights and the mask are read where the texel lies across the
+# chunk, so a layer held at another resolution adds where it shows.
+#
+# `height_over`, for a transform's landing: the layer's own paint moved over
+# itself, so the height below is covered by the paint above as far as it covers
+# it, a mix by the moved paint's alpha (*cover*) times *opacity*.
+#
+# `height_erased`, for a wash eraser. Its stroke carves the layer's alpha once at
+# the pen's lift, but its height moves under each region the dabs land on, by the
+# door's deposition rule with a target of nought, the eraser's opacity as the rate
+# and the buffer's coverage (alpha, in *cover*) as the coverage. A build-up
+# eraser's dab applies the same rule texel by texel, so both lower paint alike and
+# never past nought. *upper* is the height the stroke found, and a texel only ever
+# comes nearer nought, so a region crossed again or committed twice lands where the
+# coverage says and no nearer. It runs over the region from *offset*.
+#
+# The two heights share the storage format (one half float a texel). The paint is
+# colour at the document's depth and the mask one float a texel, so *cover* takes a
+# format of its own through `use_binding_format`.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel height_over
+kernel height_added
+kernel height_erased
+
+import height_deposit
+
+image target
+image upper: readonly
+image cover: readonly
+
+params:
+    # How much of the upper paint shows: its opacity, and its groups'. The
+    # eraser's opacity for `height_erased`.
+    float opacity
+    # 1.0 when *upper* is the layer's height, 0.0 when the layer has none here
+    # and *upper* is a stand-in nothing reads.
+    float upper_present
+    # The dispatch region's origin in the chunk, the dirty rectangle's corner.
+    float offset_x
+    float offset_y
+
+
+def height_over():
+    ivec2 pixel = ivec2(global_id.xy) + ivec2(int(offset_x), int(offset_y))
+    if pixel.x >= image_size(target).x or pixel.y >= image_size(target).y:
+        return
+    float below = target[pixel].r
+    float above = 0.0
+    if upper_present > 0.5:
+        above = upper[min(pixel, image_size(upper) - 1)].r
+    float covered = clamp(cover[min(pixel, image_size(cover) - 1)].a * opacity, 0.0, 1.0)
+    target[pixel] = vec4(mix(below, above, covered), 0.0, 0.0, 1.0)
+
+
+def height_added():
+    ivec2 pixel = ivec2(global_id.xy) + ivec2(int(offset_x), int(offset_y))
+    ivec2 size = image_size(target)
+    if pixel.x >= size.x or pixel.y >= size.y or upper_present < 0.5:
+        return
+    vec2 across = (vec2(pixel) + vec2(0.5)) / vec2(size)
+    ivec2 upper_size = image_size(upper)
+    ivec2 cover_size = image_size(cover)
+    float above = upper[min(ivec2(across * vec2(upper_size)), upper_size - 1)].r
+    float shown = cover[min(ivec2(across * vec2(cover_size)), cover_size - 1)].r
+    target[pixel] = vec4(target[pixel].r + above * opacity * shown, 0.0, 0.0, 1.0)
+
+
+def height_erased():
+    ivec2 pixel = ivec2(global_id.xy) + ivec2(int(offset_x), int(offset_y))
+    if pixel.x >= image_size(target).x or pixel.y >= image_size(target).y:
+        return
+    float erased = cover[min(pixel, image_size(cover) - 1)].a
+    if erased <= 0.0:
+        return
+    float nearer = sa_height_towards(upper[pixel].r, 0.0, opacity, erased)
+    if abs(nearer) >= abs(target[pixel].r):
+        return
+    target[pixel] = vec4(nearer, 0.0, 0.0, 1.0)

@@ -1,0 +1,28 @@
+[
+ {"comment": "The Brush Editor open on General with the Tool Options docker open beside it, both carrying a HardnessSlider. A bare slider_edit name reads the docker's, the window key reads the editor's, and a drag on the editor's is read back on both."},
+ {"wait": 40},
+ {"prefs": {"ui_scale": 1.0}},
+ {"wait": 10},
+ {"tool": {"id": "brush", "options": {"tip_generator": 0, "tip_image_path": "", "tip_ratio": 1.0, "radius": 0.06, "hardness": 1.0}}},
+ {"wait": 10},
+ {"brush_editor": {"open": true, "page": "General"}},
+ {"wait": 25},
+ {"slider_edit": {"name": "HardnessSlider", "read": true}},
+ {"slider_edit": {"name": "HardnessSlider", "window": "SaBrushEditorWindow", "read": true}},
+ {"brush_editor": {}},
+ {"state": "1-both-sliders-before-the-drag"},
+ {"shot": "1-both-sliders-before-the-drag"},
+
+ {"slider_edit": {"name": "HardnessSlider", "window": "SaBrushEditorWindow", "drag_to": 0.25}},
+ {"wait": 30},
+ {"slider_edit": {"name": "HardnessSlider", "read": true}},
+ {"slider_edit": {"name": "HardnessSlider", "window": "SaBrushEditorWindow", "read": true}},
+ {"brush_editor": {}},
+ {"state": "2-after-the-editors-slider-was-dragged"},
+ {"shot": "2-after-the-editors-slider-was-dragged"},
+
+ {"tool": {"id": "brush", "options": {"radius": 0.02314814815, "hardness": 1.0}}},
+ {"wait": 10},
+ {"brush_editor": {"close": true}},
+ {"wait": 10}
+]

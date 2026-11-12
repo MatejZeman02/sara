@@ -1,0 +1,26 @@
+[
+  {"args": ["--modules-dir=res://tests/fixtures/module-with-a-test"]},
+  {"comment": "A copy of a module with a test script beside it, whose base class the zip does not ship, is read by the start with no error and by Modules > Reload Modules with none either. The Modules menu lists the copy as loaded before and after the reload."},
+  {"wait": 45},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 20},
+  {"document": "srgb"},
+  {"wait": 25},
+  {"docker": "park"},
+  {"wait": 10},
+
+  {"menu": "Modules"},
+  {"wait": 15},
+  {"shot": "01-the-modules-menu-the-copy-loaded-at-the-start"},
+  {"state": "01-the-modules-menu-the-copy-loaded-at-the-start"},
+  {"key": "escape"},
+
+  {"menu_item": {"menu": "Modules", "id": 802}},
+  {"wait": 60},
+
+  {"menu": "Modules"},
+  {"wait": 15},
+  {"shot": "02-the-modules-menu-after-the-reload"},
+  {"state": "02-the-modules-menu-after-the-reload"},
+  {"key": "escape"}
+]

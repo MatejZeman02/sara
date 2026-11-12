@@ -1,0 +1,16 @@
+[
+  {"wait": 60},
+  {"shot": "01-a-fresh-window"},
+  {"state": "01-a-fresh-window"},
+  {"presets_docker": {}},
+  {"preset": {"load": "Inked Pen"}},
+  {"wait": 20},
+  {"shot": "02-the-bar-with-inked-pen"},
+  {"state": "02-the-bar-with-inked-pen"},
+  {"presets_docker": {}},
+  {"preset": {"load": "Canvas Brush"}},
+  {"wait": 20},
+  {"shot": "03-the-bar-with-canvas-brush"},
+  {"state": "03-the-bar-with-canvas-brush"},
+  {"presets_docker": {}}
+]

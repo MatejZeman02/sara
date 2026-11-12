@@ -1,0 +1,8 @@
+[
+  {"wait": 30},
+  {"shot": "1-no-device-at-boot"},
+  {"state": "1-no-device-at-boot"},
+  {"wait": 90},
+  {"shot": "2-still-up-ninety-frames-later"},
+  {"state": "2-still-up-ninety-frames-later"}
+]

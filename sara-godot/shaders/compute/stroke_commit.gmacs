@@ -1,0 +1,71 @@
+# A brush stroke's commit into its layer: the stroke buffer composited onto the
+# layer in the stroke's blend mode, each kernel the formula of
+# `composite.gmacs`'s kernel of the same name, answered by
+# `libs/composite_blend_modes.gmacs` and made into a kernel of each file by
+# its `import kernels_of/composite_blend_modes/blended`, and each store
+# rounded to a half where the layer narrows it, drawn from the stroke's seed
+# through `libs/stochastic_half.gmacs`.
+#
+# **A file of its own, not a rounded store in `composite.gmacs`**, because
+# the seed needs a binding and that file's 128 byte block is full. Godot refuses
+# a uniform set that leaves out any binding the shader declares, used or not,
+# and `composite.gmacs` is bound by two dozen callers, every bake and every
+# stage of `SaStrokeRun` among them, which store composite rather than painted
+# colour and are left exactly as they were. `SaCompositor.composite_chunk_pairs`
+# dispatches this file for a commit handed a seed, the kernel named as
+# the mode's kernel in `composite.gmacs`, and the block below is the
+# compositor's contract restated, as `modules/sara-base-modules/hard-mix/hard_mix.gmacs` restates
+# it, so `SaCompute.pack_composite_params()` packs it unchanged.
+#
+# A blend mode a module brings in a shader of its own, Hard Mix and a mixing
+# module's mode, has no kernel here, and a commit in it still stores through the module's
+# shader and truncates.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+import linear_srgb_color_space, positive_channels, transfer_curve
+
+# The layer's chunk at binding 0, the stroke buffer's at 1.
+image canvas
+image chunk
+
+# 128 bytes, the order SaColorSpace writes and SaCompute.pack_composite_params()
+# packs, field for field `composite.gmacs`'s.
+params:
+    vec2 offset
+    float opacity
+    float blend_white
+    float doc_to_linear_srgb[9]
+    float linear_srgb_to_doc[9]
+    float transfer_slope
+    float transfer_threshold
+    float transfer_gain
+    float transfer_exponent
+    float coordinates
+    float density
+    float region_x
+    float region_y
+    float region_w
+    float region_h
+
+# The stroke's seed folded to 24 bits, one uint, at binding 2. A buffer rather
+# than a field because the block above is full.
+buffer stroke_draw: uint seeds[]
+
+import composite_color_space
+
+import composite_blend_ops
+
+# Before the store, so the formulas lie where they always lay in the SPIR-V.
+import composite_blend_modes
+
+import stochastic_half
+
+# The store every kernel here ends on. The commit stores each texel once, so
+# the stroke's seed and the texel are the whole draw and the dab's seed is nought.
+
+
+def store_blended(ivec2 canvas_coords, vec4 value): sa_store_rounded(canvas_coords, value, stroke_draw.seeds[0], 0u)
+
+# A kernel for each formula, named as its mode's kernel is in `composite.gmacs`
+# and ending on the store above.
+import kernels_of/composite_blend_modes/blended

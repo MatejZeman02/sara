@@ -1,0 +1,13 @@
+# Library: broken_field
+#
+# A brush field whose kernel does not compile, the banded field fixture's
+# second file: its function reads a name nothing declares, on line 12, which
+# `module.gd`'s `BROKEN_LINE` names, so a suite can watch the door refuse it
+# with this file and that line.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+
+def brush_field(float along, float across, float half_width, vec3 numbers, vec2 offset) -> vec2:
+    float needed = fract(along / stripe_width)
+    return vec2(needed, needed)

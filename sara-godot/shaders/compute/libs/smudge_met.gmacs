@@ -1,0 +1,44 @@
+# Where the smudge stage's carry meets the brush's own colour in a dab, an include
+# and not a kernel. Including it where no `smudge` image is declared is a compile
+# error rather than a wrong picture.
+#
+# A brush whose mode is not Normal has the meeting taken ahead of the dab, by that
+# mode's own composite kernel run on the carry, which `smudge_mix.gmacs` stages and
+# settles. The carry's texel 0 then holds the brush's colour with the carried paint
+# composited over it at the carry's strength, and so does each cell of a lattice
+# the carry holds. Texel `SA_CARRY_MET` of row 0 says so in alpha and holds in rgb
+# the brush's colour the meeting was taken against. A dab kernel reads no mode and
+# binds nothing new.
+#
+# A dab whose colour varies across the tip (a noise brush's strand tone) lays the
+# meeting's result moved by how far its own colour stands from the one the meeting
+# was taken against, at the share the carry leaves the brush. Where the two agree,
+# as on every stamp dab, the result is the mode's to the bit.
+#
+# A gradient map's meeting is taken cell by cell, because its colour is the ramp's
+# at each texel: the cells hold the meeting less the ramp's share of it, texel 0
+# the carry's share alone, and the texel is marked two. `smudge_mix.gmacs` says why
+# that agrees with the straight line where no cell holds paint.
+#
+# Normal is untouched: nothing stages a meeting, the texel is nought, and the dab
+# mixes in the straight line. A carry too narrow to hold the texel (the stand-in or
+# a suite's two texels) is read the same way.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# The texel of the carry's row 0 that marks a meeting taken in the brush's
+# mode, after the carry's own colour, what the pickup found and where it
+# started at 5, 6 and 7.
+const int SA_CARRY_MET = 8
+
+
+def sa_smudge_met(vec3 own, vec3 carried, float weight) -> vec3:
+    float share = clamp(weight, 0.0, 1.0)
+    if image_size(smudge).x <= SA_CARRY_MET:
+        return mix(own, carried, share)
+    vec4 met = image_load(smudge, ivec2(SA_CARRY_MET, 0))
+    if met.a < 0.5:
+        return mix(own, carried, share)
+    if met.a > 1.5:
+        return carried + own * (1.0 - share)
+    return carried + (own - met.rgb) * (1.0 - share)

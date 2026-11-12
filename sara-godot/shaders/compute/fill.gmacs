@@ -1,0 +1,47 @@
+# Kernel: fill
+# Fills a chunk with a solid colour, respecting alpha lock.
+
+kernel fill
+
+image canvas
+# The document-wide selection, as in paint.gmacs: a 1 by 1 mask reads as 1.0
+# everywhere through the clamped read (core/api/selection/sa_selection.gd).
+image mask: r32f, readonly
+params:
+    vec4 color
+    float alpha_lock  # 0.0 = off, 1.0 = on
+
+
+def fill():
+    ivec2 pixel_coords = ivec2(global_id.xy)
+    ivec2 size = image_size(canvas)
+
+    if pixel_coords.x >= size.x or pixel_coords.y >= size.y:
+        return
+
+    vec4 original_color = canvas[pixel_coords]
+    float dst_a = original_color.a
+    float coverage = mask[min(pixel_coords * image_size(mask) / image_size(canvas), image_size(mask) - 1)].r
+
+    vec4 filled = color
+    if alpha_lock > 0.5:
+        if dst_a <= 0.0:
+            return
+        # If alpha locked, preserve destination alpha
+        filled = vec4(color.rgb, dst_a)
+
+    # Outside the selection the pixel keeps what it had, and a feathered edge
+    # takes the fill in proportion. The proportion is taken with the colours
+    # premultiplied and the result put back, because Sara stores straight
+    # alpha (the compositor's porter_duff divides by the output alpha) and a
+    # straight-alpha colour cannot be interpolated channel by channel.
+    #
+    # Channel by channel would draw a dark ring. Over a transparent
+    # destination, whose RGB is black and carries no meaning at zero alpha,
+    # it would leave the fill colour scaled by coverage at an alpha that is
+    # also coverage, so the edge would composite as coverage squared, dipping
+    # below both ends, which is a dark ring and not a soft edge.
+    float out_a = mix(dst_a, filled.a, coverage)
+    vec3 premultiplied = mix(original_color.rgb * dst_a, filled.rgb * filled.a, coverage)
+    vec3 out_rgb = out_a > 0.0 ? premultiplied / out_a : vec3(0.0)
+    canvas[pixel_coords] = vec4(out_rgb, out_a)

@@ -1,0 +1,127 @@
+# The read of the lifted picture the transform's kernels share, an include and
+# not a kernel: the resample kernel of `transform.gmacs`, the warp kernel of
+# `warp.gmacs` and Liquify's draw. It reads the `source` image each declares, so
+# including it where none is declared is a compile error rather than a wrong
+# picture.
+#
+# Linear light: each tap is decoded by the document's transfer curve before it is
+# weighted and the sum is encoded again after the divide by alpha, because a
+# blend of encoded values is darker than the light it stands for. The curve
+# arrives as the four numbers `transfer_curve.gmacs` takes, and a linear document
+# hands the identity. An Oklab document hands a curve with a negative slope,
+# which no transfer has, and its taps go through linear sRGB and back.
+#
+# Footprint: a read is handed how many source texels one destination texel spans
+# along each source axis. Up to one it is the four tap bilinear read. Past one it
+# is a box of that size, each source texel weighted by the share of it the box
+# covers, so nothing jumps where shrinking starts. The box keeps to the source's
+# axes, which a turn while shrinking approximates by its scale alone.
+#
+# Premultiplied: Sara stores straight alpha, and interpolating that pulls a
+# transparent texel's colour into its opaque neighbour as a dark rim.
+#
+# Nearest is one read of the stored value and neither decodes nor averages.
+# Nothing clamps, and the curve is mirrored through the origin for a negative
+# channel.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+import oklab_color_space, transfer_curve
+
+# The most source texels a box spans along one axis. A transform that shrinks
+# past it averages this wide a box rather than every texel, which bounds the
+# work of one destination texel on a map a painter dragged to almost nothing.
+const float SA_FOOTPRINT_MOST = 128.0
+
+# How many source texels a destination texel spans along each source axis,
+# from how the source position moves for one destination texel along x and
+# along y.
+
+
+def sa_footprint(vec2 along_x, vec2 along_y) -> vec2:
+    vec2 width = vec2(length(vec2(along_x.x, along_y.x)), length(vec2(along_x.y, along_y.y)))
+    return min(width, vec2(SA_FOOTPRINT_MOST))
+
+
+def sa_is_bilinear(vec2 footprint) -> bool:
+    return footprint.x <= 1.0 and footprint.y <= 1.0
+
+# The texels a read at `at` with `footprint` touches, the first in `xy` and the
+# last in `zw`, before any bound of the source.
+
+
+def sa_window(vec2 at, vec2 footprint) -> ivec4:
+    if sa_is_bilinear(footprint):
+        ivec2 corner = ivec2(floor(at))
+        return ivec4(corner, corner + ivec2(1))
+    vec2 width = max(footprint, vec2(1.0))
+    vec2 low = at + vec2(0.5) - width * 0.5
+    return ivec4(ivec2(floor(low)), ivec2(ceil(low + width)) - ivec2(1))
+
+# The share of a read at `at` with `footprint` the texel `texel` of its window
+# takes. The shares of a whole window sum to one.
+
+
+def sa_weight(ivec2 texel, vec2 at, vec2 footprint) -> float:
+    if sa_is_bilinear(footprint):
+        vec2 base = floor(at)
+        vec2 t = at - base
+        ivec2 d = texel - ivec2(base)
+        return (d.x == 0 ? 1.0 - t.x : t.x) * (d.y == 0 ? 1.0 - t.y : t.y)
+    vec2 width = max(footprint, vec2(1.0))
+    vec2 low = at + vec2(0.5) - width * 0.5
+    vec2 cover = max(min(vec2(texel) + vec2(1.0), low + width) - max(vec2(texel), low), vec2(0.0))
+    return cover.x * cover.y / (width.x * width.y)
+
+# Whether *curve* marks an Oklab document rather than a transfer curve.
+
+
+def sa_curve_is_oklab(vec4 curve) -> bool:
+    return curve.x < 0.0
+
+# A stored triple as linear light.
+
+
+def sa_decode_light(vec3 stored, vec4 curve) -> vec3:
+    if sa_curve_is_oklab(curve):
+        return oklab_to_linear_srgb(stored)
+    return sa_transfer_decode(stored, curve.x, curve.y, curve.z, curve.w)
+
+# Linear light as the stored triple.
+
+
+def sa_encode_light(vec3 light, vec4 curve) -> vec3:
+    if sa_curve_is_oklab(curve):
+        return linear_srgb_to_oklab(light)
+    return sa_transfer_encode(light, curve.x, curve.y, curve.z, curve.w)
+
+# A stored colour as linear light, premultiplied by its alpha.
+
+
+def sa_to_linear(vec4 colour, vec4 curve) -> vec4:
+    return vec4(sa_decode_light(colour.rgb, curve) * colour.a, colour.a)
+
+# A premultiplied linear sum back to a stored straight colour.
+
+
+def sa_from_linear(vec4 sum, vec4 curve) -> vec4:
+    if sum.a <= 0.0:
+        return vec4(0.0)
+    return vec4(sa_encode_light(sum.rgb / sum.a, curve), sum.a)
+
+
+def sa_read_source(vec2 at, ivec2 size, bool nearest, vec2 footprint, vec4 curve) -> vec4:
+    if nearest:
+        ivec2 texel = ivec2(round(at))
+        if texel.x < 0 or texel.y < 0 or texel.x >= size.x or texel.y >= size.y:
+            return vec4(0.0)
+        return image_load(source, texel)
+    ivec4 window = sa_window(at, footprint)
+    ivec2 first = max(window.xy, ivec2(0))
+    ivec2 last = min(window.zw, size - ivec2(1))
+    vec4 sum = vec4(0.0)
+    for y in range_inclusive(first.y, last.y):
+        for x in range_inclusive(first.x, last.x):
+            ivec2 texel = ivec2(x, y)
+            sum += sa_to_linear(image_load(source, texel), curve) * sa_weight(texel, at, footprint)
+    return sa_from_linear(sum, curve)

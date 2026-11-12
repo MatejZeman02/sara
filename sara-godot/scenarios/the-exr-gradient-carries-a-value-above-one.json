@@ -1,0 +1,273 @@
+[
+ {
+  "comment": "The EXR gradient's right edge holds four, read with the texel step when the fixture opens and again after it is exported as EXR and opened, so a value above one survives the round trip unclamped."
+ },
+ {
+  "wait": 30
+ },
+ {
+  "prefs": {
+   "tonemap_highlights": false,
+   "tonemap_knee": 0.5,
+   "tonemap_desaturation": 0.15,
+   "display_exposure_enabled": false,
+   "display_exposure_stops": 0.0,
+   "gamut_mapping": "clip"
+  }
+ },
+ {
+  "menu_item": {
+   "menu": "File",
+   "id": 200
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "file_picker": {
+   "choose": "res://tests/data/exr_gradtest.exr"
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "key": "enter"
+ },
+ {
+  "wait": 25
+ },
+ {
+  "zoom": 1.0
+ },
+ {
+  "wait": 10
+ },
+ {
+  "texel": [
+   [
+    0,
+    50
+   ],
+   [
+    250,
+    50
+   ],
+   [
+    500,
+    50
+   ],
+   [
+    750,
+    50
+   ],
+   [
+    1000,
+    50
+   ],
+   [
+    0,
+    150
+   ],
+   [
+    250,
+    150
+   ],
+   [
+    500,
+    150
+   ],
+   [
+    750,
+    150
+   ],
+   [
+    1000,
+    150
+   ],
+   [
+    0,
+    250
+   ],
+   [
+    250,
+    250
+   ],
+   [
+    500,
+    250
+   ],
+   [
+    750,
+    250
+   ],
+   [
+    1000,
+    250
+   ]
+  ]
+ },
+ {
+  "shot": "rolloff-off"
+ },
+ {
+  "state": "rolloff-off"
+ },
+ {
+  "prefs": {
+   "tonemap_highlights": true
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "texel": [
+   [
+    0,
+    50
+   ],
+   [
+    250,
+    50
+   ],
+   [
+    500,
+    50
+   ],
+   [
+    750,
+    50
+   ],
+   [
+    1000,
+    50
+   ],
+   [
+    0,
+    150
+   ],
+   [
+    250,
+    150
+   ],
+   [
+    500,
+    150
+   ],
+   [
+    750,
+    150
+   ],
+   [
+    1000,
+    150
+   ],
+   [
+    0,
+    250
+   ],
+   [
+    250,
+    250
+   ],
+   [
+    500,
+    250
+   ],
+   [
+    750,
+    250
+   ],
+   [
+    1000,
+    250
+   ]
+  ]
+ },
+ {
+  "shot": "rolloff-on"
+ },
+ {
+  "state": "rolloff-on"
+ },
+ {
+  "prefs": {
+   "tonemap_highlights": false
+  }
+ },
+ {
+  "export": "user://a4-exr-gradtest-round-trip.exr"
+ },
+ {
+  "wait": 8
+ },
+ {
+  "menu_item": {
+   "menu": "File",
+   "id": 200
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "file_picker": {
+   "choose": "user://a4-exr-gradtest-round-trip.exr"
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "key": "enter"
+ },
+ {
+  "wait": 25
+ },
+ {
+  "zoom": 1.0
+ },
+ {
+  "wait": 10
+ },
+ {
+  "texel": [
+   [
+    0,
+    50
+   ],
+   [
+    250,
+    50
+   ],
+   [
+    500,
+    50
+   ],
+   [
+    750,
+    50
+   ],
+   [
+    1000,
+    50
+   ],
+   [
+    1000,
+    150
+   ],
+   [
+    1000,
+    250
+   ]
+  ]
+ },
+ {
+  "shot": "round-trip"
+ },
+ {
+  "state": "round-trip"
+ }
+]

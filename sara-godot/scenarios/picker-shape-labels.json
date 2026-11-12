@@ -1,0 +1,93 @@
+[
+ {
+  "wait": 35
+ },
+ {
+  "docker": "park"
+ },
+ {
+  "wait": 12
+ },
+ {
+  "docker": {
+   "id": "ColorDocker",
+   "at": [
+    1450,
+    120
+   ],
+   "size": [
+    380,
+    620
+   ]
+  }
+ },
+ {
+  "wait": 22
+ },
+ {
+  "open": "preferences"
+ },
+ {
+  "wait": 18
+ },
+ {
+  "page": "Colour Picker"
+ },
+ {
+  "wait": 12
+ },
+ {
+  "layout_rows": {}
+ },
+ {
+  "shot": "1-the-type-row"
+ },
+ {
+  "dropdown": "Option_shape"
+ },
+ {
+  "wait": 12
+ },
+ {
+  "shot": "2-the-seven-labels"
+ },
+ {
+  "state": "2-the-seven-labels"
+ },
+ {
+  "dropdown": {
+   "name": "Option_shape",
+   "row": "HSV, triangle"
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "layout_rows": {}
+ },
+ {
+  "state": "3-the-hsv-triangle"
+ },
+ {
+  "shot": "3-the-hsv-triangle"
+ },
+ {
+  "dropdown": {
+   "name": "Option_shape",
+   "row": "OKHSV, square"
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "layout_rows": {}
+ },
+ {
+  "state": "4-back-to-the-okhsv-square"
+ },
+ {
+  "shot": "4-back-to-the-okhsv-square"
+ }
+]

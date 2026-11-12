@@ -1,0 +1,767 @@
+[
+  {
+    "comment": "The brush editor opened on the noise brush and closed, then a stamp preset converted to noise and back is loaded on the stamp brush. Before the fix the load stopped a script in values_match, because the hidden window still held the noise brush's settings. The log must carry no script error, and the reopened editor names the stamp preset and reads Saved."
+  },
+  {
+    "wait": 40
+  },
+  {
+    "prefs": {
+      "ui_scale": 1.0,
+      "show_relief": true,
+      "relief_light_angle": 315.0,
+      "relief_strength": 4.0,
+      "tonemap_highlights": false
+    }
+  },
+  {
+    "wait": 15
+  },
+  {
+    "document": "srgb"
+  },
+  {
+    "wait": 12
+  },
+  {
+    "docker": "park"
+  },
+  {
+    "wait": 25
+  },
+  {
+    "fill": [
+      1.0,
+      1.0,
+      1.0
+    ]
+  },
+  {
+    "wait": 5
+  },
+  {
+    "fill": [
+      0.94,
+      0.93,
+      0.9
+    ]
+  },
+  {
+    "colour": "#c02818"
+  },
+  {
+    "tool": "noise_brush"
+  },
+  {
+    "wait": 6
+  },
+  {
+    "brush_editor": {
+      "open": true,
+      "page": "Opacity"
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "brush_editor": {
+      "close": true
+    }
+  },
+  {
+    "wait": 6
+  },
+  {
+    "docker": {
+      "id": "BrushPresetsDocker",
+      "at": [
+        1500,
+        60
+      ],
+      "size": [
+        400,
+        700
+      ]
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "tool": "brush"
+  },
+  {
+    "wait": 6
+  },
+  {
+    "preset": {
+      "load": "Charcoal"
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "colour": "#2050c0"
+  },
+  {
+    "stroke": {
+      "points": [
+        {
+          "at": [
+            110.0,
+            560.0
+          ],
+          "pressure": 0.2
+        },
+        {
+          "at": [
+            134.6,
+            561.6
+          ],
+          "pressure": 0.233
+        },
+        {
+          "at": [
+            159.2,
+            563.0
+          ],
+          "pressure": 0.267
+        },
+        {
+          "at": [
+            183.8,
+            564.2
+          ],
+          "pressure": 0.3
+        },
+        {
+          "at": [
+            208.3,
+            565.2
+          ],
+          "pressure": 0.333
+        },
+        {
+          "at": [
+            232.9,
+            565.8
+          ],
+          "pressure": 0.367
+        },
+        {
+          "at": [
+            257.5,
+            566.0
+          ],
+          "pressure": 0.4
+        },
+        {
+          "at": [
+            282.1,
+            565.8
+          ],
+          "pressure": 0.433
+        },
+        {
+          "at": [
+            306.7,
+            565.2
+          ],
+          "pressure": 0.467
+        },
+        {
+          "at": [
+            331.2,
+            564.2
+          ],
+          "pressure": 0.5
+        },
+        {
+          "at": [
+            355.8,
+            563.0
+          ],
+          "pressure": 0.533
+        },
+        {
+          "at": [
+            380.4,
+            561.6
+          ],
+          "pressure": 0.567
+        },
+        {
+          "at": [
+            405.0,
+            560.0
+          ],
+          "pressure": 0.6
+        },
+        {
+          "at": [
+            429.6,
+            558.4
+          ],
+          "pressure": 0.633
+        },
+        {
+          "at": [
+            454.2,
+            557.0
+          ],
+          "pressure": 0.667
+        },
+        {
+          "at": [
+            478.8,
+            555.8
+          ],
+          "pressure": 0.7
+        },
+        {
+          "at": [
+            503.3,
+            554.8
+          ],
+          "pressure": 0.733
+        },
+        {
+          "at": [
+            527.9,
+            554.2
+          ],
+          "pressure": 0.767
+        },
+        {
+          "at": [
+            552.5,
+            554.0
+          ],
+          "pressure": 0.8
+        },
+        {
+          "at": [
+            577.1,
+            554.2
+          ],
+          "pressure": 0.833
+        },
+        {
+          "at": [
+            601.7,
+            554.8
+          ],
+          "pressure": 0.867
+        },
+        {
+          "at": [
+            626.2,
+            555.8
+          ],
+          "pressure": 0.9
+        },
+        {
+          "at": [
+            650.8,
+            557.0
+          ],
+          "pressure": 0.933
+        },
+        {
+          "at": [
+            675.4,
+            558.4
+          ],
+          "pressure": 0.967
+        },
+        {
+          "at": [
+            700.0,
+            560.0
+          ],
+          "pressure": 1.0
+        }
+      ]
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "preset": {
+      "tags": {
+        "menu": "Charcoal"
+      }
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "presets_docker": {}
+  },
+  {
+    "shot": "d4-00-the-stamp-presets-menu-before-the-conversion"
+  },
+  {
+    "state": "d4-00-the-stamp-presets-menu-before-the-conversion"
+  },
+  {
+    "preset": {
+      "tags": {
+        "convert": "noise"
+      }
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "preset": {
+      "finish": true
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "tool": "noise_brush"
+  },
+  {
+    "wait": 6
+  },
+  {
+    "preset": {
+      "load": "Charcoal (Noise)"
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "stroke": {
+      "points": [
+        {
+          "at": [
+            760.0,
+            560.0
+          ],
+          "pressure": 0.2
+        },
+        {
+          "at": [
+            784.6,
+            561.6
+          ],
+          "pressure": 0.233
+        },
+        {
+          "at": [
+            809.2,
+            563.0
+          ],
+          "pressure": 0.267
+        },
+        {
+          "at": [
+            833.8,
+            564.2
+          ],
+          "pressure": 0.3
+        },
+        {
+          "at": [
+            858.3,
+            565.2
+          ],
+          "pressure": 0.333
+        },
+        {
+          "at": [
+            882.9,
+            565.8
+          ],
+          "pressure": 0.367
+        },
+        {
+          "at": [
+            907.5,
+            566.0
+          ],
+          "pressure": 0.4
+        },
+        {
+          "at": [
+            932.1,
+            565.8
+          ],
+          "pressure": 0.433
+        },
+        {
+          "at": [
+            956.7,
+            565.2
+          ],
+          "pressure": 0.467
+        },
+        {
+          "at": [
+            981.2,
+            564.2
+          ],
+          "pressure": 0.5
+        },
+        {
+          "at": [
+            1005.8,
+            563.0
+          ],
+          "pressure": 0.533
+        },
+        {
+          "at": [
+            1030.4,
+            561.6
+          ],
+          "pressure": 0.567
+        },
+        {
+          "at": [
+            1055.0,
+            560.0
+          ],
+          "pressure": 0.6
+        },
+        {
+          "at": [
+            1079.6,
+            558.4
+          ],
+          "pressure": 0.633
+        },
+        {
+          "at": [
+            1104.2,
+            557.0
+          ],
+          "pressure": 0.667
+        },
+        {
+          "at": [
+            1128.8,
+            555.8
+          ],
+          "pressure": 0.7
+        },
+        {
+          "at": [
+            1153.3,
+            554.8
+          ],
+          "pressure": 0.733
+        },
+        {
+          "at": [
+            1177.9,
+            554.2
+          ],
+          "pressure": 0.767
+        },
+        {
+          "at": [
+            1202.5,
+            554.0
+          ],
+          "pressure": 0.8
+        },
+        {
+          "at": [
+            1227.1,
+            554.2
+          ],
+          "pressure": 0.833
+        },
+        {
+          "at": [
+            1251.7,
+            554.8
+          ],
+          "pressure": 0.867
+        },
+        {
+          "at": [
+            1276.2,
+            555.8
+          ],
+          "pressure": 0.9
+        },
+        {
+          "at": [
+            1300.8,
+            557.0
+          ],
+          "pressure": 0.933
+        },
+        {
+          "at": [
+            1325.4,
+            558.4
+          ],
+          "pressure": 0.967
+        },
+        {
+          "at": [
+            1350.0,
+            560.0
+          ],
+          "pressure": 1.0
+        }
+      ]
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "preset": {
+      "tags": {
+        "menu": "Charcoal (Noise)"
+      }
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "preset": {
+      "tags": {
+        "convert": "stamp"
+      }
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "preset": {
+      "finish": true
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "tool": "brush"
+  },
+  {
+    "wait": 6
+  },
+  {
+    "preset": {
+      "load": "Charcoal (Noise) (Stamp)"
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "stroke": {
+      "points": [
+        {
+          "at": [
+            110.0,
+            650.0
+          ],
+          "pressure": 0.2
+        },
+        {
+          "at": [
+            134.6,
+            651.6
+          ],
+          "pressure": 0.233
+        },
+        {
+          "at": [
+            159.2,
+            653.0
+          ],
+          "pressure": 0.267
+        },
+        {
+          "at": [
+            183.8,
+            654.2
+          ],
+          "pressure": 0.3
+        },
+        {
+          "at": [
+            208.3,
+            655.2
+          ],
+          "pressure": 0.333
+        },
+        {
+          "at": [
+            232.9,
+            655.8
+          ],
+          "pressure": 0.367
+        },
+        {
+          "at": [
+            257.5,
+            656.0
+          ],
+          "pressure": 0.4
+        },
+        {
+          "at": [
+            282.1,
+            655.8
+          ],
+          "pressure": 0.433
+        },
+        {
+          "at": [
+            306.7,
+            655.2
+          ],
+          "pressure": 0.467
+        },
+        {
+          "at": [
+            331.2,
+            654.2
+          ],
+          "pressure": 0.5
+        },
+        {
+          "at": [
+            355.8,
+            653.0
+          ],
+          "pressure": 0.533
+        },
+        {
+          "at": [
+            380.4,
+            651.6
+          ],
+          "pressure": 0.567
+        },
+        {
+          "at": [
+            405.0,
+            650.0
+          ],
+          "pressure": 0.6
+        },
+        {
+          "at": [
+            429.6,
+            648.4
+          ],
+          "pressure": 0.633
+        },
+        {
+          "at": [
+            454.2,
+            647.0
+          ],
+          "pressure": 0.667
+        },
+        {
+          "at": [
+            478.8,
+            645.8
+          ],
+          "pressure": 0.7
+        },
+        {
+          "at": [
+            503.3,
+            644.8
+          ],
+          "pressure": 0.733
+        },
+        {
+          "at": [
+            527.9,
+            644.2
+          ],
+          "pressure": 0.767
+        },
+        {
+          "at": [
+            552.5,
+            644.0
+          ],
+          "pressure": 0.8
+        },
+        {
+          "at": [
+            577.1,
+            644.2
+          ],
+          "pressure": 0.833
+        },
+        {
+          "at": [
+            601.7,
+            644.8
+          ],
+          "pressure": 0.867
+        },
+        {
+          "at": [
+            626.2,
+            645.8
+          ],
+          "pressure": 0.9
+        },
+        {
+          "at": [
+            650.8,
+            647.0
+          ],
+          "pressure": 0.933
+        },
+        {
+          "at": [
+            675.4,
+            648.4
+          ],
+          "pressure": 0.967
+        },
+        {
+          "at": [
+            700.0,
+            650.0
+          ],
+          "pressure": 1.0
+        }
+      ]
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "brush_editor": {
+      "open": true
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "d4-01-the-editor-reopened-on-the-stamp-preset"
+  },
+  {
+    "state": "d4-01-the-editor-reopened-on-the-stamp-preset"
+  }
+]

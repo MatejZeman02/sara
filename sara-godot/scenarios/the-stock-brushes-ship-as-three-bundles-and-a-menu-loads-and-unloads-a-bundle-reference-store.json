@@ -1,0 +1,63 @@
+[
+ {
+  "comment": "A store of presets. Run under sara_shot.py --keep-settings on a profile whose brush presets folder is a scratch copy of an older, written by the seven old bundles. After this one start the state lists the same presets under Sara Basic, Sara Filters and Sara Advanced Paint, and an imported bundle keeps its name."
+ },
+ {
+  "wait": 40
+ },
+ {
+  "prefs": {
+   "ui_scale": 1.0
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "docker": {
+   "id": "BrushPresetsDocker",
+   "at": [
+    860,
+    40
+   ],
+   "size": [
+    420,
+    940
+   ]
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "tool": "brush"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "preset": {
+   "finish": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "presets_docker": {}
+ },
+ {
+  "state": "1-the-author-s-store-under-the-three-bundles"
+ },
+ {
+  "choice": {
+   "open": "ChooserBundles"
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "1-the-author-s-store-under-the-three-bundles"
+ }
+]

@@ -1,0 +1,37 @@
+[
+  {"wait": 40},
+  {"docker": "park"},
+  {"wait": 10},
+  {"move": [960, 540]},
+  {"state": "0-parked"},
+  {"shot": "0-parked"},
+
+  {"docker_pointer": [700, 450]},
+  {"key": {"key": "t", "shift": true, "alt": true}},
+  {"wait": 10},
+  {"state": "1-layers-summoned-at-700-450"},
+  {"shot": "1-layers-summoned-at-700-450"},
+
+  {"docker_pointer": [1150, 600]},
+  {"key": {"key": "c", "shift": true, "alt": true}},
+  {"wait": 10},
+  {"state": "2-colour-summoned-at-1150-600"},
+  {"shot": "2-colour-summoned-at-1150-600"},
+
+  {"docker_pointer": [120, 1000]},
+  {"until": "dockers_back", "frames": 900},
+  {"wait": 10},
+  {"state": "3-the-pointer-walked-away"},
+  {"shot": "3-the-pointer-walked-away"},
+
+  {"docker_pointer": [900, 500]},
+  {"key": {"key": "v", "shift": true, "alt": true}},
+  {"wait": 5},
+  {"state": "4-minimap-summoned"},
+  {"key": {"key": "v", "shift": true, "alt": true}},
+  {"until": "dockers_back", "frames": 120},
+  {"wait": 10},
+  {"state": "5-the-chord-twice-closed-it"},
+  {"shot": "5-the-chord-twice-closed-it"},
+  {"docker_pointer": null}
+]

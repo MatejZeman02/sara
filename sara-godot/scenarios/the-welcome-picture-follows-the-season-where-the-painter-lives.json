@@ -1,0 +1,7 @@
+[
+    {"comment": "The Welcome picture follows the season where the painter lives. Run with SARA_WELCOME_PICTURES=res://ui/welcome/tests/pictures/seasons/, SARA_WELCOME_HOUR=<hour>, SARA_WELCOME_MONTH=<month> and SARA_WELCOME_LOCALE=<locale>, which is the suite's three plain pictures, a pale winter and a yellow summer at 6 and a grey one for every season at 18, in the place the locale names. At 6 a painter in Czechia in January sees the winter picture, one in Australia the summer one, and one in Ecuador or with no country the grey one, and at 12 the winter or the summer picture is half faded into the grey one."},
+    {"wait": 11},
+    {"open": "welcome"},
+    {"wait": 20},
+    {"shot": "0-the-band-in-the-season"}
+]

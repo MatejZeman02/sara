@@ -1,0 +1,31 @@
+[
+  {"wait": 45},
+  {"colour": "#c8503c"},
+  {"tool": "brush"},
+  {"wait": 4},
+  {"stroke": {"from": [400, 600], "to": [1400, 600], "pressure": 0.9, "steps": 26}},
+  {"wait": 10},
+  {"shot": "01-a-red-band"},
+  {"state": "01-a-red-band"},
+
+  {"colour": "#1c6ad2"},
+  {"wait": 4},
+  {"tool": "eraser"},
+  {"wait": 6},
+  {"state": "02-eraser-active"},
+  {"stroke": {"from": [700, 480], "to": [700, 760], "pressure": 0.9, "steps": 24}},
+  {"wait": 12},
+  {"shot": "03-erased-across-the-band"},
+  {"state": "03-erased-across-the-band"},
+
+  {"key": {"key": "z", "ctrl": true}},
+  {"wait": 12},
+  {"shot": "04-undone"},
+
+  {"tool": "brush"},
+  {"wait": 6},
+  {"stroke": {"from": [900, 480], "to": [900, 760], "pressure": 0.9, "steps": 24}},
+  {"wait": 12},
+  {"shot": "05-the-brush-still-paints"},
+  {"state": "05-the-brush-still-paints"}
+]

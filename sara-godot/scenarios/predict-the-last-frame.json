@@ -1,0 +1,47 @@
+[
+  {"wait": 30},
+  {"answer": 2},
+  {"wait": 6},
+  {"docker": {"id": "ToolOptionsDocker", "at": [70, 330], "size": [300, 430]}},
+  {"docker": {"id": "ColorDocker", "at": [1584, 105], "size": [321, 480]}},
+  {"docker": {"id": "LayersDocker", "at": [1600, 570], "size": [310, 400]}},
+  {"wait": 12},
+  {"tool": "brush"},
+  {"brush": {"radius": 0.06}},
+  {"fill": [0.6, 0.0, 0.0]},
+  {"wait": 8},
+
+  {"prefs": {"cursor_lead": "on"}},
+  {"prefs": {"cursor_prediction_ms": 16.0}},
+  {"wait": 5},
+  {"ring_predict": "rest"},
+  {"ring_predict": {"from": [500, 500], "to": [1100, 500], "seconds": 1.0, "samples": 24}},
+  {"shot": "1-sweep-at-600"},
+
+  {"ring_predict": "rest"},
+  {"ring_predict": {"from": [500, 500], "to": [1700, 500], "seconds": 1.0, "samples": 24}},
+  {"shot": "2-sweep-at-1200"},
+
+  {"ring_predict": "rest"},
+  {"ring_predict": {"from": [500, 500], "to": [500, 1100], "seconds": 1.0, "samples": 24}},
+
+  {"prefs": {"cursor_prediction_ms": 32.0}},
+  {"wait": 5},
+  {"ring_predict": "rest"},
+  {"ring_predict": {"from": [500, 500], "to": [1100, 500], "seconds": 1.0, "samples": 24}},
+
+  {"prefs": {"cursor_prediction_ms": 0.0}},
+  {"wait": 5},
+  {"ring_predict": "rest"},
+  {"ring_predict": {"from": [500, 500], "to": [1100, 500], "seconds": 1.0, "samples": 24}},
+
+  {"prefs": {"cursor_prediction_ms": -1.0}},
+  {"wait": 5},
+  {"ring_predict": "rest"},
+  {"ring_predict": {"from": [500, 500], "to": [1100, 500], "seconds": 1.0, "samples": 24}},
+
+  {"ring_predict": "rest"},
+  {"ring_predict": {"from": [500, 500], "to": [502, 500], "seconds": 1.0, "samples": 24}},
+  {"shot": "3-at-rest"},
+  {"state": "3-at-rest"}
+]

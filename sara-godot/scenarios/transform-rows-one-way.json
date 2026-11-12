@@ -1,0 +1,139 @@
+[
+ {
+  "wait": 45
+ },
+ {
+  "docker": "park"
+ },
+ {
+  "colour": "#e8b23c"
+ },
+ {
+  "tool": "brush"
+ },
+ {
+  "wait": 4
+ },
+ {
+  "stroke": {
+   "from": [
+    350,
+    450
+   ],
+   "to": [
+    1200,
+    800
+   ],
+   "pressure": 0.9,
+   "steps": 28
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "tool": "transform"
+ },
+ {
+  "wait": 6
+ },
+ {
+  "select": [
+   400,
+   400,
+   500,
+   400
+  ]
+ },
+ {
+  "wait": 6
+ },
+ {
+  "docker": {
+   "id": "ToolOptionsDocker",
+   "at": [
+    1300,
+    120
+   ],
+   "size": [
+    360,
+    500
+   ]
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "f22-01-box-on-the-selection"
+ },
+ {
+  "state": "f22-01-box-on-the-selection"
+ },
+ {
+  "option": {
+   "key": "transform_move_x",
+   "value": 200
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "shot": "f22-02-position-x-written"
+ },
+ {
+  "state": "f22-02-position-x-written"
+ },
+ {
+  "option": {
+   "key": "transform_angle",
+   "value": 30
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "shot": "f22-03-turned-thirty-degrees"
+ },
+ {
+  "state": "f22-03-turned-thirty-degrees"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "shot": "f22-04-reset-under-the-rows"
+ },
+ {
+  "state": "f22-04-reset-under-the-rows"
+ },
+ {
+  "option": {
+   "key": "transform_scale_x",
+   "value": 1.4
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "state": "f22-05-width-written"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "shot": "f22-06-reset-after-the-width"
+ },
+ {
+  "state": "f22-06-reset-after-the-width"
+ }
+]

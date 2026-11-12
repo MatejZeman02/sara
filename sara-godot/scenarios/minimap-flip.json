@@ -1,0 +1,198 @@
+[
+  {
+    "wait": 30
+  },
+  {"docker": "park"},
+  {
+    "colour": "#d84a2a"
+  },
+  {
+    "stroke": {
+      "from": [
+        420,
+        300
+      ],
+      "to": [
+        700,
+        320
+      ],
+      "pressure": 0.9,
+      "steps": 20
+    }
+  },
+  {
+    "colour": "#2e8f5a"
+  },
+  {
+    "stroke": {
+      "from": [
+        430,
+        340
+      ],
+      "to": [
+        560,
+        640
+      ],
+      "pressure": 0.9,
+      "steps": 20
+    }
+  },
+  {
+    "colour": "#3a5fd0"
+  },
+  {
+    "stroke": {
+      "from": [
+        1000,
+        620
+      ],
+      "to": [
+        1180,
+        700
+      ],
+      "pressure": 0.9,
+      "steps": 20
+    }
+  },
+  {
+    "colour": "#e8d84a"
+  },
+  {
+    "stroke": {
+      "from": [
+        460,
+        260
+      ],
+      "to": [
+        1150,
+        730
+      ],
+      "pressure": 0.8,
+      "steps": 28
+    }
+  },
+  {
+    "wait": 10
+  },
+  {
+    "docker": {
+      "id": "MinimapDocker",
+      "at": [
+        1180,
+        140
+      ],
+      "size": [
+        320,
+        260
+      ]
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "shot": "unflipped"
+  },
+  {
+    "state": "unflipped"
+  },
+  {
+    "click": {
+      "at": [
+        1257,
+        197
+      ]
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "shot": "flipped-h"
+  },
+  {
+    "state": "flipped-h"
+  },
+  {
+    "click": {
+      "at": [
+        1422,
+        197
+      ]
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "shot": "flipped-both"
+  },
+  {
+    "state": "flipped-both"
+  },
+  {
+    "click": {
+      "at": [
+        1257,
+        197
+      ]
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "click": {
+      "at": [
+        1422,
+        197
+      ]
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "shot": "back-as-it-was"
+  },
+  {
+    "state": "back-as-it-was"
+  },
+  {
+    "click": {
+      "at": [
+        1257,
+        197
+      ]
+    }
+  },
+  {
+    "wait": 8
+  },
+  {
+    "colour": "#f2f2f0"
+  },
+  {
+    "stroke": {
+      "from": [
+        420,
+        820
+      ],
+      "to": [
+        900,
+        880
+      ],
+      "pressure": 0.9,
+      "steps": 16
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "shot": "painting-while-mirrored"
+  },
+  {
+    "state": "painting-while-mirrored"
+  }
+]

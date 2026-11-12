@@ -1,0 +1,16 @@
+[
+  {"comment": "A file manager's Copy leaves no picture on the clipboard, only a list of files, so this runs five times, once for each offer a Copy makes. Write two small PNGs, `red one.png` and `blue.png`, and a payload file for the case, then run `scripts/sara_shot.py --scenario <this file> --desktop-clipboard <payload> --desktop-clipboard-type <type>`. The five: `text/uri-list` holding `file:///...red%20one.png` and a CRLF; `x-special/gnome-copied-files` holding `copy`, then a `file://` line for `blue.png` and one for `red one.png`; `text/plain;charset=utf-8` holding the two bare paths, `blue.png` first, one a line and no `file://`, which is what Nautilus 51.1 leaves on the plain text; `text/plain;charset=utf-8` holding `Hello, this names no file`; and, for the shape KDE's Copy leaves, `text/plain;charset=utf-8` holding one `file://` address. Ctrl+V opens the Fit dialog and Enter presses Place, so the layer is named after the first picture the list names, `red one` for the address cases and `blue` for the two whose list starts with it, and the corner says how many were left out when the list named two. The case that names no file opens no dialog and adds no layer, and the corner says there is nothing to paste. The pan tool, so a click on a run with no dialog paints nothing."},
+  {"wait": 25},
+  {"tool": "pan"},
+  {"prefs": {"import_fit": "ask"}},
+  {"layers": {}},
+  {"key": {"key": "v", "ctrl": true}},
+  {"wait": 20},
+  {"shot": "after-ctrl-v"},
+  {"state": "after-ctrl-v"},
+  {"key": "enter"},
+  {"wait": 20},
+  {"shot": "after-place"},
+  {"state": "after-place"},
+  {"layers": {}}
+]

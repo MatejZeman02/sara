@@ -1,0 +1,1538 @@
+[
+ {
+  "comment": "Bristle Flat's Build Up raises the paint's relief where the pen comes back over the stroke. On a 1000 by 700 document of a pale ground with the relief shown under its light from 315 degrees, Bristle Flat in a warm brown at a radius of 21 pixels and Randomness at nought paints the notes' path, right, back left and right again over legs of six radii at pressure 0.5, once at Build Up 0 and once at Build Up 1 below it. A look of the whole and a shot of the pair at three times is kept for review."
+ },
+ {
+  "wait": 60
+ },
+ {
+  "prefs": {
+   "ui_scale": 1.0,
+   "autosave_interval_minutes": 0,
+   "show_relief": true,
+   "relief_light_angle": 315.0,
+   "tonemap_highlights": false
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "pressure_curve": 1.0
+ },
+ {
+  "wait": 5
+ },
+ {
+  "layout_preset": {
+   "load": "minimalistic"
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "document": "srgb",
+  "size": [
+   1000,
+   700
+  ]
+ },
+ {
+  "wait": 10
+ },
+ {
+  "fit": true
+ },
+ {
+  "wait": 5
+ },
+ {
+  "fill": [
+   0.86,
+   0.8,
+   0.68
+  ]
+ },
+ {
+  "wait": 10
+ },
+ {
+  "colour": [
+   0.69,
+   0.44,
+   0.24
+  ]
+ },
+ {
+  "preset": {
+   "load": "Bristle Flat"
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "tool": {
+   "id": "noise_brush",
+   "options": {
+    "radius": 0.03,
+    "build_up": 0.0,
+    "randomness": 0.0
+   }
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "stroke": {
+   "space": "document",
+   "route": "tool",
+   "smoothing": false,
+   "points": [
+    {
+     "at": [
+      300.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      304.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      308.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      312.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      316.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      320.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      324.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      328.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      332.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      336.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      340.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      344.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      348.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      352.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      356.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      360.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      364.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      368.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      372.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      376.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      380.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      384.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      388.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      392.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      396.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      400.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      404.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      408.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      412.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      416.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      420.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      424.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      426.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      424.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      420.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      416.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      412.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      408.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      404.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      400.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      396.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      392.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      388.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      384.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      380.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      376.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      372.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      368.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      364.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      360.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      356.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      352.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      348.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      344.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      340.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      336.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      332.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      328.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      324.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      320.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      316.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      312.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      308.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      304.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      300.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      304.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      308.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      312.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      316.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      320.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      324.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      328.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      332.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      336.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      340.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      344.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      348.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      352.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      356.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      360.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      364.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      368.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      372.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      376.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      380.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      384.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      388.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      392.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      396.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      400.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      404.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      408.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      412.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      416.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      420.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      424.0,
+      250
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      426.0,
+      250
+     ],
+     "pressure": 0.5
+    }
+   ]
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "tool": {
+   "id": "noise_brush",
+   "options": {
+    "radius": 0.03,
+    "build_up": 1.0,
+    "randomness": 0.0
+   }
+  }
+ },
+ {
+  "wait": 5
+ },
+ {
+  "stroke": {
+   "space": "document",
+   "route": "tool",
+   "smoothing": false,
+   "points": [
+    {
+     "at": [
+      300.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      304.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      308.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      312.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      316.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      320.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      324.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      328.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      332.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      336.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      340.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      344.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      348.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      352.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      356.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      360.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      364.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      368.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      372.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      376.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      380.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      384.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      388.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      392.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      396.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      400.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      404.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      408.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      412.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      416.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      420.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      424.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      426.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      424.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      420.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      416.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      412.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      408.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      404.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      400.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      396.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      392.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      388.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      384.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      380.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      376.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      372.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      368.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      364.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      360.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      356.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      352.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      348.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      344.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      340.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      336.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      332.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      328.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      324.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      320.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      316.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      312.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      308.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      304.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      300.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      304.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      308.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      312.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      316.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      320.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      324.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      328.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      332.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      336.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      340.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      344.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      348.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      352.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      356.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      360.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      364.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      368.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      372.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      376.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      380.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      384.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      388.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      392.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      396.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      400.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      404.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      408.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      412.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      416.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      420.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      424.0,
+      420
+     ],
+     "pressure": 0.5
+    },
+    {
+     "at": [
+      426.0,
+      420
+     ],
+     "pressure": 0.5
+    }
+   ]
+  }
+ },
+ {
+  "wait": 20
+ },
+ {
+  "wait": 20
+ },
+ {
+  "height_span": -0.1
+ },
+ {
+  "look": {
+   "path": "1-all.png",
+   "rect": [
+    0,
+    0,
+    1000,
+    700
+   ],
+   "scale": 0.5
+  }
+ },
+ {
+  "look": {
+   "path": "2-bristle-flat-build-up-0-above-1.png",
+   "rect": [
+    260,
+    200,
+    210,
+    270
+   ],
+   "scale": 2.0
+  }
+ },
+ {
+  "export": "user://lit.png",
+  "bake_relief": true,
+  "over_frames": false
+ },
+ {
+  "export": "user://unlit.png",
+  "bake_relief": false,
+  "over_frames": false
+ },
+ {
+  "wait": 10
+ },
+ {
+  "zoom": 3.0
+ },
+ {
+  "wait": 15
+ },
+ {
+  "shot": "3-bristle-flat-build-up-0-above-1-lit"
+ },
+ {
+  "state": "3-bristle-flat-build-up-0-above-1-lit"
+ }
+]

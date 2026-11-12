@@ -1,0 +1,25 @@
+[
+  {"comment": "A floating docker stops at the window's edge while dragged, under the rule that a floating docker keeps part of its title strip on the window. At 1280 by 1024 Layers is dragged towards the lower middle of the window, far enough that the pointer's place would leave its bottom edge 900 below where it was, and let go. The drag's place goes through SaDockerLayoutFit.reached, so it stops at 1000 with 24 of its title strip, the button row and the grip, in reach. Then a drag 2000 to the right, which stops with 128 of the strip inside the right edge, and Shift+T off and on, which opens it whole again through DockerDragHandle.clamp_to_host."},
+  {"window": [1280, 1024]},
+  {"wait": 30},
+  {"state": "01-layers-where-it-opens"},
+  {"shot": "01-layers-where-it-opens"},
+
+  {"drag": {"window": "Layers", "by": [-450, 900]}},
+  {"wait": 10},
+  {"state": "02-dragged-to-the-lower-middle"},
+  {"shot": "02-dragged-to-the-lower-middle"},
+
+  {"drag": {"window": "Layers", "by": [2000, 0]}},
+  {"wait": 10},
+  {"state": "03-dragged-past-the-right-edge"},
+  {"shot": "03-dragged-past-the-right-edge"},
+
+  {"key": {"key": "t", "shift": true}},
+  {"wait": 10},
+  {"state": "04-shift-t-off"},
+  {"key": {"key": "t", "shift": true}},
+  {"wait": 30},
+  {"state": "05-shift-t-off-and-on"},
+  {"shot": "05-shift-t-off-and-on"}
+]

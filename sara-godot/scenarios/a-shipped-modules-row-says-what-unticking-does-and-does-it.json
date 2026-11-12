@@ -1,0 +1,21 @@
+[
+ {"wait": 45},
+ {"docker": "park"},
+ {"wait": 15},
+
+ {"menu": "Modules"},
+ {"wait": 15},
+ {"shot": "1-every-module-row-says-built-in-with-no-tick"},
+ {"state": "1-every-module-row-says-built-in-with-no-tick"},
+
+ {"key": "down"},
+ {"wait": 10},
+ {"key": "enter"},
+ {"wait": 12},
+ {"shot": "2-a-press-on-a-module-row-runs-nothing"},
+ {"state": "2-a-press-on-a-module-row-runs-nothing"},
+
+ {"key": "escape"},
+ {"wait": 12},
+ {"state": "3-every-menu-closed"}
+]

@@ -1,0 +1,92 @@
+[
+ {
+  "wait": 40
+ },
+ {
+  "prefs": {
+   "theme_name": "default",
+   "ui_scale": 1.0
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "layer": {
+   "add": "probe",
+   "fill": [
+    0.753,
+    0.188,
+    0.125,
+    1.0
+   ]
+  }
+ },
+ {
+  "select": [
+   200,
+   200,
+   300,
+   200
+  ]
+ },
+ {
+  "wait": 10
+ },
+ {
+  "menu": "Layer"
+ },
+ {
+  "wait": 18
+ },
+ {
+  "shot": "01-layer-menu-with-a-selection"
+ },
+ {
+  "state": "01-layer-menu-with-a-selection"
+ },
+ {
+  "key": "escape"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "key": {
+   "key": "j",
+   "ctrl": true,
+   "alt": true,
+   "shift": true
+  }
+ },
+ {
+  "wait": 10
+ },
+ {
+  "layers": true
+ },
+ {
+  "state": "02-after-the-chord"
+ },
+ {
+  "select": "none"
+ },
+ {
+  "wait": 5
+ },
+ {
+  "menu": "Layer"
+ },
+ {
+  "wait": 18
+ },
+ {
+  "shot": "03-layer-menu-with-no-selection"
+ },
+ {
+  "state": "03-layer-menu-with-no-selection"
+ },
+ {
+  "key": "escape"
+ }
+]

@@ -1,0 +1,36 @@
+[
+  {"comment": "The Minimap in the full layout, in the left column at its shipped width, at 1920 by 1080, a red ground with a dark stroke on it. The proof off with Lightness Check named whole beside the Proof switch, then the switch pressed and the map grey, then Ctrl+Shift+Y turning it off with the switch letting go, then the longest mode, Display encoding off, still whole."},
+  {"wait": 30},
+  {"layout_preset": {"delete": "full (custom)"}},
+  {"layout_preset": {"load": "full"}},
+  {"wait": 25},
+  {"prefs": {"minimap_proof_mode": "lightness_check"}},
+  {"fill": [0.8, 0.1, 0.1]},
+  {"stroke": {"from": [1320, 220], "to": [1560, 820], "pressure": 1.0, "steps": 14}},
+  {"wait": 15},
+  {"minimap": {}},
+  {"state": "01-the-proof-off"},
+  {"shot": "01-the-proof-off"},
+
+  {"click": {"control": "ProofSwitch"}},
+  {"wait": 15},
+  {"minimap": {}},
+  {"state": "02-the-switch-turns-the-proof-on"},
+  {"shot": "02-the-switch-turns-the-proof-on"},
+
+  {"key": {"key": "y", "ctrl": true, "shift": true}},
+  {"wait": 15},
+  {"minimap": {}},
+  {"state": "03-the-chord-turns-it-off-and-the-switch-lets-go"},
+  {"shot": "03-the-chord-turns-it-off-and-the-switch-lets-go"},
+
+  {"minimap": {"proof": "encoding_off"}},
+  {"wait": 15},
+  {"state": "04-the-longest-mode-reads-whole"},
+  {"shot": "04-the-longest-mode-reads-whole"},
+
+  {"prefs": {"minimap_proof_mode": "lightness_check"}},
+  {"layout_preset": {"load": "default"}},
+  {"wait": 15},
+  {"layout_preset": {"delete": "full (custom)"}}
+]

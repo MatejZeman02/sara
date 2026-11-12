@@ -1,0 +1,17 @@
+# A kernel named hard_mix, which is what the module beside this file declares
+# and what its mode does not ask for. Nothing here is an example worth copying:
+# it is the shortest kernel that gives the refusal something to look for, and
+# it is never dispatched, the mode that would name it having been refused.
+
+kernel hard_mix
+
+image dst
+
+params:
+    vec4 value
+
+
+def hard_mix():
+    if pixel.x >= image_size(dst).x or pixel.y >= image_size(dst).y:
+        return
+    image_store(dst, pixel, value)

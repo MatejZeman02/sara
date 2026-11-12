@@ -1,0 +1,17 @@
+[
+  {"document": "srgb"},
+  {"layer": {"add": "Small"}},
+  {"path": {"circle": [960, 540, 40]}},
+  {"wait": 240},
+  {"state": "before_lock"},
+  {"layer_action": "alpha_lock"},
+  {"wait": 5},
+  {"state": "locked"},
+  {"fill": [1.0, 0.0, 0.0]},
+  {"wait": 5},
+  {"state": "after_fill"},
+  {"shot": "after_fill"},
+  {"undo": true},
+  {"wait": 5},
+  {"state": "after_undo"}
+]

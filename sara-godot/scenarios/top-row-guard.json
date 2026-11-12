@@ -1,0 +1,16 @@
+[
+  {"wait": 30},
+  {"prefs": {"second_row": true}},
+  {"wait": 20},
+  {"state": "1-second-row-on"},
+  {"shot": "1-second-row-on"},
+
+  {"prefs": {"second_row": false}},
+  {"wait": 20},
+  {"state": "2-second-row-off"},
+  {"shot": "2-second-row-off"},
+
+  {"prefs": {"second_row": true}},
+  {"wait": 15},
+  {"state": "3-put-back"}
+]

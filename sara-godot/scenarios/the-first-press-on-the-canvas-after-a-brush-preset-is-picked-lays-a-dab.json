@@ -1,0 +1,2457 @@
+[
+  {
+    "comment": "The first press on the canvas after a brush preset is picked lays a dab. Each run picks a preset whose tool is another than the one in hand, the stamp brush's Airbrush, the filter brush's Grain Filter, the stamp brush's Eraser and the noise brush's Grain Round in turn, by a press on its tile's name, which picks on the press while the button is still down on the docker, and then strokes at once. A mouse lets go on the tile, a click. A pen's tip goes down on the tile and leaves range there, and its release is never sent, which is what Godot's Wayland driver does with a release in the frame the pen leaves range. Twenty mouse strokes and then twenty pen strokes, because a pen's pressure makes the brush a tablet's for the strokes after it, each twenty half with the presets docker embedded and half with it let out as a window of its own. A pen stroke's verdict says how many dabs it laid and the texel of the first, a stroke that began is one step of the history, and the look at the end shows every stroke reaching its press point."
+  },
+  {
+    "window": [
+      1920,
+      1080
+    ]
+  },
+  {
+    "wait": 90
+  },
+  {
+    "document": "srgb"
+  },
+  {
+    "layer": {
+      "fill": [
+        0.8,
+        0.75,
+        0.6,
+        1.0
+      ],
+      "chunks": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          0,
+          4
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          2,
+          4
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          3,
+          3
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ],
+        [
+          4,
+          2
+        ],
+        [
+          4,
+          3
+        ],
+        [
+          4,
+          4
+        ],
+        [
+          5,
+          0
+        ],
+        [
+          5,
+          1
+        ],
+        [
+          5,
+          2
+        ],
+        [
+          5,
+          3
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          6,
+          0
+        ],
+        [
+          6,
+          1
+        ],
+        [
+          6,
+          2
+        ],
+        [
+          6,
+          3
+        ],
+        [
+          6,
+          4
+        ],
+        [
+          7,
+          0
+        ],
+        [
+          7,
+          1
+        ],
+        [
+          7,
+          2
+        ],
+        [
+          7,
+          3
+        ],
+        [
+          7,
+          4
+        ]
+      ]
+    }
+  },
+  {
+    "docker": "park"
+  },
+  {
+    "docker": {
+      "id": "BrushPresetsDocker",
+      "at": [
+        900,
+        40
+      ],
+      "size": [
+        1010,
+        1030
+      ]
+    }
+  },
+  {
+    "wait": 60
+  },
+  {
+    "comment": "run 1, mouse, embedded, Airbrush"
+  },
+  {
+    "click": {
+      "control": "Cell_Airbrush",
+      "within": [
+        0.5,
+        0.95
+      ]
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "move": [
+      100,
+      370
+    ]
+  },
+  {
+    "press": "left"
+  },
+  {
+    "move": [
+      137,
+      370
+    ]
+  },
+  {
+    "move": [
+      175,
+      370
+    ]
+  },
+  {
+    "move": [
+      212,
+      370
+    ]
+  },
+  {
+    "move": [
+      250,
+      370
+    ]
+  },
+  {
+    "move": [
+      287,
+      370
+    ]
+  },
+  {
+    "move": [
+      325,
+      370
+    ]
+  },
+  {
+    "move": [
+      362,
+      370
+    ]
+  },
+  {
+    "move": [
+      400,
+      370
+    ]
+  },
+  {
+    "release": "left"
+  },
+  {
+    "wait": 3
+  },
+  {
+    "comment": "run 2, mouse, embedded, Grain Filter"
+  },
+  {
+    "click": {
+      "control": "Cell_Grain Filter",
+      "within": [
+        0.5,
+        0.95
+      ]
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "move": [
+      100,
+      390
+    ]
+  },
+  {
+    "press": "left"
+  },
+  {
+    "move": [
+      137,
+      390
+    ]
+  },
+  {
+    "move": [
+      175,
+      390
+    ]
+  },
+  {
+    "move": [
+      212,
+      390
+    ]
+  },
+  {
+    "move": [
+      250,
+      390
+    ]
+  },
+  {
+    "move": [
+      287,
+      390
+    ]
+  },
+  {
+    "move": [
+      325,
+      390
+    ]
+  },
+  {
+    "move": [
+      362,
+      390
+    ]
+  },
+  {
+    "move": [
+      400,
+      390
+    ]
+  },
+  {
+    "release": "left"
+  },
+  {
+    "wait": 3
+  },
+  {
+    "comment": "run 3, mouse, embedded, Eraser"
+  },
+  {
+    "click": {
+      "control": "Cell_Eraser",
+      "within": [
+        0.5,
+        0.95
+      ]
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "move": [
+      100,
+      410
+    ]
+  },
+  {
+    "press": "left"
+  },
+  {
+    "move": [
+      137,
+      410
+    ]
+  },
+  {
+    "move": [
+      175,
+      410
+    ]
+  },
+  {
+    "move": [
+      212,
+      410
+    ]
+  },
+  {
+    "move": [
+      250,
+      410
+    ]
+  },
+  {
+    "move": [
+      287,
+      410
+    ]
+  },
+  {
+    "move": [
+      325,
+      410
+    ]
+  },
+  {
+    "move": [
+      362,
+      410
+    ]
+  },
+  {
+    "move": [
+      400,
+      410
+    ]
+  },
+  {
+    "release": "left"
+  },
+  {
+    "wait": 3
+  },
+  {
+    "comment": "run 4, mouse, embedded, Grain Round"
+  },
+  {
+    "click": {
+      "control": "Cell_Grain Round",
+      "within": [
+        0.5,
+        0.95
+      ]
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "move": [
+      100,
+      430
+    ]
+  },
+  {
+    "press": "left"
+  },
+  {
+    "move": [
+      137,
+      430
+    ]
+  },
+  {
+    "move": [
+      175,
+      430
+    ]
+  },
+  {
+    "move": [
+      212,
+      430
+    ]
+  },
+  {
+    "move": [
+      250,
+      430
+    ]
+  },
+  {
+    "move": [
+      287,
+      430
+    ]
+  },
+  {
+    "move": [
+      325,
+      430
+    ]
+  },
+  {
+    "move": [
+      362,
+      430
+    ]
+  },
+  {
+    "move": [
+      400,
+      430
+    ]
+  },
+  {
+    "release": "left"
+  },
+  {
+    "wait": 3
+  },
+  {
+    "comment": "run 5, mouse, embedded, Airbrush"
+  },
+  {
+    "click": {
+      "control": "Cell_Airbrush",
+      "within": [
+        0.5,
+        0.95
+      ]
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "move": [
+      100,
+      450
+    ]
+  },
+  {
+    "press": "left"
+  },
+  {
+    "move": [
+      137,
+      450
+    ]
+  },
+  {
+    "move": [
+      175,
+      450
+    ]
+  },
+  {
+    "move": [
+      212,
+      450
+    ]
+  },
+  {
+    "move": [
+      250,
+      450
+    ]
+  },
+  {
+    "move": [
+      287,
+      450
+    ]
+  },
+  {
+    "move": [
+      325,
+      450
+    ]
+  },
+  {
+    "move": [
+      362,
+      450
+    ]
+  },
+  {
+    "move": [
+      400,
+      450
+    ]
+  },
+  {
+    "release": "left"
+  },
+  {
+    "wait": 3
+  },
+  {
+    "comment": "run 6, mouse, embedded, Grain Filter"
+  },
+  {
+    "click": {
+      "control": "Cell_Grain Filter",
+      "within": [
+        0.5,
+        0.95
+      ]
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "move": [
+      100,
+      470
+    ]
+  },
+  {
+    "press": "left"
+  },
+  {
+    "move": [
+      137,
+      470
+    ]
+  },
+  {
+    "move": [
+      175,
+      470
+    ]
+  },
+  {
+    "move": [
+      212,
+      470
+    ]
+  },
+  {
+    "move": [
+      250,
+      470
+    ]
+  },
+  {
+    "move": [
+      287,
+      470
+    ]
+  },
+  {
+    "move": [
+      325,
+      470
+    ]
+  },
+  {
+    "move": [
+      362,
+      470
+    ]
+  },
+  {
+    "move": [
+      400,
+      470
+    ]
+  },
+  {
+    "release": "left"
+  },
+  {
+    "wait": 3
+  },
+  {
+    "comment": "run 7, mouse, embedded, Eraser"
+  },
+  {
+    "click": {
+      "control": "Cell_Eraser",
+      "within": [
+        0.5,
+        0.95
+      ]
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "move": [
+      100,
+      490
+    ]
+  },
+  {
+    "press": "left"
+  },
+  {
+    "move": [
+      137,
+      490
+    ]
+  },
+  {
+    "move": [
+      175,
+      490
+    ]
+  },
+  {
+    "move": [
+      212,
+      490
+    ]
+  },
+  {
+    "move": [
+      250,
+      490
+    ]
+  },
+  {
+    "move": [
+      287,
+      490
+    ]
+  },
+  {
+    "move": [
+      325,
+      490
+    ]
+  },
+  {
+    "move": [
+      362,
+      490
+    ]
+  },
+  {
+    "move": [
+      400,
+      490
+    ]
+  },
+  {
+    "release": "left"
+  },
+  {
+    "wait": 3
+  },
+  {
+    "comment": "run 8, mouse, embedded, Grain Round"
+  },
+  {
+    "click": {
+      "control": "Cell_Grain Round",
+      "within": [
+        0.5,
+        0.95
+      ]
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "move": [
+      100,
+      510
+    ]
+  },
+  {
+    "press": "left"
+  },
+  {
+    "move": [
+      137,
+      510
+    ]
+  },
+  {
+    "move": [
+      175,
+      510
+    ]
+  },
+  {
+    "move": [
+      212,
+      510
+    ]
+  },
+  {
+    "move": [
+      250,
+      510
+    ]
+  },
+  {
+    "move": [
+      287,
+      510
+    ]
+  },
+  {
+    "move": [
+      325,
+      510
+    ]
+  },
+  {
+    "move": [
+      362,
+      510
+    ]
+  },
+  {
+    "move": [
+      400,
+      510
+    ]
+  },
+  {
+    "release": "left"
+  },
+  {
+    "wait": 3
+  },
+  {
+    "comment": "run 9, mouse, embedded, Airbrush"
+  },
+  {
+    "click": {
+      "control": "Cell_Airbrush",
+      "within": [
+        0.5,
+        0.95
+      ]
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "move": [
+      100,
+      530
+    ]
+  },
+  {
+    "press": "left"
+  },
+  {
+    "move": [
+      137,
+      530
+    ]
+  },
+  {
+    "move": [
+      175,
+      530
+    ]
+  },
+  {
+    "move": [
+      212,
+      530
+    ]
+  },
+  {
+    "move": [
+      250,
+      530
+    ]
+  },
+  {
+    "move": [
+      287,
+      530
+    ]
+  },
+  {
+    "move": [
+      325,
+      530
+    ]
+  },
+  {
+    "move": [
+      362,
+      530
+    ]
+  },
+  {
+    "move": [
+      400,
+      530
+    ]
+  },
+  {
+    "release": "left"
+  },
+  {
+    "wait": 3
+  },
+  {
+    "comment": "run 10, mouse, embedded, Grain Filter"
+  },
+  {
+    "click": {
+      "control": "Cell_Grain Filter",
+      "within": [
+        0.5,
+        0.95
+      ]
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "move": [
+      100,
+      550
+    ]
+  },
+  {
+    "press": "left"
+  },
+  {
+    "move": [
+      137,
+      550
+    ]
+  },
+  {
+    "move": [
+      175,
+      550
+    ]
+  },
+  {
+    "move": [
+      212,
+      550
+    ]
+  },
+  {
+    "move": [
+      250,
+      550
+    ]
+  },
+  {
+    "move": [
+      287,
+      550
+    ]
+  },
+  {
+    "move": [
+      325,
+      550
+    ]
+  },
+  {
+    "move": [
+      362,
+      550
+    ]
+  },
+  {
+    "move": [
+      400,
+      550
+    ]
+  },
+  {
+    "release": "left"
+  },
+  {
+    "wait": 3
+  },
+  {
+    "prefs": {
+      "embed_subwindows": false
+    }
+  },
+  {
+    "wait": 90
+  },
+  {
+    "docker": "park"
+  },
+  {
+    "docker": {
+      "id": "BrushPresetsDocker",
+      "at": [
+        900,
+        40
+      ],
+      "size": [
+        1010,
+        1030
+      ]
+    }
+  },
+  {
+    "wait": 30
+  },
+  {
+    "comment": "run 11, mouse, let out, Eraser"
+  },
+  {
+    "click": {
+      "control": "Cell_Eraser",
+      "within": [
+        0.5,
+        0.95
+      ]
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "move": [
+      480,
+      370
+    ]
+  },
+  {
+    "press": "left"
+  },
+  {
+    "move": [
+      517,
+      370
+    ]
+  },
+  {
+    "move": [
+      555,
+      370
+    ]
+  },
+  {
+    "move": [
+      592,
+      370
+    ]
+  },
+  {
+    "move": [
+      630,
+      370
+    ]
+  },
+  {
+    "move": [
+      667,
+      370
+    ]
+  },
+  {
+    "move": [
+      705,
+      370
+    ]
+  },
+  {
+    "move": [
+      742,
+      370
+    ]
+  },
+  {
+    "move": [
+      780,
+      370
+    ]
+  },
+  {
+    "release": "left"
+  },
+  {
+    "wait": 3
+  },
+  {
+    "comment": "run 12, mouse, let out, Grain Round"
+  },
+  {
+    "click": {
+      "control": "Cell_Grain Round",
+      "within": [
+        0.5,
+        0.95
+      ]
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "move": [
+      480,
+      390
+    ]
+  },
+  {
+    "press": "left"
+  },
+  {
+    "move": [
+      517,
+      390
+    ]
+  },
+  {
+    "move": [
+      555,
+      390
+    ]
+  },
+  {
+    "move": [
+      592,
+      390
+    ]
+  },
+  {
+    "move": [
+      630,
+      390
+    ]
+  },
+  {
+    "move": [
+      667,
+      390
+    ]
+  },
+  {
+    "move": [
+      705,
+      390
+    ]
+  },
+  {
+    "move": [
+      742,
+      390
+    ]
+  },
+  {
+    "move": [
+      780,
+      390
+    ]
+  },
+  {
+    "release": "left"
+  },
+  {
+    "wait": 3
+  },
+  {
+    "comment": "run 13, mouse, let out, Airbrush"
+  },
+  {
+    "click": {
+      "control": "Cell_Airbrush",
+      "within": [
+        0.5,
+        0.95
+      ]
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "move": [
+      480,
+      410
+    ]
+  },
+  {
+    "press": "left"
+  },
+  {
+    "move": [
+      517,
+      410
+    ]
+  },
+  {
+    "move": [
+      555,
+      410
+    ]
+  },
+  {
+    "move": [
+      592,
+      410
+    ]
+  },
+  {
+    "move": [
+      630,
+      410
+    ]
+  },
+  {
+    "move": [
+      667,
+      410
+    ]
+  },
+  {
+    "move": [
+      705,
+      410
+    ]
+  },
+  {
+    "move": [
+      742,
+      410
+    ]
+  },
+  {
+    "move": [
+      780,
+      410
+    ]
+  },
+  {
+    "release": "left"
+  },
+  {
+    "wait": 3
+  },
+  {
+    "comment": "run 14, mouse, let out, Grain Filter"
+  },
+  {
+    "click": {
+      "control": "Cell_Grain Filter",
+      "within": [
+        0.5,
+        0.95
+      ]
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "move": [
+      480,
+      430
+    ]
+  },
+  {
+    "press": "left"
+  },
+  {
+    "move": [
+      517,
+      430
+    ]
+  },
+  {
+    "move": [
+      555,
+      430
+    ]
+  },
+  {
+    "move": [
+      592,
+      430
+    ]
+  },
+  {
+    "move": [
+      630,
+      430
+    ]
+  },
+  {
+    "move": [
+      667,
+      430
+    ]
+  },
+  {
+    "move": [
+      705,
+      430
+    ]
+  },
+  {
+    "move": [
+      742,
+      430
+    ]
+  },
+  {
+    "move": [
+      780,
+      430
+    ]
+  },
+  {
+    "release": "left"
+  },
+  {
+    "wait": 3
+  },
+  {
+    "comment": "run 15, mouse, let out, Eraser"
+  },
+  {
+    "click": {
+      "control": "Cell_Eraser",
+      "within": [
+        0.5,
+        0.95
+      ]
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "move": [
+      480,
+      450
+    ]
+  },
+  {
+    "press": "left"
+  },
+  {
+    "move": [
+      517,
+      450
+    ]
+  },
+  {
+    "move": [
+      555,
+      450
+    ]
+  },
+  {
+    "move": [
+      592,
+      450
+    ]
+  },
+  {
+    "move": [
+      630,
+      450
+    ]
+  },
+  {
+    "move": [
+      667,
+      450
+    ]
+  },
+  {
+    "move": [
+      705,
+      450
+    ]
+  },
+  {
+    "move": [
+      742,
+      450
+    ]
+  },
+  {
+    "move": [
+      780,
+      450
+    ]
+  },
+  {
+    "release": "left"
+  },
+  {
+    "wait": 3
+  },
+  {
+    "comment": "run 16, mouse, let out, Grain Round"
+  },
+  {
+    "click": {
+      "control": "Cell_Grain Round",
+      "within": [
+        0.5,
+        0.95
+      ]
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "move": [
+      480,
+      470
+    ]
+  },
+  {
+    "press": "left"
+  },
+  {
+    "move": [
+      517,
+      470
+    ]
+  },
+  {
+    "move": [
+      555,
+      470
+    ]
+  },
+  {
+    "move": [
+      592,
+      470
+    ]
+  },
+  {
+    "move": [
+      630,
+      470
+    ]
+  },
+  {
+    "move": [
+      667,
+      470
+    ]
+  },
+  {
+    "move": [
+      705,
+      470
+    ]
+  },
+  {
+    "move": [
+      742,
+      470
+    ]
+  },
+  {
+    "move": [
+      780,
+      470
+    ]
+  },
+  {
+    "release": "left"
+  },
+  {
+    "wait": 3
+  },
+  {
+    "comment": "run 17, mouse, let out, Airbrush"
+  },
+  {
+    "click": {
+      "control": "Cell_Airbrush",
+      "within": [
+        0.5,
+        0.95
+      ]
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "move": [
+      480,
+      490
+    ]
+  },
+  {
+    "press": "left"
+  },
+  {
+    "move": [
+      517,
+      490
+    ]
+  },
+  {
+    "move": [
+      555,
+      490
+    ]
+  },
+  {
+    "move": [
+      592,
+      490
+    ]
+  },
+  {
+    "move": [
+      630,
+      490
+    ]
+  },
+  {
+    "move": [
+      667,
+      490
+    ]
+  },
+  {
+    "move": [
+      705,
+      490
+    ]
+  },
+  {
+    "move": [
+      742,
+      490
+    ]
+  },
+  {
+    "move": [
+      780,
+      490
+    ]
+  },
+  {
+    "release": "left"
+  },
+  {
+    "wait": 3
+  },
+  {
+    "comment": "run 18, mouse, let out, Grain Filter"
+  },
+  {
+    "click": {
+      "control": "Cell_Grain Filter",
+      "within": [
+        0.5,
+        0.95
+      ]
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "move": [
+      480,
+      510
+    ]
+  },
+  {
+    "press": "left"
+  },
+  {
+    "move": [
+      517,
+      510
+    ]
+  },
+  {
+    "move": [
+      555,
+      510
+    ]
+  },
+  {
+    "move": [
+      592,
+      510
+    ]
+  },
+  {
+    "move": [
+      630,
+      510
+    ]
+  },
+  {
+    "move": [
+      667,
+      510
+    ]
+  },
+  {
+    "move": [
+      705,
+      510
+    ]
+  },
+  {
+    "move": [
+      742,
+      510
+    ]
+  },
+  {
+    "move": [
+      780,
+      510
+    ]
+  },
+  {
+    "release": "left"
+  },
+  {
+    "wait": 3
+  },
+  {
+    "comment": "run 19, mouse, let out, Eraser"
+  },
+  {
+    "click": {
+      "control": "Cell_Eraser",
+      "within": [
+        0.5,
+        0.95
+      ]
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "move": [
+      480,
+      530
+    ]
+  },
+  {
+    "press": "left"
+  },
+  {
+    "move": [
+      517,
+      530
+    ]
+  },
+  {
+    "move": [
+      555,
+      530
+    ]
+  },
+  {
+    "move": [
+      592,
+      530
+    ]
+  },
+  {
+    "move": [
+      630,
+      530
+    ]
+  },
+  {
+    "move": [
+      667,
+      530
+    ]
+  },
+  {
+    "move": [
+      705,
+      530
+    ]
+  },
+  {
+    "move": [
+      742,
+      530
+    ]
+  },
+  {
+    "move": [
+      780,
+      530
+    ]
+  },
+  {
+    "release": "left"
+  },
+  {
+    "wait": 3
+  },
+  {
+    "comment": "run 20, mouse, let out, Grain Round"
+  },
+  {
+    "click": {
+      "control": "Cell_Grain Round",
+      "within": [
+        0.5,
+        0.95
+      ]
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "move": [
+      480,
+      550
+    ]
+  },
+  {
+    "press": "left"
+  },
+  {
+    "move": [
+      517,
+      550
+    ]
+  },
+  {
+    "move": [
+      555,
+      550
+    ]
+  },
+  {
+    "move": [
+      592,
+      550
+    ]
+  },
+  {
+    "move": [
+      630,
+      550
+    ]
+  },
+  {
+    "move": [
+      667,
+      550
+    ]
+  },
+  {
+    "move": [
+      705,
+      550
+    ]
+  },
+  {
+    "move": [
+      742,
+      550
+    ]
+  },
+  {
+    "move": [
+      780,
+      550
+    ]
+  },
+  {
+    "release": "left"
+  },
+  {
+    "wait": 3
+  },
+  {
+    "comment": "run 21, pen, let out, Airbrush"
+  },
+  {
+    "press": {
+      "button": "left",
+      "at": [
+        984,
+        344
+      ]
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "stroke": {
+      "from": [
+        480,
+        570
+      ],
+      "to": [
+        780,
+        570
+      ],
+      "pressure": 0.8
+    }
+  },
+  {
+    "wait": 3
+  },
+  {
+    "comment": "run 22, pen, let out, Grain Filter"
+  },
+  {
+    "press": {
+      "button": "left",
+      "at": [
+        1652,
+        935
+      ]
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "stroke": {
+      "from": [
+        480,
+        590
+      ],
+      "to": [
+        780,
+        590
+      ],
+      "pressure": 0.8
+    }
+  },
+  {
+    "wait": 3
+  },
+  {
+    "comment": "run 23, pen, let out, Eraser"
+  },
+  {
+    "press": {
+      "button": "left",
+      "at": [
+        1818,
+        738
+      ]
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "stroke": {
+      "from": [
+        480,
+        610
+      ],
+      "to": [
+        780,
+        610
+      ],
+      "pressure": 0.8
+    }
+  },
+  {
+    "wait": 3
+  },
+  {
+    "comment": "run 24, pen, let out, Grain Round"
+  },
+  {
+    "press": {
+      "button": "left",
+      "at": [
+        1818,
+        935
+      ]
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "stroke": {
+      "from": [
+        480,
+        630
+      ],
+      "to": [
+        780,
+        630
+      ],
+      "pressure": 0.8
+    }
+  },
+  {
+    "wait": 3
+  },
+  {
+    "comment": "run 25, pen, let out, Airbrush"
+  },
+  {
+    "press": {
+      "button": "left",
+      "at": [
+        984,
+        344
+      ]
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "stroke": {
+      "from": [
+        480,
+        650
+      ],
+      "to": [
+        780,
+        650
+      ],
+      "pressure": 0.8
+    }
+  },
+  {
+    "wait": 3
+  },
+  {
+    "comment": "run 26, pen, let out, Grain Filter"
+  },
+  {
+    "press": {
+      "button": "left",
+      "at": [
+        1652,
+        935
+      ]
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "stroke": {
+      "from": [
+        480,
+        670
+      ],
+      "to": [
+        780,
+        670
+      ],
+      "pressure": 0.8
+    }
+  },
+  {
+    "wait": 3
+  },
+  {
+    "comment": "run 27, pen, let out, Eraser"
+  },
+  {
+    "press": {
+      "button": "left",
+      "at": [
+        1818,
+        738
+      ]
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "stroke": {
+      "from": [
+        480,
+        690
+      ],
+      "to": [
+        780,
+        690
+      ],
+      "pressure": 0.8
+    }
+  },
+  {
+    "wait": 3
+  },
+  {
+    "comment": "run 28, pen, let out, Grain Round"
+  },
+  {
+    "press": {
+      "button": "left",
+      "at": [
+        1818,
+        935
+      ]
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "stroke": {
+      "from": [
+        480,
+        710
+      ],
+      "to": [
+        780,
+        710
+      ],
+      "pressure": 0.8
+    }
+  },
+  {
+    "wait": 3
+  },
+  {
+    "comment": "run 29, pen, let out, Airbrush"
+  },
+  {
+    "press": {
+      "button": "left",
+      "at": [
+        984,
+        344
+      ]
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "stroke": {
+      "from": [
+        480,
+        730
+      ],
+      "to": [
+        780,
+        730
+      ],
+      "pressure": 0.8
+    }
+  },
+  {
+    "wait": 3
+  },
+  {
+    "comment": "run 30, pen, let out, Grain Filter"
+  },
+  {
+    "press": {
+      "button": "left",
+      "at": [
+        1652,
+        935
+      ]
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "stroke": {
+      "from": [
+        480,
+        750
+      ],
+      "to": [
+        780,
+        750
+      ],
+      "pressure": 0.8
+    }
+  },
+  {
+    "wait": 3
+  },
+  {
+    "prefs": {
+      "embed_subwindows": true
+    }
+  },
+  {
+    "wait": 90
+  },
+  {
+    "docker": "park"
+  },
+  {
+    "docker": {
+      "id": "BrushPresetsDocker",
+      "at": [
+        900,
+        40
+      ],
+      "size": [
+        1010,
+        1030
+      ]
+    }
+  },
+  {
+    "wait": 30
+  },
+  {
+    "comment": "run 31, pen, embedded, Eraser"
+  },
+  {
+    "press": {
+      "button": "left",
+      "at": [
+        1818,
+        738
+      ]
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "stroke": {
+      "from": [
+        100,
+        570
+      ],
+      "to": [
+        400,
+        570
+      ],
+      "pressure": 0.8
+    }
+  },
+  {
+    "wait": 3
+  },
+  {
+    "comment": "run 32, pen, embedded, Grain Round"
+  },
+  {
+    "press": {
+      "button": "left",
+      "at": [
+        1818,
+        935
+      ]
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "stroke": {
+      "from": [
+        100,
+        590
+      ],
+      "to": [
+        400,
+        590
+      ],
+      "pressure": 0.8
+    }
+  },
+  {
+    "wait": 3
+  },
+  {
+    "comment": "run 33, pen, embedded, Airbrush"
+  },
+  {
+    "press": {
+      "button": "left",
+      "at": [
+        984,
+        344
+      ]
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "stroke": {
+      "from": [
+        100,
+        610
+      ],
+      "to": [
+        400,
+        610
+      ],
+      "pressure": 0.8
+    }
+  },
+  {
+    "wait": 3
+  },
+  {
+    "comment": "run 34, pen, embedded, Grain Filter"
+  },
+  {
+    "press": {
+      "button": "left",
+      "at": [
+        1652,
+        935
+      ]
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "stroke": {
+      "from": [
+        100,
+        630
+      ],
+      "to": [
+        400,
+        630
+      ],
+      "pressure": 0.8
+    }
+  },
+  {
+    "wait": 3
+  },
+  {
+    "comment": "run 35, pen, embedded, Eraser"
+  },
+  {
+    "press": {
+      "button": "left",
+      "at": [
+        1818,
+        738
+      ]
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "stroke": {
+      "from": [
+        100,
+        650
+      ],
+      "to": [
+        400,
+        650
+      ],
+      "pressure": 0.8
+    }
+  },
+  {
+    "wait": 3
+  },
+  {
+    "comment": "run 36, pen, embedded, Grain Round"
+  },
+  {
+    "press": {
+      "button": "left",
+      "at": [
+        1818,
+        935
+      ]
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "stroke": {
+      "from": [
+        100,
+        670
+      ],
+      "to": [
+        400,
+        670
+      ],
+      "pressure": 0.8
+    }
+  },
+  {
+    "wait": 3
+  },
+  {
+    "comment": "run 37, pen, embedded, Airbrush"
+  },
+  {
+    "press": {
+      "button": "left",
+      "at": [
+        984,
+        344
+      ]
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "stroke": {
+      "from": [
+        100,
+        690
+      ],
+      "to": [
+        400,
+        690
+      ],
+      "pressure": 0.8
+    }
+  },
+  {
+    "wait": 3
+  },
+  {
+    "comment": "run 38, pen, embedded, Grain Filter"
+  },
+  {
+    "press": {
+      "button": "left",
+      "at": [
+        1652,
+        935
+      ]
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "stroke": {
+      "from": [
+        100,
+        710
+      ],
+      "to": [
+        400,
+        710
+      ],
+      "pressure": 0.8
+    }
+  },
+  {
+    "wait": 3
+  },
+  {
+    "comment": "run 39, pen, embedded, Eraser"
+  },
+  {
+    "press": {
+      "button": "left",
+      "at": [
+        1818,
+        738
+      ]
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "stroke": {
+      "from": [
+        100,
+        730
+      ],
+      "to": [
+        400,
+        730
+      ],
+      "pressure": 0.8
+    }
+  },
+  {
+    "wait": 3
+  },
+  {
+    "comment": "run 40, pen, embedded, Grain Round"
+  },
+  {
+    "press": {
+      "button": "left",
+      "at": [
+        1818,
+        935
+      ]
+    }
+  },
+  {
+    "wait": 2
+  },
+  {
+    "stroke": {
+      "from": [
+        100,
+        750
+      ],
+      "to": [
+        400,
+        750
+      ],
+      "pressure": 0.8
+    }
+  },
+  {
+    "wait": 3
+  },
+  {
+    "wait": 10
+  },
+  {
+    "shot": "1-forty-strokes"
+  },
+  {
+    "state": "1-forty-strokes"
+  },
+  {
+    "look": {
+      "path": "look-1-forty-strokes.png",
+      "long_edge": 1920
+    }
+  }
+]

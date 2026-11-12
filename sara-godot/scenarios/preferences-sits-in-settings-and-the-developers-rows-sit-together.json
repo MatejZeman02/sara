@@ -1,0 +1,53 @@
+[
+  {"comment": "Modules ends with a Develop section holding Documentation, New Module..., Open User Modules Folder..., Reload Modules, Reload Shaders, Copy the kernel prompt and Connect an Agent, Help holds the painter's rows and the three settings pages, and Filter holds the browser and its sections with no Writing a filter heading. Each menu is opened and shot, the dump's open_menus carries its rows, and the look writes the picture without the window. Copy the kernel prompt (804) and Reload Shaders (803) are pressed from their new home and the clipboard and the corner are read back. Then Modules again at 1280 by 800 at scale 2, where the menu is longest against the room."},
+  {"wait": 40},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 20},
+  {"look": {"path": "0-the-picture-under-the-menus.png", "long_edge": 800}},
+
+  {"menu": "Modules"},
+  {"wait": 16},
+  {"shot": "1-modules-ends-with-develop"},
+  {"state": "1-modules-ends-with-develop"},
+  {"key": "escape"},
+  {"wait": 10},
+
+  {"menu": "Help"},
+  {"wait": 16},
+  {"shot": "2-help-keeps-the-painters-rows"},
+  {"state": "2-help-keeps-the-painters-rows"},
+  {"key": "escape"},
+  {"wait": 10},
+
+  {"menu": "Filter"},
+  {"wait": 16},
+  {"shot": "3-filter-has-no-writing-a-filter-row"},
+  {"state": "3-filter-has-no-writing-a-filter-row"},
+  {"key": "escape"},
+  {"wait": 10},
+
+  {"menu": "Edit"},
+  {"wait": 16},
+  {"shot": "4-edit-keeps-preferences"},
+  {"state": "4-edit-keeps-preferences"},
+  {"key": "escape"},
+  {"wait": 10},
+
+  {"kernel_prompt": "file"},
+  {"kernel_prompt": "clear"},
+  {"menu_item": {"menu": "Modules", "id": 804}},
+  {"wait": 15},
+  {"kernel_prompt": "clipboard"},
+  {"menu_item": {"menu": "Modules", "id": 803}},
+  {"wait": 20},
+  {"shot": "5-reload-shaders-from-develop"},
+  {"state": "5-reload-shaders-from-develop"},
+
+  {"window": [1280, 800]},
+  {"prefs": {"ui_scale": 2.0}},
+  {"wait": 40},
+  {"menu": "Modules"},
+  {"wait": 16},
+  {"shot": "6-modules-at-1280-by-800-at-scale-2"},
+  {"state": "6-modules-at-1280-by-800-at-scale-2"}
+]

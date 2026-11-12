@@ -1,0 +1,24 @@
+[
+ {"wait": 30},
+ {"layout_preset": {"delete": "full (custom)"}},
+ {"layout_preset": {"load": "full"}},
+ {"wait": 30},
+ {"colour": "#2f6fd6"},
+ {"wait": 10},
+ {"state": "01-the-picker-at-its-default-width"},
+ {"shot": "01-the-picker-at-its-default-width"},
+
+ {"docker_resize": {"id": "ColorDocker", "by": [-600, 0], "grip": true}},
+ {"wait": 20},
+ {"state": "02-dragged-as-narrow-as-it-goes"},
+ {"shot": "02-dragged-as-narrow-as-it-goes"},
+
+ {"docker_resize": {"id": "ColorDocker", "by": [400, 0], "grip": true}},
+ {"wait": 20},
+ {"state": "03-and-as-wide-as-the-screen-allows"},
+ {"shot": "03-and-as-wide-as-the-screen-allows"},
+
+ {"layout_preset": {"load": "default"}},
+ {"wait": 20},
+ {"layout_preset": {"delete": "full (custom)"}}
+]

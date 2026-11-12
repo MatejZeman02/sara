@@ -1,0 +1,50 @@
+[
+  {"comment": "A report: 'CTRL + +|-|NumPad0 stopped working.' Choosing Krita replaced each action's whole chord list with the one key the table names, so Ctrl+Plus and the numpad went with the profile, and on a Czech keyboard the digit row types letters without Shift. Dumps 0 to 1 send the gesture on the build's own map: Ctrl with the numpad's plus zooms in. Dump 2 shows the Zoom in row answering every chord, three buttons of chords and one to add another. Dump 3 is the same row under Krita, still four buttons, which is the fix: the table's Ctrl+Equal, the build's Ctrl+Plus and the build's numpad plus. Dumps 4 to 7 send the four keys with the page closed and read the zoom each one left: the numpad's plus raises it, Ctrl+0 reaches the hundred percent, the numpad's plus raises it again and the numpad's 0 reaches the hundred percent, so no key of the pair is left unanswered. Dump 8 is Photoshop's Ctrl+1 on the Zoom to 100 percent row, two buttons, because a table that moves an action to another key keeps nothing of the old one."},
+  {"wait": 35},
+  {"state": "0-the-build-map-and-the-numpads-plus"},
+
+  {"key": {"key": "Kp Add", "ctrl": true, "shape": "both"}},
+  {"wait": 16},
+  {"state": "1-ctrl-with-the-numpads-plus-on-the-build-map"},
+
+  {"open": "preferences"},
+  {"wait": 18},
+  {"page": "Keyboard Shortcuts"},
+  {"wait": 14},
+  {"shortcut": {"show": "view_zoom_in"}},
+  {"shot": "2-the-zoom-row-shows-every-chord"},
+  {"state": "2-the-zoom-row-shows-every-chord"},
+
+  {"shortcut_profile": "Krita"},
+  {"wait": 16},
+  {"shortcut": {"show": "view_zoom_in"}},
+  {"shot": "3-the-krita-profile-is-on-and-the-row-still-answers-three-chords"},
+  {"state": "3-the-krita-profile-is-on-and-the-row-still-answers-three-chords"},
+
+  {"open": "preferences"},
+  {"wait": 16},
+  {"state": "4-preferences-closed-under-krita"},
+
+  {"key": {"key": "Kp Add", "ctrl": true, "shape": "both"}},
+  {"wait": 20},
+  {"state": "5-ctrl-with-the-numpads-plus-under-krita"},
+
+  {"key": {"key": "0", "ctrl": true, "shape": "both"}},
+  {"wait": 16},
+  {"state": "6-ctrl-with-the-rows-0-under-krita"},
+
+  {"key": {"key": "Kp Add", "ctrl": true, "shape": "both"}},
+  {"wait": 16},
+  {"state": "7-ctrl-with-the-numpads-plus-again"},
+
+  {"key": {"key": "Kp 0", "ctrl": true, "shape": "both"}},
+  {"wait": 16},
+  {"state": "8-ctrl-with-the-numpads-0-under-krita"},
+
+  {"open": "preferences"},
+  {"wait": 16},
+  {"shortcut_profile": "Photoshop"},
+  {"wait": 14},
+  {"shortcut": {"show": "view_zoom_100"}},
+  {"state": "9-photoshop-moves-zoom-to-100-and-keeps-nothing-beside-it"}
+]

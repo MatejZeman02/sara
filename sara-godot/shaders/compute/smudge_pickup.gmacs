@@ -1,0 +1,223 @@
+# Kernel: smudge_pickup
+#
+# The smudge stage's pickup: one invocation per dab reads the paint under the dab
+# out of the stroke's sample merged snapshot and moves the stroke's carried colour
+# towards it. The dab kernel reads the result and mixes it into the colour it lays
+# down, so a stroke drags the paint it crossed along with it.
+#
+# The carry is two texels of one `rgba32f` texture. Texel 0 is what the dab reads:
+# the carried colour, and in alpha how much of it replaces the brush's own colour
+# on this dab. Texel 1 is the pickup's own state: the carry's strength (which the
+# smear length decays and fresh paint under the dab restores), then the height the
+# next dab moves the paint's height towards, the rate it moves it at, and whether
+# the carry holds a height yet. One group, because the answer is one colour
+# rather than a picture, and nothing is read back.
+#
+# The snapshot rather than the layer, so a smudge across two layers reads as one
+# surface. It is the composite as it stood when the stroke began and grows by
+# each dab's box, so the stroke picks up what it crossed and not what it has just
+# painted.
+#
+# Two rates. Smearing mixes the carry towards the paint under the dab at the
+# pickup rate, so the carry lags the canvas. Dulling sets the carry to the mean of
+# the paint under the dab on every dab, a mode with no memory.
+#
+# The height is carried the other way round, not read out of a snapshot: the dab
+# that ran last reports in the `exchange` buffer the sum of its coverage and of
+# its coverage times the height it found, and this kernel reads that mean. The
+# carry moves towards it at the rate that dab moved the canvas towards the carry,
+# so a ridge is dragged without heights growing out of nothing. A snapshot read
+# would pick up again what the last dab had already moved.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel smudge_pickup
+
+# The stroke's copy of the composite, at the composite's own format.
+image snapshot: readonly
+# The carry, two texels, written here and read by `dab`.
+image reservoir: rgba32f
+# The carry's spread about the paint under the last dab, one float:
+# nought for a dulling dab, which sets the carry to that paint, and the
+# squared distance the carry lags by while smearing, which is what a dump reads
+# to tell the two rates apart. A storage buffer rather than a third channel of
+# the carry, because the only texture read this repository allows is the
+# eyedropper's and the texel step's, and the read of a reduction is the one
+# `SaMeasure` already makes. Binding 2, after the two images, and bound on every
+# dispatch for the reason `dab.gmacs` gives: a uniform set has to cover every
+# binding the kernel declares.
+buffer spread: float variance[]
+# What the last dab found under itself, two sums in fixed point on one scale,
+# which the division below cancels: its coverage, and its coverage times the
+# height it read before it wrote. The dab adds to both with `atomic_add`, which
+# has no float form here, and this kernel reads them and sets them back to
+# nought for the next dab. Binding 3, after the variance.
+buffer exchange: uint sums[]
+params:
+    vec2 centre  # the dab's centre, in the snapshot's own texels
+    float radius  # how far out the pickup samples, in texels
+    float pickup  # how much of the paint under the dab enters the carry
+    float keep  # the smear length: how much of the carry's strength survives a dab
+    float color_rate  # how much of the brush's own colour the dab lays beside the carry
+    float first  # 1 on the stroke's first dab, which starts the carry from the paint under it
+    float mode  # 0 smears, which mixes the carry towards what it crossed, 1 dulls, which sets it
+
+# Five samples a side. Enough to read a dab's worth of paint as one colour
+# rather than as the one texel under its centre, and few enough that a dab
+# costs twenty-five loads whatever its size.
+const int SA_PICKUP_SIDE = 5
+
+# Where the carry's load sits in row 0, past the blur's frame and count at 2 and
+# 3, so a smearing carry and a blurring one hold it at the same texel. The load
+# is how much paint the carry holds for the dab to lay where the layer is
+# empty, which the dab reads in red. A carry narrower than this, as a suite's
+# two texel one is, holds no load and the dab lays as it did.
+const int SA_CARRY_LOAD = 4
+
+# Where the carry keeps what a mix in the brush's own blend mode needs, past the
+# load, in a carry wide enough to hold them. `SA_CARRY_HELD` is the carry's own
+# colour, which the next pickup reads, with one in alpha once it holds one.
+# `SA_CARRY_PICKED` is what this dab found, with in alpha the share of it that
+# enters the carry, and `SA_CARRY_FROM` is the colour that share enters, the
+# carry before this dab. For a Normal brush the straight line below is the
+# mix and nothing reads the last two. For any other mode `smudge_mix.gmacs`
+# composites the found paint over the colour it entered in that mode and
+# writes the result back to the first and to texel 0, so the carry the next
+# dab reads is the mode's and not the straight line's. Texel 0 alone is not
+# enough, because the meeting with the brush's colour is written over it there.
+const int SA_CARRY_HELD = 5
+const int SA_CARRY_PICKED = 6
+const int SA_CARRY_FROM = 7
+# The texel `smudge_met.gmacs` reads to know a meeting was taken in the mode,
+# cleared by every pickup so a dab laid straight after it finds the straight
+# line.
+const int SA_CARRY_MET_FLAG = 8
+
+# The carry's height after the last dab, and what the next one does with it:
+# the strength, the height the dab moves the paint towards, the rate, and one
+# once the carry holds a height.
+#
+# *rate* is the one the carried colour moves at, the pickup times the paint
+# present under the dab, and it is both how fast the carry's height follows
+# the paint and how far the next dab moves the paint towards the carry. One
+# rate for both is the exchange that keeps the sum: the dab moved its texels
+# towards the carry by the rate times each one's coverage, and the carry moves
+# by the same rate towards their mean. So over bare canvas, where no paint is
+# present, the carry neither picks height up nor lays it, and the height stays
+# with the paint. A dulling carry is set to the mean,
+# with no memory, as its colour is. The first dab of a stroke finds the carry
+# empty and lays nothing, it only measures, so the carry starts from the paint
+# under it rather than from nought. A dab that found nothing, over no height or
+# on a layer the stroke does not move, leaves the carry where it stood.
+
+
+def sa_height_carried(vec4 before, float strength, float rate) -> vec4:
+    float level = before.g
+    float held = before.a
+    uint weight = exchange.sums[0]
+    if weight > 0u:
+        float found = float(exchange.sums[1]) / weight
+        if held < 0.5 or mode > 0.5:
+            level = found
+        else:
+            level = level + before.b * (found - level)
+        held = 1.0
+    exchange.sums[0] = 0u
+    exchange.sums[1] = 0u
+    return vec4(strength, level, held > 0.5 ? rate : 0.0, held)
+
+
+def smudge_pickup():
+    # **Once, not sixty-four times.** A kernel runs eight by eight invocations
+    # to a group whatever it asks for, and a dispatch of one group is sixty-four
+    # pickups of the same two texels, each reading what another had just
+    # written, so the pickup would apply itself over and over. Every invocation
+    # but the first returns before it reads.
+    if global_id.x != 0 or global_id.y != 0:
+        return
+
+    ivec2 size = image_size(snapshot)
+    vec3 painted = vec3(0.0)
+    float weight = 0.0
+    for sy in range(SA_PICKUP_SIDE):
+        for sx in range(SA_PICKUP_SIDE):
+            vec2 unit = (vec2(sx, sy) / (SA_PICKUP_SIDE - 1)) * 2.0 - 1.0
+            ivec2 at = clamp(ivec2(centre + unit * radius), ivec2(0), size - 1)
+            vec4 texel = snapshot[at]
+            # Weighted by alpha, so a dab half over bare canvas picks up the
+            # paint it is over rather than a colour diluted towards nothing.
+            painted += texel.rgb * texel.a
+            weight += texel.a
+
+    bool wide = image_size(reservoir).x > SA_CARRY_MET_FLAG
+    vec4 carried = reservoir[ivec2(0, 0)]
+    if wide and reservoir[ivec2(SA_CARRY_HELD, 0)].a > 0.5:
+        carried.rgb = reservoir[ivec2(SA_CARRY_HELD, 0)].rgb
+    vec4 state = reservoir[ivec2(1, 0)]
+    float strength = state.r
+    # Coverage of paint under the dab, nought to one, so bare canvas moves the
+    # carry by nothing rather than towards black.
+    float present = clamp(weight / (SA_PICKUP_SIDE * SA_PICKUP_SIDE), 0.0, 1.0)
+    vec3 picked = weight > 0.0 ? painted / weight : carried.rgb
+
+    vec3 colour = carried.rgb
+    # The colour a mix in the brush's mode starts from and the share of the
+    # found paint it takes, nought where the carry is set rather than mixed.
+    vec3 start = picked
+    float taken = 0.0
+    # The load starts full, the brush dipped in its own colour, then decays by
+    # the smear length and is restored by the paint present, the strength's
+    # own rule with the paint present in place of what the pickup took. The
+    # strength never reaches one over paint, since the pickup takes only part
+    # of it, and the load does, exactly, so a dab over paint the pickup reads
+    # is never thinned and only a smear that has left the paint behind thins.
+    # A dulling or blurring dab lays what stands where it is rather than a
+    # carry that runs out, so its load stays full over paint, and is nought
+    # where it found none, below.
+    float load = reservoir[ivec2(SA_CARRY_LOAD, 0)].r
+    if first > 0.5 or mode > 0.5:
+        load = 1.0
+    else:
+        load = mix(load * clamp(keep, 0.0, 1.0), 1.0, present)
+    if mode > 0.5:
+        # The paint under this dab, set rather than mixed, because a dulling or
+        # blurring dab never drags. The carry replaces the brush's own colour
+        # in full wherever any paint was found, however thin, because the
+        # colour picked is weighed by alpha and is the paint's own. A strength
+        # of the paint present would lay the swatch's colour over a thin edge,
+        # a grey dash. Where the dab found no paint the
+        # load is nought, so it lays nothing on an empty texel rather than a
+        # blot of the swatch. The carry then stands where it stood, as the
+        # height does, because the texels such a dab still covers are the ones
+        # the stroke itself laid, which the snapshot taken before them reads as
+        # empty, and a strength of nought there would lay the swatch over them.
+        colour = picked
+        if weight > 0.0:
+            strength = 1.0
+        else:
+            load = 0.0
+    elif first > 0.5:
+        # The paint under this dab, set rather than mixed: the first dab of a
+        # smear has nothing to drag yet.
+        colour = picked
+        strength = present
+    else:
+        taken = clamp(pickup, 0.0, 1.0) * present
+        start = carried.rgb
+        colour = mix(carried.rgb, picked, taken)
+        # Decayed by the smear length first and restored by what was picked up
+        # after, so a stroke that leaves the paint fades and one that crosses
+        # more of it is strong again.
+        strength = mix(strength * clamp(keep, 0.0, 1.0), 1.0, taken)
+
+    vec3 lag = colour - picked
+    spread.variance[0] = dot(lag, lag)
+    reservoir[ivec2(0, 0)] = vec4(colour, (1.0 - clamp(color_rate, 0.0, 1.0)) * strength)
+    reservoir[ivec2(1, 0)] = sa_height_carried(state, strength, clamp(pickup, 0.0, 1.0) * present)
+    if image_size(reservoir).x > SA_CARRY_LOAD:
+        reservoir[ivec2(SA_CARRY_LOAD, 0)] = vec4(load, 0.0, 0.0, 0.0)
+    if wide:
+        reservoir[ivec2(SA_CARRY_HELD, 0)] = vec4(colour, 1.0)
+        reservoir[ivec2(SA_CARRY_PICKED, 0)] = vec4(picked, taken)
+        reservoir[ivec2(SA_CARRY_FROM, 0)] = vec4(start, 1.0)
+        reservoir[ivec2(SA_CARRY_MET_FLAG, 0)] = vec4(0.0)

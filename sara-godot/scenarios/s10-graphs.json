@@ -1,0 +1,245 @@
+[
+  {
+    "wait": 35
+  },
+  {
+    "docker": {
+      "id": "BrushPresetsDocker",
+      "at": [
+        2,
+        340
+      ],
+      "size": [
+        280,
+        360
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "ToolBoxDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "LayersDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "ColorDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "InfoDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "RecorderDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "MinimapDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "ToolOptionsDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "GraphDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "HistoryDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "docker": {
+      "id": "ReferenceDocker",
+      "at": [
+        1560,
+        40
+      ],
+      "size": [
+        340,
+        200
+      ]
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "colour": "#ffffff"
+  },
+  {
+    "tool": {
+      "id": "brush",
+      "options": {
+        "radius": 0.05,
+        "hardness": 1.0
+      }
+    }
+  },
+  {
+    "wait": 12
+  },
+  {
+    "stroke": {
+      "from": [
+        300,
+        300
+      ],
+      "to": [
+        1100,
+        300
+      ],
+      "pressure": 1.0,
+      "steps": 12
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "docker": {
+      "id": "GraphDocker",
+      "at": [
+        700,
+        420
+      ],
+      "size": [
+        760,
+        540
+      ]
+    }
+  },
+  {
+    "wait": 20
+  },
+  {
+    "graph": "waveform"
+  },
+  {
+    "wait": 20
+  },
+  {
+    "state": "1-l6-waveform-before"
+  },
+  {
+    "shot": "1-l6-waveform-before"
+  },
+  {
+    "adjust": {
+      "kind": "brightness_contrast",
+      "brightness": -0.35,
+      "contrast": 1.0
+    }
+  },
+  {
+    "wait": 25
+  },
+  {
+    "state": "2-l6-waveform-after"
+  },
+  {
+    "shot": "2-l6-waveform-after"
+  },
+  {
+    "open": "preferences"
+  },
+  {
+    "wait": 25
+  },
+  {
+    "page": "Display"
+  },
+  {
+    "wait": 25
+  },
+  {
+    "state": "3-l13-display-page"
+  },
+  {
+    "shot": "3-l13-display-page"
+  }
+]

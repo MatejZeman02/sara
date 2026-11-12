@@ -1,0 +1,45 @@
+# Kernels: sad_snapshot_sweep
+#
+# The pass a save runs over each texture it is about to take, one dispatch a
+# texture, leaving a word a chunk in `flags`. SaSadClearChunks, beside this,
+# dispatches it and reads the words back where the save reads back already.
+#
+# The word of the chunk is set when any texel of the texture differs from the
+# blank that field opens at, compared bit for bit and never within a
+# tolerance, so a chunk whose word stays zero holds nothing in any field the
+# pass was run over and the save leaves it out. A hash is never compared with
+# a blank chunk's hash, because a collision there would delete paint.
+#
+# Only the first `channels` channels are compared, since a fetch answers zero
+# and one for the channels a format does not have. The pass reads and never
+# writes the texture, and a set word is only ever set again, so lanes that
+# store into the same word at once store the same value.
+#
+# Any other output a save wants of the same textures, such as a hash a field
+# for the reuse of unchanged chunks, is one more output of this kernel rather
+# than a second pass.
+
+kernel sad_snapshot_sweep
+
+sampler field
+
+# One word a chunk, zeroed before the first dispatch and set by any texel that
+#   differs from its field's blank.
+buffer flags: uint words[]
+
+params:
+    vec4 blank
+    int width
+    int height
+    int channels
+    int slot
+
+
+@workgroup_size(8, 8)
+def sad_snapshot_sweep():
+    if pixel.x >= width or pixel.y >= height:
+        return
+    vec4 texel = texel_fetch(field, pixel, 0)
+    for channel in range(4):
+        if channel < channels and float_bits_to_uint(texel[channel]) != float_bits_to_uint(blank[channel]):
+            flags.words[slot] = 1u

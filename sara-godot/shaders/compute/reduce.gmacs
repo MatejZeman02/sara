@@ -1,0 +1,162 @@
+# The `reduce` step's kernels: the sum, the minimum and the
+# maximum of every channel of a layer over a rectangle, in float, on the
+# graphics card, with only the last record read back.
+#
+# A record is sixteen floats: the count of texels it covers and a pad of
+# three, then the sum, the minimum and the maximum of the four channels. It
+# is four vec4s written as floats, so the packing is the sequence it reads as
+# and std430 has nothing to pad.
+#
+# `reduce_chunk` runs over one chunk's share of the rectangle through
+# SaChunkWalk, and each workgroup of sixty-four lanes folds its own texels in
+# shared memory into one record, written at *base* plus the workgroup's place
+# in the dispatch. `reduce_fold` then folds sixty-four records into one, pass
+# after pass, until one record is left. Every fold is pairwise, a tree rather
+# than a running total, which is what keeps a float sum of a million texels
+# good to a few units in the last place rather than to what a long chain of
+# additions leaves.
+#
+# No atomics, so no fixed point: a value below zero and one above one reduce
+# as they are, which is what a float canvas holds.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel reduce_chunk
+kernel reduce_fold
+
+image field: readonly
+
+# What a fold reads. Pass one reads the chunk instead and never touches it.
+buffer source: float values[]
+
+# Where every pass writes its records.
+buffer target: float values[]
+
+# 48 bytes, packed by SaReduce in the order written here, every field a float
+# for the reason measure.gmacs gives.
+params:
+    # Where the dispatch starts, in chunk-local pixels, since the walk aligns
+    # the start down to the workgroup grid.
+    float offset_x
+    float offset_y
+    # The rectangle's share of this chunk, in chunk-local pixels.
+    float begin_x
+    float begin_y
+    float end_x
+    float end_y
+    # The first record this dispatch writes.
+    float base
+    # How many workgroups a row of this dispatch holds, so a workgroup knows
+    # its place in the dispatch without being told the dispatch's size.
+    float groups_x
+    # How many records a fold reads from *source*.
+    float count
+    float pad_a
+    float pad_b
+    float pad_c
+
+const uint LANES = 64u
+const uint RECORD = 16u
+
+# Past anything a float canvas holds, and finite, so a record with no texel
+# in it folds into its neighbour as nothing.
+const float HUGE = 3.0e38
+
+shared float lane_count[64]
+shared vec4 lane_sum[64]
+shared vec4 lane_min[64]
+shared vec4 lane_max[64]
+
+
+def outside(ivec2 px) -> bool:
+    ivec2 size = image_size(field)
+    if px.x >= size.x or px.y >= size.y:
+        return true
+    if px.x < int(begin_x) or px.y < int(begin_y):
+        return true
+    return px.x >= int(end_x) or px.y >= int(end_y)
+
+
+def empty_lane(uint lane):
+    lane_count[lane] = 0.0
+    lane_sum[lane] = vec4(0.0)
+    lane_min[lane] = vec4(HUGE)
+    lane_max[lane] = vec4(-HUGE)
+
+# The tree over the sixty-four lanes: each round folds the upper half onto
+# the lower, and lane 0 ends holding the workgroup's record. Every lane
+# reaches every barrier, which is why an idle lane is an empty record rather
+# than an early return.
+
+
+def fold_lanes(uint lane):
+    barrier()
+    # Six rounds, thirty-two lanes folded onto thirty-two, then sixteen, down
+    # to one.
+    for level in range(6):
+        uint width = 32u >> uint(level)
+        if lane < width:
+            uint other = lane + width
+            lane_count[lane] += lane_count[other]
+            lane_sum[lane] += lane_sum[other]
+            lane_min[lane] = min(lane_min[lane], lane_min[other])
+            lane_max[lane] = max(lane_max[lane], lane_max[other])
+        barrier()
+
+# Four floats of a record as one vector and back, by constant index, so no
+# vector is indexed by a variable.
+
+
+def load_vec4(uint at) -> vec4:
+    return vec4(source.values[at], source.values[at + 1u], source.values[at + 2u], source.values[at + 3u])
+
+
+def store_vec4(uint at, vec4 value):
+    target.values[at] = value.x
+    target.values[at + 1u] = value.y
+    target.values[at + 2u] = value.z
+    target.values[at + 3u] = value.w
+
+
+def write_record(uint at):
+    uint first = at * RECORD
+    target.values[first] = lane_count[0]
+    target.values[first + 1u] = 0.0
+    target.values[first + 2u] = 0.0
+    target.values[first + 3u] = 0.0
+    store_vec4(first + 4u, lane_sum[0])
+    store_vec4(first + 8u, lane_min[0])
+    store_vec4(first + 12u, lane_max[0])
+
+
+def reduce_chunk():
+    uint lane = local_index
+    ivec2 px = ivec2(global_id.xy) + ivec2(int(offset_x), int(offset_y))
+    empty_lane(lane)
+    if not outside(px):
+        vec4 texel = field[px]
+        lane_count[lane] = 1.0
+        lane_sum[lane] = texel
+        lane_min[lane] = texel
+        lane_max[lane] = texel
+    fold_lanes(lane)
+    if lane == 0u:
+        write_record(uint(base) + group_id.y * uint(groups_x) + group_id.x)
+
+
+@workgroup_size(64)
+def reduce_fold():
+    uint lane = local_index
+    uint at = global_id.x
+    empty_lane(lane)
+    # A record that covers no texel stays the empty lane it was set to, since
+    # its minimum and maximum are the stand-ins and not values.
+    if at < uint(count) and source.values[at * RECORD] > 0.0:
+        uint first = at * RECORD
+        lane_count[lane] = source.values[first]
+        lane_sum[lane] = load_vec4(first + 4u)
+        lane_min[lane] = load_vec4(first + 8u)
+        lane_max[lane] = load_vec4(first + 12u)
+    fold_lanes(lane)
+    if lane == 0u:
+        write_record(group_id.x)

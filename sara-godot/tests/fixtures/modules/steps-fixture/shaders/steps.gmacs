@@ -1,0 +1,46 @@
+# Kernels: copy, shift, last
+# The fixture for a neighbourhood pass of several steps.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+kernel copy
+kernel shift
+kernel last
+
+image src: readonly
+image mask: r32f, readonly
+image dst
+image previous: readonly
+
+params:
+    int halo  # how far the source is padded, written by the runner
+    vec2 origin  # the dispatched region's corner in the chunk
+
+
+def copy():
+    # A list of one: previous is the source, so this is the source's red and
+    # its green.
+    ivec2 at = pixel + ivec2(origin)
+    if at.x >= image_size(dst).x or at.y >= image_size(dst).y:
+        return
+    ivec2 centre = at + ivec2(halo, halo)
+    image_store(dst, at, vec4(image_load(previous, centre).r, image_load(src, centre).g, 0.0, 1.0))
+
+
+def shift():
+    # A middle step: what the step before wrote, one texel to the right, in the
+    # padded frame.
+    ivec2 at = pixel + ivec2(origin) + ivec2(halo, halo)
+    if at.x < 0 or at.y < 0 or at.x >= image_size(dst).x or at.y >= image_size(dst).y:
+        return
+    ivec2 from = clamp(at - ivec2(1, 0), ivec2(0, 0), image_size(previous) - 1)
+    image_store(dst, at, image_load(previous, from))
+
+
+def last():
+    # The shifted red beside the source's own green.
+    ivec2 at = pixel + ivec2(origin)
+    if at.x >= image_size(dst).x or at.y >= image_size(dst).y:
+        return
+    ivec2 centre = at + ivec2(halo, halo)
+    image_store(dst, at, vec4(image_load(previous, centre).r, image_load(src, centre).g, 0.0, 1.0))

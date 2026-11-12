@@ -1,0 +1,202 @@
+{
+  "Airbrush": {
+    "dab": "765d74acab002b00c843e8edb12c2d8adb970f504b66a65301d1a3f02f076724",
+    "stroke": "3ec274c6737f21b4b6a9dae55b9188aced46f20029188eeadde01b162127abd6"
+  },
+  "Blender": {
+    "dab": "57a566c88b778920b14f10a4ab677f5b936ad80b1a004e4bcb21ce00909127aa",
+    "stroke": "57a566c88b778920b14f10a4ab677f5b936ad80b1a004e4bcb21ce00909127aa"
+  },
+  "Bush": {
+    "dab": "f35e16ee980274b938f954638108e58cfcd6aa0b13a003ff62a4ce9d6964d464",
+    "stroke": "f83475abb78f4a527e5f2e648ab41fedef651ae8a96e6cf4a62c8c63660b3b9c"
+  },
+  "Canvas Brush": {
+    "dab": "9fb3ee31fca936c2d7341867835a360c44a14446c4826112a663425f352658af",
+    "stroke": "981a40bcb0dfdfdccd3eb03394745b3d55f0d92137b9bfaf67d56eea74313fff"
+  },
+  "Charcoal": {
+    "dab": "72021faf938a4e6292875681d55efaaf3748906b91b6fc0bfeee14b52ccf1041",
+    "stroke": "196797f215977eee920134d304ded7914574ff2a3191b2df7c1c7b6cafc11dc3"
+  },
+  "Chisel Marker": {
+    "dab": "4cf3926ca3a33e6208eb8d480ae3f369114db5ecc27784ceddd13e78177c6444",
+    "stroke": "d50e546b8f0c953e83f6e73737902a6dcc972d3f00f835c1a60190cc4214d910"
+  },
+  "Cloud Puff": {
+    "dab": "8e49af6f35db74da5cbfad64e02d439920a02158e37c49c8e6762e9cdb8e618b",
+    "stroke": "9942c874635b2f0654c8e2def3d84b1402de7c8eeb57b01c166b77cb187e37ca"
+  },
+  "Dotted Line": {
+    "dab": "cddc3089cb534fb0ce44c908eb87e8127970d424f6f12b1850a8accf44947d28",
+    "stroke": "d681dfd5204437d7390c8577638a71adbd17cb5770fc96bb2b91fa4213980a4b"
+  },
+  "Dry Marker": {
+    "dab": "a0de56b88833cfb578c0cc4c5efd225ec3e42b53e839387ccefa699f624758aa",
+    "stroke": "883eb7c81bd23a9ba1d857d0c30adc5583987672b738fcd3b61f4fb875a44aa5"
+  },
+  "Dry Strokes": {
+    "dab": "eeb9f8a01b8f1119b6dd454c58a2e9e96fa04705db438c0bd8ccf97fd9d4e2e6",
+    "stroke": "403022b08c0981c262d9eafa7d8bf7c330c1791f7b09cfa0a798c062527ad91d"
+  },
+  "Dust": {
+    "dab": "d783411d30b5977d55caeb166edd3fd26041e318f917cb9dd4c4527ef35d5356",
+    "stroke": "1e1af4492ce342b4cdaf0bf83fed45f59cf67ca23fc47884c5d8dceb5fd4aede"
+  },
+  "Eraser": {
+    "dab": "57a566c88b778920b14f10a4ab677f5b936ad80b1a004e4bcb21ce00909127aa",
+    "stroke": "57a566c88b778920b14f10a4ab677f5b936ad80b1a004e4bcb21ce00909127aa"
+  },
+  "Fill": {
+    "dab": "1f1dfcb0dc7d9d49e5a5b6244d1265391857c6c845de4ea83f4b9135c3981a78",
+    "stroke": "196791d3e13df1d1fe69d3ca9270e82b78228d615abd51f55d2eb5f9bbab9341"
+  },
+  "Fir Tree": {
+    "dab": "7588363ae52a8df1331d6b193b348875d6f43ad223a341e621663a90be2759c5",
+    "stroke": "738a19fab70b5fed6ad399dc3a48c33d9950b42aeb44b4e421c5507fc7d1cf33"
+  },
+  "Flat Brush": {
+    "dab": "2ad0bb6cc09cc3b2c636ed382d2264c33d53248dbab4a0b4cbc9de03194e04bc",
+    "stroke": "7a45ed89dda9719ad51562bc98b021f08d6f242a202f512a9a0704e1d062c0fe"
+  },
+  "Flecks": {
+    "dab": "2804696d2d3f0009e827b374a7a790ef824f10698fc93cab044d04f0c7a8584f",
+    "stroke": "a71a5f38c0dca4cc5213e58d876507bf28ec74afd1bca8c924bb09cd17fb6e8c"
+  },
+  "Grainy Pencil": {
+    "dab": "4b35769d9fef17dbd2c5f94e5a4dc111a8dbb6c804fd8261832f4e9a3e48251b",
+    "stroke": "6b959bce27314dedba84b5cf843208c7d817d62a43c967f58fe8a7fba23ee142"
+  },
+  "Grass Tuft": {
+    "dab": "5529a082be523c073a2932952e0f225df56f818e7a174521c42effb7f00ec119",
+    "stroke": "6a97ee12c1de8dfcab4e13d1734d2a70dee21f1f40a5c91ceaaceb1a69b935bb"
+  },
+  "Halftone": {
+    "dab": "6a213fd063ea900e6201a65637e2ab86e72bf204c6f4372369cb9ad56085b75a",
+    "stroke": "b078d1d8c5997ca352193065b8afab8061d46f8f2bd5787b86a4cff30515952b"
+  },
+  "Inked Pen": {
+    "dab": "7e1b6c430b70c48143fbdaa25b19be024c3e8b2c8d295eaab3a79951e6d6f819",
+    "stroke": "ac667e9adb38e419c9bd45951ade3aadaa299404cfbdae7593fb6d46f7ea6c19"
+  },
+  "Layer Blender": {
+    "dab": "57a566c88b778920b14f10a4ab677f5b936ad80b1a004e4bcb21ce00909127aa",
+    "stroke": "57a566c88b778920b14f10a4ab677f5b936ad80b1a004e4bcb21ce00909127aa"
+  },
+  "Leafy Twig": {
+    "dab": "5fad5c0f689c967d2b253440acd8aa6aa066df1697438b4c50e7e211b102bf97",
+    "stroke": "155463a0d0382432d269b5deeb7d6345318b0e75ec52e8efa88a5eaa6e18c28a"
+  },
+  "Lichen": {
+    "dab": "790981e794b44b3ee1d47600b8dcb11a7bc0afecbd659b4751a6281df67c5021",
+    "stroke": "dc39089314abf6c9e42adf73f1bd9f47f96136d76d37278d0e56fb55ce434409"
+  },
+  "Lift": {
+    "dab": "57a566c88b778920b14f10a4ab677f5b936ad80b1a004e4bcb21ce00909127aa",
+    "stroke": "57a566c88b778920b14f10a4ab677f5b936ad80b1a004e4bcb21ce00909127aa"
+  },
+  "Lost Edges": {
+    "dab": "222c7862d52443f70c01b9eae666da3590f2d13a18665bf3364746d86a49d698",
+    "stroke": "5ffca2ce9fcf40f6f3a172ea0f943581353fd142a4143ce1ee6b1a30623f9d9d"
+  },
+  "Masked Stipple": {
+    "dab": "ab47d135e68b44091b6db65ef10d0a0127b599d6e47f3eaecdc37de60d63c761",
+    "stroke": "5c7377cf4677fee06aaec7e69c09848b658e1119cc6cd5130d7c8697907b2779"
+  },
+  "Oil Smudge": {
+    "dab": "86d3c528f73095af52ef27c80f6ab9f6033ad47cc21799e30527904f1a211d28",
+    "stroke": "66a7eed851d4dc474216dbd0a10b2a4a9888548f7cabf946ca4f4bf8a1cd5d2e"
+  },
+  "Paint": {
+    "dab": "1c8c64dbadbe74daa053d9dc18b44db1181246a4cc6f61f6b0ef1eb31e70452b",
+    "stroke": "d57d18e83b35ce03c2d14391c8971218068ef0cf165a43757ce0ce9f42b7cf1e"
+  },
+  "Palm Fronds": {
+    "dab": "18621c7b413002954072845eedc78cc86ebbea4a05c3e905848a18f898422928",
+    "stroke": "a93521d6e5a8115ec3aa85a2d89f1e3f3b9a35023c0d6d1840415e35f3bb985d"
+  },
+  "Paper Wash": {
+    "dab": "c22bb9c350a7b6d879cf3dbe6a33a54618198fd0323d0398e6ee1a18e2c4b2db",
+    "stroke": "f28881fbcac264e9cd66f03355b956d7d0dd2fcad9b4f966e1eae08ac9413ab0"
+  },
+  "Pencil": {
+    "dab": "e74e8af481445cf8a5801b47115a54b523a90e10f40c9e3b2d57dee510b82256",
+    "stroke": "eb57edc660d45f31548f9f9d8e5956860ba1ae8b62393ed04af2fda88b7e10c2"
+  },
+  "Pointed Mark": {
+    "dab": "df844afe697f4349e0e23ec7883ba377405dca3e6b0ec43b8a2e0b84c3b79de8",
+    "stroke": "b9154a186e58d70844bb6ca5121117bafe8914ece76a4ae69620e3a63db27a14"
+  },
+  "Ridge": {
+    "dab": "9ab00008d592cdf8802364a8fded80a2428e6919e430754012aed4facf44a8d5",
+    "stroke": "abf792db3797bf8992806299192f325b0a5e600083712c7f019192aeabc64c4f"
+  },
+  "Scattered Dots": {
+    "dab": "5b5b91a3b797361b194e9213d955205c1f6bb9a4fa30e5e391c0a048c54d0e7e",
+    "stroke": "3bb0846f2d8bfad2cf40ed9877f07596b093d9afac481aa74522ba7af3eb0588"
+  },
+  "Scrawled Block": {
+    "dab": "64a0546141fdcb36bbcb13f3c0cd6d6c16a57d7b5fb3334c5931fe2f83f8ed94",
+    "stroke": "d4a0144780930d3661f66c78c9bbfaeee313eb4c98919e466b32eb8ec97f2471"
+  },
+  "Scribble Marks": {
+    "dab": "a7f0162112281c601a96c2c1b8431f1de47a9e593c414f608dfeca0df53ca375",
+    "stroke": "04eff59ba7671b4e3b7ddc4d5639aecb7beb9ef5161ca314bac5a5cbafc65bb1"
+  },
+  "Scumble": {
+    "dab": "f067d038c42da0db5e51c6a6a825ad51a36c4a08688a3979ff020ec5904cc174",
+    "stroke": "712953b76fc98778f3a7af4f815d1aef8c6932e8c11fabbe221bb2eeff3c5e86"
+  },
+  "Shadow Edge": {
+    "dab": "1c8c64dbadbe74daa053d9dc18b44db1181246a4cc6f61f6b0ef1eb31e70452b",
+    "stroke": "ce87386f65f22ef30d64f9e710f9d8d71af8ff257ff1ac116661a40f142652f6"
+  },
+  "Sketch": {
+    "dab": "cd5e5205a083049981e45d24c5329cd0e9c58bfb68c592550ad0e7bf0340cfa8",
+    "stroke": "c2c9fb26e20ca6566cc9492fda42db2d79dc2802f1b51e97db70f00142ee25fb"
+  },
+  "Smoky Blot": {
+    "dab": "9b57c2e7f4704e6e1890e1200714faead7a5e3b822f488d5dd2d13642a6decea",
+    "stroke": "fcb1a1f15932aeae7d7f67bc601ae76b2e95be5a1bc39e882d0b33bdc076545f"
+  },
+  "Soft Eraser": {
+    "dab": "57a566c88b778920b14f10a4ab677f5b936ad80b1a004e4bcb21ce00909127aa",
+    "stroke": "57a566c88b778920b14f10a4ab677f5b936ad80b1a004e4bcb21ce00909127aa"
+  },
+  "Soft Haze": {
+    "dab": "804da943342caf7d6af527a87d56cae01f0a2cccd9b3d25110c022f38552a0bb",
+    "stroke": "5320f6c7712bf4f6847ba1a46121bda8de1fa20d76a0cf2bf6f596c7d22f3c10"
+  },
+  "Sparse Specks": {
+    "dab": "57a566c88b778920b14f10a4ab677f5b936ad80b1a004e4bcb21ce00909127aa",
+    "stroke": "226ce2497828dbdec8e19f2ba7972e81889ba71f0335855d53b7d6f82ec38b90"
+  },
+  "Spatter": {
+    "dab": "12acc4c4204849eba6835806fb47da20ae76c86157315f7eb39f5d1352e6f1ed",
+    "stroke": "d4038657ded95cb69395732446de9d33ecd0c288fac6cb42578d7ba9c7d46bb6"
+  },
+  "Splattered Block": {
+    "dab": "3ac35f05863a6149fbf6d4cb78e1cf523f4f17a6ac8f4ef4f00afe2721b6afee",
+    "stroke": "8f25ed3f6523cb831752d15235752cc7de349ea91f251b24f13ea808de843653"
+  },
+  "Storm Cloud": {
+    "dab": "2ae125a4915d7342f9048604312c479e579fdf724b3bb7cd05fddfc29299d6eb",
+    "stroke": "e768c66dc5176f8ad94321e38ca0da8f9b9eb0e466c44369b6ab12d4f63b7f86"
+  },
+  "Streaks": {
+    "dab": "4e8aedaaeb0e4adedaa8ac8fe12f11f9d3c9db2a6849b929d009ce0cf9a81b1d",
+    "stroke": "8226316d6fcb87d1cde069edf8aefb3abe0864e7fb54f69466c6a41745d135a4"
+  },
+  "Torn Block": {
+    "dab": "79e9d27b1e9ec72a4983aa4f77e32ff68004a5c1c1f12380eb795fd098845386",
+    "stroke": "df79aa381c74aa88ab7de351c458a2555d5cdba345db13d955a4d14dc3b22084"
+  },
+  "Torn Gouache": {
+    "dab": "25a6980545ceba7d732397869126a89e681160435e4856622320c49dc92297ae",
+    "stroke": "a349b69f4363f1ecc1e5700446cc6533fc3e86ceb992a7d8bcca49d84b66849d"
+  },
+  "Wash": {
+    "dab": "3ba5a98ccbd3f0f762a0595a5ba8ece1bf1c50a687def8dcc4192b8bc8fb00be",
+    "stroke": "d231e73462bd06a97739ca608cb4074ccbe30deb41e588220e0c662da09b606c"
+  }
+}

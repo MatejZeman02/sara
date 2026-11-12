@@ -1,0 +1,17 @@
+[
+  {"comment": "Every module carries a manifest with its version. On a fresh profile at 1280 by 1024 and an interface scale of 1, Help, About Sara opens folded, and Modules and licences is pressed open. Its Modules block names each loaded module a line, its name, the version its manifest.cfg gives and the commit it was built from, the base modules, the noise brush, the tutorials and the others at 1.0.0-alpha.1. The run log's console line of the loader names the same versions and commits."},
+  {"wait": 45},
+  {"window": [1280, 1024]},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 25},
+  {"open": "about"},
+  {"wait": 30},
+  {"state": "1-about-opens-folded"},
+  {"shot": "1-about-opens-folded"},
+  {"click": {"control": "ModulesAndLicences", "in": "AboutDialog"}},
+  {"wait": 30},
+  {"move": [1275, 1018]},
+  {"wait": 6},
+  {"state": "2-the-modules-and-their-versions"},
+  {"shot": "2-the-modules-and-their-versions"}
+]

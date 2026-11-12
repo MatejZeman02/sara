@@ -1,0 +1,385 @@
+# The selection mask kernels. Every kernel here writes coverage, 0 to 1,
+# into one r32f chunk of the document-wide selection, over a region given in
+# chunk-local pixels, and tests each pixel itself so an edge is exact whatever
+# the workgroup alignment of the dispatch.
+#
+# `value` is what a pixel inside the shape becomes: 1.0 to add, 0.0 to
+# subtract. A pixel outside the shape is left alone, which is what lets one
+# kernel serve replace, add and subtract. The polygon and the ellipse may cover
+# a pixel in part, and `select_polygon` says how a part meets the mask. A value cannot
+# keep only what two shapes share, so an intersect draws its shape into chunks
+# of its own and meets the selection through `intersect`.
+
+kernel select_rect
+kernel select_ellipse
+kernel select_polygon
+kernel invert
+kernel filter_h
+kernel filter_v
+kernel combine
+kernel unite
+kernel bounds
+kernel intersect
+kernel fill_under
+
+image mask
+# The neighbours a filter reads across the chunk seam, and the polygon's
+# points. Bound only by the kernels that read them.
+image before: readonly
+image self_in: readonly
+image after: readonly
+buffer points: vec2 pts[]
+
+# The tight box the `bounds` kernel reduces into, in document pixels, as
+# min x, min y, max x, max y. Written by that kernel alone and bound to a
+# stand-in by every other, the uniform set covering the whole layout whichever
+# kernel runs.
+buffer tight: int box[4]
+
+params:
+    # The shape, in chunk-local pixels: a rectangle's corner and size or an
+    # ellipse's box. A polygon's shape is its points, and it reads `w` alone,
+    # as the width of its edge in pixels: 1 anti-aliases it and 0 keeps it hard.
+    # A filter reads all four as where a row or a column meets the neighbour
+    # across a canvas's seam, see `row_sample`.
+    float x
+    float y
+    float w
+    float h
+    float value
+    # Where the dispatch starts, so a region needs no full-chunk dispatch.
+    float offset_x
+    float offset_y
+    # A polygon's point count, a filter's radius, which a blur takes with a
+    # fraction, an ellipse's edge width in pixels as the polygon reads `w`, or
+    # unused.
+    float count
+    # A polygon's points are in document pixels, so this is the chunk's origin.
+    # A filter reads it as its op: 0 blur, 1 dilate, 2 erode.
+    float origin_x
+    float origin_y
+    # The region's end, exclusive, in chunk-local pixels, for the kernels that
+    # dispatch over a region rather than a shape.
+    float end_x
+    float end_y
+
+# Past any squared distance a pixel can be from an edge, and finite, which is
+# where the polygon's search for its nearest edge starts.
+const float HUGE = 3.0e38
+
+# A point whose x reaches this ends a ring rather than being one, and the ring
+# closes back to its own first point. `SaSelectionRings` writes it, and a
+# polygon of one ring with no end mark closes through the last point to the
+# first, as it always did.
+const float RING_END = 1.0e30
+
+
+def dispatch_pixel() -> ivec2:
+    return ivec2(global_id.xy) + ivec2(int(offset_x), int(offset_y))
+
+
+def outside_image(ivec2 px) -> bool:
+    ivec2 size = image_size(mask)
+    return px.x >= size.x or px.y >= size.y
+
+
+def select_rect():
+    ivec2 px = dispatch_pixel()
+    if outside_image(px):
+        return
+    if px.x < int(x) or px.y < int(y) or px.x >= int(x + w) or px.y >= int(y + h):
+        return
+    mask[px] = vec4(value)
+
+# Inside the ellipse inscribed in the box, tested at the pixel's centre. With
+# an edge of width `count` the coverage is 0.5 plus the centre's signed
+# distance to the ellipse over that width, clamped, as the polygon's is, and
+# meets the mask the way the polygon's does. The distance is estimated from the
+# ellipse's equation: the scaled radius `k0` less 1 over its gradient's length,
+# exact on a circle and close on an ellipse a few pixels across. At the centre
+# both are 0 and the limit is about the radius, deep inside whatever the edge.
+# The ellipse touches its box at four points and is inside it everywhere else,
+# so every pixel the grade reaches is in the box the dispatch covers.
+
+
+def select_ellipse():
+    ivec2 px = dispatch_pixel()
+    if outside_image(px):
+        return
+    vec2 centre = vec2(x + w * 0.5, y + h * 0.5)
+    vec2 radii = vec2(max(w * 0.5, 0.5), max(h * 0.5, 0.5))
+    vec2 d = (vec2(px) + vec2(0.5) - centre) / radii
+    float cover = (dot(d, d) > 1.0) ? 0.0 : 1.0
+    if count > 0.0:
+        float k0 = length(d)
+        float k1 = length(d / radii)
+        float signed_distance = (k1 > 0.0) ? k0 * (1.0 - k0) / k1 : min(radii.x, radii.y)
+        cover = clamp(0.5 + signed_distance / count, 0.0, 1.0)
+    if cover <= 0.0:
+        return
+    float old = mask[px].r
+    float next = (value > 0.0) ? max(old, cover) : min(old, 1.0 - cover)
+    mask[px] = vec4(next)
+
+# Even-odd winding: a ray from the pixel's centre to the right crosses an odd
+# number of edges when the pixel is inside. The points may be several closed
+# rings, each followed by a `RING_END` mark, and a ring inside another is then
+# a hole, because a ray from inside it crosses both. The points are in document pixels
+# and the pixel is moved into that space through the chunk's origin, so one
+# buffer serves every chunk the polygon touches.
+#
+# With an edge of width `w`, a pixel's coverage is 0.5 plus its centre's signed
+# distance to the nearest edge over `w`, positive inside, clamped to 0 to 1.
+# So an edge along a whole pixel line, half a pixel from every centre beside it,
+# comes out exactly as hard as the plain test, and a slanted one is graded
+# across the pixels it cuts. The pixel's floor and ceiling box the polygon's
+# points already, and a pixel outside that box is at least half a pixel from
+# every edge, so the dispatch reaches every pixel the grade touches.
+#
+# Coverage meets the mask as the greater of the two to add, and as the lesser
+# of the mask and what the shape leaves to subtract, so a part of a pixel never
+# takes back what an earlier shape gave or put back what it took. A whole pixel
+# in or out comes to `value` or to the mask as it was, which is the plain test.
+
+
+def edge_distance_squared(vec2 p, vec2 a, vec2 b) -> float:
+    vec2 ab = b - a
+    float along = clamp(dot(p - a, ab) / max(dot(ab, ab), 1e-12), 0.0, 1.0)
+    vec2 off = p - a - ab * along
+    return dot(off, off)
+
+
+def select_polygon():
+    ivec2 px = dispatch_pixel()
+    if outside_image(px):
+        return
+    if px.x >= int(end_x) or px.y >= int(end_y):
+        return
+    vec2 at = vec2(px) + vec2(0.5) + vec2(origin_x, origin_y)
+    int n = int(count)
+    bool graded = w > 0.0
+    bool inside = false
+    float nearest = HUGE
+    int start = 0
+    for i in range(n):
+        vec2 a = points.pts[i]
+        if a.x >= RING_END:
+            start = i + 1
+            continue
+        vec2 b = points.pts[(i + 1) % n]
+        if b.x >= RING_END:
+            b = points.pts[start]
+        if (a.y > at.y) != (b.y > at.y):
+            float cross_x = a.x + (at.y - a.y) * (b.x - a.x) / (b.y - a.y)
+            if at.x < cross_x:
+                inside = not inside
+        if graded:
+            nearest = min(nearest, edge_distance_squared(at, a, b))
+    float cover = inside ? 1.0 : 0.0
+    if graded:
+        float signed_distance = inside ? sqrt(nearest) : -sqrt(nearest)
+        cover = clamp(0.5 + signed_distance / w, 0.0, 1.0)
+    if cover <= 0.0:
+        return
+    float old = mask[px].r
+    float next = (value > 0.0) ? max(old, cover) : min(old, 1.0 - cover)
+    mask[px] = vec4(next)
+
+
+def invert():
+    ivec2 px = dispatch_pixel()
+    if outside_image(px):
+        return
+    if px.x >= int(end_x) or px.y >= int(end_y):
+        return
+    float v = mask[px].r
+    mask[px] = vec4(1.0 - v)
+
+# One texel of the input row, reaching into the neighbour across the seam. A
+# missing neighbour is a 1 by 1 texture holding 0, which the clamped read
+# makes 0 everywhere, so the picture ends where the selection does.
+#
+# On a canvas whose rows wrap, the last column's chunk ends where the canvas
+# does and the first column's begins there, so a filter's `w` is how far this
+# chunk's row runs before `after` takes over, and its `x` how far the row of
+# `before` runs, the last column's own width when this is the first. Nought in
+# either is the width of `self_in`, which `SaSelectionFilters` never sends,
+# since a chunk it does not hold is bound 1 by 1. A column reads `h` and `y`
+# the same way for a canvas whose columns wrap.
+#
+# The slots the other axis leaves unused carry how far `after`'s row or column
+# runs on a flat canvas when `after` is the chunk its edge falls in, `h` for a
+# row and `w` for a column, so a read across the seam before the last chunk
+# stops at the canvas's edge texel rather than the zeros past it. Nought reads
+# the whole of `after`.
+
+
+def row_sample(int at_x, int at_y) -> float:
+    int whole = image_size(self_in).x
+    int size = w > 0.0 ? int(w) : whole
+    if at_x < 0:
+        int before_size = x > 0.0 ? int(x) : whole
+        ivec2 at = ivec2(max(at_x + before_size, 0), at_y)
+        return before[min(at, image_size(before) - 1)].r
+    if at_x >= size:
+        int after_size = h > 0.0 ? int(h) : image_size(after).x
+        ivec2 at = ivec2(min(at_x - size, after_size - 1), at_y)
+        return after[min(at, image_size(after) - 1)].r
+    return self_in[min(ivec2(at_x, at_y), image_size(self_in) - 1)].r
+
+
+def column_sample(int at_x, int at_y) -> float:
+    int whole = image_size(self_in).y
+    int size = h > 0.0 ? int(h) : whole
+    if at_y < 0:
+        int before_size = y > 0.0 ? int(y) : whole
+        ivec2 at = ivec2(at_x, max(at_y + before_size, 0))
+        return before[min(at, image_size(before) - 1)].r
+    if at_y >= size:
+        int after_size = w > 0.0 ? int(w) : image_size(after).y
+        ivec2 at = ivec2(at_x, min(at_y - size, after_size - 1))
+        return after[min(at, image_size(after) - 1)].r
+    return self_in[min(ivec2(at_x, at_y), image_size(self_in) - 1)].r
+
+# A box filter along one axis, or the running max or min for a dilate or an
+# erode. Separable, so a feather is two passes and a border is four.
+#
+# A blur's radius may carry a fraction, and the texel one past its whole part
+# on either side then counts by that fraction, so the box's width runs on
+# between 2r + 1 and 2r + 3 rather than jumping. A whole radius never reads
+# that texel and sums a plain box. A dilate and an erode take the whole
+# part, since a running max has no texel to count in part.
+
+
+def fold(float acc, float v, int op) -> float:
+    if op == 1:
+        return max(acc, v)
+    if op == 2:
+        return min(acc, v)
+    return acc + v
+
+
+def filter_h():
+    ivec2 px = dispatch_pixel()
+    if outside_image(px):
+        return
+    if px.x >= int(end_x) or px.y >= int(end_y):
+        return
+    int r = int(count)
+    int op = int(origin_x)
+    float acc = (op == 0) ? 0.0 : row_sample(px.x, px.y)
+    for dx in range_inclusive(-r, r):
+        acc = fold(acc, row_sample(px.x + dx, px.y), op)
+    if op == 0:
+        float part = count - r
+        if part > 0.0:
+            acc += part * (row_sample(px.x - r - 1, px.y) + row_sample(px.x + r + 1, px.y))
+        acc /= 2.0 * count + 1.0
+    mask[px] = vec4(acc)
+
+
+def filter_v():
+    ivec2 px = dispatch_pixel()
+    if outside_image(px):
+        return
+    if px.x >= int(end_x) or px.y >= int(end_y):
+        return
+    int r = int(count)
+    int op = int(origin_x)
+    float acc = (op == 0) ? 0.0 : column_sample(px.x, px.y)
+    for dy in range_inclusive(-r, r):
+        acc = fold(acc, column_sample(px.x, px.y + dy), op)
+    if op == 0:
+        float part = count - r
+        if part > 0.0:
+            acc += part * (column_sample(px.x, px.y - r - 1) + column_sample(px.x, px.y + r + 1))
+        acc /= 2.0 * count + 1.0
+    mask[px] = vec4(acc)
+
+# mask = before - after, clamped: a dilated selection less an eroded one is
+# the band around its edge, which is what a border is.
+
+
+def combine():
+    ivec2 px = dispatch_pixel()
+    if outside_image(px):
+        return
+    if px.x >= int(end_x) or px.y >= int(end_y):
+        return
+    float a = before[min(px, image_size(before) - 1)].r
+    float b = after[min(px, image_size(after) - 1)].r
+    mask[px] = vec4(clamp(a - b, 0.0, 1.0))
+
+# mask = max( before, after ): what adding a flood to a selection is.
+
+
+def unite():
+    ivec2 px = dispatch_pixel()
+    if outside_image(px):
+        return
+    if px.x >= int(end_x) or px.y >= int(end_y):
+        return
+    float a = before[min(px, image_size(before) - 1)].r
+    float b = after[min(px, image_size(after) - 1)].r
+    mask[px] = vec4(max(a, b))
+
+# mask = min( before, after ): what both hold, which is an intersect.
+
+
+def intersect():
+    ivec2 px = dispatch_pixel()
+    if outside_image(px):
+        return
+    if px.x >= int(end_x) or px.y >= int(end_y):
+        return
+    float a = before[min(px, image_size(before) - 1)].r
+    float b = after[min(px, image_size(after) - 1)].r
+    mask[px] = vec4(min(a, b))
+
+# The tight box round the coverage this chunk holds, reduced on the GPU.
+#
+# A subtract writes `before AND NOT after` pixel by pixel, so what survives is
+# a shape inside the chunk rectangles rather than the rectangles, and a box
+# shrunk by the rectangles would claim less coverage than the mask still holds.
+# The only honest answer has looked at the pixels, and the two ways to look are
+# reading the mask back or reducing it here. This is the second: four atomics
+# per covered texel and four numbers back, never a texture.
+#
+# The caller seeds the buffer wide, `min` at a number no pixel reaches and `max`
+# at one below zero, so an empty selection comes back as the empty box rather
+# than as a box round nothing.
+
+
+def bounds():
+    ivec2 px = dispatch_pixel()
+    if outside_image(px):
+        return
+    if px.x >= int(end_x) or px.y >= int(end_y):
+        return
+    # The same threshold `SaSelection` reads coverage at everywhere else: a
+    # texel is in the selection when it is not fully transparent.
+    if mask[px].r <= 0.0:
+        return
+    ivec2 doc = px + ivec2(int(origin_x), int(origin_y))
+    atomic_min(tight.box[ 0 ], doc.x)
+    atomic_min(tight.box[ 1 ], doc.y)
+    atomic_max(tight.box[ 2 ], doc.x)
+    atomic_max(tight.box[ 3 ], doc.y)
+
+# mask = mix( mask, value, self_in ): a fill of a layer's mask that keeps to
+# the selection, which `self_in` holds for this chunk. Grey where the selection
+# is soft, so a feathered edge fills by degrees as a fill of paint does. The
+# selection is read at the same place of the chunk rather than the same texel,
+# because a layer painted at another density holds a mask chunk of another size.
+
+
+def fill_under():
+    ivec2 px = dispatch_pixel()
+    if outside_image(px):
+        return
+    if px.x >= int(end_x) or px.y >= int(end_y):
+        return
+    ivec2 at = min(px * image_size(self_in) / image_size(mask), image_size(self_in) - 1)
+    float selected = self_in[at].r
+    float old = mask[px].r
+    mask[px] = vec4(mix(old, value, selected))

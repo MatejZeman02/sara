@@ -1,0 +1,18 @@
+[
+  {"comment": "A fresh profile's first screen opens five dockers, four, the Brush Presets closed, and keeps the Reference closed. Shift+F opens it where the file keeps it, at the foot of the left column, with Fit, Normalize and Solo dimmed on its empty board and the five buttons as icons on the tabs' row. A picture opened onto the board takes everything under that row, where it took 30 of 255 under two rows of buttons and a path label. The dump's reference block reads picture_size, and its windows array the docker's rectangle."},
+  {"wait": 30},
+  {"state": "1-the-first-screen"},
+  {"shot": "1-the-first-screen"},
+  {"key": {"key": "f", "shift": true}},
+  {"wait": 20},
+  {"state": "2-the-reference-opened-on-an-empty-board"},
+  {"shot": "2-the-reference-opened-on-an-empty-board"},
+  {"reference": {"open": ["res://ui/icon.png"]}},
+  {"wait": 10},
+  {"state": "3-a-picture-takes-the-room-under-the-row"},
+  {"shot": "3-a-picture-takes-the-room-under-the-row"},
+  {"window": [1920, 1080]},
+  {"wait": 30},
+  {"state": "4-on-the-window-the-file-was-written-for"},
+  {"shot": "4-on-the-window-the-file-was-written-for"}
+]

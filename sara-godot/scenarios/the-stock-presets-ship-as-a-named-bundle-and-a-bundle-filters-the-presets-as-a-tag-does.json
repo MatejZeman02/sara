@@ -1,0 +1,124 @@
+[
+ {
+  "comment": "The presets docker's tag list on a fresh profile, with the bundles every stock preset came from under a heading of Bundles after the tags, then Sara Essentials pressed once, which lists its twenty-one presets alone."
+ },
+ {
+  "wait": 40
+ },
+ {
+  "prefs": {
+   "ui_scale": 1.0
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "docker": {
+   "id": "BrushPresetsDocker",
+   "at": [
+    860,
+    40
+   ],
+   "size": [
+    420,
+    940
+   ]
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "tool": "brush"
+ },
+ {
+  "wait": 10
+ },
+ {
+  "preset": {
+   "finish": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "choice": {
+   "open": "ChooserTag"
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "wait": 15
+ },
+ {
+  "key": "up"
+ },
+ {
+  "presets_docker": {}
+ },
+ {
+  "shot": "1-the-filter-list-with-its-bundles-heading"
+ },
+ {
+  "state": "1-the-filter-list-with-its-bundles-heading"
+ },
+ {
+  "choice": {
+   "pick": 44
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "preset": {
+   "finish": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "presets_docker": {}
+ },
+ {
+  "shot": "2-sara-essentials-shown-only"
+ },
+ {
+  "state": "2-sara-essentials-shown-only"
+ },
+ {
+  "choice": {
+   "open": "ChooserTag"
+  }
+ },
+ {
+  "wait": 8
+ },
+ {
+  "choice": {
+   "pick": 0
+  }
+ },
+ {
+  "wait": 15
+ },
+ {
+  "preset": {
+   "finish": true
+  }
+ },
+ {
+  "wait": 12
+ },
+ {
+  "presets_docker": {}
+ },
+ {
+  "state": "3-all-clears-the-filter"
+ }
+]

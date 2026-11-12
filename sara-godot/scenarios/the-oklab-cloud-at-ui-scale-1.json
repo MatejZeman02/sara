@@ -1,0 +1,19 @@
+[
+  {"comment": "The Graph panel's Oklab cloud at UI scale 1, at the panel's default size, over three painted strokes. The cloud's cell follows the picture, two texels a cell, so its points read as many small marks at any scale, and the state names the cells, the plot's side and the picture's size in real pixels."},
+  {"prefs": {"ui_scale": 1.0}},
+  {"wait": 30},
+  {"docker": "park"},
+  {"docker": {"id": "GraphDocker", "at": [540, 40]}},
+  {"wait": 10},
+  {"colour": "#c0392b"},
+  {"stroke": {"from": [40, 140], "to": [480, 230], "pressure": 0.9, "steps": 24}},
+  {"colour": "#2e8f5a"},
+  {"stroke": {"from": [40, 280], "to": [480, 360], "pressure": 0.9, "steps": 24}},
+  {"colour": "#1a1410"},
+  {"stroke": {"from": [80, 420], "to": [460, 440], "pressure": 0.9, "steps": 24}},
+  {"wait": 40},
+  {"graph": {"mode": "cloud", "scale": "log", "reset": true}},
+  {"wait": 40},
+  {"shot": "1-the-cloud-at-ui-scale-1"},
+  {"state": "1-the-cloud-at-ui-scale-1"}
+]
